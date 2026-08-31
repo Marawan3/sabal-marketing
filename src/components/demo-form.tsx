@@ -52,7 +52,7 @@ export function DemoForm() {
 
   if (status === "sent") {
     return (
-      <p className="rounded-2xl border border-palm/30 bg-leaf px-5 py-8 text-sm leading-6">
+      <p className="rounded-2xl border border-palm/30 bg-leaf px-5 py-8 text-sm leading-6 text-ink">
         Received. Someone from Sabal will write you back. We onboard every
         restaurant personally, so expect a real conversation rather than an
         automated sequence.
@@ -74,7 +74,7 @@ export function DemoForm() {
         <textarea
           name="message"
           rows={4}
-          className="mt-1 w-full rounded-xl border border-line bg-white px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
+          className="mt-1 w-full rounded-xl border border-line bg-paper-2 px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
         />
       </label>
       <div className="hidden" aria-hidden>
@@ -87,14 +87,14 @@ export function DemoForm() {
         Email or phone is required. We will not add you to a newsletter.
       </p>
       {status === "error" ? (
-        <p className="text-sm text-rose-800" role="alert">
+        <p className="text-sm text-rose-400" role="alert">
           {message}
         </p>
       ) : null}
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-paper hover:bg-palm disabled:opacity-60"
+        className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-on-brand hover:bg-palm disabled:opacity-60"
       >
         {status === "submitting" ? "Sending…" : "Request a demo"}
       </button>
@@ -123,7 +123,7 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
-        className="mt-1 w-full rounded-xl border border-line bg-white px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
+        className="mt-1 w-full rounded-xl border border-line bg-paper-2 px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
       />
     </label>
   );

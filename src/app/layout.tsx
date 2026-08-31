@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Instrument_Sans } from "next/font/google";
+import { Outfit } from "next/font/google";
 import Script from "next/script";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -8,14 +8,8 @@ import { organizationSchema, webSiteSchema } from "@/lib/schema";
 import { getSiteUrl, shouldIndex, site } from "@/lib/site";
 import "./globals.css";
 
-const sans = Instrument_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const display = Fraunces({
-  variable: "--font-display",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,7 +17,7 @@ const display = Fraunces({
 export const dynamic = "error";
 
 export const viewport: Viewport = {
-  themeColor: "#0e3f28",
+  themeColor: "#0d0d0d",
 };
 
 const indexing = shouldIndex();
@@ -60,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} h-full`}>
+    <html lang="en" className={`${outfit.variable} h-full`}>
       <body className="min-h-full bg-paper font-sans text-ink antialiased">
         <JsonLd data={[organizationSchema(), webSiteSchema()]} />
         <a className="skip-link" href="#main">

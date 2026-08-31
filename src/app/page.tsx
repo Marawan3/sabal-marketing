@@ -62,7 +62,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/demo"
-                className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-paper hover:bg-palm"
+                className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-on-brand hover:bg-palm"
               >
                 Book a demo
               </Link>
@@ -110,7 +110,7 @@ export default function HomePage() {
               <Link
                 key={pillar.title}
                 href={pillar.href}
-                className="rounded-2xl border border-line bg-white p-6 hover:border-palm/40"
+                className="rounded-2xl border border-line bg-paper-2 p-6 hover:border-palm/40"
               >
                 <p className="font-display text-sm text-palm">
                   {String(index + 1).padStart(2, "0")}

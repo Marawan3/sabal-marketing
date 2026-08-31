@@ -6,7 +6,7 @@ export function CrawlerDiagram() {
           Menu as a PDF, image, or JS blob
         </figcaption>
         <p className="mt-1 text-xs text-ink-soft">What a crawler gets: nothing it can quote.</p>
-        <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-4 font-mono text-[11px] leading-5 text-zinc-400">
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-black p-4 font-mono text-[11px] leading-5 text-zinc-400">
 {`<div id="root"></div>
 <script src="/app.js"></script>
 <!-- or a PDF / photo of the menu -->
@@ -14,12 +14,12 @@ export function CrawlerDiagram() {
 [empty document]`}
         </pre>
       </figure>
-      <figure className="rounded-2xl border border-palm/30 bg-leaf/60 p-5">
+      <figure className="rounded-2xl border border-palm/30 bg-leaf p-5">
         <figcaption className="text-sm font-semibold">Menu as HTML on Sabal</figcaption>
         <p className="mt-1 text-xs text-ink-soft">
           What a crawler gets: every dish, price, and description.
         </p>
-        <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-4 font-mono text-[11px] leading-5 text-leaf">
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-black p-4 font-mono text-[11px] leading-5 text-palm-bright">
 {`<h1>Citrus herb chicken</h1>
 <p>Half chicken, preserved lemon...</p>
 <span>22</span>

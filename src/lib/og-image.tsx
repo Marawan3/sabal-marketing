@@ -13,10 +13,10 @@ export function createOgImage(title: string, kicker = "Sabal") {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0e3f28",
-          color: "#f3eee4",
+          background: "#0d0d0d",
+          color: "#f4f6f8",
           padding: "72px",
-          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontFamily: "ui-sans-serif, system-ui, sans-serif",
         }}
       >
         <div
@@ -27,7 +27,7 @@ export function createOgImage(title: string, kicker = "Sabal") {
             fontSize: 22,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "#d7e6db",
+            color: "#007bff",
           }}
         >
           <span>{kicker}</span>
@@ -55,7 +55,7 @@ export function createOgImage(title: string, kicker = "Sabal") {
             style={{
               display: "flex",
               fontSize: 24,
-              color: "#d7e6db",
+              color: "#9aa3ad",
             }}
           >
             Restaurant websites that rank. Ordering you own.

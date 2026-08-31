@@ -30,7 +30,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
           </a>
           <Link
             href="/demo"
-            className="rounded-full bg-palm-deep px-4 py-2 text-sm font-semibold text-paper hover:bg-palm"
+            className="rounded-full bg-palm-deep px-4 py-2 text-sm font-semibold text-on-brand hover:bg-palm"
           >
             Book a demo
           </Link>
@@ -61,7 +61,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
             </a>
             <Link
               href="/demo"
-              className="mt-2 inline-flex justify-center rounded-full bg-palm-deep px-4 py-2.5 text-sm font-semibold text-paper"
+              className="mt-2 inline-flex justify-center rounded-full bg-palm-deep px-4 py-2.5 text-sm font-semibold text-on-brand"
               onClick={() => setOpen(false)}
             >
               Book a demo

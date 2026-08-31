@@ -92,7 +92,7 @@ export default function HowItWorksPage() {
         </p>
         <Link
           href="/demo"
-          className="mt-8 inline-flex rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-paper hover:bg-palm"
+          className="mt-8 inline-flex rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-on-brand hover:bg-palm"
         >
           Book a demo
         </Link>
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
               }`}
             >
               <div>
-                <p className="font-display text-6xl text-leaf sm:text-7xl">{step.n}</p>
+                <p className="font-display text-6xl text-palm/25 sm:text-7xl">{step.n}</p>
                 <h2 className="mt-4 font-display text-3xl tracking-tight">{step.title}</h2>
                 <p className="mt-4 max-w-md text-base leading-7 text-ink-soft">{step.body}</p>
                 <Link
