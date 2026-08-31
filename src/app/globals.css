@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f3eee4;
+  --paper-2: #e8e0d1;
+  --ink: #14261c;
+  --ink-soft: #3f5549;
+  --palm: #1b6b45;
+  --palm-deep: #0e3f28;
+  --palm-bright: #2d8f58;
+  --leaf: #d7e6db;
+  --sand: #e4d7c0;
+  --line: #d2c8b4;
+  --product: #003e80;
+  --product-deep: #003368;
+  --product-soft: #eaf1f8;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-palm: var(--palm);
+  --color-palm-deep: var(--palm-deep);
+  --color-palm-bright: var(--palm-bright);
+  --color-leaf: var(--leaf);
+  --color-sand: var(--sand);
+  --color-line: var(--line);
+  --color-product: var(--product);
+  --color-product-deep: var(--product-deep);
+  --color-product-soft: var(--product-soft);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), ui-serif, Georgia, "Times New Roman", serif;
+}
+
+::selection {
+  background: var(--leaf);
+  color: var(--ink);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 80;
+  border-radius: 999px;
+  background: var(--ink);
+  padding: 0.5rem 1rem;
+  color: var(--paper);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
