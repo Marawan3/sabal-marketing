@@ -101,8 +101,9 @@ export default function OnlineOrderingPage() {
           <h2 className="font-display text-3xl tracking-tight">Payments you hold</h2>
           <p className="mt-4 max-w-3xl text-base leading-7 text-ink-soft">
             Guests pay the restaurant, not a marketplace wallet. Card data is
-            tokenized through your merchant account. Sabal never needs the
-            kitchen to split a ticket with a third party to get paid.
+            tokenized through your merchant account. Sabal charges the
+            restaurant five percent of the online order. That is not a
+            marketplace markup on the diner.
           </p>
           <h2 className="mt-12 font-display text-3xl tracking-tight">Row-level isolation</h2>
           <p className="mt-4 max-w-3xl text-base leading-7 text-ink-soft">

@@ -21,7 +21,9 @@ export const nav = [
 
 export const legalNav = [
   { href: "/privacy", label: "Privacy" },
-  { href: "/terms", label: "Terms" },
+  { href: "/terms", label: "Website Terms" },
+  { href: "/platform-terms", label: "Platform Terms" },
+  { href: "/dpa", label: "DPA" },
   { href: "/accessibility", label: "Accessibility" },
 ] as const;
 

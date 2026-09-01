@@ -12,6 +12,24 @@ export const restaurantSeoFaqs = [
   {
     question: "Do you take a commission on orders?",
     answer:
-      "No. Guests pay you through your own merchant account. We do not take a cut of the ticket.",
+      "Sabal’s platform fee is 5% of each online order placed through your storefront. A $10 ticket is fifty cents. Guests still pay you through your own merchant account. Card processing is separate, at your processor’s rates.",
+  },
+] as const;
+
+export const pricingFaqs = [
+  {
+    question: "What does Sabal charge?",
+    answer:
+      "Five percent of each online order placed through your Sabal storefront. A $10 order is fifty cents to Sabal.",
+  },
+  {
+    question: "Is that on top of card processing?",
+    answer:
+      "Yes. Card charges settle to your merchant account at the processor’s rates. Five percent is Sabal’s platform fee, not the card network’s.",
+  },
+  {
+    question: "Is there a monthly subscription?",
+    answer:
+      "There is no monthly platform fee on this page. The public number is five percent of online orders. We set you up in person — there is no self-serve signup.",
   },
 ] as const;

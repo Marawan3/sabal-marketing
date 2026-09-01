@@ -31,9 +31,10 @@ Set `NEXT_PUBLIC_APP_URL` to the current ROS origin so header **Log in** works. 
 - [ ] `RESEND_API_KEY`, `RESEND_FROM`, `DEMO_INBOX` set; demo form delivers
 - [ ] Google Search Console verified, sitemap submitted, Rich Results clean
 - [ ] Lighthouse ≥ 95 on the production URL
-- [ ] Legal pages reviewed (`/privacy`, `/terms`, `/accessibility` are drafts)
+- [ ] Legal pages reviewed (`legal/` drafts; `/privacy`, `/terms`, `/platform-terms`, `/dpa`, `/accessibility` stay draft until counsel signs off)
 - [ ] Delivery-network partner named on `/online-ordering` only after it is public
 - [ ] Real product screenshots swapped in if the HTML mockups are no longer close enough
+- [ ] Entity name filled; `LAWYER-QUESTIONS.md` walked with counsel before treating legal pages as binding
 
 ## Honesty
 

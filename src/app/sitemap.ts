@@ -11,13 +11,22 @@ const paths = [
   "/about",
   "/privacy",
   "/terms",
+  "/platform-terms",
+  "/dpa",
   "/accessibility",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const legal = new Set([
+    "/privacy",
+    "/terms",
+    "/platform-terms",
+    "/dpa",
+    "/accessibility",
+  ]);
   return paths.map((path) => ({
     url: absoluteUrl(path),
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.7,
+    priority: path === "/" ? 1 : legal.has(path) ? 0.3 : 0.7,
   }));
 }

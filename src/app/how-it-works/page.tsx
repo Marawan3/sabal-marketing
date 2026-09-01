@@ -34,7 +34,7 @@ const steps = [
   {
     n: "02",
     title: "Diners order from you, not a marketplace.",
-    body: "Pickup and delivery checkout on your own domain. Your customers, your data, your merchant account.",
+    body: "Pickup and delivery checkout on your own domain. Five percent of the ticket. Your customers, your merchant account.",
     href: "/online-ordering",
     link: "Online ordering",
     frame: "demokitchen.sabalsites.com/menu/citrus-herb-chicken",

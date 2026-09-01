@@ -27,7 +27,7 @@ const pillars = [
   {
     href: "/online-ordering",
     title: "Take orders directly",
-    body: "Pickup and delivery checkout on your domain. Your customers, your data, your merchant account.",
+    body: "Pickup and delivery checkout on your domain. Your customers, your merchant account. Five percent of the ticket.",
   },
   {
     href: "/online-ordering#kitchen",
