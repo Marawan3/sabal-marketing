@@ -37,7 +37,9 @@ Features include the provisioned website, online ordering, kitchen display, trac
 
 # Fees
 
-Platform fees are in the MSA: **5% of each online order**, plus the restaurant’s own processor and delivery-partner charges. These terms do not set a different price.
+Platform fees are in the MSA and described on the public pricing page. These terms do not set a different price.
+
+[Lawyer: marketing now says flat monthly + processing at cost, no per-order commission. The MSA draft still says 5% of each online order. Reconcile before publishing.]
 
 # Termination
 

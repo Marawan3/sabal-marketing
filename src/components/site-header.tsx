@@ -14,7 +14,10 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         <Link href="/" className="shrink-0" aria-label="Sabal home">
           <Logo />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-soft lg:flex" aria-label="Primary">
+        <nav
+          className="hidden items-center gap-6 text-sm font-medium text-ink-soft lg:flex"
+          aria-label="Primary"
+        >
           {nav.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-ink">
               {item.label}
@@ -22,10 +25,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
           ))}
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
-          <a
-            href={appUrl}
-            className="text-sm font-medium text-ink-soft hover:text-ink"
-          >
+          <a href={appUrl} className="text-sm font-medium text-ink-soft hover:text-ink">
             Log in
           </a>
           <Link

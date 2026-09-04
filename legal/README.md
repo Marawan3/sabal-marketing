@@ -20,6 +20,8 @@ Every file starts with the draft banner. Bracketed text is an unresolved lawyer/
 
 Ground truth for ROS/Sites was taken from `Sabal-OOS/sabal-ros` (schema, checkout, Twilio, NMI, Clerk, DoorDash Drive, RLS). Ground truth for this site was taken from `sabal-marketing` (demo form, Resend, optional Plausible). If the code changes, the matching draft is stale.
 
+Marketing pages now describe **flat monthly + processing at cost**. `msa.md` still says **5%**. See `LAWYER-QUESTIONS.md` §6 before publishing.
+
 Do not publish any of these until:
 
 1. `[LEGAL_ENTITY_NAME]` exists and is the contracting party.

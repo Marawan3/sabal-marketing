@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
+/* Design tokens — keep product and marketing aligned from this file. */
 :root {
-  --paper: #0d0d0d;
-  --paper-2: #161616;
-  --ink: #f4f6f8;
-  --ink-soft: #9aa3ad;
-  --palm: #3d9eff;
-  --palm-deep: #007bff;
-  --palm-bright: #5eb0ff;
-  --leaf: #10243d;
-  --sand: #121212;
-  --line: #2a2a2a;
-  --on-brand: #ffffff;
-  --product: #003e80;
-  --product-deep: #003368;
-  --product-soft: #eaf1f8;
+  --paper: #f6f1e8;
+  --paper-2: #fffdf8;
+  --ink: #1c2418;
+  --ink-soft: #5a6354;
+  --palm: #2e6b45;
+  --palm-deep: #1e4d32;
+  --palm-bright: #3f8a58;
+  --clay: #c4622d;
+  --leaf: #e4efe6;
+  --sand: #efe6d6;
+  --line: #d8d0c2;
+  --on-brand: #fffdf8;
+  --product: #1e4d32;
+  --product-deep: #163826;
+  --product-soft: #e4efe6;
 }
 
 @theme inline {
@@ -25,6 +27,7 @@
   --color-palm: var(--palm);
   --color-palm-deep: var(--palm-deep);
   --color-palm-bright: var(--palm-bright);
+  --color-clay: var(--clay);
   --color-leaf: var(--leaf);
   --color-sand: var(--sand);
   --color-line: var(--line);
@@ -54,8 +57,13 @@ h3,
 }
 
 ::selection {
-  background: #007bff;
-  color: #ffffff;
+  background: #1e4d32;
+  color: #fffdf8;
+}
+
+:focus-visible {
+  outline: 2px solid var(--palm);
+  outline-offset: 3px;
 }
 
 .skip-link {
@@ -64,9 +72,9 @@ h3,
   top: -100%;
   z-index: 80;
   border-radius: 999px;
-  background: #007bff;
+  background: #1e4d32;
   padding: 0.5rem 1rem;
-  color: #ffffff;
+  color: #fffdf8;
 }
 
 .skip-link:focus {

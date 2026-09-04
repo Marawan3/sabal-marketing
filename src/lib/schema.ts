@@ -1,4 +1,4 @@
-import { absoluteUrl, site } from "./site";
+import { site, absoluteUrl } from "./site";
 
 export function organizationSchema() {
   return {

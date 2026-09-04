@@ -5,5 +5,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return createOgImage("Book a walkthrough of your menu.", "Demo");
+  return createOgImage("Book a demo.", "Demo");
 }

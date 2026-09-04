@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import Script from "next/script";
@@ -17,7 +18,7 @@ const outfit = Outfit({
 export const dynamic = "error";
 
 export const viewport: Viewport = {
-  themeColor: "#0d0d0d",
+  themeColor: "#f6f1e8",
 };
 
 const indexing = shouldIndex();
@@ -25,8 +26,8 @@ const indexing = shouldIndex();
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Sabal — Restaurant websites that rank, and ordering you own",
-    template: "%s · Sabal",
+    default: `${site.name} — ${site.tagline}`,
+    template: `%s · ${site.name}`,
   },
   description: site.description,
   applicationName: "Sabal",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Sabal",
-    title: "Sabal — Restaurant websites that rank, and ordering you own",
+    title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },
   twitter: {
@@ -50,7 +51,11 @@ export const metadata: Metadata = {
   icons: { icon: "/logo.svg" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
   const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
   return (

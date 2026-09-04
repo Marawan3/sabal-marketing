@@ -14,7 +14,9 @@ These terms cover **this public marketing website** operated by **[LEGAL_ENTITY_
 
 Pages describe what the software does. They are not a promise of Google rankings, order volume, or a launch date we have not agreed in writing. Product frames on this site are HTML reconstructions of the storefront, kitchen display, and launch checklist, using a demo restaurant named Sabal Demo Kitchen.
 
-Pricing: Sabal’s public platform fee is **5% of each online order**. Card processing and delivery-partner charges are separate. We onboard restaurants in person; sending a demo request does not create a customer contract.
+Pricing: the public marketing site states a **flat monthly fee plus payment processing at the processor’s rates**, with **no commission or per-order platform fee**. The MSA (not this page) is the contract. We onboard restaurants in person; sending a demo request does not create a customer contract.
+
+[Lawyer: marketing copy and the MSA draft still disagree. MSA still says 5% of each online order. Reconcile before publishing.]
 
 # Demos
 
