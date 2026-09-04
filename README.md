@@ -37,7 +37,7 @@ Design tokens live in `src/app/globals.css` (`:root`). Palm green `#1e4d32` / `#
 
 | Path | Role |
 |---|---|
-| `/` | Hero, Google-crawler proof, features, savings example, testimonial placeholders, demo form |
+| `/` | Invisibility hero, interactive Google-sees proof, honesty pull-quote, features, input-side stats, testimonial placeholders, demo form |
 | `/product` | Storefront, ordering, kitchen, SEO, onboarding |
 | `/pricing` | Flat monthly + processing at cost vs marketplaces as a category |
 | `/about` | Orlando, independents, honesty rules |

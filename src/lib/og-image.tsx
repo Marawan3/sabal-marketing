@@ -58,7 +58,7 @@ export function createOgImage(title: string, kicker = "Sabal") {
               color: "#5a6354",
             }}
           >
-            Your menu on Google. Your orders on your site.
+            Restaurant websites Google can actually read.
           </div>
         </div>
       </div>

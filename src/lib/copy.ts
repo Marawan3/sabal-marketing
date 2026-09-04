@@ -6,42 +6,63 @@
 export const brand = {
   name: "Sabal",
   domain: "sabalmenu.com",
-  tagline: "Your menu on Google. Your orders on your site.",
+  tagline: "Restaurant websites Google can actually read",
   description:
-    "Sabal builds SEO-first websites and commission-free online ordering for independent restaurants. We set it up with you. No self-serve signup.",
+    "Most restaurant websites load the menu with code Google skips. Sabal serves every dish, price, and description in the HTML Google reads — plus commission-free ordering we set up with you.",
 } as const;
+
+/** Headline candidates. The site builds `heroTitle` (first). Founder picks in COPY.md. */
+export const heroHeadlineVariants = [
+  "Google can't read your menu. We fix that.",
+  "Your best dish is invisible to Google.",
+  "When Google reads your website, it sees nothing. Change that.",
+  // SOURCE: 220 is an illustrative count, not a live restaurant. Do not treat as a metric.
+  "220 dishes. Google sees 0. That's why they order elsewhere.",
+  "Google can only rank a menu it can read.",
+] as const;
 
 export const homeCopy = {
   heroKicker: "For independent restaurants",
-  heroTitle: "Get found on Google. Keep the order. Keep the margin.",
+  heroTitle: heroHeadlineVariants[0],
   heroBody:
-    "Sabal gives you a website Google can actually read and ordering that stays on your domain. We set it up with you. You stay the merchant. No marketplace in the middle.",
+    "Most restaurant websites load the menu with code Google skips. Sabal serves every dish, price, and description in the exact form Google reads — so when someone nearby searches for what you cook, the menu is actually there to be read.",
   heroCta: "Book a demo",
-  heroSecondary: "See the product",
-  heroPhoneCaption: "Pickup ordering on your own site",
+  heroSecondary: "See what Google sees",
+  heroSecondaryHref: "#what-google-sees",
 
-  proofKicker: "The wedge is Google",
-  proofTitle: "How Google sees your menu",
-  proofBody:
-    "Most restaurant sites hide the menu behind JavaScript, a PDF, or a photo. A crawler opens the page and finds an empty box. Sabal prints every dish, price, and description into the HTML — plus structured data — so a search for the food you cook can find you.",
-  proofLeftTitle: "A typical JavaScript menu",
-  proofLeftNote: "What a crawler often gets: an empty page.",
-  proofRightTitle: "A Sabal menu",
-  proofRightNote: "What a crawler gets: every dish, price, and description.",
+  proofKicker: "The difference",
+  proofTitle: "What Google actually sees",
+  proofCaption:
+    "Google decides who shows up in local search by reading websites. It can only rank what it can read.",
+  proofToggleDiner: "What diners see",
+  proofToggleGoogle: "What Google sees",
+  proofLeftTitle: "A typical restaurant site",
+  proofRightTitle: "A Sabal site",
+  proofLeftCount: "Menu items visible to Google: 0",
+  proofRightCount: "Menu items visible to Google: every single one",
+  proofDinerNote:
+    "Both can look like a normal menu. That is the trap. The diner never sees the empty page.",
+  proofGoogleNote:
+    "A crawler does not see the pretty view. It sees the first HTML. Stylized markup — not any real restaurant's source.",
+
+  honestyQuote:
+    "Nobody honest can promise you a ranking. We promise Google can finally read you — completely. The rest compounds from there.",
+  honestyNote:
+    "We guarantee crawler-readable HTML, structured data on every item, dish-and-city pages, and a fast site. We do not promise positions, timelines, or traffic.",
 
   featuresTitle: "What you get",
   features: [
     {
       id: "seo",
-      title: "Pages built for the searches people type",
-      body: "Your menu becomes real web pages. We also build crave-term pages — think /tags/chicken — aimed at “dish + city” searches. Same data the kitchen uses. No thin placeholder copy.",
+      title: "Every dish is a page Google can read",
+      body: "The first HTML response includes the menu — names, prices, descriptions — plus MenuItem structured data. We also build dish-and-city pages such as /tags/chicken. Same data the kitchen uses. No thin placeholder copy.",
       href: "/product#google",
-      link: "How the site gets found",
+      link: "How the pages are built",
     },
     {
       id: "ordering",
-      title: "One tap to add. No account wall.",
-      body: "Guests add a dish in one tap. Pickup checkout is name, phone, and payment. Tip presets always include a visible None. We do not add a service fee on the diner.",
+      title: "Orders on your site. No cut of the ticket.",
+      body: "One tap adds a dish. Pickup checkout is name, phone, and payment. Tip presets always include a visible None. No diner service fee. You are the merchant. Sabal is a flat monthly fee plus processing at cost.",
       href: "/product#ordering",
       link: "See the checkout",
     },
@@ -53,36 +74,42 @@ export const homeCopy = {
       link: "Kitchen flow",
     },
     {
-      id: "money",
-      title: "No commission on the ticket",
-      body: "You are the merchant of record. Guests pay you. Sabal charges a flat monthly fee and passes through payment processing at cost. We do not take a cut of the order.",
-      href: "/pricing",
-      link: "See pricing",
+      id: "service",
+      title: "We set it up. You cook.",
+      body: "Sabal is not a self-serve tool. We import the menu, guide photography, set up search, connect the domain, and stay through launch. The button on this site books a conversation, not an account.",
+      href: "/product#service",
+      link: "How onboarding works",
     },
   ],
 
-  savingsKicker: "The money",
-  savingsTitle: "What you keep vs a marketplace",
-  savingsBody:
-    "This is example math, not a promise about your restaurant. Marketplace commissions are commonly listed in the 15–30% range. We use 25% as a midpoint so the contrast is easy to see.",
-  savingsSource:
-    "SOURCE: typical published marketplace commission range 15–30% of the order. Midpoint 25% used for the example only — verify before treating as a claim. Monthly Sabal fee is quoted on the call; do not invent a dollar amount here.",
-  savingsExampleLabel: "Example on $10,000 of marketplace orders in a month",
-  savingsRows: [
+  statsKicker: "What we can actually count",
+  statsTitle: "Inputs we control. Not rankings.",
+  statsBody:
+    "These are product facts, not Google outcomes. Each number has a source note in the copy file for launch review.",
+  statsRows: [
     {
-      label: "Marketplace cut at 25%",
-      value: "$2,500",
-      note: "Leaves the restaurant",
+      label: "Menu items in the first HTML",
+      value: "All of them",
+      note: "Every published dish ships in the first response, not after a script runs.",
+      // SOURCE: storefront is server-rendered; menu nodes are in the initial HTML document.
     },
     {
-      label: "Sabal per-order commission",
+      label: "Taps to add a dish",
+      value: "1",
+      note: "One tap on Add. No account wall before the cart.",
+      // SOURCE: storefront menu / item sheet Add control.
+    },
+    {
+      label: "Pickup checkout fields",
+      value: "3",
+      note: "Name, phone, payment. Tip None is always visible.",
+      // SOURCE: pickup checkout spec — guest-first, three required fields.
+    },
+    {
+      label: "Sabal service fee on the diner",
       value: "$0",
-      note: "We do not take a cut of the ticket",
-    },
-    {
-      label: "What you still pay with Sabal",
-      value: "Monthly + processing",
-      note: "Flat monthly fee, quoted on the call. Card processing at the processor’s rates.",
+      note: "No extra line on the guest. Processing is the processor’s rate to you.",
+      // SOURCE: checkout has no Sabal service-fee line.
     },
   ],
 
@@ -119,7 +146,7 @@ export const productCopy = {
     {
       id: "google",
       title: "Built so Google can read the menu",
-      body: "Every item, price, and description ships in the HTML. We add MenuItem structured data and dedicated crave-term pages such as /tags/chicken for “dish + city” searches. Quality gates block thin or leftover draft copy.",
+      body: "Every item, price, and description ships in the first HTML. We add MenuItem structured data and dish-and-city pages such as /tags/chicken. Quality gates block thin or leftover draft copy. We do not promise a ranking — we promise the page is readable.",
     },
     {
       id: "service",

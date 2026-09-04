@@ -5,7 +5,7 @@ import { Container } from "@/components/container";
 import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
 import { PhoneFrame } from "@/components/phone-frame";
-import { CrawlerProof } from "@/components/crawler-proof";
+import { GoogleProof } from "@/components/google-proof";
 import { CartCheckoutMock, ConfirmationMock, ItemSheetMock } from "@/components/mocks/item-cart-mock";
 import { PrinterTicketMock } from "@/components/mocks/printer-ticket-mock";
 import { StorefrontMenuMock } from "@/components/mocks/storefront-menu-mock";
@@ -48,7 +48,7 @@ const visuals = {
       </PhoneFrame>
     </div>
   ),
-  google: <CrawlerProof />,
+  google: <GoogleProof />,
   service: (
     <AssetSlot
       id="onboarding-team"

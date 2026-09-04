@@ -6,49 +6,65 @@ Brand judgment: warm cream paper, palm-green accent (Sabal is a palm genus), Out
 
 **Commercial note:** this copy is flat monthly + processing at cost, no per-order commission. The MSA draft still says 5% of each online order. Reconcile before launch.
 
+**Honesty:** we guarantee crawler-readable HTML, structured data, dish-and-city pages, and a fast site. We never promise rankings, positions, timelines, or traffic.
+
 ---
 
 ## Brand
 
 - **Name:** Sabal
 - **Domain:** sabalmenu.com
-- **Tagline:** Your menu on Google. Your orders on your site.
-- **Description:** Sabal builds SEO-first websites and commission-free online ordering for independent restaurants. We set it up with you. No self-serve signup.
+- **Tagline / default title:** Restaurant websites Google can actually read
+- **Description:** Most restaurant websites load the menu with code Google skips. Sabal serves every dish, price, and description in the HTML Google reads — plus commission-free ordering we set up with you.
 
 ## Home
 
+### Headline candidates (build uses #1)
+
+1. **Google can't read your menu. We fix that.** ← live H1
+2. Your best dish is invisible to Google.
+3. When Google reads your website, it sees nothing. Change that.
+4. 220 dishes. Google sees 0. That's why they order elsewhere. *(illustrative count — not a live restaurant)*
+5. Google can only rank a menu it can read.
+
 **Kicker:** For independent restaurants
 
-**H1:** Get found on Google. Keep the order. Keep the margin.
-
-**Body:** Sabal gives you a website Google can actually read and ordering that stays on your domain. We set it up with you. You stay the merchant. No marketplace in the middle.
+**Body:** Most restaurant websites load the menu with code Google skips. Sabal serves every dish, price, and description in the exact form Google reads — so when someone nearby searches for what you cook, the menu is actually there to be read.
 
 **Primary CTA:** Book a demo  
-**Secondary CTA:** See the product
+**Secondary CTA:** See what Google sees → `#what-google-sees`
 
-### How Google sees your menu
+### Proof — What Google actually sees
 
-Most restaurant sites hide the menu behind JavaScript, a PDF, or a photo. A crawler opens the page and finds an empty box. Sabal prints every dish, price, and description into the HTML — plus structured data — so a search for the food you cook can find you.
+Caption: Google decides who shows up in local search by reading websites. It can only rank what it can read.
 
-- Left: A typical JavaScript menu — What a crawler often gets: an empty page.
-- Right: A Sabal menu — What a crawler gets: every dish, price, and description.
+Toggle: What diners see / What Google sees
+
+- Left: A typical restaurant site — Menu items visible to Google: 0
+- Right: A Sabal site — Menu items visible to Google: every single one
+
+Diner note: Both can look like a normal menu. That is the trap.  
+Google note: Stylized markup — not any real restaurant's source.
+
+### Honesty pull-quote
+
+> Nobody honest can promise you a ranking. We promise Google can finally read you — completely. The rest compounds from there.
+
+We guarantee crawler-readable HTML, structured data on every item, dish-and-city pages, and a fast site. We do not promise positions, timelines, or traffic.
 
 ### Features
 
-1. **Pages built for the searches people type** — Your menu becomes real web pages. We also build crave-term pages — think /tags/chicken — aimed at “dish + city” searches. Same data the kitchen uses. No thin placeholder copy.
-2. **One tap to add. No account wall.** — Guests add a dish in one tap. Pickup checkout is name, phone, and payment. Tip presets always include a visible None. We do not add a service fee on the diner.
-3. **Tickets that reach the line** — Orders print to the kitchen printers you already use, through your POS — Clover today, more coming — or a cloud printer we ship. If a print fails, a text still goes out. No order disappears.
-4. **No commission on the ticket** — You are the merchant of record. Guests pay you. Sabal charges a flat monthly fee and passes through payment processing at cost. We do not take a cut of the order.
+1. **Every dish is a page Google can read**
+2. **Orders on your site. No cut of the ticket.**
+3. **Tickets that reach the line**
+4. **We set it up. You cook.**
 
-### Savings band
+### Stat band (inputs only)
 
-Example math only. Marketplace commissions commonly listed 15–30%. Midpoint 25% used so the contrast is easy to see. **Verify before launch.**
-
-Example on $10,000 of marketplace orders in a month:
-
-- Marketplace cut at 25% → $2,500
-- Sabal per-order commission → $0
-- What you still pay with Sabal → Monthly + processing (quoted on the call)
+- Menu items in the first HTML → All of them *(storefront SSR)*
+- Taps to add a dish → 1 *(Add control)*
+- Pickup checkout fields → 3 *(name, phone, payment)*
+- Sabal service fee on the diner → $0 *(no service-fee line)*
 
 ### Testimonials
 
@@ -63,23 +79,16 @@ A short call. Your city, your menu, what you already have live. We onboard every
 
 **H1:** From the first search to the ticket on the line
 
-Sections: storefront, ordering (one tap, guest checkout, visible None tip, no diner service fee), kitchen printing, Google/HTML + /tags/chicken, full-service onboarding.
+Google section now says we do not promise a ranking — we promise the page is readable.
 
 ## Pricing
 
 **H1:** A flat monthly fee. No cut of the order.
 
-Three cards: Monthly (quoted with you) · Card processing (at cost) · Per-order commission ($0)
-
-Contrast table vs **marketplaces as a category**. Never name a company.
-
 ## About
 
 **H1:** Built in Orlando for independent restaurants
 
-Honesty rules: no fake urgency, no exit popups, no invented reviews, tip None, no diner service fee. If a draft starts in a tool, a person signs off.
-
 ## Demo
 
-Fields: name, restaurant, phone, city.  
-Success: Received. Someone from Sabal will write you back.
+Fields: name, restaurant, phone, city.
