@@ -4,6 +4,9 @@ import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
 
+const EMAIL =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function field(value: unknown, max: number) {
   if (typeof value !== "string") return "";
   return value.replace(/\s+/g, " ").trim().slice(0, max);
@@ -24,23 +27,39 @@ export async function POST(request: Request) {
   const name = field(body.name, 120);
   const restaurant = field(body.restaurant, 160);
   const city = field(body.city, 120);
+  const email = field(body.email, 160);
   const phone = field(body.phone, 40);
+  const message = field(body.message, 2000);
 
-  if (!name || !restaurant || !city || !phone) {
+  if (!name || !restaurant || !city) {
     return NextResponse.json(
-      { ok: false, error: "Name, restaurant, phone, and city are required." },
+      { ok: false, error: "Name, restaurant, and city are required." },
       { status: 400 },
     );
+  }
+
+  if (!email && !phone) {
+    return NextResponse.json(
+      { ok: false, error: "Add an email or a phone number." },
+      { status: 400 },
+    );
+  }
+
+  if (email && !EMAIL.test(email)) {
+    return NextResponse.json({ ok: false, error: "That email does not look valid." }, { status: 400 });
   }
 
   const text = [
     `Name: ${name}`,
     `Restaurant: ${restaurant}`,
     `City: ${city}`,
-    `Phone: ${phone}`,
+    `Email: ${email || "—"}`,
+    `Phone: ${phone || "—"}`,
+    "",
+    message || "(no message)",
   ].join("\n");
 
-  const payload = { name, restaurant, city, phone };
+  const payload = { name, restaurant, city, email, phone, message };
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -61,6 +80,7 @@ export async function POST(request: Request) {
   const { error } = await resend.emails.send({
     from,
     to,
+    replyTo: email || undefined,
     subject: `Demo request: ${restaurant} (${city})`,
     text,
   });

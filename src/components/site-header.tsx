@@ -14,10 +14,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         <Link href="/" className="shrink-0" aria-label="Sabal home">
           <Logo />
         </Link>
-        <nav
-          className="hidden items-center gap-6 text-sm font-medium text-ink-soft lg:flex"
-          aria-label="Primary"
-        >
+        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-soft lg:flex" aria-label="Primary">
           {nav.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-ink">
               {item.label}
@@ -25,7 +22,10 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
           ))}
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
-          <a href={appUrl} className="text-sm font-medium text-ink-soft hover:text-ink">
+          <a
+            href={appUrl}
+            className="text-sm font-medium text-ink-soft hover:text-ink"
+          >
             Log in
           </a>
           <Link
@@ -37,7 +37,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         </div>
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-paper-2 lg:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
@@ -49,11 +49,8 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         </button>
       </div>
       {open ? (
-        <div
-          id="mobile-nav"
-          className="border-t border-line bg-paper-2 px-5 py-5 shadow-sm lg:hidden"
-        >
-          <nav className="flex flex-col gap-4 text-base font-medium" aria-label="Mobile">
+        <div id="mobile-nav" className="border-t border-line px-5 py-4 lg:hidden">
+          <nav className="flex flex-col gap-3 text-base font-medium" aria-label="Mobile">
             {nav.map((item) => (
               <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>
                 {item.label}

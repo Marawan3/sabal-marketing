@@ -3,7 +3,9 @@ import { absoluteUrl } from "@/lib/site";
 
 const paths = [
   "/",
-  "/product",
+  "/how-it-works",
+  "/online-ordering",
+  "/restaurant-seo",
   "/pricing",
   "/demo",
   "/about",

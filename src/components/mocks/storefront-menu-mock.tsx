@@ -1,16 +1,9 @@
-import { DishPlaceholder } from "@/components/asset-slot";
+import Image from "next/image";
 import { demoDishes, demoKitchen } from "@/lib/demo-kitchen";
-
-const tones = {
-  "citrus-herb-chicken": "wood",
-  "charred-cauliflower": "wood",
-  "grove-greens": "garden",
-  "tomato-bread": "bread",
-} as const;
 
 export function StorefrontMenuMock() {
   return (
-    <div className="h-full bg-white text-zinc-900">
+    <div className="bg-white text-zinc-900">
       <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-product text-xs font-bold text-white">
@@ -40,10 +33,13 @@ export function StorefrontMenuMock() {
       <div className="divide-y divide-zinc-100">
         {demoDishes.map((dish) => (
           <div key={dish.slug} className="flex gap-3 px-4 py-3">
-            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
-              <DishPlaceholder
-                name={dish.name}
-                tone={tones[dish.slug as keyof typeof tones] ?? "wood"}
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-zinc-100">
+              <Image
+                src={dish.photo}
+                alt={dish.alt}
+                fill
+                sizes="64px"
+                className="object-cover"
               />
             </div>
             <div className="min-w-0 flex-1">

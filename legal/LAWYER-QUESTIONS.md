@@ -12,7 +12,7 @@
 
 ## Fees (MSA § fees)
 
-6. **Commercial model — reconcile.** The MSA draft still says **5% of each online order**. The marketing site (this rebuild) now says **flat monthly + payment processing at cost, no commission / per-order fee**. Pick one before publishing either page. **Neither model is implemented in NMI sale code.** No `platform_fee` line exists.
+6. **5% of each online order** is the commercial term Marawan confirmed (a $10 ticket → 50¢). **It is not implemented in NMI sale code.** No `platform_fee` line exists. Decide: invoice in arrears, withhold from settlement, or add a Sabal line at the processor. The public pricing page states the 5% number; it does not claim a collection mechanic.
 7. **What the 5% is measured on.** Merchandise only? After discounts? Including tax, tip, delivery quote? Code has those as separate money fields.
 8. **Card processing.** Drafts treat processor (NMI) rates as the restaurant’s cost, not Sabal’s 5%. Confirm.
 9. **Delivery-network partner fees.** Pass-through, not Sabal’s 5%. Partner is DoorDash Drive in code; marketing site still does not name them publicly.

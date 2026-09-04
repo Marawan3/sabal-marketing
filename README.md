@@ -1,8 +1,8 @@
-# Sabal marketing site (sabalmenu.com)
+# Sabal marketing site
 
-Standalone Next.js site for Sabal. This is **not** the ROS dashboard and is **not** inside the ROS monorepo.
+Standalone Next.js site for Sabal (restaurant websites + online ordering). This is **not** the ROS dashboard and is **not** inside the ROS monorepo.
 
-Every marketing page is prerendered. The only server code is `POST /api/demo`, which emails a demo request (Resend) and optionally forwards to a webhook. No database, no Clerk, no Blob, no NMI.
+Every page is prerendered. The only server code is `POST /api/demo`, which emails a demo request (Resend) and optionally forwards to a webhook. No database, no Clerk, no Blob, no NMI.
 
 ## Local
 
@@ -12,56 +12,34 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+## Domain (needs a decision)
 
-```bash
-npm run honesty      # bans fake social proof
-npm run copy-lint    # bans hype phrases
-npm run boundary-check
-npm run build
-```
+ROS currently lives on `https://sabal.ai`. Do **not** move it until this is approved.
 
-## Edit copy
+- **Option A (recommended):** marketing at `sabal.ai`, ROS moves to `app.sabal.ai`. Touches `NEXT_PUBLIC_APP_URL`, Clerk allowed origins/redirects, invitation links, NMI webhook URLs, and any hardcoded `sabal.ai` links in ROS. Do not execute those in this repo.
+- **Option B (zero-risk interim):** marketing at `www.sabal.ai`, apex 308s to www, ROS stays on the apex. Swap to A later.
 
-1. Change strings in `src/lib/copy.ts`.
-2. Mirror the same words in `COPY.md` so the founder review file stays current.
-3. Keep claims true. Any number needs a `source` comment in `copy.ts`.
+Until a domain is attached, deploys stay `noindex`. Indexing turns on when `NEXT_PUBLIC_SITE_URL` is `sabal.ai` / `www.sabal.ai`, or when `NEXT_PUBLIC_ALLOW_INDEXING=true`.
 
-## Swap assets
+Set `NEXT_PUBLIC_APP_URL` to the current ROS origin so header **Log in** works. Today that is `https://sabal.ai`.
 
-See `ASSETS.md`. Placeholder slots use `REPLACE: id` and `data-asset-slot`. Phone frames expect **390×844**. Desktop slots are **16:10 / 1440×900**.
+## Launch checklist
 
-Design tokens live in `src/app/globals.css` (`:root`). Palm green `#1e4d32` / `#2e6b45` is the accent (Sabal is a palm genus). Cream paper, Outfit type. Revisable.
-
-## Pages
-
-| Path | Role |
-|---|---|
-| `/` | Hero, Google-crawler proof, features, savings example, testimonial placeholders, demo form |
-| `/product` | Storefront, ordering, kitchen, SEO, onboarding |
-| `/pricing` | Flat monthly + processing at cost vs marketplaces as a category |
-| `/about` | Orlando, independents, honesty rules |
-| `/demo` | Name, restaurant, phone, city |
-| Legal | Drafts until counsel signs off |
-
-Old URLs `/how-it-works`, `/online-ordering`, `/restaurant-seo` 308 to `/product`.
-
-## Domain
-
-Intended public origin: **sabalmenu.com**. Indexing turns on when `NEXT_PUBLIC_SITE_URL` is `sabalmenu.com` / `www.sabalmenu.com` (or `sabal.ai` / `www.sabal.ai`), or when `NEXT_PUBLIC_ALLOW_INDEXING=true`.
-
-`NEXT_PUBLIC_APP_URL` is the ROS sign-in (today `https://sabal.ai`).
-
-## Deploy
-
-Vercel project `sabal-marketing`. Production branch is `main`. Previews stay `noindex` until the host matches above.
-
-Set `RESEND_API_KEY`, `RESEND_FROM`, and `DEMO_INBOX` so the demo form delivers.
+- [ ] Domain option A or B chosen
+- [ ] `NEXT_PUBLIC_SITE_URL` set to the public origin
+- [ ] `noindex` gone (host match or `NEXT_PUBLIC_ALLOW_INDEXING`)
+- [ ] `RESEND_API_KEY`, `RESEND_FROM`, `DEMO_INBOX` set; demo form delivers
+- [ ] Google Search Console verified, sitemap submitted, Rich Results clean
+- [ ] Lighthouse ≥ 95 on the production URL
+- [ ] Legal pages reviewed (`legal/` drafts; `/privacy`, `/terms`, `/platform-terms`, `/dpa`, `/accessibility` stay draft until counsel signs off)
+- [ ] Delivery-network partner named on `/online-ordering` only after it is public
+- [ ] Real product screenshots swapped in if the HTML mockups are no longer close enough
+- [ ] Entity name filled; `LAWYER-QUESTIONS.md` walked with counsel before treating legal pages as binding
 
 ## Honesty
 
-No testimonials until a restaurant agrees. No named competitors. No fake urgency or exit popups. Marketplace contrast uses a **labeled example** (25% midpoint of a commonly published 15–30% range) — verify before treating as a launch claim.
+No testimonials, invented metrics, named-competitor comparisons, or ranking guarantees. `npm run honesty` greps the copy.
 
-## Pricing conflict (do not ignore)
+## Screenshots
 
-Marketing pages now say **flat monthly + processing at cost, $0 per-order commission**. The MSA draft in `legal/` still says **5% of each online order**. `LAWYER-QUESTIONS.md` item 6 tracks the reconcile.
+Product frames are HTML reconstructions of the live storefront, KDS, and SEO score panel, using the Sabal product navy (`#003e80`) and a clean internal demo tenant named **Sabal Demo Kitchen**. Food photos are Unsplash, used only as dish photography on that demo menu.

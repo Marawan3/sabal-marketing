@@ -1,25 +1,24 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { demoCopy } from "@/lib/copy";
 
 type Status = "idle" | "submitting" | "sent" | "error";
-
-const empty = { name: "", restaurant: "", phone: "", city: "" };
 
 export function DemoForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
-  const [fields, setFields] = useState(empty);
-
-  function update(name: keyof typeof empty, value: string) {
-    setFields((current) => ({ ...current, [name]: value }));
-  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const honeypot = new FormData(form).get("company_website");
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "").trim();
+    const phone = String(data.get("phone") ?? "").trim();
+    if (!email && !phone) {
+      setStatus("error");
+      setMessage("Add an email or a phone number.");
+      return;
+    }
     setStatus("submitting");
     setMessage("");
 
@@ -28,8 +27,13 @@ export function DemoForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...fields,
-          company_website: honeypot,
+          name: data.get("name"),
+          restaurant: data.get("restaurant"),
+          city: data.get("city"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          message: data.get("message"),
+          company_website: data.get("company_website"),
         }),
       });
       const payload = (await response.json()) as { ok?: boolean; error?: string };
@@ -39,7 +43,7 @@ export function DemoForm() {
         return;
       }
       setStatus("sent");
-      setFields(empty);
+      form.reset();
     } catch {
       setStatus("error");
       setMessage("Network error. Try again, or email us directly.");
@@ -48,8 +52,10 @@ export function DemoForm() {
 
   if (status === "sent") {
     return (
-      <p className="rounded-3xl border border-palm/30 bg-leaf px-5 py-8 text-sm leading-6 text-ink">
-        {demoCopy.success}
+      <p className="rounded-2xl border border-palm/30 bg-leaf px-5 py-8 text-sm leading-6 text-ink">
+        Received. Someone from Sabal will write you back. We onboard every
+        restaurant personally, so expect a real conversation rather than an
+        automated sequence.
       </p>
     );
   }
@@ -57,48 +63,31 @@ export function DemoForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          label={demoCopy.fields.name}
-          name="name"
-          value={fields.name}
-          onChange={update}
-          required
-          autoComplete="name"
-        />
-        <Field
-          label={demoCopy.fields.restaurant}
-          name="restaurant"
-          value={fields.restaurant}
-          onChange={update}
-          required
-        />
-        <Field
-          label={demoCopy.fields.phone}
-          name="phone"
-          type="tel"
-          value={fields.phone}
-          onChange={update}
-          required
-          autoComplete="tel"
-        />
-        <Field
-          label={demoCopy.fields.city}
-          name="city"
-          value={fields.city}
-          onChange={update}
-          required
-          autoComplete="address-level2"
-        />
+        <Field label="Your name" name="name" required autoComplete="name" />
+        <Field label="Restaurant" name="restaurant" required />
+        <Field label="City" name="city" required autoComplete="address-level2" />
+        <Field label="Email" name="email" type="email" autoComplete="email" />
+        <Field label="Phone" name="phone" type="tel" autoComplete="tel" />
       </div>
+      <label className="block text-sm">
+        <span className="font-medium">What should we look at?</span>
+        <textarea
+          name="message"
+          rows={4}
+          className="mt-1 w-full rounded-xl border border-line bg-paper-2 px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
+        />
+      </label>
       <div className="hidden" aria-hidden>
         <label>
           Company website
           <input name="company_website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
-      <p className="text-xs text-ink-soft">{demoCopy.requiredNote}</p>
+      <p className="text-xs text-ink-soft">
+        Email or phone is required. We will not add you to a newsletter.
+      </p>
       {status === "error" ? (
-        <p className="rounded-2xl bg-sand px-4 py-3 text-sm text-clay" role="alert">
+        <p className="text-sm text-rose-400" role="alert">
           {message}
         </p>
       ) : null}
@@ -107,7 +96,7 @@ export function DemoForm() {
         disabled={status === "submitting"}
         className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-on-brand hover:bg-palm disabled:opacity-60"
       >
-        {status === "submitting" ? demoCopy.submitting : demoCopy.submit}
+        {status === "submitting" ? "Sending…" : "Request a demo"}
       </button>
     </form>
   );
@@ -117,16 +106,12 @@ function Field({
   label,
   name,
   type = "text",
-  value,
-  onChange,
   required,
   autoComplete,
 }: {
   label: string;
-  name: keyof typeof empty;
+  name: string;
   type?: string;
-  value: string;
-  onChange: (name: keyof typeof empty, value: string) => void;
   required?: boolean;
   autoComplete?: string;
 }) {
@@ -136,10 +121,8 @@ function Field({
       <input
         name={name}
         type={type}
-        value={value}
         required={required}
         autoComplete={autoComplete}
-        onChange={(event) => onChange(name, event.target.value)}
         className="mt-1 w-full rounded-xl border border-line bg-paper-2 px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
       />
     </label>

@@ -1,10 +1,10 @@
-import { brand } from "./copy";
-
 export const site = {
-  name: brand.name,
-  tagline: brand.tagline,
-  description: brand.description,
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@sabal.ai",
+  name: "Sabal",
+  tagline: "Restaurant websites that rank, and ordering you own.",
+  description:
+    "Sabal gives restaurants a website built to rank on Google and an ordering system built to convert — on your own domain, with your own customers.",
+  contactEmail:
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@sabal.ai",
   appUrl: (process.env.NEXT_PUBLIC_APP_URL ?? "https://sabal.ai").replace(
     /\/$/,
     "",
@@ -12,7 +12,9 @@ export const site = {
 } as const;
 
 export const nav = [
-  { href: "/product", label: "Product" },
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/online-ordering", label: "Online Ordering" },
+  { href: "/restaurant-seo", label: "Restaurant SEO" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
 ] as const;
@@ -24,13 +26,6 @@ export const legalNav = [
   { href: "/dpa", label: "DPA" },
   { href: "/accessibility", label: "Accessibility" },
 ] as const;
-
-const indexHosts = new Set([
-  "sabalmenu.com",
-  "www.sabalmenu.com",
-  "sabal.ai",
-  "www.sabal.ai",
-]);
 
 export function getSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
@@ -49,7 +44,8 @@ export function shouldIndex() {
   if (flag === "true") return true;
   if (flag === "false") return false;
   try {
-    return indexHosts.has(new URL(getSiteUrl()).hostname);
+    const host = new URL(getSiteUrl()).hostname;
+    return host === "sabal.ai" || host === "www.sabal.ai";
   } catch {
     return false;
   }

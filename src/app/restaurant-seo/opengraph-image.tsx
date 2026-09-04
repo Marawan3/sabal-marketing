@@ -1,9 +1,9 @@
 import { createOgImage, ogContentType, ogSize } from "@/lib/og-image";
 
-export const alt = "Book a Sabal demo";
+export const alt = "Restaurant SEO that's built in, not bolted on";
 export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return createOgImage("Book a walkthrough of your menu.", "Demo");
+  return createOgImage("Restaurant SEO that's built in, not bolted on.", "Flagship");
 }
