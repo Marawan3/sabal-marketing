@@ -37,7 +37,7 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         </div>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-paper-2 lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
@@ -49,8 +49,11 @@ export function SiteHeader({ appUrl }: { appUrl: string }) {
         </button>
       </div>
       {open ? (
-        <div id="mobile-nav" className="border-t border-line px-5 py-4 lg:hidden">
-          <nav className="flex flex-col gap-3 text-base font-medium" aria-label="Mobile">
+        <div
+          id="mobile-nav"
+          className="border-t border-line bg-paper-2 px-5 py-5 shadow-sm lg:hidden"
+        >
+          <nav className="flex flex-col gap-4 text-base font-medium" aria-label="Mobile">
             {nav.map((item) => (
               <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>
                 {item.label}

@@ -5,14 +5,21 @@ import { demoCopy } from "@/lib/copy";
 
 type Status = "idle" | "submitting" | "sent" | "error";
 
+const empty = { name: "", restaurant: "", phone: "", city: "" };
+
 export function DemoForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [fields, setFields] = useState(empty);
+
+  function update(name: keyof typeof empty, value: string) {
+    setFields((current) => ({ ...current, [name]: value }));
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const data = new FormData(form);
+    const honeypot = new FormData(form).get("company_website");
     setStatus("submitting");
     setMessage("");
 
@@ -21,11 +28,8 @@ export function DemoForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: data.get("name"),
-          restaurant: data.get("restaurant"),
-          city: data.get("city"),
-          phone: data.get("phone"),
-          company_website: data.get("company_website"),
+          ...fields,
+          company_website: honeypot,
         }),
       });
       const payload = (await response.json()) as { ok?: boolean; error?: string };
@@ -35,7 +39,7 @@ export function DemoForm() {
         return;
       }
       setStatus("sent");
-      form.reset();
+      setFields(empty);
     } catch {
       setStatus("error");
       setMessage("Network error. Try again, or email us directly.");
@@ -53,18 +57,35 @@ export function DemoForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={demoCopy.fields.name} name="name" required autoComplete="name" />
-        <Field label={demoCopy.fields.restaurant} name="restaurant" required />
+        <Field
+          label={demoCopy.fields.name}
+          name="name"
+          value={fields.name}
+          onChange={update}
+          required
+          autoComplete="name"
+        />
+        <Field
+          label={demoCopy.fields.restaurant}
+          name="restaurant"
+          value={fields.restaurant}
+          onChange={update}
+          required
+        />
         <Field
           label={demoCopy.fields.phone}
           name="phone"
           type="tel"
+          value={fields.phone}
+          onChange={update}
           required
           autoComplete="tel"
         />
         <Field
           label={demoCopy.fields.city}
           name="city"
+          value={fields.city}
+          onChange={update}
           required
           autoComplete="address-level2"
         />
@@ -77,7 +98,7 @@ export function DemoForm() {
       </div>
       <p className="text-xs text-ink-soft">{demoCopy.requiredNote}</p>
       {status === "error" ? (
-        <p className="text-sm text-clay" role="alert">
+        <p className="rounded-2xl bg-sand px-4 py-3 text-sm text-clay" role="alert">
           {message}
         </p>
       ) : null}
@@ -96,12 +117,16 @@ function Field({
   label,
   name,
   type = "text",
+  value,
+  onChange,
   required,
   autoComplete,
 }: {
   label: string;
-  name: string;
+  name: keyof typeof empty;
   type?: string;
+  value: string;
+  onChange: (name: keyof typeof empty, value: string) => void;
   required?: boolean;
   autoComplete?: string;
 }) {
@@ -111,8 +136,10 @@ function Field({
       <input
         name={name}
         type={type}
+        value={value}
         required={required}
         autoComplete={autoComplete}
+        onChange={(event) => onChange(name, event.target.value)}
         className="mt-1 w-full rounded-xl border border-line bg-paper-2 px-3 py-2 text-ink outline-none ring-palm/30 focus:ring-2"
       />
     </label>
