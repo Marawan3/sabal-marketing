@@ -2,50 +2,68 @@ import { test } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
 const outDir = process.env.SCREENSHOT_DIR ?? "evidence/screenshots";
-const sections = [
+const homeSections = [
   "top",
   "proof",
-  "problem",
-  "how-it-works",
-  "features",
+  "sell",
+  "discovery",
+  "delivery",
+  "catering",
+  "guest",
+  "growth",
+  "operations",
+  "analytics",
+  "scale",
+  "integrations",
   "pricing",
-  "promise",
+  "customer-proof",
   "faq",
   "cta",
 ] as const;
+const pages = [
+  "online-ordering",
+  "delivery",
+  "guest-feedback",
+  "restaurant-seo",
+  "order-management",
+  "menu-check",
+  "pricing",
+  "how-it-works",
+  "solutions/independent-restaurants",
+] as const;
 
-test.describe("section screenshots", () => {
-  test("390 and 1440", async ({ page }) => {
+test.describe("screenshots", () => {
+  test("home sections, mega-menu, and key pages at 390 and 1440", async ({ page }) => {
     mkdirSync(outDir, { recursive: true });
     await page.emulateMedia({ reducedMotion: "reduce" });
     for (const width of [390, 1440] as const) {
-      await page.setViewportSize({
-        width,
-        height: width === 390 ? 844 : 900,
-      });
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
       await page.goto("/");
       await page.evaluate(() => document.fonts.ready);
-      await page.screenshot({
-        path: `${outDir}/home-full-${width}.png`,
-        fullPage: true,
-      });
-      await page.locator("header").screenshot({
-        path: `${outDir}/nav-${width}.png`,
-      });
-      for (const id of sections) {
+      await page.screenshot({ path: `${outDir}/home-full-${width}.png`, fullPage: true });
+      for (const id of homeSections) {
         const section = page.locator(`#${id}`);
         await section.scrollIntoViewIfNeeded();
-        await section.screenshot({
-          path: `${outDir}/${id}-${width}.png`,
+        await section.screenshot({ path: `${outDir}/home-${id}-${width}.png` });
+      }
+      if (width === 1440) {
+        await page.locator("header summary", { hasText: "Product" }).click();
+        await page.screenshot({
+          path: `${outDir}/mega-menu-${width}.png`,
+          clip: { x: 0, y: 0, width: 1440, height: 420 },
+        });
+      } else {
+        await page.locator("header summary", { hasText: "Menu" }).click();
+        await page.screenshot({ path: `${outDir}/mobile-menu-${width}.png` });
+      }
+      for (const path of pages) {
+        await page.goto(`/${path}`);
+        await page.evaluate(() => document.fonts.ready);
+        await page.screenshot({
+          path: `${outDir}/${path.replace("/", "-")}-${width}.png`,
+          fullPage: true,
         });
       }
-    }
-    for (const path of ["terms", "privacy"] as const) {
-      await page.goto(`/${path}`);
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.screenshot({ path: `${outDir}/${path}-390.png`, fullPage: true });
-      await page.setViewportSize({ width: 1440, height: 900 });
-      await page.screenshot({ path: `${outDir}/${path}-1440.png`, fullPage: true });
     }
   });
 });

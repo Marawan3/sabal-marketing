@@ -1,5 +1,5 @@
 /**
- * Wuntab mark. Geometry is locked (wuntab-rebrand-spec.md §2): rounded-square
+ * WunTab mark. Geometry is locked (wuntab-rebrand-spec.md §2): rounded-square
  * tile, one-stroke W with the raised center peak, WUNTAB wordmark in caps at
  * weight 500 with wide tracking. Colors are recolored for this palette:
  *   light surfaces: ink tile, saffron stroke, ink wordmark
@@ -70,7 +70,7 @@ export function Logo({
         className={`font-medium uppercase tracking-[3px] ${wordmark}`}
         style={{ fontSize: Math.round(size * 0.625) }}
       >
-        Wuntab
+        WunTab
       </span>
     </span>
   );
