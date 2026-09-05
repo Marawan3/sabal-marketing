@@ -67,9 +67,7 @@ export function ProofTickets({ left, right }: Ticket) {
         <div className="ticket flex flex-1 flex-col px-6 pt-6 pb-10 sm:px-8 sm:pt-8 sm:pb-12">
           <p className="text-small font-medium text-ink/72">{left.title}</p>
           <div className="my-auto py-10">
-            <p className="text-stat text-tomato" aria-label={`${left.count} ${left.label}`}>
-              {left.count}
-            </p>
+            <p className="text-stat text-tomato">{left.count}</p>
             <p className="mt-2 text-lead font-medium">{left.label}</p>
           </div>
           <p className="max-w-[28ch] text-small text-ink/72">{left.note}</p>
@@ -111,8 +109,9 @@ export function ProofTickets({ left, right }: Ticket) {
               {right.more}
             </li>
           </ul>
-          <p className="mt-6 text-stat" aria-label={`${right.total} ${right.label}`}>
+          <p className="mt-6 text-stat">
             <span aria-hidden>{count}</span>
+            <span className="sr-only">{right.total}</span>
           </p>
           <p className="mt-2 text-lead font-medium">{right.label}</p>
         </div>
