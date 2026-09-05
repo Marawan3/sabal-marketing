@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   const index = shouldIndex();
   return {
     rules: index
-      ? { userAgent: "*", allow: "/", disallow: ["/api/"] }
+      ? { userAgent: "*", allow: "/" }
       : { userAgent: "*", disallow: "/" },
     sitemap: absoluteUrl("/sitemap.xml"),
   };

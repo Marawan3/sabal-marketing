@@ -7,9 +7,10 @@ const forbidden = [
   "BLOB_READ_WRITE_TOKEN",
   "NMI_SECURITY_KEY",
   "NMI_PRIVATE_KEY",
+  "RESEND_API_KEY",
 ];
 
-const files = [".env.local", ".env", ".env.production"];
+const files = [".env.local", ".env", ".env.production", ".env.example"];
 let failed = false;
 
 for (const file of files) {
@@ -24,5 +25,13 @@ for (const file of files) {
   }
 }
 
+const pkg = readFileSync(join(process.cwd(), "package.json"), "utf8");
+for (const name of ["resend", "@clerk/nextjs", "prisma", "drizzle-orm"]) {
+  if (pkg.includes(`"${name}"`)) {
+    console.error(`Boundary: package.json must not depend on ${name}`);
+    failed = true;
+  }
+}
+
 if (failed) process.exit(1);
-console.log("boundary-check: marketing app has no ROS secrets in env files");
+console.log("boundary-check: marketing app has no product-repo secrets or DB clients");

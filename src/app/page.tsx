@@ -1,169 +1,168 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BrowserFrame } from "@/components/browser-frame";
 import { Container } from "@/components/container";
-import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
-import { StorefrontMenuMock } from "@/components/mocks/storefront-menu-mock";
-import { DemoForm } from "@/components/demo-form";
-import { softwareApplicationSchema } from "@/lib/schema";
-import { demoKitchen } from "@/lib/demo-kitchen";
-import { site } from "@/lib/site";
+import { TileMark } from "@/components/logo";
+import { copy } from "@/lib/copy";
+import { faqSchema } from "@/lib/schema";
+import { demoHref, site } from "@/lib/site";
 
 export const dynamic = "error";
 
 export const metadata: Metadata = {
-  title: { absolute: "Sabal — Restaurant websites that rank, and ordering you own" },
+  title: { absolute: `${copy.hero.headline} · Wuntab` },
   description: site.description,
   alternates: { canonical: "/" },
 };
 
-const pillars = [
-  {
-    href: "/restaurant-seo",
-    title: "Get found on Google",
-    body: "Your menu becomes real web pages. Dishes, neighborhoods, hours, and schema — generated from the same data the kitchen uses.",
-  },
-  {
-    href: "/online-ordering",
-    title: "Take orders directly",
-    body: "Pickup and delivery checkout on your domain. Your customers, your merchant account. Five percent of the ticket.",
-  },
-  {
-    href: "/online-ordering#kitchen",
-    title: "Run the kitchen",
-    body: "Tickets land on a kitchen display. Diners get tracking and SMS as the ticket moves.",
-  },
-  {
-    href: "/restaurant-seo#checklist",
-    title: "Know it's working",
-    body: "A launch checklist that will not call the site ready until the menu, schema, photos, and Google Business Profile all check out.",
-  },
-] as const;
-
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={softwareApplicationSchema()} />
-      <section className="overflow-hidden">
-        <Container className="grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
+      <JsonLd data={faqSchema(copy.faq.items)} />
+
+      <section id="top" className="scroll-mt-24">
+        <Container className="grid items-center gap-10 py-16 lg:grid-cols-[auto_1fr] lg:gap-16 lg:py-24">
+          <TileMark className="h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28" />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-palm">
-              Restaurant websites + ordering
-            </p>
-            <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight text-ink sm:text-5xl lg:text-6xl">
-              Your restaurant&apos;s website should be your best salesperson.
+            <h1 className="max-w-3xl text-4xl leading-[1.1] font-medium tracking-tight text-charcoal sm:text-5xl lg:text-6xl">
+              {copy.hero.headline}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink-soft">
-              Sabal gives restaurants a website built to rank on Google and an
-              ordering system built to convert — on your own domain, with your
-              own customers.
+            <p className="mt-6 max-w-xl text-lg leading-8 text-charcoal/80">
+              {copy.hero.sub}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/demo"
-                className="rounded-full bg-palm-deep px-6 py-3 text-sm font-semibold text-on-brand hover:bg-palm"
-              >
-                Book a demo
-              </Link>
-              <Link
-                href="/how-it-works"
-                className="rounded-full border border-ink/15 px-6 py-3 text-sm font-semibold hover:bg-sand"
-              >
-                See how it works
-              </Link>
-            </div>
+            <a
+              href={demoHref}
+              className="mt-8 inline-flex rounded-[12px] bg-brick px-6 py-3 text-sm font-medium text-cream hover:bg-brick/90"
+            >
+              {copy.hero.cta}
+            </a>
           </div>
-          <BrowserFrame
-            url={demoKitchen.url}
-            label="Sabal Demo Kitchen storefront menu in a browser frame"
-          >
-            <StorefrontMenuMock />
-          </BrowserFrame>
         </Container>
       </section>
 
-      <section className="border-y border-line bg-sand/50">
-        <Container className="grid gap-8 py-14 md:grid-cols-3">
-          <Problem
-            title="Marketplaces own the guest"
-            body="They charge commissions and keep the customer relationship. You cook. They stay in the middle."
-          />
-          <Problem
-            title="Most website builders hide the menu"
-            body="PDFs, photos of chalkboard specials, and client-only rendering leave Google with a blank page."
-          />
-          <Problem
-            title="Dish searches miss you"
-            body={`Most restaurant sites never show up for “grove greens near me.” The menu never became a page.`}
-          />
-        </Container>
-      </section>
-
-      <section>
-        <Container className="py-20">
-          <h2 className="max-w-2xl font-display text-3xl tracking-tight sm:text-4xl">
-            Four things Sabal actually does.
+      <section id="proof" className="scroll-mt-24 border-y border-charcoal/10">
+        <Container className="py-16 sm:py-20">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.proof.heading}
           </h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {pillars.map((pillar, index) => (
-              <Link
-                key={pillar.title}
-                href={pillar.href}
-                className="rounded-2xl border border-line bg-paper-2 p-6 hover:border-palm/40"
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {copy.proof.cards.map((card) => (
+              <article
+                key={card.stat}
+                className="rounded-[12px] border border-charcoal/10 bg-sand/35 p-6"
               >
-                <p className="font-display text-sm text-palm">
-                  {String(index + 1).padStart(2, "0")}
+                <p className="text-2xl font-medium tracking-tight text-brick">
+                  {card.stat}
                 </p>
-                <h3 className="mt-2 font-display text-2xl">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-ink-soft">{pillar.body}</p>
-                <span className="mt-4 inline-block text-sm font-semibold text-palm-deep">
-                  Learn more
-                </span>
-              </Link>
+                <p className="mt-3 text-sm leading-6 text-charcoal/80">
+                  {card.body}
+                </p>
+              </article>
             ))}
           </div>
-        </Container>
-      </section>
-
-      <section className="border-y border-line bg-leaf/40">
-        <Container className="py-16">
-          <h2 className="font-display text-3xl tracking-tight">
-            We practice what we sell.
-          </h2>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-ink-soft">
-            This site and every Sabal storefront ship as server-rendered HTML,
-            with structured data and a clean sitemap. There is no testimonial
-            wall here. View source on this page. If Google can read it, a diner
-            searching for a dish can too.
+          <aside className="mt-4 rounded-[12px] border border-charcoal/10 bg-cream p-6">
+            <p className="text-xl font-medium tracking-tight text-charcoal">
+              {copy.proof.aiLine}
+            </p>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-charcoal/80">
+              {copy.proof.aiBody}
+            </p>
+          </aside>
+          <p className="mt-6 text-sm leading-6 text-charcoal/70">
+            {copy.proof.footnote}
           </p>
         </Container>
       </section>
 
-      <section>
-        <Container className="grid items-start gap-12 py-20 lg:grid-cols-2">
-          <div>
-            <h2 className="font-display text-3xl tracking-tight">
-              Book a walkthrough of your menu.
-            </h2>
-            <p className="mt-3 max-w-md text-ink-soft">
-              Built by a small team obsessed with restaurant SEO. We onboard
-              every restaurant personally.
-            </p>
-          </div>
-          <DemoForm />
+      <section id="how-it-works" className="scroll-mt-24">
+        <Container className="py-16 sm:py-20">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.how.heading}
+          </h2>
+          <ol className="mt-10 grid gap-6 md:grid-cols-3">
+            {copy.how.steps.map((step, index) => (
+              <li
+                key={step.title}
+                className="rounded-[12px] border border-charcoal/10 p-6"
+              >
+                <p className="text-sm font-medium text-brick">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <h3 className="mt-3 text-xl font-medium">{step.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-charcoal/80">
+                  {step.body}
+                </p>
+              </li>
+            ))}
+          </ol>
         </Container>
       </section>
-      <CtaBand />
-    </>
-  );
-}
 
-function Problem({ title, body }: { title: string; body: string }) {
-  return (
-    <div>
-      <h2 className="font-display text-xl">{title}</h2>
-      <p className="mt-2 text-sm leading-6 text-ink-soft">{body}</p>
-    </div>
+      <section id="features" className="scroll-mt-24 border-y border-charcoal/10">
+        <Container className="py-16 sm:py-20">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.features.heading}
+          </h2>
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+            {copy.features.items.map((item) => (
+              <li
+                key={item.title}
+                className="rounded-[12px] border border-charcoal/10 p-6"
+              >
+                <h3 className="text-lg font-medium">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-charcoal/80">
+                  {item.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      <section id="pricing" className="scroll-mt-24">
+        <Container className="py-16 sm:py-20">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.pricing.heading}
+          </h2>
+          <article className="mt-10 max-w-xl rounded-[12px] border border-charcoal/10 bg-sand/35 p-8">
+            <p className="text-xl font-medium leading-8">{copy.pricing.line}</p>
+            <dl className="mt-8 border-t border-charcoal/10 pt-6">
+              <dt className="text-xs font-medium uppercase tracking-[0.16em] text-charcoal/70">
+                {copy.pricing.slotLabel}
+              </dt>
+              <dd className="mt-2 text-2xl font-medium">{copy.pricing.slotValue}</dd>
+              <p className="mt-2 text-sm leading-6 text-charcoal/70">
+                {copy.pricing.slotNote}
+              </p>
+            </dl>
+            <a
+              href={demoHref}
+              className="mt-8 inline-flex rounded-[12px] bg-brick px-6 py-3 text-sm font-medium text-cream hover:bg-brick/90"
+            >
+              {copy.pricing.cta}
+            </a>
+          </article>
+        </Container>
+      </section>
+
+      <section id="faq" className="scroll-mt-24 border-t border-charcoal/10">
+        <Container className="py-16 sm:py-20">
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {copy.faq.heading}
+          </h2>
+          <div className="mt-10 divide-y divide-charcoal/10 border-y border-charcoal/10">
+            {copy.faq.items.map((item) => (
+              <details key={item.question} className="group py-5">
+                <summary className="cursor-pointer text-lg font-medium">
+                  {item.question}
+                </summary>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-charcoal/80">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

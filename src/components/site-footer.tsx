@@ -1,55 +1,46 @@
 import Link from "next/link";
 import { Logo } from "./logo";
-import { legalNav, nav } from "@/lib/site";
+import { copy } from "@/lib/copy";
+import { legalNav, nav, site } from "@/lib/site";
 
-export function SiteFooter({
-  contactEmail,
-}: {
-  contactEmail: string;
-}) {
+export function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-paper-2/60">
+    <footer className="border-t border-charcoal/10">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-4">
         <div className="md:col-span-2">
           <Logo />
-          <p className="mt-4 max-w-sm text-sm leading-6 text-ink-soft">
-            Restaurant websites built to rank, and ordering that stays on your
-            domain. We onboard every restaurant personally.
+          <p className="mt-4 max-w-sm text-sm leading-6 text-charcoal/75">
+            {copy.footer.blurb}
           </p>
           <a
-            href={`mailto:${contactEmail}`}
-            className="mt-4 inline-block text-sm font-medium text-palm-deep hover:underline"
+            href={`mailto:${site.contactEmail}`}
+            className="mt-4 inline-block text-sm font-medium text-brick hover:underline"
           >
-            {contactEmail}
+            {site.contactEmail}
           </a>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft">
-            Product
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-charcoal/70">
+            On this page
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             {nav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:text-palm-deep">
+                <a href={item.href} className="hover:text-brick">
                   {item.label}
-                </Link>
+                </a>
               </li>
             ))}
-            <li>
-              <Link href="/demo" className="hover:text-palm-deep">
-                Book a demo
-              </Link>
-            </li>
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-charcoal/70">
             Legal
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             {legalNav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:text-palm-deep">
+                <Link href={item.href} className="hover:text-brick">
                   {item.label}
                 </Link>
               </li>
@@ -57,9 +48,9 @@ export function SiteFooter({
           </ul>
         </div>
       </div>
-      <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-5 py-5 text-xs text-ink-soft sm:px-8">
-          © {new Date().getFullYear()} Sabal.
+      <div className="border-t border-charcoal/10">
+        <p className="mx-auto max-w-6xl px-5 py-5 text-xs text-charcoal/70 sm:px-8">
+          © {new Date().getFullYear()} Wuntab.
         </p>
       </div>
     </footer>

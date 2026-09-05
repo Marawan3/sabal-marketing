@@ -1,8 +1,10 @@
-# Sabal marketing site
+# Wuntab marketing site
 
-Standalone Next.js site for Sabal (restaurant websites + online ordering). This is **not** the ROS dashboard and is **not** inside the ROS monorepo.
+Standalone Next.js marketing site for **Wuntab** (restaurant websites + commission-free ordering). This is not the product repo and must never import from it.
 
-Every page is prerendered. The only server code is `POST /api/demo`, which emails a demo request (Resend) and optionally forwards to a webhook. No database, no Clerk, no Blob, no NMI.
+Every page is prerendered (`dynamic = "error"`). There is no database, no API route, and no secret. The only CTA is a mailto (or a Cal URL via `NEXT_PUBLIC_DEMO_HREF` when one exists).
+
+All public copy is **draft** until Marawan approves it. Do not promote a production deploy on `wuntab.com` without that sign-off.
 
 ## Local
 
@@ -12,34 +14,24 @@ npm install
 npm run dev
 ```
 
-## Domain (needs a decision)
+```bash
+npm run build
+npm run honesty && npm run copy-lint && npm run boundary-check
+npm run test
+```
 
-ROS currently lives on `https://sabal.ai`. Do **not** move it until this is approved.
+## Domain (Marawan step)
 
-- **Option A (recommended):** marketing at `sabal.ai`, ROS moves to `app.sabal.ai`. Touches `NEXT_PUBLIC_APP_URL`, Clerk allowed origins/redirects, invitation links, NMI webhook URLs, and any hardcoded `sabal.ai` links in ROS. Do not execute those in this repo.
-- **Option B (zero-risk interim):** marketing at `www.sabal.ai`, apex 308s to www, ROS stays on the apex. Swap to A later.
+Attach `wuntab.com` on the Vercel project after copy approval:
 
-Until a domain is attached, deploys stay `noindex`. Indexing turns on when `NEXT_PUBLIC_SITE_URL` is `sabal.ai` / `www.sabal.ai`, or when `NEXT_PUBLIC_ALLOW_INDEXING=true`.
+1. Vercel → project **sabal-marketing** (rename later if you want) → **Settings** → **Domains**
+2. Add `wuntab.com` and `www.wuntab.com`
+3. In the registrar DNS, add the records Vercel shows (usually A `10.0.1.2` for apex, CNAME `cname.vercel-dns.com` for www)
+4. Set `NEXT_PUBLIC_SITE_URL=https://wuntab.com` on Production
+5. Confirm the first HTML response with `curl` before treating it as live
 
-Set `NEXT_PUBLIC_APP_URL` to the current ROS origin so header **Log in** works. Today that is `https://sabal.ai`.
-
-## Launch checklist
-
-- [ ] Domain option A or B chosen
-- [ ] `NEXT_PUBLIC_SITE_URL` set to the public origin
-- [ ] `noindex` gone (host match or `NEXT_PUBLIC_ALLOW_INDEXING`)
-- [ ] `RESEND_API_KEY`, `RESEND_FROM`, `DEMO_INBOX` set; demo form delivers
-- [ ] Google Search Console verified, sitemap submitted, Rich Results clean
-- [ ] Lighthouse ≥ 95 on the production URL
-- [ ] Legal pages reviewed (`legal/` drafts; `/privacy`, `/terms`, `/platform-terms`, `/dpa`, `/accessibility` stay draft until counsel signs off)
-- [ ] Delivery-network partner named on `/online-ordering` only after it is public
-- [ ] Real product screenshots swapped in if the HTML mockups are no longer close enough
-- [ ] Entity name filled; `LAWYER-QUESTIONS.md` walked with counsel before treating legal pages as binding
+Until the host is `wuntab.com` / `www.wuntab.com` (or `NEXT_PUBLIC_ALLOW_INDEXING=true`), the site stays `noindex`.
 
 ## Honesty
 
-No testimonials, invented metrics, named-competitor comparisons, or ranking guarantees. `npm run honesty` greps the copy.
-
-## Screenshots
-
-Product frames are HTML reconstructions of the live storefront, KDS, and SEO score panel, using the Sabal product navy (`#003e80`) and a clean internal demo tenant named **Sabal Demo Kitchen**. Food photos are Unsplash, used only as dish photography on that demo menu.
+No competitor names, invented prices, customer counts, testimonials, or ranking promises. `npm run honesty` greps the source.

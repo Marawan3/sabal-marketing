@@ -2,9 +2,23 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const ROOT = path.join(process.cwd(), "src");
-const BANNED =
-  /\b(trusted by|game-changing|revolutionary|ranks #1|#1 in|aggregateRating|"Review"|star rating)\b/gi;
-const WATCH = /(%|guarantee|#1|trusted by|reviews)/gi;
+const BANNED = [
+  /\bsabal\b/i,
+  /owner\.com/i,
+  /ubereats/i,
+  /uber eats/i,
+  /doordash/i,
+  /grubhub/i,
+  /chownow/i,
+  /square online/i,
+  /\btrusted by\b/i,
+  /game-changing/i,
+  /revolutionary/i,
+  /ranks #1/i,
+  /#1 in/i,
+  /aggregateRating/i,
+  /"@type":\s*"Review"/,
+];
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -19,23 +33,16 @@ async function walk(dir) {
 
 const files = await walk(ROOT);
 let bannedHits = 0;
-const watchHits = [];
 
 for (const file of files) {
   const text = await readFile(file, "utf8");
   const rel = path.relative(process.cwd(), file);
-  for (const match of text.matchAll(BANNED)) {
-    bannedHits += 1;
-    console.error(`BANNED ${rel}: ${match[0]}`);
+  for (const pattern of BANNED) {
+    for (const match of text.matchAll(new RegExp(pattern, "gi"))) {
+      bannedHits += 1;
+      console.error(`BANNED ${rel}: ${match[0]}`);
+    }
   }
-  for (const match of text.matchAll(WATCH)) {
-    watchHits.push(`${rel}: ${match[0]}`);
-  }
-}
-
-if (watchHits.length) {
-  console.log("Review these hits (allowed if they are honest or UI chrome):");
-  for (const hit of watchHits) console.log(`  ${hit}`);
 }
 
 if (bannedHits > 0) {

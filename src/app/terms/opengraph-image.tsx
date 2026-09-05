@@ -1,9 +1,10 @@
+import { copy } from "@/lib/copy";
 import { createOgImage, ogContentType, ogSize } from "@/lib/og-image";
 
-export const alt = "Book a Sabal demo";
+export const alt = copy.legal.termsTitle;
 export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return createOgImage("Book a walkthrough of your menu.", "Demo");
+  return createOgImage(copy.legal.termsTitle);
 }
