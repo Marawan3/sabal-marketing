@@ -1,37 +1,82 @@
 @import "tailwindcss";
 
 :root {
-  --brick: #a8431f;
-  --terracotta: #e07a5f;
-  --charcoal: #2b2b2b;
-  --cream: #faf3ec;
-  --sand: #f2cc8f;
-  --warm: #8a8a8a;
+  --paper: #ffffff;
+  --ink: #17352a;
+  --ticket: #f6f1e7;
+  --saffron: #f2b33d;
+  --saffron-deep: #e0a12e;
+  --tomato: #d9482b;
+  --mist: #e4eae6;
 }
 
 @theme inline {
-  --color-brick: var(--brick);
-  --color-terracotta: var(--terracotta);
-  --color-charcoal: var(--charcoal);
-  --color-cream: var(--cream);
-  --color-sand: var(--sand);
-  --color-warm: var(--warm);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ticket: var(--ticket);
+  --color-saffron: var(--saffron);
+  --color-saffron-deep: var(--saffron-deep);
+  --color-tomato: var(--tomato);
+  --color-mist: var(--mist);
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --shadow-lift:
+    0 1px 2px rgba(23, 53, 42, 0.06), 0 16px 40px -16px rgba(23, 53, 42, 0.22);
+  --text-display: clamp(2.625rem, 7.5vw, 4.75rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 700;
+  --text-h2: clamp(1.875rem, 4vw, 2.75rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h2--font-weight: 700;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.005em;
+  --text-h3--font-weight: 700;
+  --text-stat: clamp(3.5rem, 10vw, 6.5rem);
+  --text-stat--line-height: 0.95;
+  --text-stat--letter-spacing: -0.03em;
+  --text-stat--font-weight: 700;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.5;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.5;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
-  background: var(--cream);
-  color: var(--charcoal);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
   font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: var(--sand);
-  color: var(--charcoal);
+  background: var(--saffron);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--saffron);
 }
 
 .skip-link {
@@ -39,12 +84,76 @@ body {
   left: 1rem;
   top: -100%;
   z-index: 80;
-  border-radius: 12px;
-  background: var(--brick);
+  border-radius: 8px;
+  background: var(--saffron);
   padding: 0.5rem 1rem;
-  color: var(--cream);
+  color: var(--ink);
+  font-weight: 500;
 }
 
 .skip-link:focus {
   top: 1rem;
+}
+
+/* Kitchen ticket: receipt stock with a sawtooth bottom edge. */
+.ticket {
+  background: var(--ticket);
+  padding-bottom: 10px;
+  -webkit-mask:
+    linear-gradient(#000, #000) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom /
+      20px 10px repeat-x;
+  mask:
+    linear-gradient(#000, #000) top / 100% calc(100% - 10px) no-repeat,
+    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom /
+      20px 10px repeat-x;
+}
+
+.ticket-shadow {
+  filter: drop-shadow(0 1px 2px rgba(23, 53, 42, 0.06))
+    drop-shadow(0 16px 24px rgba(23, 53, 42, 0.14));
+}
+
+/* Ticket printing: lines are visible in the first HTML; JS hides then reveals. */
+.print-line {
+  transition:
+    opacity 260ms ease-out,
+    transform 260ms ease-out;
+}
+
+[data-armed="true"] .print-line {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+[data-armed="true"][data-printed="true"] .print-line {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .print-line {
+    transition: none;
+  }
+}
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: "+";
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.faq details[open] summary::after {
+  content: "\2212";
 }

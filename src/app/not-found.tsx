@@ -1,18 +1,15 @@
-import Link from "next/link";
 import { Container } from "@/components/container";
+import { CtaLink } from "@/components/cta-link";
 import { copy } from "@/lib/copy";
 
 export default function NotFound() {
   return (
-    <Container className="py-24">
-      <h1 className="text-4xl font-medium tracking-tight">{copy.notFound.heading}</h1>
-      <p className="mt-3 max-w-md text-charcoal/80">{copy.notFound.body}</p>
-      <Link
-        href="/"
-        className="mt-8 inline-flex rounded-[12px] bg-brick px-5 py-2.5 text-sm font-medium text-cream"
-      >
+    <Container className="py-24 lg:py-32">
+      <h1 className="text-h2">{copy.notFound.heading}</h1>
+      <p className="mt-4 max-w-[48ch] text-lead text-ink/80">{copy.notFound.body}</p>
+      <CtaLink href="/" className="mt-8">
         {copy.notFound.cta}
-      </Link>
+      </CtaLink>
     </Container>
   );
 }

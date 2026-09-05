@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const url = process.argv[2] ?? "http://127.0.0.1:3001";
-const outDir = process.argv[3] ?? "/opt/cursor/artifacts/lighthouse";
+const outDir = process.argv[3] ?? "evidence/lighthouse";
 mkdirSync(outDir, { recursive: true });
 
 const widths = [
@@ -45,7 +45,12 @@ for (const preset of widths) {
     "--output=html",
     `--output-path=${prefix}`,
   ];
-  const run = spawnSync("npx", args, { encoding: "utf8", stdio: "inherit" });
+  const run = spawnSync("npx", args, {
+    encoding: "utf8",
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
+  if (run.error) console.error(run.error);
   if (run.status !== 0) {
     process.exit(run.status ?? 1);
   }

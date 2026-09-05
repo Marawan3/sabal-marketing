@@ -15,5 +15,15 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120_000,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Set PLAYWRIGHT_CHANNEL=chrome to drive installed Chrome when the
+        // bundled browser download is unavailable.
+        channel: process.env.PLAYWRIGHT_CHANNEL,
+      },
+    },
+  ],
 });

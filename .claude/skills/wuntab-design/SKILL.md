@@ -116,29 +116,28 @@ Every section answers one question the owner has. Section content lives in
 `src/lib/copy.ts`. Sections are server components. Native `<details>` for FAQ and the
 mobile menu stays.
 
-1. **Hero.** Question: what is this. A plain headline, one sentence under it, one
-   saffron button, one text link that jumps to the proof. On desktop the right 5
-   columns hold the proof tickets (section 3) or, once rights clear, a phone frame
-   with the live restaurant site. On mobile the tickets stack under the button.
-   Headline direction: "Google can't see most restaurant menus. It can see yours."
-   No stat in the hero.
-2. **The problem, plainly.** Three short sentences in a single text column. Not cards.
-   Tell the owner what a marketplace costs them and why their current site is
-   invisible, in words a five-year-old gets.
-3. **What Google sees (the proof module, the centerpiece).** Two kitchen tickets
-   side by side. Left ticket, headed "A typical restaurant site", prints a single line
-   in `tomato`: "0 menu items Google can read." Right ticket, headed "The same
-   restaurant on Wuntab", prints a scrolling list of real dish names with a count of
-   220. Small footnote under both: measured date, same restaurant, both platforms
-   live at once. No competitor name. No live-site link until rights clear.
+1. **Hero.** Question: what is this. Text only, left-aligned, seven columns wide:
+   a plain headline, one sentence under it, one saffron button, one underlined text
+   link that jumps to the proof. No image, no stat, no card. The proof tickets sit
+   directly under it as the next section, so the hero does not need a visual.
+   Headline: "Google can't see most restaurant menus. It can see yours."
+2. **What Google sees (the proof module, the centerpiece).** Two kitchen tickets
+   side by side, equal height, sawtooth bottom edge. Left ticket, headed "A typical
+   restaurant website", shows a `tomato` 0 and "dishes Google can read". Right
+   ticket, headed "The same restaurant on Wuntab", prints a checklist of dish names,
+   "and 208 more", then 220 in stat size. Footnote: measured date, same restaurant,
+   both sites live at once. Then the AI line. No competitor name. No live-site link
+   until rights clear. Dish names are placeholders until Marawan supplies real ones.
+3. **Here's the problem.** Three short paragraphs in a single text column beside the
+   heading. Not cards. Search, invisible menu, apps take a cut and keep the customer.
 4. **How it works.** A true sequence, so numbers 1, 2, 3 are earned. One row each,
    text left, a product screenshot or framed detail right. We build the site, orders
    print in your kitchen, you keep the money.
 5. **What you get.** A two-column checklist with short plain lines. Not six identical
    cards. Group under two headings: "Getting found" and "Taking orders."
-6. **The money.** One panel on `ticket` stock. The fee in the stat size, the rule in
-   one sentence, who pays it in one sentence, the button. See section 8 for what is
-   allowed here.
+6. **What it costs you.** One ticket panel. "$0" in stat size, "Nothing. Wuntab is
+   free for the restaurant.", one paragraph on the diner's 5% at checkout, the button.
+   See section 8.
 7. **What we don't promise.** A small, quiet text block. We can't guarantee the top
    spot on Google. We can make sure Google can read every dish. That is what we promise.
    This section is brand. Keep it.
@@ -168,18 +167,18 @@ Only these numbers may appear on the site. Never invent another.
 |--------------------------------------------------------------|-------------------------------------------------|
 | 220 menu items Google can read on our live restaurant, vs 0  | "220 dishes Google can read. The other site: 0."|
 | 3 taps and 2 fields from menu to payment                     | "Three taps and two boxes to pay."              |
-| $0 service fees added for diners                             | "No service fee on the diner's bill."           |
+| $0 for the restaurant                                        | "Nothing. Wuntab is free for the restaurant."   |
+| 5% online service fee, paid by the diner at checkout         | "They pay a 5% service fee at checkout. It's shown before they pay." |
 | 15% default tip with "None" always visible                   | "Tip starts at 15%. No tip is always an option."|
 | Marketplaces often take 20 to 30% of an order (from the brief) | Category claim with "often" or "up to". Never a named company. Confirm with Marawan before publish. |
 | One live restaurant in Orlando, measured head-to-head        | "Measured on a real restaurant in Orlando."     |
 
-**Pricing:** Marawan's current brief says the fee is **5% on each online order**. This
-replaces the earlier "flat monthly, no commission" direction from HANDOFF.md.
-Do not write "commission-free" anywhere. Open question to resolve before the pricing
-panel goes live: the brief says the 5% is "charged to customer" and also says diners
-pay $0 service fees. Those cannot both be on the page. Ask Marawan who pays the 5%
-(the restaurant or the diner) and write exactly that. Until answered, the pricing
-panel says "5% per online order" and the who-pays sentence is a TODO in `copy.ts`.
+**Pricing (confirmed by Marawan 2026-09-05):** the restaurant pays nothing. The diner
+pays a 5% online service fee, added at checkout and shown plainly before they pay.
+That replaces both the earlier "flat monthly, no commission" direction and the old
+"$0 service fees for diners" line. Do not write "commission-free". Do not write "no
+fees". Say "free for the restaurant" and "the diner pays 5% at checkout". The honesty
+angle is that the fee is visible, not that it does not exist.
 
 Never: a monthly dollar amount, customer counts, testimonials, quotes, logos of
 restaurants, "trusted by", "#1", ranking promises, "guaranteed", star ratings,
@@ -209,7 +208,12 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
 - No stock food photos. The JPGs in `public/demo/` are from the old site and must not
   appear on the page.
 - Icons: none, unless a check mark in a checklist. No icon grids.
-- Logo: keep the current mark until official SVGs arrive, then swap files exactly.
+- Logo: geometry is locked (rounded-square tile, one-stroke W with the raised center
+  peak, WUNTAB wordmark caps / weight 500 / 3px tracking, tile + 14px gap lockup).
+  Never symmetrize the W. Colors are ours: on light surfaces ink tile, saffron W, ink
+  wordmark; on dark surfaces saffron tile, ink W, paper wordmark. Stroke width 6 at
+  or under 24px, 5 at or under 40px, else 4.5. Source: `src/components/logo.tsx`,
+  `public/logo.svg`, `scripts/icons.mjs` (favicon.ico 16/32/48, apple-icon 180).
 
 ## 11. Copy rules
 
@@ -263,4 +267,4 @@ Don't
 - Stock photos, icon grids, illustrations of people, emoji.
 - Testimonials, logos, "trusted by", star ratings, countdowns, popups.
 - Jargon. Competitor names. "Sabal". "Commission-free". Invented numbers.
-- Monthly prices or a "coming soon" price slot.
+- Monthly prices, a "coming soon" price slot, or "no fees" (the diner pays 5%).

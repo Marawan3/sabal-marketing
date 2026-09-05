@@ -4,17 +4,17 @@ import { site } from "@/lib/site";
 
 export function LegalPlaceholder({ title }: { title: string }) {
   return (
-    <Container className="py-20">
-      <h1 className="text-4xl font-medium tracking-tight">{title}</h1>
-      <p className="mt-6 max-w-xl text-base leading-7 text-charcoal/80">
-        {copy.legal.comingSoon}
-      </p>
-      <p className="mt-4 text-sm text-charcoal/80">
+    <Container className="py-24 lg:py-32">
+      <h1 className="text-h2">{title}</h1>
+      <p className="mt-6 max-w-[56ch] text-lead text-ink/80">{copy.legal.comingSoon}</p>
+      <p className="mt-4 text-body text-ink/80">
         {copy.legal.questions}{" "}
-        <a className="font-medium text-brick hover:underline" href={`mailto:${site.contactEmail}`}>
+        <a
+          className="font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
+          href={`mailto:${site.contactEmail}`}
+        >
           {site.contactEmail}
         </a>
-        .
       </p>
     </Container>
   );

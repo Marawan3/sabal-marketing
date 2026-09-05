@@ -7,15 +7,16 @@ export const site = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@wuntab.com",
 } as const;
 
+/** Book-a-call target. Marawan points NEXT_PUBLIC_DEMO_HREF at his scheduling link. */
 export const demoHref =
   process.env.NEXT_PUBLIC_DEMO_HREF ??
-  `mailto:${site.contactEmail}?subject=Book%20a%20Wuntab%20demo`;
+  `mailto:${site.contactEmail}?subject=Book%20a%20call%20with%20Wuntab`;
 
 export const nav = [
+  { href: "/#proof", label: "What Google sees" },
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#proof", label: "Proof" },
   { href: "/#pricing", label: "Pricing" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/#faq", label: "Questions" },
 ] as const;
 
 export const legalNav = [

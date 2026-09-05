@@ -1,11 +1,22 @@
 # Assets
 
-## Logo (blocked)
+## Logo (geometry locked, colors ours)
 
-The marketing spec said logo SVGs were included. The file dropped in this run (`wuntab-marketing-site-spec.md`) had **no SVG markup**. This app ships a local brick tile (`#A8431F`, 12px-equivalent radius) plus a WUNTAB wordmark so the lockup works.
+Geometry comes from `wuntab-rebrand-spec.md` §2 and is implemented exactly: rounded-square tile (rx 14/56), one-stroke W with the raised center peak, WUNTAB wordmark in caps at weight 500 with 3px tracking, horizontal lockup with a 14px gap. Never symmetrize the W.
 
-**Do not treat the tile as the official mark.** Drop the exact SVGs into `public/logo.svg` and `src/components/logo.tsx` when they are available.
+Colors were recolored for this palette (Marawan, 2026-09-05: "the colors are yours"):
 
-## Photos (named checkpoint)
+| Surface | Tile | W stroke | Wordmark |
+|---------|------|----------|----------|
+| Light (paper, ticket) | ink `#17352A` | saffron `#F2B33D` | ink |
+| Dark (ink band, footer) | saffron | ink | paper |
 
-Chaat House imagery, menu data, and live-site links stay out until the owner’s written OK. The hero is typographic on purpose. No stock photos.
+Files: `src/components/logo.tsx` (React), `public/logo.svg` (static, used in JSON-LD), `src/app/icon.svg`, `src/app/favicon.ico` (16/32/48), `src/app/apple-icon.png` (180). Regenerate the raster icons with `node scripts/icons.mjs`. Review sheet: `evidence/logo/logo-sheet.png`.
+
+## Product screenshots (waiting on Marawan)
+
+Real phone screenshots of the Orlando restaurant site (menu, dish page, checkout, Clover ticket) go in `public/shots/` as WebP with explicit dimensions. Until they arrive the proof tickets are typographic. The dish names on the right ticket are placeholders; see `COPY.md`.
+
+## Photos
+
+No restaurant photos, menu scans, or live-site links until the owner's written OK. No stock photos. The JPGs in `public/demo/` are left over from the old site and are not referenced anywhere; delete them once Marawan confirms they are not needed.

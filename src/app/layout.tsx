@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { JsonLd } from "@/components/json-ld";
@@ -10,8 +11,15 @@ import "./globals.css";
 
 export const dynamic = "error";
 
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: "variable",
+  display: "swap",
+  variable: "--font-bricolage",
+});
+
 export const viewport: Viewport = {
-  themeColor: brand.cream,
+  themeColor: brand.paper,
 };
 
 const indexing = shouldIndex();
@@ -19,8 +27,8 @@ const indexing = shouldIndex();
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: `${copy.hero.headline} · Wuntab`,
-    template: "%s · Wuntab",
+    default: `Wuntab: ${copy.hero.headline}`,
+    template: "%s | Wuntab",
   },
   description: site.description,
   applicationName: "Wuntab",
@@ -41,13 +49,12 @@ export const metadata: Metadata = {
     title: "Wuntab",
     description: site.description,
   },
-  icons: { icon: "/logo.svg" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full">
-      <body className="min-h-full bg-cream text-charcoal antialiased">
+    <html lang="en" className={`h-full ${bricolage.variable}`}>
+      <body className="min-h-full bg-paper text-ink antialiased">
         <JsonLd data={[organizationSchema(), webSiteSchema()]} />
         <a className="skip-link" href="#main">
           Skip to content
