@@ -8,7 +8,7 @@ Colors were recolored for this palette (Marawan, 2026-09-05: "the colors are you
 
 | Surface | Tile | W stroke | Wordmark |
 |---------|------|----------|----------|
-| Light (paper, ticket) | ink `#17352A` | saffron `#F2B33D` | ink |
+| Light (paper, ticket) | ink `#13213C` | saffron `#F4A83A` | ink |
 | Dark (ink band, footer) | saffron | ink | paper |
 
 Files: `src/components/logo.tsx` (React), `public/logo.svg` (static, used in JSON-LD), `src/app/icon.svg`, `src/app/favicon.ico` (16/32/48), `src/app/apple-icon.png` (180). Regenerate the raster icons with `node scripts/icons.mjs`. Review sheet: `evidence/logo/logo-sheet.png`.

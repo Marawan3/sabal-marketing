@@ -2,12 +2,12 @@
 
 :root {
   --paper: #ffffff;
-  --ink: #17352a;
+  --ink: #13213c;
   --ticket: #f6f1e7;
-  --saffron: #f2b33d;
-  --saffron-deep: #e0a12e;
+  --saffron: #f4a83a;
+  --saffron-deep: #e2962c;
   --tomato: #d9482b;
-  --mist: #e4eae6;
+  --mist: #e3e7ee;
 }
 
 @theme inline {
@@ -20,7 +20,7 @@
   --color-mist: var(--mist);
   --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --shadow-lift:
-    0 1px 2px rgba(23, 53, 42, 0.06), 0 16px 40px -16px rgba(23, 53, 42, 0.22);
+    0 1px 2px rgba(19, 33, 60, 0.06), 0 16px 40px -16px rgba(19, 33, 60, 0.22);
   --text-display: clamp(2.625rem, 7.5vw, 4.75rem);
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.025em;
@@ -95,9 +95,10 @@ body {
   top: 1rem;
 }
 
-/* Kitchen ticket: receipt stock with a sawtooth bottom edge. */
+/* Kitchen ticket: white receipt paper with a sawtooth bottom edge, sitting on a
+   ticket-stock band (the "counter") so the edge reads. */
 .ticket {
-  background: var(--ticket);
+  background: var(--paper);
   padding-bottom: 10px;
   -webkit-mask:
     linear-gradient(#000, #000) top / 100% calc(100% - 10px) no-repeat,
@@ -110,8 +111,8 @@ body {
 }
 
 .ticket-shadow {
-  filter: drop-shadow(0 1px 2px rgba(23, 53, 42, 0.06))
-    drop-shadow(0 16px 24px rgba(23, 53, 42, 0.14));
+  filter: drop-shadow(0 1px 2px rgba(19, 33, 60, 0.06))
+    drop-shadow(0 16px 24px rgba(19, 33, 60, 0.14));
 }
 
 /* Ticket printing: lines are visible in the first HTML; JS hides then reveals. */

@@ -4,9 +4,9 @@
  */
 export const brand = {
   paper: "#FFFFFF",
-  ink: "#17352A",
+  ink: "#13213C",
   ticket: "#F6F1E7",
-  saffron: "#F2B33D",
+  saffron: "#F4A83A",
   tomato: "#D9482B",
-  mist: "#E4EAE6",
+  mist: "#E3E7EE",
 } as const;

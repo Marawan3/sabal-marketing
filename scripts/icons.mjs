@@ -10,8 +10,8 @@ import { join } from "node:path";
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
 
-const INK = "#17352A";
-const SAFFRON = "#F2B33D";
+const INK = "#13213C";
+const SAFFRON = "#F4A83A";
 
 function tileSvg(size) {
   // §2b: stroke 6 at ≤24px, 5 at ≤40px, else 4.5. rx scales with the viewBox.

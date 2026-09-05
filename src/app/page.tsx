@@ -50,7 +50,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section id="proof" className="scroll-mt-20 border-t border-mist">
+      <section id="proof" className="scroll-mt-20 bg-ticket">
         <Container className="py-20 lg:py-32">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
             <h2 className="text-h2 lg:col-span-5">{copy.proof.heading}</h2>
@@ -62,7 +62,7 @@ export default function HomePage() {
             <ProofTickets left={copy.proof.left} right={copy.proof.right} />
           </div>
           <p className="mt-10 max-w-[62ch] text-small text-ink/72">{copy.proof.footnote}</p>
-          <div className="mt-12 grid gap-2 border-t border-mist pt-8 lg:grid-cols-12 lg:gap-12">
+          <div className="mt-12 grid gap-2 border-t border-ink/10 pt-8 lg:grid-cols-12 lg:gap-12">
             <h3 className="text-h3 lg:col-span-5">{copy.proof.aiLine}</h3>
             <p className="max-w-[62ch] text-body text-ink/80 lg:col-span-7">
               {copy.proof.aiBody}
@@ -127,7 +127,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section id="pricing" className="scroll-mt-20 border-t border-mist">
+      <section id="pricing" className="scroll-mt-20 bg-ticket">
         <Container className="py-20 lg:py-32">
           <h2 className="text-h2">{copy.pricing.heading}</h2>
           <div className="mt-14 max-w-[640px] ticket-shadow">

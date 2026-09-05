@@ -46,17 +46,19 @@ retired. Do not reintroduce them.
 ## 3. Palette
 
 Restaurant vernacular, not SaaS vernacular: white paper, kitchen-ticket stock, deep
-green ink, a saffron "we're open" accent. Use exactly these six. Define them in
+navy ink, a saffron "we're open" accent. (Ink was a deep green until 2026-09-05;
+Marawan chose navy to lose the green-and-yellow fast-food echo.) Use exactly these
+six. Define them in
 `src/lib/brand.ts` and `src/app/globals.css`; never hard-code a hex in a component.
 
 | Token     | Hex       | Use                                                                 |
 |-----------|-----------|---------------------------------------------------------------------|
 | `paper`   | `#FFFFFF` | Page background. The page is white, not cream.                      |
-| `ink`     | `#17352A` | All text, the dark CTA band, the footer. Deep green, not near-black.|
-| `ticket`  | `#F6F1E7` | Kitchen-ticket stock. Only for the proof tickets and screen frames. |
-| `saffron` | `#F2B33D` | Primary CTA fill with `ink` text. Nothing else is saffron.          |
+| `ink`     | `#13213C` | All text, the dark CTA band, the footer. Deep navy, not near-black. |
+| `ticket`  | `#F6F1E7` | The "counter": full-width band behind the proof and pricing sections. Tickets themselves are `paper` so the sawtooth edge reads. |
+| `saffron` | `#F4A83A` | Primary CTA fill with `ink` text. Nothing else is saffron.          |
 | `tomato`  | `#D9482B` | The "0 items / Google can't see this" negative state only.          |
-| `mist`    | `#E4EAE6` | Hairlines, dividers, disabled, subtle backgrounds.                  |
+| `mist`    | `#E3E7EE` | Hairlines, dividers, disabled, subtle backgrounds.                  |
 
 Secondary text is `ink` at 72% opacity. Never `mist` for text.
 Contrast floors: `ink` on `paper` and `ink` on `saffron` both pass AA for all sizes.
@@ -106,7 +108,7 @@ would say out loud.
   A ticket gets a sawtooth bottom edge via CSS mask. It is the one decorative shape on
   the site because it means something (orders print in the kitchen).
 - Shadow: only under elevated screens and tickets:
-  `0 1px 2px rgba(23,53,42,.06), 0 16px 40px -16px rgba(23,53,42,.22)`.
+  `0 1px 2px rgba(19,33,60,.06), 0 16px 40px -16px rgba(19,33,60,.22)`.
   Plain content never gets a shadow or a border box.
 - Grid: 12 columns desktop. Text columns take 6 or 7 of them, never all 12.
 
@@ -251,7 +253,7 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
 
 Do
 - One idea per section, one action on the site.
-- White page, green ink, saffron button, ticket stock for proof and screens.
+- White page, navy ink, saffron button, ticket-stock bands behind proof and pricing.
 - Big honest headline that a person would say out loud.
 - Real screenshots in frames as soon as they exist.
 - The proof tickets as the memorable thing. Keep everything else quiet.
