@@ -34,7 +34,7 @@ export function ProductPage({ product }: { product: Product }) {
     <>
       <section className="scroll-mt-20">
         <div className="mx-auto w-full max-w-[1120px] px-5 pt-16 pb-16 sm:px-8 sm:pt-24 sm:pb-20 lg:px-12 lg:pt-28 lg:pb-24">
-          <p className="text-small font-medium text-ink/60">
+          <p className="text-small font-medium text-ink/72">
             {pillar.name}
           </p>
           <div className="mt-4 grid gap-10 lg:grid-cols-12 lg:gap-12">

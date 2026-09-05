@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/container";
 import { CtaLink } from "@/components/cta-link";
 import { ScreenFrame } from "@/components/screen-frame";
@@ -31,18 +30,18 @@ export default function HowItWorksPage() {
           <Section key={stage.name} tone={index % 2 === 0 ? "ticket" : "paper"}>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-6">
-                <p className="text-small tabular-nums text-ink/60">{index + 1}</p>
+                <p className="text-small tabular-nums text-ink/72">{index + 1}</p>
                 <h2 className="mt-2 text-h2">{stage.name}</h2>
                 <p className="mt-6 max-w-[48ch] text-lead text-ink/80">{stage.body}</p>
                 <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-body font-medium">
                   {stage.products.map((slug) => (
                     <li key={slug}>
-                      <Link
+                      <a
                         href={`/${slug}`}
                         className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
                       >
                         {bySlug[slug].name}
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Logo } from "./logo";
 import { byPillar, pillars, solutions, type Pillar } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -19,9 +18,9 @@ function Column({
       <ul className="mt-3 space-y-2">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-small text-paper/75 hover:text-paper">
+            <a href={link.href} className="text-small text-paper/75 hover:text-paper">
               {link.label}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>
@@ -64,9 +63,9 @@ export function SiteFooter() {
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-small text-paper/80">
             {legalNav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:text-paper">
+                <a href={item.href} className="hover:text-paper">
                   {item.label}
-                </Link>
+                </a>
               </li>
             ))}
             <li>© {new Date().getFullYear()} WunTab</li>

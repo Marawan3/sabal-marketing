@@ -50,7 +50,7 @@ export function ScreenFrame({
           />
         ) : (
           <div className="flex h-full w-full flex-col items-start justify-end bg-ticket p-4">
-            <span className="text-small font-medium text-ink/60">{shot.label}</span>
+            <span className="text-small font-medium text-ink/72">{shot.label}</span>
           </div>
         )}
       </div>

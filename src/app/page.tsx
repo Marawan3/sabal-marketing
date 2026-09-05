@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/container";
 import { CtaLink, TextLink } from "@/components/cta-link";
 import { Chain, Flow } from "@/components/flow";
@@ -44,12 +43,12 @@ function LinkList({ items }: { items: readonly { name: string; slug: string }[] 
     <ul className="grid gap-x-12 sm:grid-cols-2">
       {items.map((item) => (
         <li key={item.name} className="border-t border-mist py-3">
-          <Link
+          <a
             href={`/${item.slug}`}
             className="text-body font-medium underline decoration-transparent underline-offset-4 hover:decoration-ink"
           >
             {item.name}
-          </Link>
+          </a>
         </li>
       ))}
     </ul>
@@ -75,16 +74,19 @@ export default function HomePage() {
           </div>
         </Container>
         <Container className="pb-20 lg:pb-28">
-          <ol className="grid items-end gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {copy.hero.screens.map((shot, index) => (
-              <li key={shot.key}>
-                <p className="mb-3 text-small font-medium text-ink/60">
-                  {index + 1}. {shot.label}
-                </p>
-                <ScreenFrame shot={shot} priority={index === 0} />
-              </li>
-            ))}
-          </ol>
+          {/* Website with the phone overlapping it; dashboard and kitchen stacked beside. */}
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className="relative lg:col-span-8">
+              <ScreenFrame shot={copy.hero.screens[0]} priority />
+              <div className="absolute -bottom-6 right-6 w-[120px] sm:w-[150px] lg:-bottom-8 lg:right-8">
+                <ScreenFrame shot={copy.hero.screens[1]} />
+              </div>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-4">
+              <ScreenFrame shot={copy.hero.screens[2]} />
+              <ScreenFrame shot={copy.hero.screens[3]} />
+            </div>
+          </div>
         </Container>
       </section>
 
@@ -94,15 +96,15 @@ export default function HomePage() {
         <ol className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {lifecycle.map((stage, index) => (
             <li key={stage.name} className="border-t border-ink/15 pt-5">
-              <p className="text-small tabular-nums text-ink/60">{index + 1}</p>
+              <p className="text-small tabular-nums text-ink/72">{index + 1}</p>
               <h3 className="mt-2 text-h3">{stage.name}</h3>
               <p className="mt-2 max-w-[36ch] text-body text-ink/80">{stage.body}</p>
               <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-small font-medium">
                 {stage.products.map((slug) => (
                   <li key={slug}>
-                    <Link href={`/${slug}`} className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink">
+                    <a href={`/${slug}`} className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink">
                       {bySlug[slug].name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -180,7 +182,7 @@ export default function HomePage() {
           <Flow steps={guest.flow!.steps} />
         </div>
         <div className="mt-12 border-t border-ink/10 pt-8">
-          <p className="text-small font-medium text-ink/60">{copy.guest.chainIntro}</p>
+          <p className="text-small font-medium text-ink/72">{copy.guest.chainIntro}</p>
           <div className="mt-4">
             <Chain items={copy.guest.chain} />
           </div>

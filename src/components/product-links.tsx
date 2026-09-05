@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { bySlug } from "@/lib/catalog";
 
 /**
@@ -21,12 +20,12 @@ export function ProductLinks({
         if (!p) return null;
         return (
           <li key={slug} className="border-t border-mist py-5">
-            <Link href={`/${p.slug}`} className="group block">
+            <a href={`/${p.slug}`} className="group block">
               <span className="text-h3 underline decoration-transparent underline-offset-4 transition-colors duration-150 group-hover:decoration-ink">
                 {p.name}
               </span>
               <span className="mt-1 block max-w-[48ch] text-body text-ink/72">{p.headline}</span>
-            </Link>
+            </a>
           </li>
         );
       })}

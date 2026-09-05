@@ -55,7 +55,7 @@ export default async function Page({ params }: PageProps<"/solutions/[slug]">) {
     <>
       <section>
         <Container className="pt-16 pb-16 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24">
-          <p className="text-small font-medium text-ink/60">WunTab for {solution.name}</p>
+          <p className="text-small font-medium text-ink/72">WunTab for {solution.name}</p>
           <h1 className="mt-4 max-w-[16ch] text-display">{solution.headline}</h1>
           <p className="mt-8 max-w-[48ch] text-lead text-ink/80">{solution.sub}</p>
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">

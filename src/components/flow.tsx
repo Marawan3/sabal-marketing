@@ -12,7 +12,7 @@ export function Flow({
   dark?: boolean;
 }) {
   const line = dark ? "bg-paper/20" : "bg-ink/15";
-  const muted = dark ? "text-paper/70" : "text-ink/60";
+  const muted = dark ? "text-paper/70" : "text-ink/72";
   return (
     <div>
       {title ? <h3 className="text-h3">{title}</h3> : null}

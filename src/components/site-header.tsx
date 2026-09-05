@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CtaLink } from "./cta-link";
 import { Logo } from "./logo";
 import { bySlug, megaMenu, pillars, solutions } from "@/lib/catalog";
@@ -60,12 +59,12 @@ function Dropdown({
 
 function MenuLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
+    <a
       href={href}
       className="block rounded-[6px] px-3 py-2 text-[0.9375rem] font-medium hover:bg-ticket"
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
@@ -73,16 +72,16 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-mist bg-paper">
       <div className="relative mx-auto flex max-w-[1120px] items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:px-12">
-        <Link href="/" className="shrink-0 rounded-[8px]" aria-label="WunTab home">
+        <a href="/" className="shrink-0 rounded-[8px]" aria-label="WunTab home">
           <Logo size={32} />
-        </Link>
+        </a>
 
         <nav className="hidden flex-1 items-center gap-5 lg:flex" aria-label="Primary">
           <Dropdown label="Product" wide>
             <div className="grid grid-cols-4 gap-2 p-4">
               {megaMenu.map((group) => (
                 <div key={group.pillar}>
-                  <p className="px-3 pb-2 text-small font-medium text-ink/60">
+                  <p className="px-3 pb-2 text-small font-medium text-ink/72">
                     {pillars[group.pillar].name}
                   </p>
                   <ul>
@@ -105,9 +104,9 @@ export function SiteHeader() {
               ))}
             </ul>
           </Dropdown>
-          <Link href="/pricing" className={summaryClass}>
+          <a href="/pricing" className={summaryClass}>
             Pricing
-          </Link>
+          </a>
           <Dropdown label="Resources">
             <ul>
               {resourcesNav.map((item) => (
@@ -164,7 +163,7 @@ export function SiteHeader() {
               <div className="grid gap-8 sm:grid-cols-2">
                 {megaMenu.map((group) => (
                   <div key={group.pillar}>
-                    <p className="text-small font-medium text-ink/60">
+                    <p className="text-small font-medium text-ink/72">
                       {pillars[group.pillar].name}
                     </p>
                     <ul className="mt-2">
@@ -177,7 +176,7 @@ export function SiteHeader() {
                   </div>
                 ))}
                 <div>
-                  <p className="text-small font-medium text-ink/60">Solutions</p>
+                  <p className="text-small font-medium text-ink/72">Solutions</p>
                   <ul className="mt-2">
                     {solutions.map((s) => (
                       <li key={s.slug}>
@@ -187,7 +186,7 @@ export function SiteHeader() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-small font-medium text-ink/60">More</p>
+                  <p className="text-small font-medium text-ink/72">More</p>
                   <ul className="mt-2">
                     <li>
                       <MenuLink href="/pricing">Pricing</MenuLink>
