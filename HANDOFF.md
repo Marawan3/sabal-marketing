@@ -2,6 +2,17 @@
 
 For the next agent (Fable 5.1). Read this before editing. Owner: Marawan Elkabany (`marawan@sabalpay.com`).
 
+> **Superseded 2026-09-05.** Marawan reviewed the site and rejected the look as generic.
+> The design constraints below (cream page, brick accent, system font, weights 400/500,
+> no shadows, no client JS) and the pricing line ("flat monthly, no per-order
+> commission") are no longer the direction. The source of truth is now
+> `.claude/skills/wuntab-design/SKILL.md` (Wuntab palette, type, sections, allowed
+> numbers, pricing = 5% per online order) together with
+> `.claude/skills/frontend-design/SKILL.md` (Anthropic's craft guide). Load both before
+> any visual or copy work. Everything else in this note (repo boundaries, honesty
+> rules, no competitor names, no "Sabal" in rendered HTML, static only, no invented
+> numbers, no tenant imagery without rights) still applies.
+
 ## What this repo is
 
 - **GitHub:** `Marawan3/sabal-marketing` (public). Working product name is **Wuntab**. The repo and Vercel project are still named `sabal-marketing`.
