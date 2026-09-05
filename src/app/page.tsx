@@ -130,9 +130,9 @@ export default function HomePage() {
                 {copy.pricing.slotLabel}
               </dt>
               <dd className="mt-2 text-2xl font-medium">{copy.pricing.slotValue}</dd>
-              <p className="mt-2 text-sm leading-6 text-charcoal/70">
+              <dd className="mt-2 text-sm leading-6 text-charcoal/70">
                 {copy.pricing.slotNote}
-              </p>
+              </dd>
             </dl>
             <a
               href={demoHref}

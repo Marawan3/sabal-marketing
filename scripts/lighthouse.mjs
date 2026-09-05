@@ -7,8 +7,26 @@ const outDir = process.argv[3] ?? "/opt/cursor/artifacts/lighthouse";
 mkdirSync(outDir, { recursive: true });
 
 const widths = [
-  { name: "390", form: "mobile", width: 390, height: 844, dpr: 2, mobile: true },
-  { name: "1440", form: "desktop", width: 1440, height: 900, dpr: 1, mobile: false },
+  {
+    name: "390",
+    extra: [
+      "--form-factor=mobile",
+      "--screenEmulation.mobile=true",
+      "--screenEmulation.width=390",
+      "--screenEmulation.height=844",
+      "--screenEmulation.deviceScaleFactor=2",
+    ],
+  },
+  {
+    name: "1440",
+    extra: [
+      "--preset=desktop",
+      "--screenEmulation.width=1440",
+      "--screenEmulation.height=900",
+      "--screenEmulation.deviceScaleFactor=1",
+      "--screenEmulation.mobile=false",
+    ],
+  },
 ];
 
 const categories = ["performance", "accessibility", "best-practices", "seo"];
@@ -21,11 +39,7 @@ for (const preset of widths) {
     "lighthouse",
     url,
     "--only-categories=performance,accessibility,best-practices,seo",
-    `--form-factor=${preset.form}`,
-    `--screenEmulation.width=${preset.width}`,
-    `--screenEmulation.height=${preset.height}`,
-    `--screenEmulation.deviceScaleFactor=${preset.dpr}`,
-    `--screenEmulation.mobile=${preset.mobile}`,
+    ...preset.extra,
     "--chrome-flags=--headless --no-sandbox --disable-gpu",
     "--output=json",
     "--output=html",

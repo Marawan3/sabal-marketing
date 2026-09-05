@@ -16,7 +16,6 @@
   --color-cream: var(--cream);
   --color-sand: var(--sand);
   --color-warm: var(--warm);
-  --font-sans: var(--font-sans-face);
 }
 
 html {
@@ -26,7 +25,7 @@ html {
 body {
   background: var(--cream);
   color: var(--charcoal);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-weight: 400;
 }
 

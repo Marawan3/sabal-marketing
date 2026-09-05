@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3 } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { JsonLd } from "@/components/json-ld";
@@ -8,13 +7,6 @@ import { brand } from "@/lib/brand";
 import { getSiteUrl, shouldIndex, site } from "@/lib/site";
 import { copy } from "@/lib/copy";
 import "./globals.css";
-
-const sans = Source_Sans_3({
-  variable: "--font-sans-face",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
 
 export const dynamic = "error";
 
@@ -54,8 +46,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${sans.variable} h-full`}>
-      <body className={`${sans.className} min-h-full bg-cream text-charcoal antialiased`}>
+    <html lang="en" className="h-full">
+      <body className="min-h-full bg-cream text-charcoal antialiased">
         <JsonLd data={[organizationSchema(), webSiteSchema()]} />
         <a className="skip-link" href="#main">
           Skip to content

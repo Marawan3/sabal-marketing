@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 3001;
+const port = 3002;
 const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
@@ -12,7 +12,7 @@ export default defineConfig({
   webServer: {
     command: `npm run start -- --port ${port}`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],

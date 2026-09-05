@@ -2,7 +2,7 @@
 
 Standalone Next.js marketing site for **Wuntab** (restaurant websites + commission-free ordering). This is not the product repo and must never import from it.
 
-Every page is prerendered (`dynamic = "error"`). There is no database, no API route, and no secret. The only CTA is a mailto (or a Cal URL via `NEXT_PUBLIC_DEMO_HREF` when one exists).
+Every page is prerendered (`dynamic = "error"`). There is no database, no API route, and no secret. The only CTA is a mailto (or a Cal URL via `NEXT_PUBLIC_DEMO_HREF` when one exists). Type is the system UI sans (one family, 400/500) so a webfont never shows up in Lighthouse.
 
 All public copy is **draft** until Marawan approves it. Do not promote a production deploy on `wuntab.com` without that sign-off.
 
