@@ -23,32 +23,9 @@ export function webSiteSchema() {
   };
 }
 
-export function softwareApplicationSchema() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Sabal",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: absoluteUrl("/"),
-    description: site.description,
-  };
-}
-
-export function breadcrumbSchema(items: { name: string; path: string }[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: absoluteUrl(item.path),
-    })),
-  };
-}
-
-export function faqSchema(items: { question: string; answer: string }[]) {
+export function faqSchema(
+  items: readonly { question: string; answer: string }[],
+) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",

@@ -8,6 +8,8 @@ const banned = [
   /revolutionary/i,
   /AI-powered/i,
   /ranks #1/i,
+  /\bsabal\b/i,
+  /owner\.com/i,
   /AggregateRating/,
   /"@type":\s*"Review"/,
   /"@type":\s*"AggregateRating"/,

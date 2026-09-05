@@ -1,74 +1,60 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 import { Logo } from "./logo";
-import { nav } from "@/lib/site";
+import { copy } from "@/lib/copy";
+import { demoHref, nav } from "@/lib/site";
 
-export function SiteHeader({ appUrl }: { appUrl: string }) {
-  const [open, setOpen] = useState(false);
-
+export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-charcoal/10 bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
-        <Link href="/" className="shrink-0" aria-label="Sabal home">
+        <Link href="/" className="shrink-0" aria-label="Wuntab home">
           <Logo />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-soft lg:flex" aria-label="Primary">
+        <nav
+          className="hidden items-center gap-6 text-sm font-medium text-charcoal lg:flex"
+          aria-label="Primary"
+        >
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-ink">
+            <a key={item.href} href={item.href} className="hover:text-brick">
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 lg:flex">
-          <a
-            href={appUrl}
-            className="text-sm font-medium text-ink-soft hover:text-ink"
-          >
-            Log in
-          </a>
-          <Link
-            href="/demo"
-            className="rounded-full bg-palm-deep px-4 py-2 text-sm font-semibold text-on-brand hover:bg-palm"
-          >
-            Book a demo
-          </Link>
-        </div>
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((value) => !value)}
+        <a
+          href={demoHref}
+          className="hidden rounded-[12px] bg-brick px-4 py-2 text-sm font-medium text-cream hover:bg-brick/90 lg:inline-flex"
         >
-          <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-          <span aria-hidden className="text-lg leading-none">
-            {open ? "×" : "☰"}
-          </span>
-        </button>
-      </div>
-      {open ? (
-        <div id="mobile-nav" className="border-t border-line px-5 py-4 lg:hidden">
-          <nav className="flex flex-col gap-3 text-base font-medium" aria-label="Mobile">
-            {nav.map((item) => (
-              <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>
-                {item.label}
-              </Link>
-            ))}
-            <a href={appUrl} onClick={() => setOpen(false)}>
-              Log in
-            </a>
-            <Link
-              href="/demo"
-              className="mt-2 inline-flex justify-center rounded-full bg-palm-deep px-4 py-2.5 text-sm font-semibold text-on-brand"
-              onClick={() => setOpen(false)}
-            >
-              Book a demo
-            </Link>
+          {copy.hero.cta}
+        </a>
+        <details className="relative lg:hidden">
+          <summary className="flex h-12 w-12 cursor-pointer list-none items-center justify-center rounded-[12px] border border-charcoal/15 text-charcoal [&::-webkit-details-marker]:hidden">
+            <span className="sr-only">Menu</span>
+            <span aria-hidden className="text-lg leading-none">
+              ☰
+            </span>
+          </summary>
+          <nav
+            className="absolute right-0 mt-2 w-56 rounded-[12px] border border-charcoal/10 bg-cream p-4"
+            aria-label="Mobile"
+          >
+            <ul className="flex flex-col gap-3 text-base font-medium">
+              {nav.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
+              <li>
+                <a
+                  href={demoHref}
+                  className="mt-1 inline-flex w-full justify-center rounded-[12px] bg-brick px-4 py-2.5 text-sm font-medium text-cream"
+                >
+                  {copy.hero.cta}
+                </a>
+              </li>
+            </ul>
           </nav>
-        </div>
-      ) : null}
+        </details>
+      </div>
     </header>
   );
 }

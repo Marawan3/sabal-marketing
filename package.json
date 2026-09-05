@@ -1,5 +1,5 @@
 {
-  "name": "sabal-marketing",
+  "name": "wuntab-marketing",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,15 +9,17 @@
     "lint": "eslint",
     "honesty": "node scripts/honesty-check.mjs",
     "copy-lint": "node scripts/copy-lint.mjs",
-    "boundary-check": "node scripts/boundary-check.mjs"
+    "boundary-check": "node scripts/boundary-check.mjs",
+    "test": "playwright test",
+    "evidence": "node scripts/evidence.mjs"
   },
   "dependencies": {
     "next": "16.3.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "resend": "^6.25.0"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

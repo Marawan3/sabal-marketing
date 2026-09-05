@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { LegalPage } from "@/components/legal-page";
+import { LegalPlaceholder } from "@/components/legal-placeholder";
+import { copy } from "@/lib/copy";
 
 export const dynamic = "error";
 
 export const metadata: Metadata = {
-  title: "Website Terms",
-  description:
-    "Draft terms for the Sabal marketing website. Restaurant software is contracted separately. Not yet attorney-reviewed.",
+  title: copy.legal.termsTitle,
+  description: copy.legal.comingSoon,
   alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {
-  return <LegalPage file="sabal-website-terms.md" path="/terms" />;
+  return <LegalPlaceholder title={copy.legal.termsTitle} />;
 }

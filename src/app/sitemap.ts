@@ -1,32 +1,12 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
 
-const paths = [
-  "/",
-  "/how-it-works",
-  "/online-ordering",
-  "/restaurant-seo",
-  "/pricing",
-  "/demo",
-  "/about",
-  "/privacy",
-  "/terms",
-  "/platform-terms",
-  "/dpa",
-  "/accessibility",
-] as const;
+const paths = ["/", "/privacy", "/terms"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const legal = new Set([
-    "/privacy",
-    "/terms",
-    "/platform-terms",
-    "/dpa",
-    "/accessibility",
-  ]);
   return paths.map((path) => ({
     url: absoluteUrl(path),
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : legal.has(path) ? 0.3 : 0.7,
+    priority: path === "/" ? 1 : 0.3,
   }));
 }
