@@ -1,3 +1,4 @@
+import { SmartLink } from "@/components/smart-link";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink } from "@/components/cta-link";
@@ -36,12 +37,12 @@ export default function HowItWorksPage() {
                 <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-body font-medium">
                   {stage.products.map((slug) => (
                     <li key={slug}>
-                      <a
+                      <SmartLink
                         href={`/${slug}`}
                         className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
                       >
                         {bySlug[slug].name}
-                      </a>
+                      </SmartLink>
                     </li>
                   ))}
                 </ul>

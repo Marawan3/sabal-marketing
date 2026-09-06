@@ -1,3 +1,4 @@
+import { SmartLink } from "./smart-link";
 import { Logo } from "./logo";
 import { byPillar, pillars, solutions, type Pillar } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -18,9 +19,9 @@ function Column({
       <ul className="mt-3 space-y-2">
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href} className="text-small text-paper/75 hover:text-paper">
+            <SmartLink href={link.href} className="text-small text-paper/75 hover:text-paper">
               {link.label}
-            </a>
+            </SmartLink>
           </li>
         ))}
       </ul>
@@ -53,19 +54,19 @@ export function SiteFooter() {
           <div>
             <Logo tone="dark" size={32} />
             <p className="mt-4 max-w-xs text-small text-paper/80">{copy.footer.blurb}</p>
-            <a
+            <SmartLink
               href={`mailto:${site.contactEmail}`}
               className="mt-3 inline-block text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
             >
               {site.contactEmail}
-            </a>
+            </SmartLink>
           </div>
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-small text-paper/80">
             {legalNav.map((item) => (
               <li key={item.href}>
-                <a href={item.href} className="hover:text-paper">
+                <SmartLink href={item.href} className="hover:text-paper">
                   {item.label}
-                </a>
+                </SmartLink>
               </li>
             ))}
             <li>© {new Date().getFullYear()} WunTab</li>

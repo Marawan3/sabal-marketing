@@ -1,3 +1,4 @@
+import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
@@ -63,9 +64,9 @@ function buildMenus(): NavMenu[] {
 
 function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} className="block rounded-[6px] px-3 py-2.5 text-[1rem] font-medium hover:bg-ticket">
+    <SmartLink href={href} className="block rounded-[6px] px-3 py-2.5 text-[1rem] font-medium hover:bg-ticket">
       {children}
-    </a>
+    </SmartLink>
   );
 }
 
@@ -97,9 +98,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-mist bg-paper">
       <div className="relative mx-auto flex max-w-[1120px] items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-        <a href="/" className="shrink-0 justify-self-start rounded-[8px]" aria-label="WunTab home">
+        <SmartLink href="/" className="shrink-0 justify-self-start rounded-[8px]" aria-label="WunTab home">
           <Logo size={32} />
-        </a>
+        </SmartLink>
 
         <nav className="hidden lg:block" aria-label="Primary">
           <DesktopNav menus={menus} pricing={{ href: "/pricing", label: "Pricing" }} />
@@ -107,12 +108,12 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-3 justify-self-end">
           {appHref ? (
-            <a
+            <SmartLink
               href={appHref}
               className="hidden rounded-[6px] px-2 py-1.5 text-[0.9375rem] font-medium hover:text-ink/70 sm:inline-block"
             >
               {copy.cta.login}
-            </a>
+            </SmartLink>
           ) : null}
           <CtaLink href={demoHref} size="sm">
             {copy.cta.primary}

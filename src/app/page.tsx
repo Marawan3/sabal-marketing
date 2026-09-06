@@ -1,3 +1,4 @@
+import { SmartLink } from "@/components/smart-link";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink, TextLink } from "@/components/cta-link";
@@ -43,12 +44,12 @@ function LinkList({ items }: { items: readonly { name: string; slug: string }[] 
     <ul className="grid gap-x-12 sm:grid-cols-2">
       {items.map((item) => (
         <li key={item.name} className="border-t border-mist py-3">
-          <a
+          <SmartLink
             href={`/${item.slug}`}
             className="text-body font-medium underline decoration-transparent underline-offset-4 hover:decoration-ink"
           >
             {item.name}
-          </a>
+          </SmartLink>
         </li>
       ))}
     </ul>
@@ -102,9 +103,9 @@ export default function HomePage() {
               <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-small font-medium">
                 {stage.products.map((slug) => (
                   <li key={slug}>
-                    <a href={`/${slug}`} className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink">
+                    <SmartLink href={`/${slug}`} className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink">
                       {bySlug[slug].name}
-                    </a>
+                    </SmartLink>
                   </li>
                 ))}
               </ul>
@@ -332,16 +333,16 @@ export default function HomePage() {
           </div>
           <p className="mt-6 text-small text-paper/70">
             or email{" "}
-            <a
+            <SmartLink
               href={`mailto:${site.contactEmail}`}
               className="font-medium text-paper underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
             >
               {site.contactEmail}
-            </a>
+            </SmartLink>
             {" · "}
-            <a href={menuCheckHref} className="font-medium text-paper underline decoration-paper/40 underline-offset-4 hover:decoration-paper">
+            <SmartLink href={menuCheckHref} className="font-medium text-paper underline decoration-paper/40 underline-offset-4 hover:decoration-paper">
               {copy.discovery.checkCta}
-            </a>
+            </SmartLink>
           </p>
         </div>
       </Section>

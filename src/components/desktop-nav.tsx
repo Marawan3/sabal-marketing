@@ -1,5 +1,6 @@
 "use client";
 
+import { SmartLink } from "./smart-link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 /**
@@ -123,7 +124,7 @@ export function DesktopNav({
         return (
           <div key={menu.key} className="contents">
             {index === 2 ? (
-              <a
+              <SmartLink
                 href={pricing.href}
                 className={`${triggerClass} text-ink hover:text-ink/70`}
                 onPointerEnter={(event) => {
@@ -132,7 +133,7 @@ export function DesktopNav({
                 onFocus={closeNow}
               >
                 {pricing.label}
-              </a>
+              </SmartLink>
             ) : null}
             <button
               type="button"
@@ -199,7 +200,7 @@ export function DesktopNav({
                       <ul>
                         {group.items.map((item) => (
                           <li key={item.href}>
-                            <a
+                            <SmartLink
                               href={item.href}
                               className="block rounded-[6px] px-3 py-2 transition-colors duration-150 hover:bg-ticket focus-visible:bg-ticket"
                             >
@@ -211,7 +212,7 @@ export function DesktopNav({
                                   {item.blurb}
                                 </span>
                               ) : null}
-                            </a>
+                            </SmartLink>
                           </li>
                         ))}
                       </ul>
