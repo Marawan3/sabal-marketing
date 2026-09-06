@@ -23,10 +23,13 @@ export function ScreenFrame({
   shot,
   className = "",
   priority = false,
+  dark = false,
 }: {
   shot: Shot;
   className?: string;
   priority?: boolean;
+  /** On an ink band: lighter caption and frame edge. */
+  dark?: boolean;
 }) {
   const src = findShot(shot.key);
   const phone = shot.kind === "phone";
@@ -35,7 +38,7 @@ export function ScreenFrame({
   return (
     <figure className={`${phone ? "mx-auto w-full max-w-[280px]" : "w-full"} ${className}`}>
       <div
-        className={`overflow-hidden rounded-[16px] border border-ink/10 bg-paper shadow-lift ${
+        className={`overflow-hidden rounded-[16px] border bg-paper shadow-lift ${dark ? "border-paper/20" : "border-ink/10"} ${
           phone ? "aspect-[390/844]" : "aspect-[16/10]"
         }`}
       >
@@ -55,7 +58,9 @@ export function ScreenFrame({
         )}
       </div>
       {src ? (
-        <figcaption className="mt-3 text-small text-ink/72">{shot.label}</figcaption>
+        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/72"}`}>
+          {shot.label}
+        </figcaption>
       ) : null}
     </figure>
   );

@@ -116,18 +116,23 @@ export default function HomePage() {
 
       {/* 4. Sell directly */}
       <Section id="sell">
-        <SectionHead heading={copy.sell.heading} sub={copy.sell.sub} />
-        <div className="mt-12">
-          <ProductLinks
-            slugs={["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"]}
-            columns={3}
-          />
+        <SectionHead kicker="Sell" heading={copy.sell.heading} sub={copy.sell.sub} />
+        <div className="mt-12 grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <ScreenFrame shot={bySlug["online-ordering"].shots[0]} />
+          </div>
+          <div className="lg:col-span-8">
+            <ProductLinks
+              slugs={["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"]}
+              columns={2}
+            />
+          </div>
         </div>
       </Section>
 
       {/* 5. Website + discovery */}
       <Section id="discovery">
-        <SectionHead heading={copy.discovery.heading} sub={copy.discovery.sub} />
+        <SectionHead kicker="Grow" heading={copy.discovery.heading} sub={copy.discovery.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <ProductLinks
@@ -148,28 +153,40 @@ export default function HomePage() {
       </Section>
 
       {/* 6. Delivery */}
-      <Section id="delivery" tone="ticket">
-        <SectionHead heading={copy.delivery.heading} sub={copy.delivery.sub} />
+      <Section id="delivery" tone="ink">
+        <SectionHead kicker="Sell" heading={copy.delivery.heading} sub={copy.delivery.sub} dark />
         <div className="mt-14">
-          <Flow steps={delivery.flow!.steps} />
+          <Flow steps={delivery.flow!.steps} dark />
         </div>
         <div className="mt-14 grid gap-10 md:grid-cols-2">
           {delivery.shots.map((shot) => (
-            <ScreenFrame key={shot.key} shot={shot} />
+            <ScreenFrame key={shot.key} shot={shot} dark />
           ))}
         </div>
         <p className="mt-10">
-          <TextLink href="/delivery">More about delivery</TextLink>
+          <TextLink href="/delivery" className="text-paper decoration-paper/40 hover:decoration-paper">
+            More about delivery
+          </TextLink>
         </p>
       </Section>
 
       {/* 7. Catering */}
       <Section id="catering">
-        <SectionHead heading={copy.catering.heading} sub={copy.catering.sub} />
-        <div className="mt-12 grid gap-10 md:grid-cols-2">
-          {catering.shots.map((shot) => (
-            <ScreenFrame key={shot.key} shot={shot} />
-          ))}
+        <SectionHead kicker="Sell" heading={copy.catering.heading} sub={copy.catering.sub} />
+        <div className="mt-12 grid gap-12 lg:grid-cols-12">
+          <ul className="space-y-4 lg:col-span-5">
+            {catering.capabilities.map((item) => (
+              <li key={item} className="flex gap-3 text-body">
+                <Check />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7">
+            {catering.shots.map((shot) => (
+              <ScreenFrame key={shot.key} shot={shot} />
+            ))}
+          </div>
         </div>
         <p className="mt-10">
           <TextLink href="/catering">More about catering</TextLink>
@@ -177,8 +194,8 @@ export default function HomePage() {
       </Section>
 
       {/* 8. Guest experience */}
-      <Section id="guest" tone="ticket">
-        <SectionHead heading={copy.guest.heading} sub={copy.guest.sub} />
+      <Section id="guest" tone="paper">
+        <SectionHead kicker="Grow" heading={copy.guest.heading} sub={copy.guest.sub} />
         <div className="mt-14">
           <Flow steps={guest.flow!.steps} />
         </div>
@@ -196,8 +213,8 @@ export default function HomePage() {
       </Section>
 
       {/* 9. Customer growth */}
-      <Section id="growth">
-        <SectionHead heading={copy.growth.heading} sub={copy.growth.sub} />
+      <Section id="growth" tone="ticket">
+        <SectionHead kicker="Grow" heading={copy.growth.heading} sub={copy.growth.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <LinkList items={copy.growth.items} />
@@ -209,8 +226,8 @@ export default function HomePage() {
       </Section>
 
       {/* 10. Operations */}
-      <Section id="operations" tone="ticket">
-        <SectionHead heading={copy.operations.heading} sub={copy.operations.sub} />
+      <Section id="operations">
+        <SectionHead kicker="Operate" heading={copy.operations.heading} sub={copy.operations.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <LinkList items={copy.operations.items} />
@@ -222,8 +239,8 @@ export default function HomePage() {
       </Section>
 
       {/* 11. Analytics */}
-      <Section id="analytics">
-        <SectionHead heading={copy.analytics.heading} sub={copy.analytics.sub} />
+      <Section id="analytics" tone="ticket">
+        <SectionHead kicker="Operate" heading={copy.analytics.heading} sub={copy.analytics.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <ScreenFrame shot={bySlug.analytics.shots[0]} />
@@ -240,8 +257,8 @@ export default function HomePage() {
       </Section>
 
       {/* 12. Multi-location */}
-      <Section id="scale" tone="ticket">
-        <SectionHead heading={copy.scale.heading} sub={copy.scale.sub} />
+      <Section id="scale">
+        <SectionHead kicker="Scale" heading={copy.scale.heading} sub={copy.scale.sub} />
         <div className="mt-12">
           <ProductLinks slugs={["multi-location", "enterprise", "ai"]} columns={3} />
         </div>
@@ -249,7 +266,7 @@ export default function HomePage() {
 
       {/* 13. Integrations */}
       <Section id="integrations">
-        <SectionHead heading={copy.integrations.heading} />
+        <SectionHead kicker="Scale" heading={copy.integrations.heading} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <ul className="space-y-4 lg:col-span-5">
             {copy.integrations.available.map((item) => (

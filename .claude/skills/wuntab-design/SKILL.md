@@ -147,6 +147,11 @@ or a generic SaaS graphic. The list of required keys is in `ASSETS.md`.
 orders (+ menu-check CTA) → Delivery flow → Catering → Guest experience flow + chain →
 Customer growth → Operations → Analytics → Multi-location → Integrations → Pricing →
 Customer proof (real only) → FAQ → Final CTA. Alternate `paper` and `ticket` bands.
+Every pillar section carries its pillar as a sentence-case kicker above the heading
+(Sell, Grow, Operate, Scale) so the architecture is visible on the homepage. Product
+rows use the catalog `blurb`, the same line the mega-menu shows. Delivery is the one
+dark showcase band on the page; the final CTA is the other. Internal links go through
+`SmartLink` (next/link, prefetch off); external, mailto, and hash targets stay anchors.
 
 **Product page template** (`src/components/product-page.tsx`): pillar label, headline,
 sub, Get Started + See pricing, hero screen; "What you can do" checklist on ticket
