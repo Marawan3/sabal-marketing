@@ -48,3 +48,7 @@ deploy-manifest.json
 next-env.d.ts
 
 .vercel
+
+# screenshot capture
+/shots.config.json
+/.capture-profile

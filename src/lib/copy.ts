@@ -14,12 +14,14 @@ export const copy = {
   hero: {
     headline: "More direct orders. More repeat customers. One platform.",
     sub: "WunTab brings your website, online ordering, delivery, catering, guest experience, marketing, and restaurant operations together in one platform.",
+    /** One composition: the four screens share keys with the product pages. */
     screens: [
-      { key: "hero-website", label: "Your website" },
-      { key: "hero-ordering", label: "Online ordering", kind: "phone" as const },
-      { key: "hero-dashboard", label: "Your dashboard" },
-      { key: "hero-kitchen", label: "Kitchen and orders" },
+      { key: "website-home", label: "Your website", priority: "must" as const },
+      { key: "ordering-menu", label: "Customer ordering", kind: "phone" as const, priority: "must" as const },
+      { key: "order-management", label: "Your dashboard", priority: "must" as const },
+      { key: "kitchen-display", label: "Kitchen and fulfillment", priority: "must" as const },
     ],
+    lifecycle: ["Website", "Ordering", "Dashboard", "Kitchen"],
   },
   proof: {
     heading: "One platform, from the first search to the next order.",
@@ -100,7 +102,7 @@ export const copy = {
     body: "A real restaurant in Orlando runs its website, online ordering, and kitchen on WunTab. We measured its menu head to head against the same restaurant on another platform: 220 dishes readable by Google in the first response, versus 0.",
     footnote:
       "Measured September 2026. Same restaurant, same menu, both websites live at the same time. Restaurant name and screens will appear here with the owner's permission.",
-    shot: { key: "proof-storefront", label: "A live WunTab storefront" },
+    shot: { key: "website-home", label: "A live WunTab storefront", priority: "must" as const },
   },
   faq: {
     heading: "Questions owners ask",

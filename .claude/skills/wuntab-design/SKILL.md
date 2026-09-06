@@ -137,11 +137,26 @@ would say out loud.
 
 ## 6. Section patterns
 
-**The product is the visual identity.** Every product section shows a real WunTab
-screen in a `ScreenFrame` (`src/components/screen-frame.tsx`). The frame reads
-`public/shots/<key>.webp|png|jpg` at build time and renders a captioned empty frame
-when the file is missing. Never draw a fake dashboard, never use a stock illustration
-or a generic SaaS graphic. The list of required keys is in `ASSETS.md`.
+**The product is the visual identity.** Product sections show real WunTab screens in
+a `ScreenFrame` (`src/components/screen-frame.tsx`): slim browser bar on desktop
+frames, slim status bar on phone frames, 16px / 24px radius, one shadow. The frame
+reads `public/shots/<key>.webp|png|jpg` at build time. Never draw a fake dashboard,
+never use a stock illustration or a generic SaaS graphic.
+
+**Slot policy (Marawan, 2026-09-06):** about 10 to 15 strong screens across the
+homepage beats one per feature. Every shot has a `priority`: `must` renders a
+captioned empty frame until the file exists; `helpful` renders nothing until it
+exists. Keys are shared across pages on purpose (the hero's four screens are the
+same files as the Restaurant Websites, Online Ordering, Order Management, and
+Kitchen Display pages). Products with no honest screen get copy, a capability list,
+a flow, or the `OrgDiagram` (Scale), not a placeholder. The classified list is in
+`ASSETS.md`; `npm run capture` with `shots.config.json` fills the files.
+
+**Hero composition:** one connected composition, not four floating cards. Website at
+the back, the customer's phone overlapping it, dashboard and kitchen stepping down
+the right, and the lifecycle named under it (Website → Ordering → Dashboard →
+Kitchen). Test: can an owner tell from the visual alone that the website, ordering,
+management, and fulfillment are one platform?
 
 **Homepage order (spec):** hero → lifecycle proof → Sell directly → Turn searches into
 orders (+ menu-check CTA) → Delivery flow → Catering → Guest experience flow + chain →

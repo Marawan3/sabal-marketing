@@ -4,6 +4,7 @@ import { Container } from "@/components/container";
 import { CtaLink, TextLink } from "@/components/cta-link";
 import { Chain, Flow } from "@/components/flow";
 import { JsonLd } from "@/components/json-ld";
+import { OrgDiagram } from "@/components/org-diagram";
 import { ProductLinks } from "@/components/product-links";
 import { ScreenFrame } from "@/components/screen-frame";
 import { Section, SectionHead } from "@/components/section";
@@ -75,18 +76,25 @@ export default function HomePage() {
           </div>
         </Container>
         <Container className="pb-20 lg:pb-28">
-          {/* Website with the phone overlapping it; dashboard and kitchen stacked beside. */}
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+          {/*
+            One composition, four screens: the website at the back, the
+            customer's phone in front of it, the dashboard and kitchen screens
+            stepping down the right, and the lifecycle named underneath.
+          */}
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-0">
             <div className="relative lg:col-span-8">
               <ScreenFrame shot={copy.hero.screens[0]} priority />
-              <div className="absolute -bottom-6 right-6 w-[120px] sm:w-[150px] lg:-bottom-8 lg:right-8">
+              <div className="mx-auto mt-6 w-[150px] sm:absolute sm:-bottom-8 sm:right-6 sm:mx-0 sm:mt-0 sm:w-[160px] lg:-right-12 lg:-bottom-10">
                 <ScreenFrame shot={copy.hero.screens[1]} />
               </div>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-5 lg:pl-16 lg:pt-14">
               <ScreenFrame shot={copy.hero.screens[2]} />
               <ScreenFrame shot={copy.hero.screens[3]} />
             </div>
+          </div>
+          <div className="mt-16 flex justify-center lg:mt-20">
+            <Chain items={copy.hero.lifecycle} />
           </div>
         </Container>
       </section>
@@ -232,8 +240,9 @@ export default function HomePage() {
           <div className="lg:col-span-5">
             <LinkList items={copy.operations.items} />
           </div>
-          <div className="lg:col-span-7">
+          <div className="grid gap-8 lg:col-span-7">
             <ScreenFrame shot={bySlug["order-management"].shots[0]} />
+            <ScreenFrame shot={bySlug["menu-management"].shots[0]} />
           </div>
         </div>
       </Section>
@@ -259,8 +268,13 @@ export default function HomePage() {
       {/* 12. Multi-location */}
       <Section id="scale">
         <SectionHead kicker="Scale" heading={copy.scale.heading} sub={copy.scale.sub} />
-        <div className="mt-12">
-          <ProductLinks slugs={["multi-location", "enterprise", "ai"]} columns={3} />
+        <div className="mt-12 grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-6">
+            <ProductLinks slugs={["multi-location", "enterprise", "ai"]} columns={1} />
+          </div>
+          <div className="self-center lg:col-span-6">
+            <OrgDiagram />
+          </div>
         </div>
       </Section>
 

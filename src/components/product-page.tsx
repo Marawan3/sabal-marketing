@@ -1,7 +1,8 @@
 import { CtaLink, TextLink } from "./cta-link";
 import { Flow } from "./flow";
+import { OrgDiagram } from "./org-diagram";
 import { ProductLinks } from "./product-links";
-import { ScreenFrame } from "./screen-frame";
+import { findShot, ScreenFrame } from "./screen-frame";
 import { Section, SectionHead } from "./section";
 import { pillars, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -49,6 +50,10 @@ export function ProductPage({ product }: { product: Product }) {
             {hero ? (
               <div className="lg:col-span-5">
                 <ScreenFrame shot={hero} priority />
+              </div>
+            ) : product.visual === "org" ? (
+              <div className="self-center lg:col-span-5">
+                <OrgDiagram />
               </div>
             ) : null}
           </div>
@@ -98,7 +103,7 @@ export function ProductPage({ product }: { product: Product }) {
         </Section>
       ) : null}
 
-      {rest.length ? (
+      {rest.some((shot) => shot.priority === "must" || findShot(shot.key)) ? (
         <Section>
           <h2 className="text-h2">In the product</h2>
           <div className="mt-12 grid gap-10 md:grid-cols-2">

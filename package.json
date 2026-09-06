@@ -12,7 +12,8 @@
     "boundary-check": "node scripts/boundary-check.mjs",
     "test": "playwright test",
     "docs": "node --experimental-strip-types scripts/docs.mjs",
-    "icons": "node scripts/icons.mjs"
+    "icons": "node scripts/icons.mjs",
+    "capture": "node scripts/capture.mjs"
   },
   "dependencies": {
     "next": "16.3.3",
