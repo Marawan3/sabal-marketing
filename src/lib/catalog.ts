@@ -27,6 +27,8 @@ export type Flow = {
 export type Product = {
   slug: string;
   name: string;
+  /** One line under the name in the mega-menu. */
+  blurb: string;
   pillar: Pillar;
   /** Appears in the Product mega-menu. */
   inMenu: boolean;
@@ -74,6 +76,7 @@ export const products: Product[] = [
   {
     slug: "online-ordering",
     name: "Online Ordering",
+    blurb: "Take direct pickup and delivery orders.",
     pillar: "sell",
     inMenu: true,
     headline: "Take orders on your own website, under your own name.",
@@ -101,6 +104,7 @@ export const products: Product[] = [
   {
     slug: "online-menu",
     name: "Online Menu",
+    blurb: "A menu people can order from.",
     pillar: "sell",
     inMenu: false,
     headline: "A menu people can read, and order from.",
@@ -118,6 +122,7 @@ export const products: Product[] = [
   {
     slug: "delivery",
     name: "Delivery",
+    blurb: "Offer delivery with third-party drivers.",
     pillar: "sell",
     inMenu: true,
     headline: "Delivery without building a delivery fleet.",
@@ -152,6 +157,7 @@ export const products: Product[] = [
   {
     slug: "catering",
     name: "Catering",
+    blurb: "Take large orders ahead of time.",
     pillar: "sell",
     inMenu: true,
     headline: "Turn big orders into easy orders.",
@@ -172,6 +178,7 @@ export const products: Product[] = [
   {
     slug: "table-ordering",
     name: "Table Ordering",
+    blurb: "Order and pay from the table.",
     pillar: "sell",
     inMenu: true,
     headline: "Order and pay from the table.",
@@ -183,6 +190,7 @@ export const products: Product[] = [
   {
     slug: "kiosk",
     name: "Self-Service Kiosk",
+    blurb: "Self-service ordering you control.",
     pillar: "sell",
     inMenu: true,
     headline: "In-store ordering you control.",
@@ -198,6 +206,7 @@ export const products: Product[] = [
   {
     slug: "restaurant-app",
     name: "Branded Mobile App",
+    blurb: "Your own iOS and Android app.",
     pillar: "sell",
     inMenu: true,
     headline: "Your own app on their phone.",
@@ -213,6 +222,7 @@ export const products: Product[] = [
   {
     slug: "gift-cards",
     name: "Gift Cards",
+    blurb: "Digital gift cards sold online.",
     pillar: "sell",
     inMenu: false,
     headline: "Digital gift cards, sold from your website.",
@@ -224,6 +234,7 @@ export const products: Product[] = [
   {
     slug: "upsells",
     name: "Smart Upsells",
+    blurb: "Suggest add-ons while they order.",
     pillar: "sell",
     inMenu: false,
     headline: "The right add-on at the right moment.",
@@ -240,6 +251,7 @@ export const products: Product[] = [
   {
     slug: "restaurant-websites",
     name: "Restaurant Websites",
+    blurb: "Your digital storefront.",
     pillar: "grow",
     inMenu: true,
     headline: "Your digital storefront.",
@@ -260,6 +272,7 @@ export const products: Product[] = [
   {
     slug: "restaurant-seo",
     name: "Restaurant SEO",
+    blurb: "Built so search engines read your menu.",
     pillar: "grow",
     inMenu: true,
     headline: "Built so Google can read your menu.",
@@ -283,6 +296,7 @@ export const products: Product[] = [
   {
     slug: "listings",
     name: "Restaurant Listings",
+    blurb: "Consistent name, hours, and address everywhere.",
     pillar: "grow",
     inMenu: false,
     headline: "The same name, hours, and address everywhere.",
@@ -297,6 +311,7 @@ export const products: Product[] = [
   {
     slug: "guest-feedback",
     name: "Guest Feedback",
+    blurb: "Capture feedback and resolve issues faster.",
     pillar: "grow",
     inMenu: true,
     headline: "Know what your guests think.",
@@ -330,6 +345,7 @@ export const products: Product[] = [
   {
     slug: "reviews",
     name: "Reviews",
+    blurb: "Ask for reviews and watch what comes in.",
     pillar: "grow",
     inMenu: true,
     headline: "More reviews, watched in one place.",
@@ -347,6 +363,7 @@ export const products: Product[] = [
   {
     slug: "loyalty",
     name: "Loyalty & Rewards",
+    blurb: "Give regulars a reason to come back.",
     pillar: "grow",
     inMenu: true,
     headline: "Give regulars a reason to come back.",
@@ -362,6 +379,7 @@ export const products: Product[] = [
   {
     slug: "customers",
     name: "Customer Database",
+    blurb: "Know who your direct customers are.",
     pillar: "grow",
     inMenu: false,
     headline: "Know who your direct customers are.",
@@ -379,6 +397,7 @@ export const products: Product[] = [
   {
     slug: "restaurant-marketing",
     name: "Customer Marketing",
+    blurb: "Email, text, and automatic campaigns.",
     pillar: "grow",
     inMenu: true,
     headline: "Turn customers into regulars.",
@@ -399,6 +418,7 @@ export const products: Product[] = [
   {
     slug: "email-marketing",
     name: "Email Marketing",
+    blurb: "Email the customers who order from you.",
     pillar: "grow",
     inMenu: false,
     headline: "Email your customers without a separate tool.",
@@ -414,6 +434,7 @@ export const products: Product[] = [
   {
     slug: "sms-marketing",
     name: "SMS Marketing",
+    blurb: "Short texts to opted-in customers.",
     pillar: "grow",
     inMenu: false,
     headline: "A text they actually read.",
@@ -431,6 +452,7 @@ export const products: Product[] = [
   {
     slug: "menu-management",
     name: "Menu Management",
+    blurb: "Change the menu once, everywhere.",
     pillar: "operate",
     inMenu: true,
     headline: "Change the menu once. It changes everywhere.",
@@ -452,6 +474,7 @@ export const products: Product[] = [
   {
     slug: "order-management",
     name: "Order Management",
+    blurb: "Every order from new to done.",
     pillar: "operate",
     inMenu: true,
     headline: "Every order, from new to done.",
@@ -469,6 +492,7 @@ export const products: Product[] = [
   {
     slug: "kitchen-display",
     name: "Kitchen Display",
+    blurb: "Orders on a kitchen screen.",
     pillar: "operate",
     inMenu: true,
     headline: "Orders on a screen, in the order they came in.",
@@ -484,6 +508,7 @@ export const products: Product[] = [
   {
     slug: "payments",
     name: "Payments",
+    blurb: "Fast checkout, payouts to your bank.",
     pillar: "operate",
     inMenu: true,
     headline: "A fast checkout for them. Money to your bank for you.",
@@ -505,6 +530,7 @@ export const products: Product[] = [
   {
     slug: "analytics",
     name: "Analytics",
+    blurb: "Sales, orders, menu, and customer reports.",
     pillar: "operate",
     inMenu: true,
     headline: "Know what's working.",
@@ -522,6 +548,7 @@ export const products: Product[] = [
   {
     slug: "reservations",
     name: "Reservations",
+    blurb: "Direct bookings and a waitlist.",
     pillar: "operate",
     inMenu: true,
     headline: "Book a table without a middleman.",
@@ -533,6 +560,7 @@ export const products: Product[] = [
   {
     slug: "ai",
     name: "WunTab AI",
+    blurb: "An assistant that knows your orders.",
     pillar: "scale",
     inMenu: true,
     headline: "An assistant that knows your menu and your orders.",
@@ -551,6 +579,7 @@ export const products: Product[] = [
   {
     slug: "multi-location",
     name: "Multi-Location",
+    blurb: "Every location on one account.",
     pillar: "scale",
     inMenu: true,
     headline: "One restaurant or fifty.",
@@ -566,6 +595,7 @@ export const products: Product[] = [
   {
     slug: "enterprise",
     name: "Restaurant Groups & Franchises",
+    blurb: "Group controls, location freedom.",
     pillar: "scale",
     inMenu: true,
     headline: "Controls for the group. Freedom for the location.",
@@ -581,6 +611,7 @@ export const products: Product[] = [
   {
     slug: "integrations",
     name: "Integrations",
+    blurb: "Payments and delivery, POS coming soon.",
     pillar: "scale",
     inMenu: true,
     headline: "Works with what you already use.",
@@ -594,6 +625,7 @@ export const products: Product[] = [
   {
     slug: "partners",
     name: "Partners",
+    blurb: "Offer WunTab under your own brand.",
     pillar: "scale",
     inMenu: false,
     headline: "Offer WunTab under your own brand.",
@@ -647,11 +679,24 @@ export const megaMenu: { pillar: Pillar; slugs: string[] }[] = [
   },
 ];
 
+/** Solutions menu groups (nav spec, 2026-09-05). */
+export const solutionsMenu: { title: string; slugs: string[] }[] = [
+  {
+    title: "By business",
+    slugs: ["independent-restaurants", "multi-location-restaurants", "restaurant-groups-franchises"],
+  },
+  {
+    title: "By restaurant type",
+    slugs: ["quick-service", "full-service", "catering"],
+  },
+];
+
 // ───────────────────────────── SOLUTIONS ─────────────────────────────
 
 export type Solution = {
   slug: string;
   name: string;
+  blurb: string;
   headline: string;
   sub: string;
   points: string[];
@@ -662,6 +707,7 @@ export const solutions: Solution[] = [
   {
     slug: "independent-restaurants",
     name: "Independent Restaurants",
+    blurb: "One restaurant, everything direct.",
     headline: "Everything a single restaurant needs to sell direct.",
     sub: "Website, ordering, delivery, and marketing in one place, set up for you.",
     points: [
@@ -675,6 +721,7 @@ export const solutions: Solution[] = [
   {
     slug: "multi-location-restaurants",
     name: "Multi-Location Restaurants",
+    blurb: "Shared menus, per-location control.",
     headline: "Every location on one platform.",
     sub: "Shared menus, per-location control, and reporting across all of them.",
     points: [
@@ -687,6 +734,7 @@ export const solutions: Solution[] = [
   {
     slug: "restaurant-groups-franchises",
     name: "Restaurant Groups & Franchises",
+    blurb: "Organization-level controls.",
     headline: "Group controls, location freedom.",
     sub: "Decide what the organization sets and what each franchisee runs.",
     points: [
@@ -699,6 +747,7 @@ export const solutions: Solution[] = [
   {
     slug: "quick-service",
     name: "Quick-Service Restaurants",
+    blurb: "Kiosk, app, and faster lines.",
     headline: "Fast orders, fewer lines.",
     sub: "Kiosk, app, and online ordering that move people through faster.",
     points: [
@@ -711,6 +760,7 @@ export const solutions: Solution[] = [
   {
     slug: "full-service",
     name: "Full-Service Restaurants",
+    blurb: "Reservations, table ordering, feedback.",
     headline: "Reservations, table ordering, and feedback while they're seated.",
     sub: "Direct bookings, QR ordering at the table, and a way for guests to tell you how it went.",
     points: [
@@ -722,7 +772,8 @@ export const solutions: Solution[] = [
   },
   {
     slug: "catering",
-    name: "Catering",
+    name: "Catering Businesses",
+    blurb: "Big orders without the phone tag.",
     headline: "Big orders without the phone tag.",
     sub: "A catering menu, lead times, minimums, and delivery, all online.",
     points: [

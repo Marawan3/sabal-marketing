@@ -157,8 +157,19 @@ stock with optional Coming soon and notes; optional numbered flow; more screens;
 delivery order, feedback loop, lifecycle. Do not number things that are not sequences.
 
 The single-page patterns below are kept for `/menu-check`, which still uses the
-proof tickets. Native `<details>` for FAQ, dropdowns, and the mobile menu stays;
-the header has zero client JavaScript.
+proof tickets. Native `<details>` for FAQ and the mobile accordion menu stays.
+
+**Header (nav spec, 2026-09-05):** three zones on a `1fr auto 1fr` grid so the
+center nav is centered on the viewport, logo left, Log in + Get Started right. The
+desktop nav is the one client island besides the proof tickets
+(`src/components/desktop-nav.tsx`): menus open on hover or focus, click toggles for
+touch and keyboard, 160ms close delay so the gap under the header is not a dead
+zone, hovering another trigger switches immediately, hovering Pricing closes, Escape
+closes and returns focus, `aria-expanded` and `aria-controls` on every trigger.
+Panels are centered under the navbar at a consistent position: Product 1180px wide
+with the four pillars and a one-line blurb per product (`blurb` in the catalog),
+Solutions 720px in two groups, Resources and Company 320px. Below `lg` the header
+switches to the hamburger with tap-based accordions. Only link to pages that exist.
 
 1. **Hero.** Question: what is this. Text only, left-aligned, seven columns wide:
    a plain headline, one sentence under it, one saffron button, one underlined text

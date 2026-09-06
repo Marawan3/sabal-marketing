@@ -464,7 +464,7 @@ What you can do:
 - Order and pay at the table
 - Feedback before they leave
 
-### Catering (/solutions/catering)
+### Catering Businesses (/solutions/catering)
 
 **Big orders without the phone tag.** A catering menu, lead times, minimums, and delivery, all online.
 

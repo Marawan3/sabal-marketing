@@ -62,13 +62,52 @@ test("menu check page carries the proof tickets", async ({ request }) => {
   expect(html).toContain(String(copy.menuCheck.right.total));
 });
 
-test("header has the product mega-menu and the Get Started CTA", async ({ page }) => {
+test("product mega-menu opens on hover, switches to Solutions, closes on Pricing", async ({
+  page,
+}) => {
   await page.goto("/");
-  await page.locator("header summary", { hasText: "Product" }).click();
+  const product = page.getByRole("button", { name: "Product" });
+  await product.hover();
+  await expect(product).toHaveAttribute("aria-expanded", "true");
   for (const slug of ["online-ordering", "restaurant-websites", "order-management", "multi-location"]) {
     await expect(page.locator(`header a[href="/${slug}"]`).first()).toBeVisible();
   }
+  // Moving into the panel keeps it open.
+  await page.locator('header a[href="/delivery"]').first().hover();
+  await expect(product).toHaveAttribute("aria-expanded", "true");
+  // Hovering Solutions switches immediately.
+  const solutions = page.getByRole("button", { name: "Solutions" });
+  await solutions.hover();
+  await expect(solutions).toHaveAttribute("aria-expanded", "true");
+  await expect(product).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator('header a[href="/solutions/quick-service"]').first()).toBeVisible();
+  // Hovering Pricing closes everything.
+  await page.locator('header a[href="/pricing"]').first().hover();
+  await expect(solutions).toHaveAttribute("aria-expanded", "false");
   await expect(page.locator(`header a[href="${demoHref}"]`).first()).toBeVisible();
+});
+
+test("mega-menu works from the keyboard and Escape returns focus", async ({ page }) => {
+  await page.goto("/");
+  const product = page.getByRole("button", { name: "Product" });
+  await product.focus();
+  await expect(product).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator('header a[href="/online-ordering"]').first()).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(product).toHaveAttribute("aria-expanded", "false");
+  await expect(product).toBeFocused();
+  const controls = await product.getAttribute("aria-controls");
+  expect(controls).toBeTruthy();
+  await expect(page.locator(`[id="${controls}"]`)).toBeHidden();
+});
+
+test("center nav is centered on the viewport at 1440", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const box = await page.locator('header nav[aria-label="Primary"]').boundingBox();
+  expect(box).toBeTruthy();
+  const center = box!.x + box!.width / 2;
+  expect(Math.abs(center - 720)).toBeLessThan(24);
 });
 
 test("the header CTA stays visible on a phone", async ({ page }) => {

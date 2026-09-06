@@ -47,13 +47,23 @@ test.describe("screenshots", () => {
         await section.screenshot({ path: `${outDir}/home-${id}-${width}.png` });
       }
       if (width === 1440) {
-        await page.locator("header summary", { hasText: "Product" }).click();
+        await page.getByRole("button", { name: "Product" }).hover();
+        await page.waitForTimeout(200);
         await page.screenshot({
           path: `${outDir}/mega-menu-${width}.png`,
-          clip: { x: 0, y: 0, width: 1440, height: 420 },
+          clip: { x: 0, y: 0, width: 1440, height: 520 },
         });
+        await page.getByRole("button", { name: "Solutions" }).hover();
+        await page.waitForTimeout(200);
+        await page.screenshot({
+          path: `${outDir}/solutions-menu-${width}.png`,
+          clip: { x: 0, y: 0, width: 1440, height: 320 },
+        });
+        await page.mouse.move(720, 700);
+        await page.waitForTimeout(300);
       } else {
         await page.locator("header summary", { hasText: "Menu" }).click();
+        await page.locator("header summary", { hasText: "Product" }).click();
         await page.screenshot({ path: `${outDir}/mobile-menu-${width}.png` });
       }
       for (const path of pages) {
