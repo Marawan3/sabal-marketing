@@ -46,7 +46,7 @@ test("legal pages return 200", async ({ request }) => {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
     const html = await response.text();
-    expect(html).toContain("coming soon");
+    expect(html).toContain("This document is being finalized.");
   }
 });
 

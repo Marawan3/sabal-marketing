@@ -152,13 +152,7 @@ export const copy = {
     body: "A short call. We'll show you what Google sees on your website today.",
     cta: "Book a call",
   },
-  legal: {
-    termsTitle: "Terms",
-    privacyTitle: "Privacy",
-    comingSoon:
-      "This page is coming soon. Our lawyer hasn't signed off on the public terms yet, so we're not publishing placeholder legal text.",
-    questions: "Questions in the meantime:",
-  },
+
   footer: {
     blurb: "Restaurant websites and online ordering, built and run for you.",
   },
