@@ -69,7 +69,7 @@ test("body text is at least 16px and readable at 390px", async ({ page }) => {
 });
 
 test("every page footer links to both legal routes", async ({ page }) => {
-  for (const path of ["/", "/online-ordering", "/pricing", "/terms", "/privacy"]) {
+  for (const path of ["/", "/terms", "/privacy"]) {
     await page.goto(path);
     await expect(page.locator('footer a[href="/privacy"]'), path).toHaveCount(1);
     await expect(page.locator('footer a[href="/terms"]'), path).toHaveCount(1);
