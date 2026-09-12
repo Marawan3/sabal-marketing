@@ -210,13 +210,6 @@ export const copy = {
     aiBody:
       "AI helpers like ChatGPT and Claude read your menu the same way. If search engines can read it, so can they.",
   },
-  legal: {
-    termsTitle: "Terms",
-    privacyTitle: "Privacy",
-    comingSoon:
-      "This page is coming soon. Our lawyer hasn't signed off on the public terms yet, so we're not publishing placeholder legal text.",
-    questions: "Questions in the meantime:",
-  },
   footer: {
     blurb: "Restaurant websites, online ordering, delivery, and marketing, built and run for you.",
   },

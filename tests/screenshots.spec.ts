@@ -30,6 +30,8 @@ const pages = [
   "pricing",
   "how-it-works",
   "solutions/independent-restaurants",
+  "privacy",
+  "terms",
 ] as const;
 
 test.describe("screenshots", () => {

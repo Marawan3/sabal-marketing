@@ -1,5 +1,6 @@
 import { copy } from "./copy";
 import { products, solutions } from "./catalog";
+import { finalLegalRoutes } from "./legal";
 
 export const site = {
   name: "WunTab",
@@ -44,7 +45,11 @@ export const legalNav = [
 ] as const;
 
 /** Every public route, for the sitemap. */
-export const allRoutes = [
+/**
+ * Every route that belongs in the sitemap. Legal documents join only once
+ * their final text is published; until then they are noindex and excluded.
+ */
+export const allRoutes: string[] = [
   "/",
   "/pricing",
   "/how-it-works",
@@ -52,11 +57,10 @@ export const allRoutes = [
   "/about",
   "/contact",
   "/blog",
-  "/privacy",
-  "/terms",
   ...products.map((p) => `/${p.slug}`),
   ...solutions.map((s) => `/solutions/${s.slug}`),
-] as const;
+  ...finalLegalRoutes(),
+];
 
 export function getSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");

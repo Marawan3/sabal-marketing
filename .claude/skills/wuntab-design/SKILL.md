@@ -311,6 +311,24 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   named in the AI-readability line. Clover may be named.
 - Mirror any copy change into `COPY.md` so Marawan can review without reading code.
 
+## 11b. Legal pages are hosting only
+
+`/privacy` and `/terms` exist for the Clover App Market submission. **Never write,
+reword, summarise, or "improve" legal wording, and never fill the placeholder with
+invented text.** Marawan supplies the text; it is pasted verbatim into
+`src/lib/legal.ts`, where `heading` becomes an H2 and each `body` string becomes a
+paragraph. `[[label|/href]]` is the only markup, so his words can link to the other
+document unchanged.
+
+Until `final: true`, each page shows the H1 and one line, `LEGAL_PLACEHOLDER`, and
+nothing else. Those pages are force-noindex and excluded from the sitemap regardless
+of the site-wide indexing flag. Publishing = paste text, set `contactEmail`, set
+`lastUpdated` to that day, flip `final`. Both documents must carry a contact email;
+`/terms` must link to `/privacy`. `tests/legal.spec.ts` holds the whole contract,
+including 200 on the exact paths and 301 (not 308) on `/privacy-policy` and
+`/terms-of-service`. No hero, no marketing copy, no cookie banner on these pages.
+The old drafts in `legal/` are the dead Sabal 5% packet and are never routed.
+
 ## 12. Quality floor before a preview goes up
 
 - `npm run honesty && npm run copy-lint && npm run boundary-check && npm run lint`

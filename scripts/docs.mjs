@@ -57,7 +57,7 @@ md += `## Solutions\n\n`;
 for (const s of solutions) {
   md += `### ${s.name} (/solutions/${s.slug})\n\n**${s.headline}** ${s.sub}\n\n${s.points.map((x) => `- ${x}`).join("\n")}\n\n`;
 }
-md += `## Company\n\n**About:** ${copy.about.headline}\n\n${copy.about.body.join("\n\n")}\n\n**Contact:** ${copy.contact.headline} ${copy.contact.body}\n\n**Articles:** ${copy.blog.body}\n\n**Legal placeholders:** ${copy.legal.comingSoon}\n`;
+md += `## Company\n\n**About:** ${copy.about.headline}\n\n${copy.about.body.join("\n\n")}\n\n**Contact:** ${copy.contact.headline} ${copy.contact.body}\n\n**Articles:** ${copy.blog.body}\n\n**Legal:** /privacy and /terms are hosting shells. Text is supplied by Marawan and pasted verbatim into src/lib/legal.ts; nothing legal is written here.\n`;
 writeFileSync(join(root, "COPY.md"), md);
 
 // ── ASSETS.md screenshot checklist ───────────────────────────────────

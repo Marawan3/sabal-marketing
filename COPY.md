@@ -486,4 +486,4 @@ We promise what we control and we say what things cost. That is the whole compan
 
 **Articles:** We are writing. The first articles will be about getting found on Google, direct ordering, and running delivery without drivers.
 
-**Legal placeholders:** This page is coming soon. Our lawyer hasn't signed off on the public terms yet, so we're not publishing placeholder legal text.
+**Legal:** /privacy and /terms are hosting shells. Text is supplied by Marawan and pasted verbatim into src/lib/legal.ts; nothing legal is written here.
