@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SmartLink } from "./smart-link";
 
 const base =
   "inline-flex items-center justify-center rounded-[8px] font-medium leading-none transition-colors duration-150";
@@ -21,12 +22,12 @@ export function CtaLink({
   className?: string;
 }) {
   return (
-    <a
+    <SmartLink
       href={href}
       className={`${base} ${sizes[size]} bg-saffron text-ink hover:bg-saffron-deep ${className}`}
     >
       {children}
-    </a>
+    </SmartLink>
   );
 }
 
@@ -41,11 +42,11 @@ export function TextLink({
   className?: string;
 }) {
   return (
-    <a
+    <SmartLink
       href={href}
       className={`font-medium underline decoration-ink/30 underline-offset-4 transition-colors duration-150 hover:decoration-ink ${className}`}
     >
       {children}
-    </a>
+    </SmartLink>
   );
 }

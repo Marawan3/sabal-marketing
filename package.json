@@ -11,7 +11,9 @@
     "copy-lint": "node scripts/copy-lint.mjs",
     "boundary-check": "node scripts/boundary-check.mjs",
     "test": "playwright test",
-    "evidence": "node scripts/evidence.mjs"
+    "docs": "node --experimental-strip-types scripts/docs.mjs",
+    "icons": "node scripts/icons.mjs",
+    "capture": "node scripts/capture.mjs"
   },
   "dependencies": {
     "next": "16.3.3",

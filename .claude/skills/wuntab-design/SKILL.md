@@ -13,21 +13,44 @@ Copy is draft until he says otherwise.
 
 ## 1. What we are designing for
 
-**Wuntab** builds and runs an independent restaurant's own website with online ordering.
-One vendor: the site, getting found on Google, the ordering, checkout, and orders
-printing straight into the kitchen through the POS they already own (Clover first).
-Not self-serve. Every restaurant is onboarded by hand. The only thing this site has to
-do is get an owner to book a call.
+**WunTab** (capital W, capital T) is a restaurant technology platform: more direct
+orders, more repeat customers, one platform. It brings restaurant websites, online
+ordering, delivery, catering, guest experience, marketing, and operations together.
+Online ordering is the core commerce engine; everything else expands how a restaurant
+finds customers, fulfills orders, builds relationships, and operates.
+
+Never position WunTab as merely an ordering widget, a website builder, an SEO product,
+a Google menu tool, or a feedback product. Those are components.
+
+Not self-serve. Every restaurant is onboarded by hand. The one conversion action on
+the site is **Get Started**, which books a call.
+
+**Information architecture (Marawan's 2026-09-05 spec, source of truth is
+`src/lib/catalog.ts`):** four pillars, Sell / Grow / Operate / Scale, each product on
+its own route generated from the catalog by one template. Product mega-menu shows the
+pillar structure, not every capability. Solutions live under `/solutions/<slug>`.
+The "See what Google sees" tickets live on `/menu-check` as a lead tool, not as the
+headline of the company.
+
+**Cut, never reintroduce under any name:** Website Grader, Developer API or platform,
+Webhooks, WunTab POS, Inventory, Labor or employee scheduling, Restaurant CRM (say
+"customer database"). POS *integrations* are not cut: they are "Coming soon" and never
+"available".
+
+**The product story every page should serve:** Discover → Order → Fulfill →
+Understand → Build the relationship → Bring them back. The lifecycle, not any one
+feature, is what WunTab is.
 
 **Reader:** an independent restaurant owner. Often family-run, busy, not technical,
 burned by agencies and apps before, losing a big cut of each order to delivery
 marketplaces. They read this on a phone between rushes. Write and design for a smart,
 tired person.
 
-**The one idea that drives the page:** most restaurant websites hide the menu behind
-code Google cannot read, so the restaurant is invisible for "biryani near me". On a
-Wuntab site Google can read every dish and every price. We promise the inputs (Google
-can read everything). We never promise the outputs (rankings). That honesty is the brand.
+**On search claims:** Google can run JavaScript; it does so in a later pass that may
+not finish. WunTab puts the menu in the page itself so it is read on the first visit.
+Never write "Google can't run JavaScript" or "Google sees an empty page" as a blanket
+claim. We promise the inputs (search engines can read everything). We never promise
+rankings, indexing, traffic, or AI citations. That honesty is the brand.
 
 **Voice in one line:** the restaurant keeps the money, the diner gets a fast honest
 checkout, and Google finally sees the menu.
@@ -112,11 +135,61 @@ would say out loud.
   Plain content never gets a shadow or a border box.
 - Grid: 12 columns desktop. Text columns take 6 or 7 of them, never all 12.
 
-## 6. Section patterns, in order
+## 6. Section patterns
 
-Every section answers one question the owner has. Section content lives in
-`src/lib/copy.ts`. Sections are server components. Native `<details>` for FAQ and the
-mobile menu stays.
+**The product is the visual identity.** Product sections show real WunTab screens in
+a `ScreenFrame` (`src/components/screen-frame.tsx`): slim browser bar on desktop
+frames, slim status bar on phone frames, 16px / 24px radius, one shadow. The frame
+reads `public/shots/<key>.webp|png|jpg` at build time. Never draw a fake dashboard,
+never use a stock illustration or a generic SaaS graphic.
+
+**Slot policy (Marawan, 2026-09-06):** about 10 to 15 strong screens across the
+homepage beats one per feature. Every shot has a `priority`: `must` renders a
+captioned empty frame until the file exists; `helpful` renders nothing until it
+exists. Keys are shared across pages on purpose (the hero's four screens are the
+same files as the Restaurant Websites, Online Ordering, Order Management, and
+Kitchen Display pages). Products with no honest screen get copy, a capability list,
+a flow, or the `OrgDiagram` (Scale), not a placeholder. The classified list is in
+`ASSETS.md`; `npm run capture` with `shots.config.json` fills the files.
+
+**Hero composition:** one connected composition, not four floating cards. Website at
+the back, the customer's phone overlapping it, dashboard and kitchen stepping down
+the right, and the lifecycle named under it (Website → Ordering → Dashboard →
+Kitchen). Test: can an owner tell from the visual alone that the website, ordering,
+management, and fulfillment are one platform?
+
+**Homepage order (spec):** hero → lifecycle proof → Sell directly → Turn searches into
+orders (+ menu-check CTA) → Delivery flow → Catering → Guest experience flow + chain →
+Customer growth → Operations → Analytics → Multi-location → Integrations → Pricing →
+Customer proof (real only) → FAQ → Final CTA. Alternate `paper` and `ticket` bands.
+Every pillar section carries its pillar as a sentence-case kicker above the heading
+(Sell, Grow, Operate, Scale) so the architecture is visible on the homepage. Product
+rows use the catalog `blurb`, the same line the mega-menu shows. Delivery is the one
+dark showcase band on the page; the final CTA is the other. Internal links go through
+`SmartLink` (next/link, prefetch off); external, mailto, and hash targets stay anchors.
+
+**Product page template** (`src/components/product-page.tsx`): pillar label, headline,
+sub, Get Started + See pricing, hero screen; "What you can do" checklist on ticket
+stock with optional Coming soon and notes; optional numbered flow; more screens;
+"Works with" related products as hairline rows; dark final CTA.
+
+**Flows** (`src/components/flow.tsx`) are numbered because they are real sequences:
+delivery order, feedback loop, lifecycle. Do not number things that are not sequences.
+
+The single-page patterns below are kept for `/menu-check`, which still uses the
+proof tickets. Native `<details>` for FAQ and the mobile accordion menu stays.
+
+**Header (nav spec, 2026-09-05):** three zones on a `1fr auto 1fr` grid so the
+center nav is centered on the viewport, logo left, Log in + Get Started right. The
+desktop nav is the one client island besides the proof tickets
+(`src/components/desktop-nav.tsx`): menus open on hover or focus, click toggles for
+touch and keyboard, 160ms close delay so the gap under the header is not a dead
+zone, hovering another trigger switches immediately, hovering Pricing closes, Escape
+closes and returns focus, `aria-expanded` and `aria-controls` on every trigger.
+Panels are centered under the navbar at a consistent position: Product 1180px wide
+with the four pillars and a one-line blurb per product (`blurb` in the catalog),
+Solutions 720px in two groups, Resources and Company 320px. Below `lg` the header
+switches to the hamburger with tap-based accordions. Only link to pages that exist.
 
 1. **Hero.** Question: what is this. Text only, left-aligned, seven columns wide:
    a plain headline, one sentence under it, one saffron button, one underlined text
@@ -151,7 +224,10 @@ mobile menu stays.
 ## 7. The call to action
 
 One action on the whole site: book a call. Same label everywhere, in the header,
-hero, pricing, and final band. Label: **"Book a call"** (fallback "Talk to us").
+hero, pricing, and final band. Label: **"Get Started"** (spec, 2026-09-05; "Talk to
+us" on the pricing panel). Secondary: "See how it works" → `/how-it-works`.
+"Log in" appears only when `NEXT_PUBLIC_APP_HREF` is set, because the app host still
+carries the old name and that name must never render.
 The href is `demoHref` from `src/lib/site.ts`, driven by `NEXT_PUBLIC_DEMO_HREF`
 (Marawan will point it at his scheduling link) with a mailto fallback. The header
 button is visible on mobile too, not hidden behind the menu. No forms, no API routes,
@@ -234,6 +310,24 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   metadata. "Sabal" never appears in anything that renders. Claude and ChatGPT may be
   named in the AI-readability line. Clover may be named.
 - Mirror any copy change into `COPY.md` so Marawan can review without reading code.
+
+## 11b. Legal pages are hosting only
+
+`/privacy` and `/terms` exist for the Clover App Market submission. **Never write,
+reword, summarise, or "improve" legal wording, and never fill the placeholder with
+invented text.** Marawan supplies the text; it is pasted verbatim into
+`src/lib/legal.ts`, where `heading` becomes an H2 and each `body` string becomes a
+paragraph. `[[label|/href]]` is the only markup, so his words can link to the other
+document unchanged.
+
+Until `final: true`, each page shows the H1 and one line, `LEGAL_PLACEHOLDER`, and
+nothing else. Those pages are force-noindex and excluded from the sitemap regardless
+of the site-wide indexing flag. Publishing = paste text, set `contactEmail`, set
+`lastUpdated` to that day, flip `final`. Both documents must carry a contact email;
+`/terms` must link to `/privacy`. `tests/legal.spec.ts` holds the whole contract,
+including 200 on the exact paths and 301 (not 308) on `/privacy-policy` and
+`/terms-of-service`. No hero, no marketing copy, no cookie banner on these pages.
+The old drafts in `legal/` are the dead Sabal 5% packet and are never routed.
 
 ## 12. Quality floor before a preview goes up
 

@@ -1,28 +1,66 @@
 import { copy } from "./copy";
+import { products, solutions } from "./catalog";
+import { finalLegalRoutes } from "./legal";
 
 export const site = {
-  name: "Wuntab",
+  name: "WunTab",
   tagline: copy.hero.headline,
   description: copy.hero.sub,
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@wuntab.com",
 } as const;
 
-/** Book-a-call target. Marawan points NEXT_PUBLIC_DEMO_HREF at his scheduling link. */
+/** "Get Started" target. Marawan points NEXT_PUBLIC_DEMO_HREF at his scheduling link. */
 export const demoHref =
   process.env.NEXT_PUBLIC_DEMO_HREF ??
-  `mailto:${site.contactEmail}?subject=Book%20a%20call%20with%20Wuntab`;
+  `mailto:${site.contactEmail}?subject=Get%20started%20with%20WunTab`;
 
-export const nav = [
-  { href: "/#proof", label: "What Google sees" },
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#pricing", label: "Pricing" },
-  { href: "/#faq", label: "Questions" },
+/** "Log in" target. Hidden until NEXT_PUBLIC_APP_HREF is set. */
+export const appHref = process.env.NEXT_PUBLIC_APP_HREF;
+
+export const menuCheckHref = `mailto:${site.contactEmail}?subject=Check%20my%20menu&body=My%20website%20is%3A%20`;
+
+export const topNav = [
+  { key: "product", label: "Product" },
+  { key: "solutions", label: "Solutions" },
+  { key: "pricing", label: "Pricing", href: "/pricing" },
+  { key: "resources", label: "Resources" },
+  { key: "company", label: "Company" },
+] as const;
+
+export const resourcesNav = [
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/menu-check", label: "See what Google sees" },
+  { href: "/blog", label: "Articles" },
+] as const;
+
+export const companyNav = [
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/partners", label: "Partners" },
 ] as const;
 
 export const legalNav = [
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy" },
 ] as const;
+
+/** Every public route, for the sitemap. */
+/**
+ * Every route that belongs in the sitemap. Legal documents join only once
+ * their final text is published; until then they are noindex and excluded.
+ */
+export const allRoutes: string[] = [
+  "/",
+  "/pricing",
+  "/how-it-works",
+  "/menu-check",
+  "/about",
+  "/contact",
+  "/blog",
+  ...products.map((p) => `/${p.slug}`),
+  ...solutions.map((s) => `/solutions/${s.slug}`),
+  ...finalLegalRoutes(),
+];
 
 export function getSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");

@@ -1,0 +1,22 @@
+{
+  "_": "Copy to shots.config.json. Fill url for each screen you can capture. kind phone = 390x844, otherwise 1280x800. Optional: selector (capture one element), waitFor (selector to wait for), settleMs.",
+  "shots": [
+    { "key": "website-home", "kind": "desktop", "url": "", "note": "MUST. The live restaurant website home. Needs the owner's OK before publishing." },
+    { "key": "ordering-menu", "kind": "phone", "url": "", "note": "MUST. The ordering menu with categories and dishes." },
+    { "key": "order-management", "kind": "desktop", "url": "", "note": "MUST. Dashboard with incoming and in-progress orders. No real customer names." },
+    { "key": "kitchen-display", "kind": "desktop", "url": "", "note": "MUST. Kitchen display with a few orders in progress." },
+    { "key": "delivery-order", "kind": "desktop", "url": "", "note": "MUST. A delivery order with driver status." },
+    { "key": "catering-menu", "kind": "phone", "url": "", "note": "MUST. Catering menu with scheduling." },
+    { "key": "feedback-guest", "kind": "phone", "url": "", "note": "MUST. The guest feedback form after a QR scan." },
+    { "key": "feedback-dashboard", "kind": "desktop", "url": "", "note": "MUST. Manager alert or satisfaction dashboard." },
+    { "key": "menu-management", "kind": "desktop", "url": "", "note": "MUST. The menu editor." },
+    { "key": "analytics", "kind": "desktop", "url": "", "note": "MUST. Sales and orders analytics." },
+    { "key": "ordering-checkout", "kind": "phone", "url": "", "note": "Helpful. Checkout with tip and the 5% fee shown." },
+    { "key": "delivery-tracking", "kind": "phone", "url": "", "note": "Helpful. Customer-side delivery tracking." },
+    { "key": "mobile-app", "kind": "phone", "url": "", "note": "Helpful. The branded app, if a build exists." },
+    { "key": "seo-dish-page", "kind": "phone", "url": "", "note": "Helpful. A single dish page on the restaurant site." },
+    { "key": "customers", "kind": "desktop", "url": "", "note": "Helpful. Customer list. No real names or phones." },
+    { "key": "marketing-campaign", "kind": "desktop", "url": "", "note": "Helpful. Campaign builder." },
+    { "key": "multi-location", "kind": "desktop", "url": "", "note": "Helpful. Locations overview, only if it exists." }
+  ]
+}

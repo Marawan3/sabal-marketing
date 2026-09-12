@@ -1,5 +1,5 @@
 /**
- * Local Wuntab brand tokens. Do not import from the product repo.
+ * Local WunTab brand tokens. Do not import from the product repo.
  * Source of truth: .claude/skills/wuntab-design/SKILL.md
  */
 export const brand = {

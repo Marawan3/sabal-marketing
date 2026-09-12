@@ -1,12 +1,10 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/site";
-
-const paths = ["/", "/privacy", "/terms"] as const;
+import { absoluteUrl, allRoutes } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return paths.map((path) => ({
+  return allRoutes.map((path) => ({
     url: absoluteUrl(path),
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.3,
+    priority: path === "/" ? 1 : path === "/privacy" || path === "/terms" ? 0.3 : 0.7,
   }));
 }

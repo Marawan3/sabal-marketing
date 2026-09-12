@@ -2,6 +2,17 @@
 
 For the next agent (Fable 5.1). Read this before editing. Owner: Marawan Elkabany (`marawan@sabalpay.com`).
 
+> **Re-platformed 2026-09-05 (later the same day).** The site is no longer one page.
+> Marawan's platform spec turned it into ~45 routes: four product pillars (Sell / Grow /
+> Operate / Scale) generated from `src/lib/catalog.ts` through one template, six
+> `/solutions/*` pages, `/pricing`, `/how-it-works`, `/menu-check` (the old proof
+> tickets, now a lead tool), `/about`, `/contact`, `/blog`. Positioning is "More direct
+> orders. More repeat customers. One platform." Do not lead with Google/menu SEO.
+> Product screens are `ScreenFrame` slots that read `public/shots/<key>.*`; the
+> checklist is in `ASSETS.md`. Regenerate `COPY.md` and that checklist with `npm run docs`.
+> Cut products (never reintroduce): Website Grader, Developer API, Webhooks, WunTab POS,
+> Inventory, Labor scheduling, Restaurant CRM. POS integrations are "Coming soon".
+>
 > **Superseded 2026-09-05.** Marawan reviewed the site and rejected the look as generic.
 > The design constraints below (cream page, brick accent, system font, weights 400/500,
 > no shadows, no client JS) and the pricing line ("flat monthly, no per-order

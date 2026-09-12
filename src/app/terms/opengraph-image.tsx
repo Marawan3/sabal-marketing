@@ -1,10 +1,10 @@
-import { copy } from "@/lib/copy";
+import { legalDocs } from "@/lib/legal";
 import { createOgImage, ogContentType, ogSize } from "@/lib/og-image";
 
-export const alt = copy.legal.termsTitle;
+export const alt = legalDocs.terms.title;
 export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return createOgImage(copy.legal.termsTitle);
+  return createOgImage(legalDocs.terms.title);
 }
