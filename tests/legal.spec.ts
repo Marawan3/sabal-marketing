@@ -6,6 +6,7 @@ import {
   legalDocList,
   legalDocs,
   SERVICE_FEE_CLAUSE,
+  UNBUILT_FEATURES,
   unresolvedMarkers,
 } from "../src/lib/legal";
 
@@ -125,6 +126,24 @@ test("both documents carry the contact email, and the terms link to the privacy 
     expect(textOf(doc), `${doc.slug} contact email`).toContain(ENTITY.email);
   }
   expect(textOf(legalDocs.terms), "terms must link to /privacy").toContain("|/privacy]]");
+});
+
+test("the documents describe only features that exist today", async () => {
+  for (const doc of legalDocList) {
+    const text = textOf(doc).toLowerCase();
+    for (const feature of UNBUILT_FEATURES) {
+      expect(text, `${doc.slug} must not describe "${feature}"`).not.toContain(feature);
+    }
+  }
+});
+
+test("internal review notes never reach the page", async ({ request }) => {
+  for (const doc of legalDocList) {
+    if (!doc.review) continue;
+    expect(textOf(doc), `${doc.slug} review note in body`).not.toContain(doc.review);
+    const html = await (await request.get(`/${doc.slug}`)).text();
+    expect(html, `${doc.slug} review note in html`).not.toContain("REVIEW BEFORE TENANT");
+  }
 });
 
 test("card wording follows the inventory override: brand and last four stored, numbers not", async () => {

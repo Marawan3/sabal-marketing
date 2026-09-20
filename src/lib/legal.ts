@@ -1,8 +1,10 @@
 /**
  * Legal documents.
  *
- * DRAFT — `final: false` keeps both pages showing the placeholder, force-noindex
- * and out of the sitemap until Marawan approves the text.
+ * Text approved by Marawan 2026-09-20. Still `final: false`, which keeps both
+ * pages showing the placeholder, force-noindex and out of the sitemap, because
+ * the entity name, address and phone and the governing-law jurisdiction are
+ * still placeholders. Resolve those four and flip `final`.
  *
  * Structure follows Clover's two templates section for section:
  *   https://docs.clover.com/dev/docs/clover-privacy-policy-template
@@ -49,6 +51,23 @@ export const DATA_CLAUSE =
 export const SERVICE_FEE_CLAUSE =
   "Wuntab is free to the restaurant. There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken. It is collected by our payment processor and routed to Wuntab at settlement.";
 
+/**
+ * Planned or unplanned, but not built today (Marawan, 2026-09-20). The
+ * documents describe only what exists now and are versioned when a feature
+ * ships. `tests/legal.spec.ts` fails if any of these appear.
+ */
+export const UNBUILT_FEATURES = [
+  "loyalty",
+  "rewards",
+  "kiosk",
+  "table ordering",
+  "gift card",
+  "mobile app",
+  "reservation",
+  "email marketing",
+  "email campaign",
+] as const;
+
 export type LegalSection = {
   /** Rendered as an H2. */
   heading: string;
@@ -66,6 +85,12 @@ export type LegalDoc = {
   lastUpdated?: string;
   /** Must appear in the body of both documents. */
   contactEmail?: string;
+  /**
+   * An internal obligation attached to this document. Never rendered and never
+   * published, so it cannot leak onto a live legal page, and kept here rather
+   * than in a comment so it travels with the document it belongs to.
+   */
+  review?: string;
   sections: LegalSection[];
 };
 
@@ -76,6 +101,8 @@ const privacy: LegalDoc = {
   title: "Privacy Policy",
   final: false,
   contactEmail: ENTITY.email,
+  review:
+    "[REVIEW BEFORE TENANT 3] The 'Storefront customer information' section describes how customer data reaches us at checkout before Clover sees it. Review that framing before a third restaurant is onboarded.",
   sections: [
     {
       heading: "Who we are and what this policy covers",
@@ -104,7 +131,7 @@ const privacy: LegalDoc = {
     {
       heading: "How we use the information",
       body: [
-        `We use the information to provide the service: to publish the restaurant's website and menu, to take and track orders, to route orders to the kitchen by printed ticket and kitchen display and, where Clover is connected, into Clover, to arrange delivery, to take payment, and to send order notifications by text message.`,
+        `We use the information to provide the service: to publish the restaurant's website and menu, to take and track orders, to route orders to the kitchen by printed ticket and, where Clover is connected, into Clover, to arrange delivery, to take payment, and to send order notifications by text message.`,
         `We use it to support the restaurant and its customers, including matching a charge to a line on a statement, which is the reason we keep the card brand and last four digits.`,
         `We use it to operate and secure the service, through error monitoring, audit logging and the prevention of abuse.`,
         `We submit the restaurant's menu and website copy to our artificial-intelligence provider when the restaurant asks us to draft content. No customer information is sent for this purpose, and nothing is published without a person at the restaurant approving it.`,
@@ -130,12 +157,11 @@ const privacy: LegalDoc = {
       ],
     },
     {
-      heading: "Storefront customer information [REVIEW BEFORE TENANT 3]",
+      heading: "Storefront customer information",
       body: [
         `Wuntab operates the restaurant's own website and its checkout. When someone places an order there, they give their information to the restaurant through a storefront that we run. We receive and store that information at the moment it is entered, before any part of it reaches Clover, and we would hold it whether or not the restaurant uses Clover at all.`,
         `What Clover receives is a subset: the order number, special instructions, item names, quantities and totals. Clover does not receive the customer's name, phone number or email address from us.`,
         `The restaurant is the merchant of record for these orders. The restaurant decides what is collected on its storefront and what it is used for, and we act on its instructions. Payments settle to the restaurant's own account.`,
-        `[REVIEW BEFORE TENANT 3] This section describes an arrangement that is to be reviewed before a third restaurant is onboarded. It is accurate as written today and is marked so that the review is not missed.`,
       ],
     },
     {
