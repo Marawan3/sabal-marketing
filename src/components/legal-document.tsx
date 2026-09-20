@@ -66,19 +66,6 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
               </section>
             ))}
 
-            {doc.contactEmail ? (
-              <section className="mt-10">
-                <h2 className="text-h3">Contact</h2>
-                <p className="mt-4 text-body text-ink">
-                  <a
-                    href={`mailto:${doc.contactEmail}`}
-                    className="underline decoration-ink/40 underline-offset-4 hover:decoration-ink"
-                  >
-                    {doc.contactEmail}
-                  </a>
-                </p>
-              </section>
-            ) : null}
           </>
         ) : (
           <p className="mt-6 text-body text-ink">{LEGAL_PLACEHOLDER}</p>

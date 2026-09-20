@@ -1,5 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { LEGAL_PLACEHOLDER, legalDocList, legalDocs } from "../src/lib/legal";
+import {
+  DATA_CLAUSE,
+  ENTITY,
+  LEGAL_PLACEHOLDER,
+  legalDocList,
+  legalDocs,
+  SERVICE_FEE_CLAUSE,
+  unresolvedMarkers,
+} from "../src/lib/legal";
 
 /**
  * The hosting contract for the Clover App Market submission.
@@ -83,16 +91,44 @@ test("no cookie banner on the legal pages", async ({ request }) => {
   }
 });
 
-test("a published document carries its date, contact email, and cross-link", async () => {
+const textOf = (doc: (typeof legalDocList)[number]) =>
+  doc.sections.flatMap((s) => [s.heading, ...s.body]).join("\n");
+
+test("a published document carries its date and has no unresolved markers", async () => {
   // Guards the publish checklist: these must all be true the day the text lands.
   for (const doc of legalDocList) {
     if (!doc.final) continue;
     expect(doc.lastUpdated, `${doc.slug} lastUpdated`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(doc.contactEmail, `${doc.slug} contactEmail`).toBeTruthy();
     expect(doc.sections.length, `${doc.slug} sections`).toBeGreaterThan(0);
+    // [ENTITY NAME], [TO SET], [REVIEW BEFORE TENANT 3] must all be gone first.
+    expect(unresolvedMarkers(doc), `${doc.slug} unresolved markers`).toEqual([]);
   }
-  if (legalDocs.terms.final) {
-    const body = legalDocs.terms.sections.flatMap((s) => s.body).join(" ");
-    expect(body, "terms must link to /privacy").toContain("|/privacy]]");
+});
+
+test("both documents carry the data clause word for word", async () => {
+  for (const doc of legalDocList) {
+    expect(textOf(doc), `${doc.slug} data clause`).toContain(DATA_CLAUSE);
   }
+});
+
+test("both documents state the service fee and never call it a surcharge", async () => {
+  for (const doc of legalDocList) {
+    const text = textOf(doc);
+    expect(text, `${doc.slug} service fee`).toContain(SERVICE_FEE_CLAUSE);
+    expect(text, `${doc.slug} fee wording`).toContain("service fee of 5%");
+    expect(text.toLowerCase(), `${doc.slug} surcharge`).not.toContain("surcharge");
+  }
+});
+
+test("both documents carry the contact email, and the terms link to the privacy policy", async () => {
+  for (const doc of legalDocList) {
+    expect(textOf(doc), `${doc.slug} contact email`).toContain(ENTITY.email);
+  }
+  expect(textOf(legalDocs.terms), "terms must link to /privacy").toContain("|/privacy]]");
+});
+
+test("card wording follows the inventory override: brand and last four stored, numbers not", async () => {
+  const text = textOf(legalDocs.privacy);
+  expect(text).toContain("We do not store card numbers, expiry dates or security codes");
+  expect(text).toContain("the last four digits");
 });
