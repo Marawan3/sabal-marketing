@@ -235,6 +235,43 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   named in the AI-readability line. Clover may be named.
 - Mirror any copy change into `COPY.md` so Marawan can review without reading code.
 
+## 11b. Legal pages
+
+`/privacy` and `/terms` exist for the Clover App Market submission. They live in
+`src/lib/legal.ts`, where `heading` becomes an H2 and each `body` string becomes a
+paragraph. `[[label|/href]]` is the only markup. Until `final: true` each page shows
+its H1 and one line, `LEGAL_PLACEHOLDER`, and nothing else; both are force-noindex
+and excluded from the sitemap regardless of the site-wide indexing flag.
+`tests/legal.spec.ts` holds the whole contract, including 200 on the exact paths and
+301 (not 308) on `/privacy-policy` and `/terms-of-service`. No hero, no marketing
+copy, no cookie banner on these pages. The old drafts in `legal/` are the dead Sabal
+5% packet and are never routed.
+
+**Marawan reversed the earlier "never write legal wording" rule on 2026-09-20** and
+asked for both documents drafted in-house. They follow Clover's two templates section
+for section (privacy: docs.clover.com/dev/docs/clover-privacy-policy-template; terms:
+.../clover-eulaterms-of-service-template). **Every factual claim must trace to the
+data inventory compiled 2026-09-15 against the product repo — invent no facts about
+what is collected, stored, shared or retained.** Where the inventory's §1 vendor table
+conflicts with its §2/§2c detail on card data, §2/§2c win: card brand and last four
+digits are stored, card numbers are not. Never write scheduled-erasure language: the
+only automatic deletions are the Clover OAuth state row, the 90-day résumé purge, and
+the Clover token clear on disconnect. Everything else is "kept while the restaurant
+uses Wuntab, deleted by hand within 30 days of a written request, no automated path".
+
+The 5% is always a **service fee**, never a surcharge, and is stated in both
+documents. `DATA_CLAUSE` and `SERVICE_FEE_CLAUSE` are shared constants so the two
+documents cannot drift; tests assert both carry them verbatim. Bracketed markers
+(`[ENTITY NAME]`, `[TO SET]`, `[REVIEW BEFORE TENANT 3]`) are caught by
+`unresolvedMarkers()` and a test fails if any survive `final: true`. The privacy
+policy names its subprocessors, including DoorDash — `scripts/honesty-check.mjs`
+carries a narrow, documented exemption for that one file, because the competitor-name
+ban protects marketing copy and a privacy policy has the opposite duty.
+
+**The data inventory itself must never be committed to this repo.** The repo is
+public and the inventory maps where sensitive data sits and which protections do not
+exist yet.
+
 ## 12. Quality floor before a preview goes up
 
 - `npm run honesty && npm run copy-lint && npm run boundary-check && npm run lint`
