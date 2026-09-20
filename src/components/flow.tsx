@@ -1,3 +1,4 @@
+import { ComingSoonBadge } from "./coming-soon";
 /**
  * A numbered step flow. Numbers are earned: every flow here is a real
  * sequence (an order moving, a feedback loop, the customer lifecycle).
@@ -33,16 +34,25 @@ export function Flow({
   );
 }
 
+export type ChainItem = string | { label: string; comingSoon?: boolean };
+
 /** A short chain like Feedback → Reviews → Loyalty → Repeat customer. */
-export function Chain({ items }: { items: readonly string[] }) {
+export function Chain({ items }: { items: readonly ChainItem[] }) {
   return (
     <ol className="flex flex-wrap items-center gap-x-3 gap-y-2 text-body font-medium">
-      {items.map((item, index) => (
-        <li key={item} className="flex items-center gap-3">
-          {index > 0 ? <span className="h-px w-6 bg-ink/30" aria-hidden /> : null}
-          <span className="rounded-[8px] bg-ticket px-3 py-1.5">{item}</span>
-        </li>
-      ))}
+      {items.map((item, index) => {
+        const label = typeof item === "string" ? item : item.label;
+        const soon = typeof item === "string" ? false : item.comingSoon;
+        return (
+          <li key={label} className="flex items-center gap-3">
+            {index > 0 ? <span className="h-px w-6 bg-ink/30" aria-hidden /> : null}
+            <span className="rounded-[8px] bg-ticket px-3 py-1.5">
+              {label}
+              {soon ? <ComingSoonBadge /> : null}
+            </span>
+          </li>
+        );
+      })}
     </ol>
   );
 }

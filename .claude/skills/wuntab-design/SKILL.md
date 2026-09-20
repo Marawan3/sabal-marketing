@@ -221,6 +221,27 @@ switches to the hamburger with tap-based accordions. Only link to pages that exi
    email address as plain text under it.
 10. **Footer.** Lockup, email, Terms, Privacy, © Wuntab. Nothing else.
 
+## 6b. Nothing unbuilt may look available
+
+**Marawan, 2026-09-20.** Built today: restaurant websites, online menu, online
+ordering, delivery, catering, payments, kitchen printing, order and menu management,
+customers, multi-location, groups, integrations, restaurant SEO. **Coming soon** and
+marked as such everywhere they are listed: loyalty, reviews, self-service kiosk, table
+ordering, gift cards, branded mobile app, and kitchen display. **Removed and never to
+be reintroduced:** reservations and email marketing. They are not planned, they are in
+the cut-route test, and "Email campaigns" is gone from Customer Marketing.
+
+A product carries `status: "coming-soon"` in the catalog. That drives a badge in the
+mega-menu, the mobile menu, the footer, product rows and homepage lists, plus a banner
+on its own page, the heading "What it will do" instead of "What you can do", and
+"Talk to us" instead of "Get Started". `tests/marketing.spec.ts` asserts the exact
+coming-soon set, that every such page carries the banner, and that no shipped page
+claims to be unavailable. Solution pages must not be built out of unbuilt products:
+full-service and quick-service were rewritten for that reason.
+
+When a feature ships, drop its `status`, update the test's expected set, and version
+the legal documents (`UNBUILT_FEATURES` in `src/lib/legal.ts`).
+
 ## 7. The call to action
 
 One action on the whole site: book a call. Same label everywhere, in the header,

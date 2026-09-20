@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink, TextLink } from "@/components/cta-link";
 import { Chain, Flow } from "@/components/flow";
+import { ComingSoonBadge } from "@/components/coming-soon";
 import { JsonLd } from "@/components/json-ld";
 import { OrgDiagram } from "@/components/org-diagram";
 import { ProductLinks } from "@/components/product-links";
@@ -40,7 +41,11 @@ function Check() {
   );
 }
 
-function LinkList({ items }: { items: readonly { name: string; slug: string }[] }) {
+function LinkList({
+  items,
+}: {
+  items: readonly { name: string; slug: string; comingSoon?: boolean }[];
+}) {
   return (
     <ul className="grid gap-x-12 sm:grid-cols-2">
       {items.map((item) => (
@@ -50,6 +55,7 @@ function LinkList({ items }: { items: readonly { name: string; slug: string }[] 
             className="text-body font-medium underline decoration-transparent underline-offset-4 hover:decoration-ink"
           >
             {item.name}
+            {item.comingSoon ? <ComingSoonBadge /> : null}
           </SmartLink>
         </li>
       ))}
@@ -215,8 +221,8 @@ export default function HomePage() {
         </div>
         <p className="mt-10 flex flex-wrap gap-x-8 gap-y-2">
           <TextLink href="/guest-feedback">Guest feedback</TextLink>
-          <TextLink href="/reviews">Reviews</TextLink>
-          <TextLink href="/loyalty">Loyalty and rewards</TextLink>
+          <span><TextLink href="/reviews">Reviews</TextLink><ComingSoonBadge /></span>
+          <span><TextLink href="/loyalty">Loyalty and rewards</TextLink><ComingSoonBadge /></span>
         </p>
       </Section>
 

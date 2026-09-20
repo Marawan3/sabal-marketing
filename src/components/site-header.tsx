@@ -1,4 +1,5 @@
 import { SmartLink } from "./smart-link";
+import { ComingSoonBadge } from "./coming-soon";
 import { CtaLink } from "./cta-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
@@ -31,6 +32,7 @@ function buildMenus(): NavMenu[] {
           href: `/${slug}`,
           name: bySlug[slug].name,
           blurb: bySlug[slug].blurb,
+          comingSoon: bySlug[slug].status === "coming-soon",
         })),
       })),
     },
@@ -149,7 +151,10 @@ export function SiteHeader() {
                       <ul>
                         {group.items.map((item) => (
                           <li key={item.href}>
-                            <MobileLink href={item.href}>{item.name}</MobileLink>
+                            <MobileLink href={item.href}>
+                              {item.name}
+                              {item.comingSoon ? <ComingSoonBadge /> : null}
+                            </MobileLink>
                           </li>
                         ))}
                       </ul>

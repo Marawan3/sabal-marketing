@@ -19,7 +19,7 @@ export const copy = {
       { key: "website-home", label: "Your website", priority: "must" as const },
       { key: "ordering-menu", label: "Customer ordering", kind: "phone" as const, priority: "must" as const },
       { key: "order-management", label: "Your dashboard", priority: "must" as const },
-      { key: "kitchen-display", label: "Kitchen and fulfillment", priority: "must" as const },
+      { key: "kitchen-ticket", label: "Kitchen ticket", priority: "must" as const },
     ],
     lifecycle: ["Website", "Ordering", "Dashboard", "Kitchen"],
   },
@@ -49,7 +49,12 @@ export const copy = {
   guest: {
     heading: "Know what your guests think.",
     sub: "A QR code or an NFC tap lets guests tell you how it went while they are still at the table.",
-    chain: ["Feedback", "Reviews", "Loyalty", "Repeat customer"],
+    chain: [
+      { label: "Feedback" },
+      { label: "Reviews", comingSoon: true },
+      { label: "Loyalty", comingSoon: true },
+      { label: "Repeat customer" },
+    ],
     chainIntro: "Then the loop continues:",
   },
   growth: {
@@ -57,11 +62,10 @@ export const copy = {
     sub: "Every direct order adds a real customer to your list. WunTab helps you bring them back.",
     items: [
       { name: "Customer database", slug: "customers" },
-      { name: "Loyalty and rewards", slug: "loyalty" },
-      { name: "Email campaigns", slug: "email-marketing" },
+      { name: "Loyalty and rewards", slug: "loyalty", comingSoon: true },
       { name: "Text campaigns", slug: "sms-marketing" },
       { name: "Automatic campaigns", slug: "restaurant-marketing" },
-      { name: "Push notifications", slug: "restaurant-app" },
+      { name: "Push notifications", slug: "restaurant-app", comingSoon: true },
     ],
   },
   operations: {
@@ -70,7 +74,7 @@ export const copy = {
     items: [
       { name: "Menu management", slug: "menu-management" },
       { name: "Order management", slug: "order-management" },
-      { name: "Kitchen display", slug: "kitchen-display" },
+      { name: "Kitchen display", slug: "kitchen-display", comingSoon: true },
       { name: "Payments", slug: "payments" },
       { name: "Prep times", slug: "order-management" },
       { name: "Availability controls", slug: "menu-management" },
@@ -114,7 +118,7 @@ export const copy = {
       {
         question: "Is WunTab a marketplace?",
         answer:
-          "No. Customers order on your website, your app, or in your restaurant. Your name is on everything, and the customer is yours.",
+          "No. Customers order on your own website. Your name is on everything, and the customer is yours.",
       },
       {
         question: "How does delivery work if I don't have drivers?",
@@ -138,7 +142,7 @@ export const copy = {
       {
         question: "Does it work with my POS?",
         answer:
-          "POS integrations are coming. Today, orders print in your kitchen and show on a kitchen display, and you manage them in the WunTab dashboard.",
+          "POS integrations are coming. Today, orders print in your kitchen and you manage them in the WunTab dashboard.",
       },
       {
         question: "Do I have to set anything up myself?",

@@ -75,12 +75,12 @@ _Measured September 2026. Same restaurant, same menu, both websites live at the 
 ### Questions owners ask
 
 - **Do I own my website and web address?** Yes. It's yours. If you ever leave, you take it with you.
-- **Is WunTab a marketplace?** No. Customers order on your website, your app, or in your restaurant. Your name is on everything, and the customer is yours.
+- **Is WunTab a marketplace?** No. Customers order on your own website. Your name is on everything, and the customer is yours.
 - **How does delivery work if I don't have drivers?** When an order is ready, WunTab requests a third-party driver. The driver picks up from you and delivers to the customer. You never build a fleet.
 - **Who gets the money?** You do. Payments go to your bank account. We never hold your money.
 - **Is there a monthly fee or a contract?** No. You pay nothing. The diner pays a 5% service fee on online orders, and you can leave any time.
 - **Do my customers see the 5%?** Yes, right at checkout, before they pay. We don't hide fees.
-- **Does it work with my POS?** POS integrations are coming. Today, orders print in your kitchen and show on a kitchen display, and you manage them in the WunTab dashboard.
+- **Does it work with my POS?** POS integrations are coming. Today, orders print in your kitchen and you manage them in the WunTab dashboard.
 - **Do I have to set anything up myself?** No. We build the site, load your menu, and connect your kitchen. You look it over and say yes.
 
 ### Final call to action
@@ -276,10 +276,9 @@ _These are your customers, not a marketplace's._
 
 ### Customer Marketing (/restaurant-marketing)
 
-**Turn customers into regulars.** Email, text, and automatic campaigns that bring people back without you sitting at a computer.
+**Turn customers into regulars.** Text and automatic campaigns that bring people back without you sitting at a computer.
 
 What you can do:
-- Email campaigns
 - Text message campaigns
 - Automatic campaigns that run on their own
 - Customer segments
@@ -287,15 +286,6 @@ What you can do:
 - Reorder reminders
 - Birthday offers
 - Follow-ups for abandoned orders
-
-### Email Marketing (/email-marketing) — not in mega-menu
-
-**Email your customers without a separate tool.** Send offers and news to the customers who already order from you.
-
-What you can do:
-- Email campaigns to your customer list
-- Automatic emails for win-back, reorder, and birthdays
-- Segments based on order history
 
 ### SMS Marketing (/sms-marketing) — not in mega-menu
 
@@ -363,14 +353,6 @@ What you can do:
 - Popular items and sales mix
 - New and repeat customer behavior
 - Feedback trends and guest sentiment
-
-### Reservations (/reservations)
-
-**Book a table without a middleman.** Direct reservations from your website and a digital waitlist for walk-ins.
-
-What you can do:
-- Direct reservations
-- Digital waitlist
 
 ## Scale
 
@@ -450,19 +432,21 @@ What you can do:
 
 ### Quick-Service Restaurants (/solutions/quick-service)
 
-**Fast orders, fewer lines.** Kiosk, app, and online ordering that move people through faster.
+**Fast orders, straight to the kitchen.** Online ordering on your own website, with tickets printing the moment an order lands.
 
-- Self-service kiosk at the counter
-- A branded app for regulars
-- Orders straight to the kitchen screen
+- Online ordering and delivery from your own website
+- Tickets print in the kitchen as orders land
+- Orders injected into your Clover where you use it
+- A self-service kiosk and a branded app are coming
 
 ### Full-Service Restaurants (/solutions/full-service)
 
-**Reservations, table ordering, and feedback while they're seated.** Direct bookings, QR ordering at the table, and a way for guests to tell you how it went.
+**Take orders direct, and hear how the visit went.** Online ordering on your own website, catering for the big bookings, and a way for guests to tell you how it went.
 
-- Direct reservations and a waitlist
-- Order and pay at the table
-- Feedback before they leave
+- Online ordering and delivery from your own website
+- Catering enquiries handled online instead of by phone
+- Guest feedback before they leave
+- Table ordering is coming
 
 ### Catering Businesses (/solutions/catering)
 

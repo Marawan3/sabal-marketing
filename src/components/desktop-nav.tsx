@@ -1,5 +1,6 @@
 "use client";
 
+import { ComingSoonBadge } from "./coming-soon";
 import { SmartLink } from "./smart-link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
@@ -14,7 +15,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
  * so aria-controls stays valid.
  */
 
-export type NavItem = { href: string; name: string; blurb?: string };
+export type NavItem = { href: string; name: string; blurb?: string; comingSoon?: boolean };
 export type NavGroup = { title?: string; items: NavItem[] };
 export type NavMenu = {
   key: string;
@@ -206,6 +207,7 @@ export function DesktopNav({
                             >
                               <span className="block text-[0.9375rem] font-medium leading-snug">
                                 {item.name}
+                                {item.comingSoon ? <ComingSoonBadge /> : null}
                               </span>
                               {item.blurb ? (
                                 <span className="mt-0.5 block text-[0.8125rem] leading-snug text-ink/72">

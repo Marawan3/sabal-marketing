@@ -1,4 +1,5 @@
 import { SmartLink } from "./smart-link";
+import { ComingSoonBadge } from "./coming-soon";
 import { Logo } from "./logo";
 import { byPillar, pillars, solutions, type Pillar } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -11,7 +12,7 @@ function Column({
   links,
 }: {
   title: string;
-  links: readonly { href: string; label: string }[];
+  links: readonly { href: string; label: string; comingSoon?: boolean }[];
 }) {
   return (
     <div>
@@ -21,6 +22,7 @@ function Column({
           <li key={link.href}>
             <SmartLink href={link.href} className="text-small text-paper/75 hover:text-paper">
               {link.label}
+              {link.comingSoon ? <ComingSoonBadge dark /> : null}
             </SmartLink>
           </li>
         ))}
@@ -38,7 +40,11 @@ export function SiteFooter() {
             <Column
               key={pillar}
               title={pillars[pillar].name}
-              links={byPillar(pillar).map((p) => ({ href: `/${p.slug}`, label: p.name }))}
+              links={byPillar(pillar).map((p) => ({
+                href: `/${p.slug}`,
+                label: p.name,
+                comingSoon: p.status === "coming-soon",
+              }))}
             />
           ))}
           <Column

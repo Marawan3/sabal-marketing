@@ -47,6 +47,11 @@ export type Product = {
   comingSoon?: string[];
   /** A restrained diagram used where no real screen exists yet (never fake UI). */
   visual?: "org";
+  /**
+   * "coming-soon" = planned but not built today. The page, the mega-menu and
+   * every product list must say so plainly. Marawan, 2026-09-20.
+   */
+  status?: "coming-soon";
 };
 
 export const pillars: Record<
@@ -177,6 +182,7 @@ export const products: Product[] = [
   },
   {
     slug: "table-ordering",
+    status: "coming-soon",
     name: "Table Ordering",
     blurb: "Order and pay from the table.",
     pillar: "sell",
@@ -189,6 +195,7 @@ export const products: Product[] = [
   },
   {
     slug: "kiosk",
+    status: "coming-soon",
     name: "Self-Service Kiosk",
     blurb: "Self-service ordering you control.",
     pillar: "sell",
@@ -205,6 +212,7 @@ export const products: Product[] = [
   },
   {
     slug: "restaurant-app",
+    status: "coming-soon",
     name: "Branded Mobile App",
     blurb: "Your own iOS and Android app.",
     pillar: "sell",
@@ -221,6 +229,7 @@ export const products: Product[] = [
   },
   {
     slug: "gift-cards",
+    status: "coming-soon",
     name: "Gift Cards",
     blurb: "Digital gift cards sold online.",
     pillar: "sell",
@@ -341,6 +350,7 @@ export const products: Product[] = [
   },
   {
     slug: "reviews",
+    status: "coming-soon",
     name: "Reviews",
     blurb: "Ask for reviews and watch what comes in.",
     pillar: "grow",
@@ -359,6 +369,7 @@ export const products: Product[] = [
   },
   {
     slug: "loyalty",
+    status: "coming-soon",
     name: "Loyalty & Rewards",
     blurb: "Give regulars a reason to come back.",
     pillar: "grow",
@@ -394,13 +405,12 @@ export const products: Product[] = [
   {
     slug: "restaurant-marketing",
     name: "Customer Marketing",
-    blurb: "Email, text, and automatic campaigns.",
+    blurb: "Text and automatic campaigns.",
     pillar: "grow",
     inMenu: true,
     headline: "Turn customers into regulars.",
-    sub: "Email, text, and automatic campaigns that bring people back without you sitting at a computer.",
+    sub: "Text and automatic campaigns that bring people back without you sitting at a computer.",
     capabilities: [
-      "Email campaigns",
       "Text message campaigns",
       "Automatic campaigns that run on their own",
       "Customer segments",
@@ -410,23 +420,7 @@ export const products: Product[] = [
       "Follow-ups for abandoned orders",
     ],
     shots: [{ key: "marketing-campaign", label: "Campaign builder", priority: "helpful" }],
-    related: ["email-marketing", "sms-marketing", "customers", "loyalty", "restaurant-app"],
-  },
-  {
-    slug: "email-marketing",
-    name: "Email Marketing",
-    blurb: "Email the customers who order from you.",
-    pillar: "grow",
-    inMenu: false,
-    headline: "Email your customers without a separate tool.",
-    sub: "Send offers and news to the customers who already order from you.",
-    capabilities: [
-      "Email campaigns to your customer list",
-      "Automatic emails for win-back, reorder, and birthdays",
-      "Segments based on order history",
-    ],
-    shots: [{ key: "marketing-campaign", label: "Campaign builder", priority: "helpful" }],
-    related: ["restaurant-marketing", "sms-marketing", "customers"],
+    related: ["sms-marketing", "customers", "loyalty", "restaurant-app"],
   },
   {
     slug: "sms-marketing",
@@ -442,7 +436,7 @@ export const products: Product[] = [
       "Opt-in handled properly",
     ],
     shots: [],
-    related: ["restaurant-marketing", "email-marketing", "customers"],
+    related: ["restaurant-marketing", "customers"],
   },
 
   // ───────────────────────────── OPERATE ─────────────────────────────
@@ -488,6 +482,7 @@ export const products: Product[] = [
   },
   {
     slug: "kitchen-display",
+    status: "coming-soon",
     name: "Kitchen Display",
     blurb: "Orders on a kitchen screen.",
     pillar: "operate",
@@ -538,18 +533,6 @@ export const products: Product[] = [
     ],
     shots: [{ key: "analytics", label: "Analytics dashboard", priority: "must" }],
     related: ["order-management", "customers", "guest-feedback", "menu-management"],
-  },
-  {
-    slug: "reservations",
-    name: "Reservations",
-    blurb: "Direct bookings and a waitlist.",
-    pillar: "operate",
-    inMenu: true,
-    headline: "Book a table without a middleman.",
-    sub: "Direct reservations from your website and a digital waitlist for walk-ins.",
-    capabilities: ["Direct reservations", "Digital waitlist"],
-    shots: [],
-    related: ["restaurant-websites", "table-ordering", "guest-feedback"],
   },
   {
     slug: "ai",
@@ -666,8 +649,7 @@ export const megaMenu: { pillar: Pillar; slugs: string[] }[] = [
       "kitchen-display",
       "payments",
       "analytics",
-      "reservations",
-    ],
+          ],
   },
   {
     pillar: "scale",
@@ -743,28 +725,30 @@ export const solutions: Solution[] = [
   {
     slug: "quick-service",
     name: "Quick-Service Restaurants",
-    blurb: "Kiosk, app, and faster lines.",
-    headline: "Fast orders, fewer lines.",
-    sub: "Kiosk, app, and online ordering that move people through faster.",
+    blurb: "Fast direct orders, straight to the kitchen.",
+    headline: "Fast orders, straight to the kitchen.",
+    sub: "Online ordering on your own website, with tickets printing the moment an order lands.",
     points: [
-      "Self-service kiosk at the counter",
-      "A branded app for regulars",
-      "Orders straight to the kitchen screen",
+      "Online ordering and delivery from your own website",
+      "Tickets print in the kitchen as orders land",
+      "Orders injected into your Clover where you use it",
+      "A self-service kiosk and a branded app are coming",
     ],
-    products: ["kiosk", "restaurant-app", "online-ordering", "kitchen-display", "upsells"],
+    products: ["online-ordering", "order-management", "delivery", "kiosk", "restaurant-app"],
   },
   {
     slug: "full-service",
     name: "Full-Service Restaurants",
-    blurb: "Reservations, table ordering, feedback.",
-    headline: "Reservations, table ordering, and feedback while they're seated.",
-    sub: "Direct bookings, QR ordering at the table, and a way for guests to tell you how it went.",
+    blurb: "Direct orders, and honest feedback.",
+    headline: "Take orders direct, and hear how the visit went.",
+    sub: "Online ordering on your own website, catering for the big bookings, and a way for guests to tell you how it went.",
     points: [
-      "Direct reservations and a waitlist",
-      "Order and pay at the table",
-      "Feedback before they leave",
+      "Online ordering and delivery from your own website",
+      "Catering enquiries handled online instead of by phone",
+      "Guest feedback before they leave",
+      "Table ordering is coming",
     ],
-    products: ["reservations", "table-ordering", "guest-feedback", "reviews", "online-ordering"],
+    products: ["online-ordering", "guest-feedback", "catering", "delivery", "table-ordering"],
   },
   {
     slug: "catering",

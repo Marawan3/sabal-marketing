@@ -48,10 +48,66 @@ test("every product and solution route returns 200 without Sabal", async ({ requ
 });
 
 test("cut products do not exist as routes", async ({ request }) => {
-  for (const route of ["/grader", "/pos", "/inventory", "/crm", "/developers", "/api-docs"]) {
+  const cut = [
+    "/grader",
+    "/pos",
+    "/inventory",
+    "/crm",
+    "/developers",
+    "/api-docs",
+    // Not planned (Marawan, 2026-09-20). Removed outright, not marked coming soon.
+    "/reservations",
+    "/email-marketing",
+  ];
+  for (const route of cut) {
     const response = await request.get(route, { maxRedirects: 0 });
     expect([301, 302, 307, 308, 404], route).toContain(response.status());
   }
+  const slugs = products.map((p) => p.slug);
+  expect(slugs).not.toContain("reservations");
+  expect(slugs).not.toContain("email-marketing");
+});
+
+test("nothing unbuilt looks available", async ({ request }) => {
+  const soon = products.filter((p) => p.status === "coming-soon").map((p) => p.slug);
+  // The six Marawan named, plus kitchen display, which he confirmed does not exist.
+  expect(soon.sort()).toEqual(
+    [
+      "gift-cards",
+      "kiosk",
+      "kitchen-display",
+      "loyalty",
+      "restaurant-app",
+      "reviews",
+      "table-ordering",
+    ].sort(),
+  );
+
+  for (const product of products) {
+    const html = await (await request.get(`/${product.slug}`)).text();
+    if (product.status === "coming-soon") {
+      expect(html, `${product.slug} banner`).toContain("is not available yet");
+      expect(html, `${product.slug} badge`).toContain("Coming soon");
+      expect(html, `${product.slug} must not say "What you can do"`).not.toContain(
+        "What you can do",
+      );
+    } else {
+      expect(html, `${product.slug} must not claim to be unavailable`).not.toContain(
+        "is not available yet",
+      );
+    }
+  }
+});
+
+test("the mega-menu flags every coming-soon product", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Product" }).hover();
+  for (const slug of ["loyalty", "reviews", "kiosk", "table-ordering", "restaurant-app"]) {
+    const row = page.locator(`header a[href="/${slug}"]`).first();
+    await expect(row, slug).toContainText("Coming soon");
+  }
+  await expect(page.locator('header a[href="/reservations"]')).toHaveCount(0);
+  await expect(page.locator('header a[href="/email-marketing"]')).toHaveCount(0);
 });
 
 test("menu check page carries the proof tickets", async ({ request }) => {

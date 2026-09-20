@@ -1,3 +1,4 @@
+import { ComingSoonBadge } from "./coming-soon";
 import { SmartLink } from "./smart-link";
 import { bySlug } from "@/lib/catalog";
 
@@ -32,6 +33,7 @@ export function ProductLinks({
               >
                 {p.name}
               </span>
+              {p.status === "coming-soon" ? <ComingSoonBadge dark={dark} /> : null}
               <span className={`mt-1 block max-w-[40ch] text-body ${blurb}`}>{p.blurb}</span>
             </SmartLink>
           </li>
