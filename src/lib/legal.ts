@@ -56,6 +56,19 @@ export const DATA_CLAUSE =
   ENTITY.email +
   ".";
 
+/**
+ * What a restaurant takes with it on exit (terms 4.2).
+ *
+ * Marawan asked for an export of the menu and customer list "at minimum"
+ * 2026-09-20 and is reviewing this wording. Described as a manual process on
+ * request: the data inventory of 2026-09-15 records no export path in the
+ * code, so no automated tool is promised, matching how deletion is described.
+ */
+export const EXIT_EXPORT =
+  "When this agreement ends, write to " +
+  ENTITY.email +
+  " and we will send you an export of your menu, including your items, prices, modifiers and their prices, and an export of your customer list, including the names, email addresses and phone numbers your customers gave you, together with their order history with you. We will also return the photos and the written content you gave us. We prepare these by hand and send them within 30 days of your written request. We do not offer an automated export tool today.";
+
 /** The service fee. Stated in both documents. Always "service fee", never "surcharge". */
 export const SERVICE_FEE_CLAUSE =
   "Wuntab is free to the restaurant. There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken. It is collected by our payment processor and routed to Wuntab at settlement.";
@@ -283,7 +296,10 @@ const terms: LegalDoc = {
       heading: "1. The app",
       body: [
         `1.1 What Wuntab does. Wuntab builds and runs your restaurant's website on your own domain, with your menu, your prices, your photos and your branding. It takes online orders for pickup and for delivery, applies promotion codes, and takes payment through our payment processor. It sends your customers order notifications by text message. It passes each order to your kitchen as a printed ticket, and, where you connect your Clover account, injects the order into Clover. It arranges delivery through a third-party delivery partner. It collects enquiries submitted through the forms on your website, including catering enquiries and job applications. It gives you tools to manage your menu, your orders, your locations, your staff accounts and your customer list, and it can draft menu and website copy for you to review and approve. Where you ask us to, it monitors how your pages appear in search.`,
-        `1.2 Licence. We grant you a limited, non-exclusive, non-transferable licence to use Wuntab for your own restaurant business. You may not distribute it, modify it, reverse engineer it, or let anyone else use it on their own behalf. We keep every intellectual property right we do not expressly grant you here. Your content stays yours: your menu, your prices, your photos, your website copy, your customer list and your domain name.`,
+        `1.2 Licence and ownership. We grant you a limited, non-exclusive, non-transferable licence to use Wuntab for your own restaurant business, for as long as this agreement lasts. You may not distribute it, modify it, reverse engineer it, or let anyone else use it on their own behalf. We keep every intellectual property right we do not expressly grant you here.`,
+        `What is yours: your menu and your prices, the photos you give us, the words you write for your site, and your customer list. Those stay yours throughout and you can take them with you.`,
+        `What is ours: Wuntab itself. That means the website we build and run for you, the templates and the design it is built from, and the platform behind it. While this agreement lasts you have a licence to use them. A licence is not a transfer, and ending this agreement ends the licence.`,
+        `Your web address: if you registered your domain name yourself, it is yours and we make no claim to it. If we registered a domain name for you, that domain name belongs to us, and it passes to you only if we agree in writing to transfer it.`,
         `1.3 Changes, interruptions and equipment. We update Wuntab from time to time, and updates may apply automatically. The service may be interrupted for maintenance or because a provider we depend on is unavailable. You are responsible for the devices, printers and internet connection you use to run your restaurant.`,
       ],
     },
@@ -291,7 +307,7 @@ const terms: LegalDoc = {
       heading: "2. Fees",
       body: [
         SERVICE_FEE_CLAUSE,
-        `You are responsible for any taxes due on your own sales. We do not calculate, collect or remit your taxes for you.`,
+        `Sales tax. Wuntab works out the sales tax on each online order using the tax rate set for the location the order is for, adds it to what the customer pays at checkout, and passes it through to you with the rest of the order. You set that rate, and making sure it is the right rate is your responsibility. We do not file or remit sales tax. Filing your returns and paying what you owe stays your responsibility.`,
         `If you believe a service fee has been miscalculated, tell us within 120 days of the order it was charged on, and we will look into it.`,
       ],
     },
@@ -305,7 +321,10 @@ const terms: LegalDoc = {
       heading: "4. Suspension and termination",
       body: [
         `4.1 By us. We may suspend or end your use of Wuntab if you breach these terms; if your use is unlawful or infringes someone else's rights; if your use risks harm to the service or to other restaurants using it; if we suspect fraud; if a payment, delivery or platform provider we depend on requires it; or if we stop offering the service, in which case we will give you as much notice as we reasonably can.`,
-        `4.2 By you. You may end this agreement at any time, for any reason or none. Because you pay us nothing, there is nothing for us to refund. Your website content, your menu and your customer list remain yours, and your domain name remains yours. Ending the agreement does not by itself delete your information; see section 5.3 and our ${"[[privacy policy|/privacy]]"} for how deletion works.`,
+        `4.2 By you. You may end this agreement at any time, for any reason or none. Because you pay us nothing, there is nothing for us to refund.`,
+        `When this agreement ends, your Wuntab website stops being published and your licence to use Wuntab ends. You do not keep the website, its templates or its design, and you do not keep the platform. Section 1.2 sets out what is yours and what is ours, including what happens to a domain name we registered for you.`,
+        EXIT_EXPORT,
+        `Ending the agreement does not by itself delete your information; see section 5.3 and our ${"[[privacy policy|/privacy]]"} for how deletion works.`,
       ],
     },
     {
