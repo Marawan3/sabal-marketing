@@ -2,6 +2,34 @@
 
 For the next agent (Fable 5.1). Read this before editing. Owner: Marawan Elkabany (`marawan@sabalpay.com`).
 
+> ## CURRENT STATE — 2026-09-20. Read this before anything below.
+>
+> **Production is `main`, live at https://wuntab.com** (attached to Vercel and verified;
+> any note below saying the domain is "not attached yet" is stale). `main` serves the
+> navy single-page site plus two **PUBLISHED** legal documents.
+>
+> **`/privacy` and `/terms` are live, indexed and in the sitemap.** They are NOT
+> "coming soon" and must not be reverted to a placeholder. Text lives in
+> `src/lib/legal.ts`, drafted from a 2026-09-15 data inventory and approved by Marawan.
+> Contracting entity: **Sabal Pay LLC, a Florida LLC d/b/a Wuntab**; Florida law, Orange
+> County venue; support@wuntab.com. `/privacy-policy` and `/terms-of-service` 301 to them.
+>
+> **The entity name is the one permitted "Sabal" in rendered HTML**, on those two pages
+> only. `scripts/honesty-check.mjs`, `scripts/copy-lint.mjs` and the "never contains
+> Sabal" test each carry a narrow exemption and assert it is the only occurrence. The
+> ban still holds everywhere else.
+>
+> **Pricing is 5% per online order paid by the diner; the restaurant pays $0.** Any note
+> below about a flat monthly price or "commission-free" is dead.
+>
+> **PR #6 (branch `platform-site`, mirrored to `dev`) is PARKED**, not abandoned. It is
+> the ~45-route platform site. Do not merge it without Marawan. Seven products are
+> marked coming soon and two (reservations, email marketing) were removed because they
+> do not exist; six more are unverified and awaiting his answer.
+>
+> **The data inventory behind the legal documents must never be committed.** This repo
+> is public.
+
 > **Superseded 2026-09-05.** Marawan reviewed the site and rejected the look as generic.
 > The design constraints below (cream page, brick accent, system font, weights 400/500,
 > no shadows, no client JS) and the pricing line ("flat monthly, no per-order
