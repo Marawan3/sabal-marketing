@@ -2,8 +2,6 @@ import { expect, test } from "@playwright/test";
 import { copy } from "../src/lib/copy";
 import { demoHref } from "../src/lib/site";
 
-const pages = ["/", "/terms", "/privacy"] as const;
-
 test("first-response HTML contains the headline and the proof tickets", async ({
   request,
 }) => {
@@ -45,15 +43,24 @@ test("legal pages return 200", async ({ request }) => {
   for (const path of ["/terms", "/privacy"]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
-    const html = await response.text();
-    expect(html).toContain("This document is being finalized.");
   }
 });
 
-test("rendered HTML never contains Sabal", async ({ request }) => {
-  for (const path of pages) {
+test("rendered HTML never contains Sabal, except the entity name on legal pages", async ({
+  request,
+}) => {
+  // The marketing brand is Wuntab. The only place "Sabal" may appear is the
+  // contracting entity named in the legal documents: Sabal Pay LLC, d/b/a Wuntab.
+  for (const path of ["/"]) {
     const html = await (await request.get(path)).text();
     expect(html, path).not.toMatch(/sabal/i);
+  }
+  for (const path of ["/terms", "/privacy"]) {
+    const html = await (await request.get(path)).text();
+    const all = html.match(/sabal[a-z]*/gi) ?? [];
+    const entity = html.match(/Sabal Pay LLC/g) ?? [];
+    expect(entity.length, `${path} must name the entity`).toBeGreaterThan(0);
+    expect(all.length, `${path} has a stray Sabal: ${all.join(", ")}`).toBe(entity.length);
   }
 });
 

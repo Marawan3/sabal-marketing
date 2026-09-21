@@ -48,16 +48,38 @@ test("placeholder pages show the title and one line, nothing else", async ({ pag
   }
 });
 
-test("legal pages are noindex and absent from the sitemap while unpublished", async ({
-  request,
-}) => {
+test("indexing and sitemap follow the published state", async ({ request }) => {
   const sitemap = await (await request.get("/sitemap.xml")).text();
   for (const doc of legalDocList) {
     const html = await (await request.get(`/${doc.slug}`)).text();
-    if (doc.final) continue;
-    expect(html, doc.slug).toMatch(/<meta name="robots" content="noindex/);
-    expect(sitemap, doc.slug).not.toContain(`/${doc.slug}</loc>`);
+    if (doc.final) {
+      // Published: no forced noindex, and in the sitemap.
+      expect(html, doc.slug).not.toMatch(/<meta name="robots" content="noindex/);
+      expect(sitemap, doc.slug).toContain(`/${doc.slug}</loc>`);
+    } else {
+      expect(html, doc.slug).toMatch(/<meta name="robots" content="noindex/);
+      expect(sitemap, doc.slug).not.toContain(`/${doc.slug}</loc>`);
+    }
   }
+});
+
+test("a published document renders its date, headings and contact details", async ({
+  request,
+}) => {
+  for (const doc of legalDocList) {
+    if (!doc.final) continue;
+    const html = await (await request.get(`/${doc.slug}`)).text();
+    expect(html, `${doc.slug} last updated`).toContain("Last updated");
+    expect(html, `${doc.slug} date`).toContain("September 20, 2026");
+    expect(html, `${doc.slug} entity`).toContain("Sabal Pay LLC");
+    expect(html, `${doc.slug} address`).toContain("1802 N Alafaya Trail");
+    expect(html, `${doc.slug} phone`).toContain("(407) 655-8761");
+    expect(html, `${doc.slug} email`).toContain("support@wuntab.com");
+    expect(html, `${doc.slug} placeholder gone`).not.toContain(LEGAL_PLACEHOLDER);
+  }
+  const terms = await (await request.get("/terms")).text();
+  expect(terms, "governing law").toContain("Orange County, Florida");
+  expect(terms, "links to the privacy policy").toContain('href="/privacy"');
 });
 
 test("body text is at least 16px and readable at 390px", async ({ page }) => {
@@ -86,9 +108,23 @@ test("every page footer links to both legal routes", async ({ page }) => {
 });
 
 test("no cookie banner on the legal pages", async ({ request }) => {
+  // The privacy policy legitimately says the word "cookie": it discloses that
+  // request cookies are stripped before anything reaches error monitoring.
+  // What must not exist is a consent banner, so look for that, not the word.
+  const banner = [
+    "accept cookies",
+    "accept all cookies",
+    "we use cookies",
+    "cookie consent",
+    "cookie preferences",
+    "manage cookies",
+    "cookie settings",
+  ];
   for (const doc of legalDocList) {
-    const html = await (await request.get(`/${doc.slug}`)).text();
-    expect(html.toLowerCase(), doc.slug).not.toContain("cookie");
+    const html = (await (await request.get(`/${doc.slug}`)).text()).toLowerCase();
+    for (const phrase of banner) {
+      expect(html, `${doc.slug}: "${phrase}"`).not.toContain(phrase);
+    }
   }
 });
 

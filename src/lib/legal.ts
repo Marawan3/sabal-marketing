@@ -1,10 +1,10 @@
 /**
  * Legal documents.
  *
- * Text approved by Marawan 2026-09-20. Still `final: false`, which keeps both
- * pages showing the placeholder, force-noindex and out of the sitemap, because
- * the entity name, address and phone and the governing-law jurisdiction are
- * still placeholders. Resolve those four and flip `final`.
+ * PUBLISHED. Text approved by Marawan 2026-09-20; entity details and governing
+ * law supplied the same day. `final: true` removes the forced noindex and adds
+ * both pages to the sitemap. Any edit from here changes a live legal document:
+ * bump `lastUpdated` when the substance changes.
  *
  * Structure follows Clover's two templates section for section:
  *   https://docs.clover.com/dev/docs/clover-privacy-policy-template
@@ -16,25 +16,34 @@
  * data, §2 / §2c win: card brand and the last four digits ARE stored, card
  * numbers are NOT.
  *
- * Bracketed markers are deliberate and must all be resolved before
- * `final: true`. `tests/legal.spec.ts` fails the build if any survive.
- *
- * To publish:
- *   1. Replace every bracketed marker.
- *   2. Set `lastUpdated` to that day, ISO `YYYY-MM-DD`.
- *   3. Set `final: true`.
+ * To amend a published document: edit the text, set `lastUpdated` to that day,
+ * and say what changed in the commit. Any bracketed marker left in a heading
+ * or body fails the build while `final` is true, so drafts in progress belong
+ * behind `final: false`.
  *
  * In a paragraph, `[[label|/href]]` renders `label` as a link to `/href`.
  */
 
 export const LEGAL_PLACEHOLDER = "This document is being finalized.";
 
-/** Swap these four when Marawan sends the registered details. */
+/**
+ * The contracting entity, supplied by Marawan 2026-09-20.
+ *
+ * NOTE: the registered name contains "Sabal". The repo-wide rule that "sabal"
+ * must never appear in rendered HTML protects the marketing brand; a legal
+ * document has the opposite duty and must identify the contracting party.
+ * `scripts/honesty-check.mjs` and the "never contains Sabal" test both carry a
+ * narrow, documented exception for the legal pages, and that test now asserts
+ * the only occurrence there is this entity name.
+ */
 export const ENTITY = {
-  name: "[ENTITY NAME]",
-  address: "[ENTITY ADDRESS]",
-  phone: "[ENTITY PHONE]",
+  name: "Sabal Pay LLC",
+  full: "Sabal Pay LLC, a Florida limited liability company doing business as Wuntab",
+  address: "1802 N Alafaya Trail, Orlando, FL 32826",
+  phone: "(407) 655-8761",
   email: "support@wuntab.com",
+  governingLaw: "the State of Florida",
+  venue: "Orange County, Florida",
 } as const;
 
 /**
@@ -99,7 +108,8 @@ export type LegalDoc = {
 const privacy: LegalDoc = {
   slug: "privacy",
   title: "Privacy Policy",
-  final: false,
+  final: true,
+  lastUpdated: "2026-09-20",
   contactEmail: ENTITY.email,
   review:
     "[REVIEW BEFORE TENANT 3] The 'Storefront customer information' section describes how customer data reaches us at checkout before Clover sees it. Review that framing before a third restaurant is onboarded.",
@@ -107,7 +117,7 @@ const privacy: LegalDoc = {
     {
       heading: "Who we are and what this policy covers",
       body: [
-        `${ENTITY.name} ("Wuntab", "we", "us") provides Wuntab, a platform for restaurants. Wuntab builds and runs a restaurant's own website and menu, takes online orders for pickup and delivery, routes those orders to the restaurant's kitchen, arranges delivery through a third-party delivery partner, takes payment, and provides the tools the restaurant uses to manage its menu, its orders and its customers. Wuntab also publishes an app on the Clover App Market that connects a restaurant's Clover account to that service.`,
+        `${ENTITY.full} ("Wuntab", "we", "us"), provides Wuntab, a platform for restaurants. Wuntab builds and runs a restaurant's own website and menu, takes online orders for pickup and delivery, routes those orders to the restaurant's kitchen, arranges delivery through a third-party delivery partner, takes payment, and provides the tools the restaurant uses to manage its menu, its orders and its customers. Wuntab also publishes an app on the Clover App Market that connects a restaurant's Clover account to that service.`,
         `This policy explains what information we collect, how we use it, and who we share it with. It covers the Wuntab platform, the Wuntab Clover app, and the restaurant storefronts we operate.`,
         `We process most of this information on behalf of our customers, who are the restaurants. The restaurant decides what is collected through its storefront and what it is used for. We act on the restaurant's instructions. Where a restaurant has its own privacy policy, that policy governs the restaurant's own handling of its customers' information.`,
         SERVICE_FEE_CLAUSE,
@@ -258,13 +268,14 @@ const privacy: LegalDoc = {
 const terms: LegalDoc = {
   slug: "terms",
   title: "Terms of Service",
-  final: false,
+  final: true,
+  lastUpdated: "2026-09-20",
   contactEmail: ENTITY.email,
   sections: [
     {
       heading: "Agreement",
       body: [
-        `These terms are an agreement between ${ENTITY.name} ("Wuntab", "we", "us") and the restaurant that uses Wuntab ("you"). They govern your use of the Wuntab app, the Wuntab platform and the services, documentation and intellectual property that go with them.`,
+        `These terms are an agreement between ${ENTITY.full} ("Wuntab", "we", "us"), and the restaurant that uses Wuntab ("you"). They govern your use of the Wuntab app, the Wuntab platform and the services, documentation and intellectual property that go with them.`,
         `By downloading, installing or using Wuntab, you accept these terms. If you do not accept them, do not use Wuntab.`,
       ],
     },
@@ -351,7 +362,7 @@ const terms: LegalDoc = {
         `11.1 Authority. You confirm that the person accepting these terms has authority to bind your business.`,
         `11.2 Changes. We may change these terms. We will update the date at the top of this page, and where a change is significant we will tell you. If you keep using Wuntab after a change takes effect, you accept it.`,
         `11.3 Compliance. Each of us will comply with the laws that apply to it. You will not upload or transmit anything unlawful, malicious or designed to cause harm.`,
-        `11.4 Governing law and venue. These terms are governed by the laws of [TO SET], without regard to conflict-of-laws rules, and the courts located in [TO SET] have exclusive jurisdiction over any dispute arising out of them.`,
+        `11.4 Governing law and venue. These terms are governed by the laws of ${ENTITY.governingLaw}, without regard to conflict-of-laws rules, and the state and federal courts located in ${ENTITY.venue} have exclusive jurisdiction over any dispute arising out of them.`,
         `11.5 Entire agreement. These terms, together with our ${"[[privacy policy|/privacy]]"}, are the entire agreement between us about Wuntab and replace anything said or written before. Neither of us is the other's agent, partner or employee; we are independent contractors.`,
         `11.6 Assignment. You may not assign this agreement without our written consent. We may assign it, including to a company that acquires our business.`,
         `11.7 Contact. ${ENTITY.name}, ${ENTITY.address}, ${ENTITY.phone}, ${ENTITY.email}.`,
