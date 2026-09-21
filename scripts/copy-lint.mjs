@@ -25,10 +25,20 @@ function walk(dir) {
   return out;
 }
 
+/**
+ * Narrow, documented exceptions. The legal documents must name the contracting
+ * entity, Sabal Pay LLC d/b/a Wuntab, and must name the subprocessors that
+ * receive personal data. The brand rule holds everywhere else, and
+ * tests/marketing.spec.ts asserts the entity name is the only "Sabal" rendered.
+ */
+const exempt = new Map([[join("lib", "legal.ts"), [/\bsabal\b/i]]]);
+
 let failed = false;
 for (const file of walk(root)) {
   const text = readFileSync(file, "utf8");
+  const allowed = exempt.get(relative(root, file)) ?? [];
   for (const pattern of banned) {
+    if (allowed.some((a) => a.source === pattern.source)) continue;
     if (pattern.test(text)) {
       console.error(`BANNED ${pattern} in ${relative(root, file)}`);
       failed = true;

@@ -172,19 +172,31 @@ test("the header CTA stays visible on a phone", async ({ page }) => {
   await expect(page.locator(`header a[href="${demoHref}"]`).first()).toBeVisible();
 });
 
-test("sample pages return 200 and never contain Sabal", async ({ request }) => {
+test("sample pages return 200; only the legal pages may name the entity", async ({
+  request,
+}) => {
+  // The marketing brand is Wuntab. "Sabal" may appear in exactly one place:
+  // the contracting entity named in the legal documents, Sabal Pay LLC.
   for (const path of sample) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
     const html = await response.text();
-    expect(html, path).not.toMatch(/sabal/i);
+    if (path === "/terms" || path === "/privacy") {
+      const all = html.match(/sabal[a-z]*/gi) ?? [];
+      const entity = html.match(/Sabal Pay LLC/g) ?? [];
+      expect(entity.length, path).toBeGreaterThan(0);
+      expect(all.length, `${path} stray Sabal: ${all.join(", ")}`).toBe(entity.length);
+    } else {
+      expect(html, path).not.toMatch(/sabal/i);
+    }
   }
 });
 
-test("legal pages say coming soon", async ({ request }) => {
+test("legal pages are published", async ({ request }) => {
   for (const path of ["/terms", "/privacy"]) {
     const html = await (await request.get(path)).text();
-    expect(html).toContain("coming soon");
+    expect(html, path).toContain("Last updated");
+    expect(html, path).toContain("Sabal Pay LLC");
   }
 });
 

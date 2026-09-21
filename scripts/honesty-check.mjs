@@ -31,13 +31,35 @@ async function walk(dir) {
   return files;
 }
 
+/**
+ * The competitor-name ban protects marketing copy. A privacy policy has the
+ * opposite duty: it must name the subprocessors that receive personal data.
+ * DoorDash is the delivery provider we actually use, named as such in
+ * src/lib/legal.ts. Every other banned pattern, "sabal" included, still
+ * applies to that file.
+ */
+const EXEMPT = new Map([
+  [
+    path.join("src", "lib", "legal.ts"),
+    [
+      /doordash/i,
+      // The contracting entity is Sabal Pay LLC, d/b/a Wuntab. A legal document
+      // must name the party it binds. The brand rule holds everywhere else, and
+      // tests/marketing.spec.ts asserts this is the only "Sabal" on those pages.
+      /\bsabal\b/i,
+    ],
+  ],
+]);
+
 const files = await walk(ROOT);
 let bannedHits = 0;
 
 for (const file of files) {
   const text = await readFile(file, "utf8");
   const rel = path.relative(process.cwd(), file);
+  const exempt = EXEMPT.get(rel) ?? [];
   for (const pattern of BANNED) {
+    if (exempt.some((e) => e.source === pattern.source)) continue;
     for (const match of text.matchAll(new RegExp(pattern, "gi"))) {
       bannedHits += 1;
       console.error(`BANNED ${rel}: ${match[0]}`);
