@@ -74,7 +74,7 @@ _Measured September 2026. Same restaurant, same menu, both websites live at the 
 
 ### Questions owners ask
 
-- **Do I own my website and web address?** Yes. It's yours. If you ever leave, you take it with you.
+- **What do I own?** Your menu, your photos, the words you write and your customer list are yours, and you take them with you if you leave. The website we build, its design and the platform behind it are ours, and you use them while you're with us. If you registered your own web address it stays yours. If we registered one for you, it's ours unless we agree to transfer it.
 - **Is WunTab a marketplace?** No. Customers order on your own website. Your name is on everything, and the customer is yours.
 - **How does delivery work if I don't have drivers?** When an order is ready, WunTab requests a third-party driver. The driver picks up from you and delivers to the customer. You never build a fleet.
 - **Who gets the money?** You do. Payments go to your bank account. We never hold your money.

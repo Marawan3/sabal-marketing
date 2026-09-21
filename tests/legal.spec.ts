@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import {
   DATA_CLAUSE,
   ENTITY,
+  EXIT_EXPORT,
   LEGAL_PLACEHOLDER,
   legalDocList,
   legalDocs,
@@ -180,6 +181,33 @@ test("internal review notes never reach the page", async ({ request }) => {
     const html = await (await request.get(`/${doc.slug}`)).text();
     expect(html, `${doc.slug} review note in html`).not.toContain("REVIEW BEFORE TENANT");
   }
+});
+
+test("tax is described as calculated and passed through, but not filed", async () => {
+  const text = textOf(legalDocs.terms);
+  expect(text, "calculates").toContain("works out the sales tax on each online order");
+  expect(text, "uses the location rate").toContain("using the tax rate set for the location");
+  expect(text, "passes through").toContain("passes it through to you");
+  expect(text, "rate is theirs").toContain("You set that rate");
+  expect(text, "we do not file").toContain("We do not file or remit sales tax");
+  // The old, wrong sentence must not come back.
+  expect(text, "stale claim").not.toContain("We do not calculate, collect or remit");
+});
+
+test("ownership on termination says what is theirs, what is ours, and what they get", async () => {
+  const text = textOf(legalDocs.terms);
+  expect(text, "theirs").toContain("What is yours: your menu and your prices");
+  expect(text, "ours").toContain("What is ours: Wuntab itself");
+  expect(text, "no website on exit").toContain(
+    "You do not keep the website, its templates or its design",
+  );
+  expect(text, "own domain stays theirs").toContain("it is yours and we make no claim to it");
+  expect(text, "our domain stays ours").toContain("that domain name belongs to us");
+  expect(text, "exit export").toContain(EXIT_EXPORT);
+  expect(EXIT_EXPORT, "menu export").toContain("export of your menu");
+  expect(EXIT_EXPORT, "customer export").toContain("export of your customer list");
+  // The old, wrong sentence must not come back.
+  expect(text, "stale claim").not.toContain("your domain name remains yours");
 });
 
 test("card wording follows the inventory override: brand and last four stored, numbers not", async () => {
