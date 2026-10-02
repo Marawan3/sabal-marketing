@@ -4,6 +4,26 @@ One entry per PR or report, newest first, in plain language. Each entry says wha
 
 ---
 
+## 2026-10-02 · PR #10: marketing-site spec and capability register (merged)
+
+**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `6976b4e` on `main`, from branch `marketing/report`. Report only; nothing was built.
+
+What it holds:
+- `docs/marketing-site/SPEC.md`, committed unchanged. It's the source of truth for the redesign.
+- `docs/marketing-site/REGISTER.md`: one row per capability, plus Marawan's decisions of 2026-10-02.
+
+What it found:
+- The platform repo couldn't be read from this session, so no capability has code proof yet. Every row is Unknown or, on Marawan's word, Not built, and nothing is cleared to publish.
+- Clover order injection ships today, so it's a live POS integration, not "Coming".
+- There's no analytics metric the site can name yet.
+- Sabal Signal's copy describes review gating (only happy guests are asked for a Google review). Signal is off limits for now, and its rows stay Unknown.
+
+Decisions recorded on 2026-10-02:
+- The spec wins over the 09-27 brief: Coming Soon is for POS only, and the homepage doesn't lead with Google.
+- Get Started stays "Book a call" until signup is proven end to end.
+- PR #6 stays parked and is never merged whole.
+- Sabal Signal is off limits.
+
 ## 2026-10-02 · PR #8: live homepage copy fix (merged)
 
 **Merged by:** Claude, on Marawan's instruction ("merge 8"). Squash commit `5148325` on `main`.
@@ -25,23 +45,3 @@ Still open: 19 unproven claims stay on the page until platform access lets each 
 **Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `db29ee0` on `main`.
 
 What changed: the design skill no longer allows "220 dishes Google can read, vs 0" or "One live restaurant in Orlando, measured head-to-head". It no longer calls the proof tickets the centerpiece, and its motion, image and do/don't sections were cleaned of them too. It records that the tickets come back only with a re-measurement whose method is committed, plus Marawan's approval. HANDOFF.md, ASSETS.md and COPY.md say the same. No site code changed.
-
-## 2026-10-02 · PR #10: marketing-site spec and capability register (merged)
-
-**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `6976b4e` on `main`, from branch `marketing/report`. Report only; nothing was built.
-
-What it holds:
-- `docs/marketing-site/SPEC.md`, committed unchanged. It's the source of truth for the redesign.
-- `docs/marketing-site/REGISTER.md`: one row per capability, plus Marawan's decisions of 2026-10-02.
-
-What it found:
-- The platform repo couldn't be read from this session, so no capability has code proof yet. Every row is Unknown or, on Marawan's word, Not built, and nothing is cleared to publish.
-- Clover order injection ships today, so it's a live POS integration, not "Coming".
-- There's no analytics metric the site can name yet.
-- Sabal Signal's copy describes review gating (only happy guests are asked for a Google review). Signal is off limits for now, and its rows stay Unknown.
-
-Decisions recorded on 2026-10-02:
-- The spec wins over the 09-27 brief: Coming Soon is for POS only, and the homepage doesn't lead with Google.
-- Get Started stays "Book a call" until signup is proven end to end.
-- PR #6 stays parked and is never merged whole.
-- Sabal Signal is off limits.
