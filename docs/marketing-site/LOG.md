@@ -4,9 +4,9 @@ One entry per PR or report, newest first, in plain language. Each entry says wha
 
 ---
 
-## 2026-10-02 · Capability register proved against the platform code (docs PR)
+## 2026-10-02 · PR #11: capability register proved against the platform code (merged)
 
-**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Branch `marketing/register-proof`.
+**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `6e02cfe` on `main`, from branch `marketing/register-proof`.
 
 What changed: `REGISTER.md` now cites platform code (sabal-ros @ `92b07e6`, read-only) for every row that could be proved. Rows that depend on Sabal Signal stay Unknown ("needs Signal access"). The file adds four sections: Clover traced end to end, payments, the delivery fee, and the exact analytics metrics an operator sees.
 
