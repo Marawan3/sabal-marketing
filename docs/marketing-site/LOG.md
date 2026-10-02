@@ -18,9 +18,9 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
-## 2026-10-02 · Spec amended: the register becomes a build list (docs PR)
+## 2026-10-02 · PR #12: spec amended, the register becomes a build list (merged)
 
-**Merged by:** Claude, self-merge on green (docs only). Branch `marketing/spec-amend-findings`.
+**Merged by:** Claude, self-merge on green (docs only). Squash commit `98ca3f2` on `main`, from branch `marketing/spec-amend-findings`.
 
 What changed:
 - `SPEC.md` sections 0, 2, 3 and 16 are amended on the owner's instruction:
