@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink, TextLink } from "@/components/cta-link";
 import { JsonLd } from "@/components/json-ld";
-import { ProofTickets } from "@/components/proof-tickets";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
 import { demoHref, site } from "@/lib/site";
@@ -54,14 +53,7 @@ export default function HomePage() {
         <Container className="py-20 lg:py-32">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
             <h2 className="text-h2 lg:col-span-5">{copy.proof.heading}</h2>
-            <p className="max-w-[48ch] text-lead text-ink/80 lg:col-span-7">
-              {copy.proof.sub}
-            </p>
           </div>
-          <div className="mt-14">
-            <ProofTickets left={copy.proof.left} right={copy.proof.right} />
-          </div>
-          <p className="mt-10 max-w-[62ch] text-small text-ink/72">{copy.proof.footnote}</p>
           <div className="mt-12 grid gap-2 border-t border-ink/10 pt-8 lg:grid-cols-12 lg:gap-12">
             <h3 className="text-h3 lg:col-span-5">{copy.proof.aiLine}</h3>
             <p className="max-w-[62ch] text-body text-ink/80 lg:col-span-7">

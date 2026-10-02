@@ -1,0 +1,21 @@
+/platform-terms    301 http://127.0.0.1:3100/terms
+/accessibility     404 
+/privacy-policy    301 http://127.0.0.1:3100/privacy
+/terms-of-service  301 http://127.0.0.1:3100/terms
+/dpa               308 http://127.0.0.1:3100/privacy
+/how-it-works      308 http://127.0.0.1:3100/#how-it-works
+/pricing           308 http://127.0.0.1:3100/#pricing
+/demo              308 http://127.0.0.1:3100/
+/about             308 http://127.0.0.1:3100/
+/online-ordering   308 http://127.0.0.1:3100/
+/restaurant-seo    308 http://127.0.0.1:3100/
+/privacy           200 
+/terms             200 
+/                  200 
+
+mailto hrefs on /:
+      2 href="mailto:hello@wuntab.com"
+      4 href="mailto:hello@wuntab.com?subject=Book%20a%20call%20with%20Wuntab"
+
+Old strings still on / (expect none):
+(end)

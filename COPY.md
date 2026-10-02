@@ -5,7 +5,7 @@ Voice and number rules: `.claude/skills/wuntab-design/SKILL.md` §8 and §11.
 
 ## Hero
 
-**Headline:** Google can't see most restaurant menus. It can see yours.
+**Headline:** Your restaurant's own website, with orders that print in your kitchen.
 
 **Sub:** We build your restaurant's website and online ordering, then run it for you. You pay nothing. Orders print in your kitchen. The money goes to your bank.
 
@@ -20,7 +20,7 @@ The 220 vs 0 proof tickets, their intro and their "Measured September 2026" foot
 ## Here's the problem.
 
 1. When someone searches "biryani near me", Google looks at your website to find your menu.
-2. Most restaurant websites hide the menu inside code Google can't read. Google sees an empty page and shows someone else.
+2. On many restaurant websites, the menu is added by code after the page opens, so Google has extra work to do before it can read your dishes.
 3. So people order from the delivery apps instead. The apps take a cut of every order, and they keep the customer. You never learn their name.
 
 ## How it works
@@ -43,7 +43,7 @@ When someone orders online, they pay a 5% service fee at checkout. That's the wh
 
 ## What we don't promise
 
-We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we can promise is that Google can read every dish, every price, and every word on your site. That's the part we control, and we get it right.
+We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we do is write every dish, every price, and every word of your menu into the page itself, with labels that tell Google what each one is. That's the part we control.
 
 ## Questions owners ask
 

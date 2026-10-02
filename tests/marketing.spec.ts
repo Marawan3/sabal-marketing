@@ -2,19 +2,13 @@ import { expect, test } from "@playwright/test";
 import { copy } from "../src/lib/copy";
 import { demoHref } from "../src/lib/site";
 
-test("first-response HTML contains the headline and the proof tickets", async ({
+test("first-response HTML contains the headline, the AI line and the pricing", async ({
   request,
 }) => {
   const response = await request.get("/");
   expect(response.status()).toBe(200);
   const html = await response.text();
   expect(html).toContain(copy.hero.headline);
-  expect(html).toContain(copy.proof.left.title);
-  expect(html).toContain(copy.proof.right.title);
-  for (const dish of copy.proof.right.dishes) {
-    expect(html).toContain(dish);
-  }
-  expect(html).toContain(String(copy.proof.right.total));
   expect(html).toContain(copy.proof.aiLine);
   expect(html).toContain(copy.pricing.body);
 });
@@ -68,5 +62,34 @@ test("favicon and apple icon are served", async ({ request }) => {
   for (const path of ["/favicon.ico", "/apple-icon.png", "/icon.svg"]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
+  }
+});
+
+test("/platform-terms 301s to /terms and /accessibility is no longer redirected", async ({
+  request,
+}) => {
+  const platformTerms = await request.get("/platform-terms", { maxRedirects: 0 });
+  expect(platformTerms.status()).toBe(301);
+  expect(platformTerms.headers()["location"]).toBe("/terms");
+
+  const accessibility = await request.get("/accessibility", { maxRedirects: 0 });
+  expect(accessibility.status()).toBe(404);
+});
+
+test("the unsourced 220 vs 0 proof tickets stay off the page", async ({ page }) => {
+  // Withdrawn 2026-10-02: the measurement method is not documented anywhere.
+  // They come back only with a re-measurement whose method is committed.
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const text = await page.locator("body").innerText();
+  expect(text).not.toMatch(/\b220\b/);
+  for (const gone of [
+    "dishes written into the page",
+    "A typical restaurant website",
+    "Measured September 2026",
+    "and 208 more",
+    "Samosa chaat",
+  ]) {
+    expect(text, gone).not.toContain(gone);
   }
 });

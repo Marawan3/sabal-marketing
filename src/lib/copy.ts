@@ -5,45 +5,13 @@
  */
 export const copy = {
   hero: {
-    headline: "Google can't see most restaurant menus. It can see yours.",
+    headline: "Your restaurant's own website, with orders that print in your kitchen.",
     sub: "We build your restaurant's website and online ordering, then run it for you. You pay nothing. Orders print in your kitchen. The money goes to your bank.",
     cta: "Book a call",
     secondary: "See what Google sees",
   },
   proof: {
     heading: "What Google sees",
-    sub: "We took one real restaurant in Orlando and put its menu on two websites. Then we checked what Google can actually read on each one.",
-    left: {
-      title: "A typical restaurant website",
-      count: "0",
-      label: "dishes Google can read",
-      note: "The menu loads after the page. Google has already left.",
-    },
-    right: {
-      title: "The same restaurant on Wuntab",
-      intro: "Google can read:",
-      // TODO(Marawan): replace with real dish names from the Orlando menu.
-      // These are placeholders so the ticket has lines to print.
-      dishes: [
-        "Samosa chaat",
-        "Pani puri",
-        "Chicken biryani",
-        "Paneer tikka",
-        "Butter chicken",
-        "Garlic naan",
-        "Dal makhani",
-        "Masala dosa",
-        "Chole bhature",
-        "Mango lassi",
-        "Gulab jamun",
-        "Masala chai",
-      ],
-      more: "and 208 more",
-      total: 220,
-      label: "dishes Google can read",
-    },
-    footnote:
-      "Measured September 2026. Same restaurant, same menu, both websites live at the same time.",
     aiLine: "It's not just Google.",
     aiBody:
       "AI helpers like ChatGPT and Claude read your menu the same way. If Google can read it, so can they.",
@@ -52,7 +20,7 @@ export const copy = {
     heading: "Here's the problem.",
     lines: [
       "When someone searches \"biryani near me\", Google looks at your website to find your menu.",
-      "Most restaurant websites hide the menu inside code Google can't read. Google sees an empty page and shows someone else.",
+      "On many restaurant websites, the menu is added by code after the page opens, so Google has extra work to do before it can read your dishes.",
       "So people order from the delivery apps instead. The apps take a cut of every order, and they keep the customer. You never learn their name.",
     ],
   },
@@ -105,7 +73,7 @@ export const copy = {
   },
   promise: {
     heading: "What we don't promise",
-    body: "We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we can promise is that Google can read every dish, every price, and every word on your site. That's the part we control, and we get it right.",
+    body: "We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we do is write every dish, every price, and every word of your menu into the page itself, with labels that tell Google what each one is. That's the part we control.",
   },
   faq: {
     heading: "Questions owners ask",

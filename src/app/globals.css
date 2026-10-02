@@ -115,29 +115,6 @@ body {
     drop-shadow(0 16px 24px rgba(19, 33, 60, 0.14));
 }
 
-/* Ticket printing: lines are visible in the first HTML; JS hides then reveals. */
-.print-line {
-  transition:
-    opacity 260ms ease-out,
-    transform 260ms ease-out;
-}
-
-[data-armed="true"] .print-line {
-  opacity: 0;
-  transform: translateY(4px);
-}
-
-[data-armed="true"][data-printed="true"] .print-line {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .print-line {
-    transition: none;
-  }
-}
-
 summary {
   list-style: none;
 }
