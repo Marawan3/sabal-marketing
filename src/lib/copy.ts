@@ -12,23 +12,6 @@ export const copy = {
   },
   proof: {
     heading: "What Google sees",
-    sub: "We took one real restaurant in Orlando and put its menu on two websites. Then we counted the dishes written into each page.",
-    left: {
-      title: "A typical restaurant website",
-      count: "0",
-      label: "dishes written into the page",
-      note: "The menu is added by code after the page opens, so it isn't in the page itself.",
-    },
-    right: {
-      title: "The same restaurant on Wuntab",
-      // No dish names until real ones from the measured menu are approved.
-      // The ticket shows the count alone while this list is empty.
-      dishes: [],
-      total: 220,
-      label: "dishes written into the page",
-    },
-    footnote:
-      "Measured September 2026. Same restaurant, same menu, both websites live at the same time.",
     aiLine: "It's not just Google.",
     aiBody:
       "AI helpers like ChatGPT and Claude read your menu the same way. If Google can read it, so can they.",
