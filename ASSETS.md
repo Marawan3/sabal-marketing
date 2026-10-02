@@ -15,7 +15,7 @@ Files: `src/components/logo.tsx` (React), `public/logo.svg` (static, used in JSO
 
 ## Product screenshots (waiting on Marawan)
 
-Real phone screenshots of the Orlando restaurant site (menu, dish page, checkout, Clover ticket) go in `public/shots/` as WebP with explicit dimensions. Until they arrive the proof tickets are typographic. The dish names on the right ticket are placeholders; see `COPY.md`.
+Real phone screenshots of the Orlando restaurant site (menu, dish page, checkout, Clover ticket) go in `public/shots/` as WebP with explicit dimensions. The 220 vs 0 proof tickets that used to stand in for them were withdrawn on 2026-10-02.
 
 ## Photos
 

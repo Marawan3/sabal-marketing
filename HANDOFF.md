@@ -27,6 +27,11 @@ For the next agent (Fable 5.1). Read this before editing. Owner: Marawan Elkaban
 > marked coming soon and two (reservations, email marketing) were removed because they
 > do not exist; six more are unverified and awaiting his answer.
 >
+> **The 220 vs 0 proof tickets are withdrawn (2026-10-02).** Their measurement method
+> is not documented anywhere in this repo, so they are off the page with nothing in their
+> place. Do not restore them, the 220, the 0 or the "measured" footnote without a
+> re-measurement whose method is committed, and Marawan's approval.
+>
 > **The data inventory behind the legal documents must never be committed.** This repo
 > is public.
 
@@ -101,7 +106,7 @@ Single page + two legal placeholders.
 **Page order:**
 
 1. Hero — “Your menu, on Google. Your orders, commission-free.”
-2. Proof — three measured cards + AI line “Readable by Google — and by AI assistants.” Footnote: measured Sept 2026, same restaurant, both platforms. No live-site link.
+2. Proof — three measured cards + AI line “Readable by Google — and by AI assistants.” Footnote: measured Sept 2026, same restaurant, both platforms. No live-site link. **(Withdrawn 2026-10-02: the measurement method was never documented. See the current-state note at the top.)**
 3. How it works — build site → kitchen (POS or printer, SMS backup) → merchant of record, money to their account.
 4. Feature grid — six one-liners (SEO menus, commission-free, kitchen/POS, delivery, AI-drafted human-approved, honest checkout).
 5. Pricing — “Simple monthly price. No per-order commission. No setup fee surprises.” Slot: **To be confirmed.** CTA “Talk to us.”

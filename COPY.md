@@ -11,17 +11,9 @@ Voice and number rules: `.claude/skills/wuntab-design/SKILL.md` §8 and §11.
 
 **Button:** Book a call · **Link:** See what Google sees
 
-## What Google sees (proof tickets)
+## What Google sees
 
-**Sub:** We took one real restaurant in Orlando and put its menu on two websites. Then we checked what Google can actually read on each one.
-
-**Left ticket:** A typical restaurant website · **0** dishes Google can read · The menu loads after the page. Google has already left.
-
-**Right ticket:** The same restaurant on Wuntab · Google can read: [12 dish names] · and 208 more · **220** dishes Google can read
-
-> **Placeholder:** the 12 dish names are stand-ins (Samosa chaat, Pani puri, Chicken biryani, Paneer tikka, Butter chicken, Garlic naan, Dal makhani, Masala dosa, Chole bhature, Mango lassi, Gulab jamun, Masala chai). Replace with real names from the Orlando menu before production.
-
-**Footnote:** Measured September 2026. Same restaurant, same menu, both websites live at the same time.
+The 220 vs 0 proof tickets, their intro and their "Measured September 2026" footnote are off the page (2026-10-02). The measurement method is not documented anywhere in the repo, so nothing replaces them until a re-measurement with a committed method.
 
 **AI line:** It's not just Google. AI helpers like ChatGPT and Claude read your menu the same way. If Google can read it, so can they.
 
