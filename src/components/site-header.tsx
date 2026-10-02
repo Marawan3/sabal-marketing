@@ -1,35 +1,95 @@
-import Link from "next/link";
+import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
+import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
+import { bySlug, megaMenu, pillars, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { demoHref, nav } from "@/lib/site";
+import { appHref, demoHref, primaryLinks } from "@/lib/site";
+
+/**
+ * Three zones: logo left, primary nav centered on the viewport, Log in and
+ * Get Started right. The center column is a grid track between two equal
+ * 1fr tracks, so it stays centered no matter how wide the sides are.
+ * Below lg the center nav is replaced by a tap-based accordion menu.
+ */
+
+/**
+ * The Product mega-menu, in the spec's four pillar groups. An item appears
+ * once its page exists, and a group with no pages does not render.
+ * Solutions, Resources and Company have no pages in phase 1, so they are not
+ * in the nav yet.
+ */
+function buildMenus(): NavMenu[] {
+  const groups = megaMenu
+    .map((group) => ({
+      title: pillars[group.pillar].name,
+      items: group.slugs.flatMap((slug) => {
+        const href = productHref(slug);
+        return href ? [{ href, name: bySlug[slug].name, blurb: bySlug[slug].blurb }] : [];
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+  return [{ key: "product", label: "Product", width: "wide", groups }];
+}
+
+function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <SmartLink href={href} className="block rounded-[6px] px-3 py-2.5 text-[1rem] font-medium hover:bg-ticket">
+      {children}
+    </SmartLink>
+  );
+}
+
+function MobileAccordion({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <details name="mobile-nav" className="group border-t border-mist">
+      <summary className="flex cursor-pointer items-center justify-between py-3.5 text-[1rem] font-medium">
+        {label}
+        <span aria-hidden className="text-h3 leading-none text-ink/72 group-open:hidden">
+          +
+        </span>
+        <span aria-hidden className="hidden text-h3 leading-none text-ink/72 group-open:inline">
+          &minus;
+        </span>
+      </summary>
+      <div className="pb-4">{children}</div>
+    </details>
+  );
+}
 
 export function SiteHeader() {
+  const menus = buildMenus();
   return (
     <header className="sticky top-0 z-40 border-b border-mist bg-paper">
-      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-12">
-        <Link href="/" className="shrink-0 rounded-[8px]" aria-label="Wuntab home">
+      <div className="relative mx-auto flex max-w-[1120px] items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-12">
+        <SmartLink href="/" className="shrink-0 justify-self-start rounded-[8px]" aria-label="WunTab home">
           <Logo size={32} />
-        </Link>
-        <nav
-          className="hidden items-center gap-8 text-[0.9375rem] font-medium lg:flex"
-          aria-label="Primary"
-        >
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="rounded-[4px] transition-colors duration-150 hover:text-ink/70"
-            >
-              {item.label}
-            </a>
-          ))}
+        </SmartLink>
+
+        <nav className="hidden lg:block" aria-label="Primary">
+          <DesktopNav menus={menus} links={primaryLinks} />
         </nav>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-3 justify-self-end">
+          {appHref ? (
+            <SmartLink
+              href={appHref}
+              className="hidden rounded-[6px] px-2 py-1.5 text-[0.9375rem] font-medium hover:text-ink/70 sm:inline-block"
+            >
+              {copy.cta.login}
+            </SmartLink>
+          ) : null}
           <CtaLink href={demoHref} size="sm">
-            {copy.hero.cta}
+            {copy.cta.primary}
           </CtaLink>
-          <details className="relative lg:hidden">
+
+          <details className="group lg:hidden">
             <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[8px] border border-mist">
               <span className="sr-only">Menu</span>
               <svg
@@ -46,21 +106,35 @@ export function SiteHeader() {
               </svg>
             </summary>
             <nav
-              className="absolute right-0 mt-2 w-60 rounded-[8px] border border-mist bg-paper p-2 shadow-lift"
+              className="absolute inset-x-0 top-full max-h-[85vh] overflow-y-auto border-b border-mist bg-paper px-5 pb-6 shadow-lift sm:px-8"
               aria-label="Mobile"
             >
-              <ul className="flex flex-col text-[1rem] font-medium">
-                {nav.map((item) => (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      className="block rounded-[6px] px-3 py-2.5 hover:bg-ticket"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
+              {menus.map((menu) => (
+                <MobileAccordion key={menu.key} label={menu.label}>
+                  {menu.groups.map((group, index) => (
+                    <div key={group.title ?? index} className={index > 0 ? "mt-3" : ""}>
+                      {group.title ? (
+                        <p className="px-3 pb-1 text-small font-medium text-ink/72">{group.title}</p>
+                      ) : null}
+                      <ul>
+                        {group.items.map((item) => (
+                          <li key={item.href}>
+                            <MobileLink href={item.href}>{item.name}</MobileLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </MobileAccordion>
+              ))}
+              <div className="border-t border-mist py-2">
+                {primaryLinks.map((link) => (
+                  <MobileLink key={link.href} href={link.href}>
+                    {link.label}
+                  </MobileLink>
                 ))}
-              </ul>
+                {appHref ? <MobileLink href={appHref}>{copy.cta.login}</MobileLink> : null}
+              </div>
             </nav>
           </details>
         </div>

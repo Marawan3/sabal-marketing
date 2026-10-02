@@ -1,0 +1,18 @@
+/demo                308 http://127.0.0.1:3100/
+/about               308 http://127.0.0.1:3100/
+/dpa                 308 http://127.0.0.1:3100/privacy
+/privacy-policy      301 http://127.0.0.1:3100/privacy
+/terms-of-service    301 http://127.0.0.1:3100/terms
+/platform-terms      301 http://127.0.0.1:3100/terms
+/accessibility       404 
+/how-it-works        200 
+/pricing             200 
+/online-ordering     200 
+/restaurant-seo      200 
+/delivery            200 
+/catering            200 
+/restaurant-websites 200 
+/order-management    200 
+/loyalty             404 
+/kiosk               404 
+/grader              404 

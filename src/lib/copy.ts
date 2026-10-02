@@ -1,79 +1,108 @@
 /**
- * DRAFT copy. Not approved for production.
- * Marawan signs off before any production deploy.
- * Rules: .claude/skills/wuntab-design/SKILL.md §8 (numbers) and §11 (voice).
+ * DRAFT copy for the homepage and shared pages, for owner review.
+ * Product-page copy lives in catalog.ts.
+ *
+ * Rules: docs/marketing-site/SPEC.md section 2 (as amended 2026-10-02).
+ * - Pricing: diners pay a 5% service fee, restaurants pay $0. Matches /terms.
+ * - Payments: each restaurant has its own payment account and is the
+ *   merchant of record. WunTab is never described as the processor.
+ * - No invented testimonials, logos, customer counts or performance numbers.
+ * - No ranking or indexing guarantees; never "Google can't read JavaScript".
+ * - Review requests are never described as going only to happy guests.
+ * - No delivery provider or POS names.
  */
 export const copy = {
+  brand: "WunTab",
+  cta: {
+    primary: "Get Started",
+    secondary: "See how it works",
+    login: "Log in",
+    talk: "Talk to us",
+  },
   hero: {
-    headline: "Your restaurant's own website, with orders that print in your kitchen.",
-    sub: "We build your restaurant's website and online ordering, then run it for you. You pay nothing. Orders print in your kitchen. The money goes to your bank.",
-    cta: "Book a call",
-    secondary: "See what Google sees",
+    headline: "More direct orders. More repeat customers. One platform.",
+    sub: "WunTab brings your website, online ordering, delivery, catering, guest experience, marketing, and restaurant operations together in one platform.",
+    /** One composition: the four screens share keys with the product pages. */
+    screens: [
+      { key: "site-home", label: "Your website", priority: "must" as const },
+      { key: "site-menu", label: "Customer ordering", kind: "phone" as const, priority: "must" as const },
+      { key: "orders-board", label: "Your dashboard", priority: "must" as const },
+      { key: "kitchen-ticket", label: "Kitchen ticket", kind: "photo" as const, priority: "must" as const },
+    ],
+    lifecycle: ["Website", "Ordering", "Dashboard", "Kitchen"],
   },
   proof: {
-    heading: "What Google sees",
-    aiLine: "It's not just Google.",
-    aiBody:
-      "AI helpers like ChatGPT and Claude read your menu the same way. If Google can read it, so can they.",
+    heading: "One platform, from the first search to the next order.",
+    sub: "Every piece of WunTab feeds the next one. That loop is the product.",
   },
-  problem: {
-    heading: "Here's the problem.",
-    lines: [
-      "When someone searches \"biryani near me\", Google looks at your website to find your menu.",
-      "On many restaurant websites, the menu is added by code after the page opens, so Google has extra work to do before it can read your dishes.",
-      "So people order from the delivery apps instead. The apps take a cut of every order, and they keep the customer. You never learn their name.",
+  sell: {
+    heading: "Give customers more ways to order from you.",
+    sub: "Every order goes through your brand and lands in your kitchen.",
+  },
+  discovery: {
+    heading: "Turn searches into orders.",
+    sub: "A website with your menu built in, made so search engines can read every dish.",
+  },
+  delivery: {
+    heading: "Delivery without building a fleet.",
+    sub: "Your customers order from you. WunTab requests the driver.",
+  },
+  catering: {
+    heading: "Turn big orders into easy orders.",
+    sub: "A catering menu, lead times, and minimums, ordered online and scheduled ahead.",
+  },
+  guest: {
+    heading: "Know what your guests think.",
+    sub: "A QR code or an NFC tap lets guests tell you how it went while they are still at the table.",
+    chain: ["Feedback", "Reviews", "Loyalty", "Repeat customer"],
+    chainIntro: "Then the loop continues:",
+  },
+  growth: {
+    heading: "Turn customers into regulars.",
+    sub: "Every direct order adds a real customer to your list. WunTab helps you bring them back.",
+    items: [
+      { name: "Customer database", slug: "customers" },
+      { name: "Loyalty and rewards", slug: "loyalty" },
+      { name: "Text campaigns", slug: "sms-marketing" },
+      { name: "Automatic campaigns", slug: "restaurant-marketing" },
+      { name: "Push notifications", slug: "restaurant-app" },
     ],
   },
-  how: {
-    heading: "How it works",
-    steps: [
-      {
-        title: "We build your website",
-        body: "Your name, your menu, your own web address. Every dish written so Google can read it. We do the work. You check it and say yes.",
-      },
-      {
-        title: "Orders print in your kitchen",
-        body: "Online orders go straight into your Clover, or to a printer if you don't have one. A text message backs up every order so nothing gets lost.",
-      },
-      {
-        title: "You keep the money",
-        body: "Payments land in your bank account, not ours. No monthly bill. No contract. Leave whenever you want.",
-      },
+  operations: {
+    heading: "Everything after Place Order.",
+    sub: "Menu, orders, kitchen, and payments, run from one dashboard.",
+    items: [
+      { name: "Menu management", slug: "menu-management" },
+      { name: "Order management", slug: "order-management" },
+      { name: "Kitchen display", slug: "kitchen-display" },
+      { name: "Payments", slug: "payments" },
+      { name: "Prep times", slug: "order-management" },
+      { name: "Availability controls", slug: "menu-management" },
     ],
   },
-  features: {
-    heading: "What you get",
-    groups: [
-      {
-        title: "Getting found",
-        items: [
-          "A website Google can read from top to bottom",
-          "A page for every dish you serve",
-          "Your menu, hours, and address, always right",
-          "Readable by AI helpers too",
-        ],
-      },
-      {
-        title: "Taking orders",
-        items: [
-          "Pickup and delivery from your own website",
-          "Orders go into your Clover or to a printer",
-          "Three taps and two boxes to pay",
-          "Tip starts at 15%, and \"no tip\" is always right there",
-        ],
-      },
+  analytics: {
+    heading: "Know what's working.",
+    sub: "Sales, orders, menu, customers, and feedback, reported from the same system that takes the orders.",
+  },
+  scale: {
+    heading: "One restaurant or fifty.",
+    sub: "Locations, groups, and franchises on one account, with controls at the level you choose.",
+  },
+  integrations: {
+    heading: "Works with what you already use.",
+    items: [
+      "Payment integrations",
+      "Third-party delivery",
+      "Connects to your POS. If your POS isn't compatible, orders go to a kitchen printer",
     ],
   },
   pricing: {
     heading: "What it costs you",
     stat: "$0",
-    line: "Nothing. Wuntab is free for the restaurant.",
-    body: "When someone orders online, they pay a 5% service fee at checkout. That's the whole price, and it's shown plainly before they pay. No monthly bill. No setup fee. No contract.",
-    cta: "Book a call",
-  },
-  promise: {
-    heading: "What we don't promise",
-    body: "We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we do is write every dish, every price, and every word of your menu into the page itself, with labels that tell Google what each one is. That's the part we control.",
+    line: "WunTab is free for the restaurant.",
+    /** Same terms as SERVICE_FEE_CLAUSE in src/lib/legal.ts. */
+    body: "There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken.",
+    more: "Questions about delivery, catering, or several locations? Talk to us and we will walk through it.",
   },
   faq: {
     heading: "Questions owners ask",
@@ -84,29 +113,33 @@ export const copy = {
           "Your menu, your photos, the words you write and your customer list are yours, and you take them with you if you leave. The website we build, its design and the platform behind it are ours, and you use them while you're with us. If you registered your own web address it stays yours. If we registered one for you, it's ours unless we agree to transfer it.",
       },
       {
-        question: "Does it work with my Clover?",
+        question: "Is WunTab a marketplace?",
         answer:
-          "Yes. Orders go straight into your Clover. If you don't have Clover, we set up a printer instead.",
+          "No. Customers order on your own website. Your name is on everything, and the customer is yours.",
       },
       {
-        question: "What about delivery?",
+        question: "How does delivery work if I don't have drivers?",
         answer:
-          "If you have your own drivers, we set that up. If you don't, we can add a courier option.",
+          "WunTab requests third-party delivery for each delivery order. The driver picks up from you and delivers to the customer. You never build a fleet.",
       },
       {
         question: "Who gets the money?",
         answer:
-          "You do. Payments go to your bank account. We never hold your money.",
+          "You do. Every restaurant has its own payment account and is the merchant of record. Customer payments go into your account.",
       },
       {
         question: "Is there a monthly fee or a contract?",
         answer:
-          "No. You pay nothing. The diner pays a 5% service fee on online orders, and you can leave any time.",
+          "No. WunTab is free for the restaurant: no monthly charge, no setup fee, and no per-order commission. The customer pays a 5% service fee on online orders, and you can leave any time.",
       },
       {
         question: "Do my customers see the 5%?",
+        answer: "Yes. The fee is shown to the customer at checkout, before payment is taken.",
+      },
+      {
+        question: "Does it work with my POS?",
         answer:
-          "Yes, right at checkout, before they pay. We don't hide fees.",
+          "WunTab connects to your POS. If your POS isn't compatible, orders go to a kitchen printer.",
       },
       {
         question: "Do I have to set anything up myself?",
@@ -116,13 +149,15 @@ export const copy = {
     ],
   },
   finalCta: {
-    heading: "Let's look at your restaurant together.",
-    body: "A short call. We'll show you what Google sees on your website today.",
-    cta: "Book a call",
+    heading: "Take control of your restaurant's direct business.",
+    body: "A short call. We will show you WunTab on your own menu.",
   },
-
+  howItWorks: {
+    headline: "How WunTab works",
+    sub: "Six steps, one platform. Each one feeds the next.",
+  },
   footer: {
-    blurb: "Restaurant websites and online ordering, built and run for you.",
+    blurb: "Restaurant websites, online ordering, delivery, and marketing, built and run for you.",
   },
   notFound: {
     heading: "That page isn't here.",
