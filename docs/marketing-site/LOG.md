@@ -4,6 +4,26 @@ One entry per PR or report, newest first, in plain language. Each entry says wha
 
 ---
 
+## 2026-10-02 · Capability register proved against the platform code (docs PR)
+
+**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Branch `marketing/register-proof`.
+
+What changed: `REGISTER.md` now cites platform code (sabal-ros @ `92b07e6`, read-only) for every row that could be proved. Rows that depend on Sabal Signal stay Unknown ("needs Signal access"). The file adds four sections: Clover traced end to end, payments, the delivery fee, and the exact analytics metrics an operator sees.
+
+What moved:
+- 35 rows from Unknown to Live or Partial.
+- 16 rows from Unknown to Not built.
+- 12 rows stay Unknown: 8 need Signal access, and 4 are delivery rows waiting on confirmation that DoorDash production is live.
+- 4 rows are new.
+- The 12 Not built rows from the 09-27 brief were re-checked against the code: 11 are confirmed, and the kitchen display moved to Live (the brief was out of date).
+
+What it found that the live site and legal documents get wrong (owner action, not fixed here):
+- There is no 5% service fee in checkout.
+- Card payments run on one platform merchant account, and money doesn't settle to the restaurant.
+- Delivery is DoorDash sandbox by default.
+- Printing works only through Clover.
+- Form submissions don't reach the restaurant.
+
 ## 2026-10-02 · PR #10: marketing-site spec and capability register (merged)
 
 **Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `6976b4e` on `main`, from branch `marketing/report`. Report only; nothing was built.
