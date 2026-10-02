@@ -5,7 +5,7 @@ Voice and number rules: `.claude/skills/wuntab-design/SKILL.md` §8 and §11.
 
 ## Hero
 
-**Headline:** Google can't see most restaurant menus. It can see yours.
+**Headline:** Your restaurant's own website, with orders that print in your kitchen.
 
 **Sub:** We build your restaurant's website and online ordering, then run it for you. You pay nothing. Orders print in your kitchen. The money goes to your bank.
 
@@ -13,13 +13,13 @@ Voice and number rules: `.claude/skills/wuntab-design/SKILL.md` §8 and §11.
 
 ## What Google sees (proof tickets)
 
-**Sub:** We took one real restaurant in Orlando and put its menu on two websites. Then we checked what Google can actually read on each one.
+**Sub:** We took one real restaurant in Orlando and put its menu on two websites. Then we counted the dishes written into each page.
 
-**Left ticket:** A typical restaurant website · **0** dishes Google can read · The menu loads after the page. Google has already left.
+**Left ticket:** A typical restaurant website · **0** dishes written into the page · The menu is added by code after the page opens, so it isn't in the page itself.
 
-**Right ticket:** The same restaurant on Wuntab · Google can read: [12 dish names] · and 208 more · **220** dishes Google can read
+**Right ticket:** The same restaurant on Wuntab · **220** dishes written into the page
 
-> **Placeholder:** the 12 dish names are stand-ins (Samosa chaat, Pani puri, Chicken biryani, Paneer tikka, Butter chicken, Garlic naan, Dal makhani, Masala dosa, Chole bhature, Mango lassi, Gulab jamun, Masala chai). Replace with real names from the Orlando menu before production.
+> The dish list is off the page until real names from the measured menu are approved. With an empty list the ticket shows the count alone.
 
 **Footnote:** Measured September 2026. Same restaurant, same menu, both websites live at the same time.
 
@@ -28,7 +28,7 @@ Voice and number rules: `.claude/skills/wuntab-design/SKILL.md` §8 and §11.
 ## Here's the problem.
 
 1. When someone searches "biryani near me", Google looks at your website to find your menu.
-2. Most restaurant websites hide the menu inside code Google can't read. Google sees an empty page and shows someone else.
+2. On many restaurant websites, the menu is added by code after the page opens, so Google has extra work to do before it can read your dishes.
 3. So people order from the delivery apps instead. The apps take a cut of every order, and they keep the customer. You never learn their name.
 
 ## How it works
@@ -51,7 +51,7 @@ When someone orders online, they pay a 5% service fee at checkout. That's the wh
 
 ## What we don't promise
 
-We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we can promise is that Google can read every dish, every price, and every word on your site. That's the part we control, and we get it right.
+We can't promise you'll be first on Google. Nobody can, and anyone who says so is guessing. What we do is write every dish, every price, and every word of your menu into the page itself, with labels that tell Google what each one is. That's the part we control.
 
 ## Questions owners ask
 

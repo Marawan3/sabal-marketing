@@ -12,9 +12,10 @@ type Ticket = {
   left: { title: string; count: string; label: string; note: string };
   right: {
     title: string;
-    intro: string;
+    /** The dish list and its intro and "more" lines render only when there are dishes. */
+    intro?: string;
     dishes: readonly string[];
-    more: string;
+    more?: string;
     total: number;
     label: string;
   };
@@ -77,38 +78,42 @@ export function ProofTickets({ left, right }: Ticket) {
       <article className="ticket-shadow flex">
         <div className="ticket flex flex-1 flex-col px-6 pt-6 pb-10 sm:px-8 sm:pt-8 sm:pb-12">
           <p className="text-small font-medium text-ink/72">{right.title}</p>
-          <p className="mt-6 text-small text-ink/72">{right.intro}</p>
-          <ul className="mt-2 divide-y divide-ink/10 border-y border-ink/10">
-            {right.dishes.map((dish, index) => (
-              <li
-                key={dish}
-                className="print-line flex items-center gap-3 py-1.5 text-body"
-                style={{ transitionDelay: `${index * LINE_DELAY_MS}ms` }}
-              >
-                <svg
-                  aria-hidden
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="shrink-0"
+          {right.dishes.length > 0 ? (
+            <>
+              <p className="mt-6 text-small text-ink/72">{right.intro}</p>
+              <ul className="mt-2 divide-y divide-ink/10 border-y border-ink/10">
+                {right.dishes.map((dish, index) => (
+                  <li
+                    key={dish}
+                    className="print-line flex items-center gap-3 py-1.5 text-body"
+                    style={{ transitionDelay: `${index * LINE_DELAY_MS}ms` }}
+                  >
+                    <svg
+                      aria-hidden
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0"
+                    >
+                      <path d="M2.5 7.5l3 3 6-7" />
+                    </svg>
+                    {dish}
+                  </li>
+                ))}
+                <li
+                  className="print-line py-1.5 text-small text-ink/72"
+                  style={{ transitionDelay: `${right.dishes.length * LINE_DELAY_MS}ms` }}
                 >
-                  <path d="M2.5 7.5l3 3 6-7" />
-                </svg>
-                {dish}
-              </li>
-            ))}
-            <li
-              className="print-line py-1.5 text-small text-ink/72"
-              style={{ transitionDelay: `${right.dishes.length * LINE_DELAY_MS}ms` }}
-            >
-              {right.more}
-            </li>
-          </ul>
+                  {right.more}
+                </li>
+              </ul>
+            </>
+          ) : null}
           <p className="mt-6 text-stat">
             <span aria-hidden>{count}</span>
             <span className="sr-only">{right.total}</span>

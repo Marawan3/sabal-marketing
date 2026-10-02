@@ -70,3 +70,21 @@ test("favicon and apple icon are served", async ({ request }) => {
     expect(response.status(), path).toBe(200);
   }
 });
+
+test("/platform-terms 301s to /terms and /accessibility is no longer redirected", async ({
+  request,
+}) => {
+  const platformTerms = await request.get("/platform-terms", { maxRedirects: 0 });
+  expect(platformTerms.status()).toBe(301);
+  expect(platformTerms.headers()["location"]).toBe("/terms");
+
+  const accessibility = await request.get("/accessibility", { maxRedirects: 0 });
+  expect(accessibility.status()).toBe(404);
+});
+
+test("the proof ticket prints no dish list while none are approved", async ({ request }) => {
+  const html = await (await request.get("/")).text();
+  expect(copy.proof.right.dishes).toHaveLength(0);
+  expect(html).not.toContain("and 208 more");
+  expect(html).not.toContain("Samosa chaat");
+});
