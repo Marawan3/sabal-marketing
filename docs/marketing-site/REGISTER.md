@@ -12,6 +12,16 @@ The "Secondary evidence" column is *not* proof under section 3. It records what 
 
 "To settle" names what would turn a row into Live, Partial or Not built.
 
+## Owner decisions
+
+**2026-10-02**
+- Where `SPEC.md` and the owner's brief of 2026-09-27 conflict, the spec wins. Coming Soon is for POS integrations only, and the homepage does not lead with Google.
+- Get Started stays "Book a call" until self-serve signup is proven end to end.
+- PR #6 (`platform-site`) stays parked as source material. It will never be merged whole and is not to be touched.
+- Sabal Signal is off limits for now: `sabal-signal-website` and `sabal-reviews` are not to be read, edited or have PRs opened. Rows that depend on Signal (guest feedback, manager alerts, surveys, feedback dashboard, review requests, review monitoring, SMS campaigns) stay Unknown. Their secondary evidence was recorded before this decision and has not been re-checked.
+
+## Register
+
 | Pillar | Capability | Route | Status | Proof | Secondary evidence | Notes / to settle |
 |---|---|---|---|---|---|---|
 | Sell | Pickup ordering | /online-ordering | Unknown | – | Brief: ships. legal.ts:133, :298 | Trace checkout → order create with fulfilment = pickup |
