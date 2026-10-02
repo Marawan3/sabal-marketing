@@ -1,6 +1,6 @@
 ---
 name: wuntab-design
-description: The Wuntab marketing-site design system and copy rules. Load before touching anything visual or any public copy in this repo. Covers palette, type scale, spacing, section patterns, motion, the proof module, allowed numbers, and the do/don't list. Pairs with the frontend-design skill in this folder.
+description: The Wuntab marketing-site design system and copy rules. Load before touching anything visual or any public copy in this repo. Covers palette, type scale, spacing, section patterns, motion, allowed numbers, and the do/don't list. Pairs with the frontend-design skill in this folder.
 ---
 
 # Wuntab design system
@@ -57,7 +57,7 @@ six. Define them in
 | `ink`     | `#13213C` | All text, the dark CTA band, the footer. Deep navy, not near-black. |
 | `ticket`  | `#F6F1E7` | The "counter": full-width band behind the proof and pricing sections. Tickets themselves are `paper` so the sawtooth edge reads. |
 | `saffron` | `#F4A83A` | Primary CTA fill with `ink` text. Nothing else is saffron.          |
-| `tomato`  | `#D9482B` | The "0 items / Google can't see this" negative state only.          |
+| `tomato`  | `#D9482B` | Unused since 2026-10-02 (its one use, the 0 on the withdrawn proof tickets, is gone). |
 | `mist`    | `#E3E7EE` | Hairlines, dividers, disabled, subtle backgrounds.                  |
 
 Secondary text is `ink` at 72% opacity. Never `mist` for text.
@@ -120,16 +120,17 @@ mobile menu stays.
 
 1. **Hero.** Question: what is this. Text only, left-aligned, seven columns wide:
    a plain headline, one sentence under it, one saffron button, one underlined text
-   link that jumps to the proof. No image, no stat, no card. The proof tickets sit
-   directly under it as the next section, so the hero does not need a visual.
-   Headline: "Google can't see most restaurant menus. It can see yours."
-2. **What Google sees (the proof module, the centerpiece).** Two kitchen tickets
-   side by side, equal height, sawtooth bottom edge. Left ticket, headed "A typical
-   restaurant website", shows a `tomato` 0 and "dishes Google can read". Right
-   ticket, headed "The same restaurant on Wuntab", prints a checklist of dish names,
-   "and 208 more", then 220 in stat size. Footnote: measured date, same restaurant,
-   both sites live at once. Then the AI line. No competitor name. No live-site link
-   until rights clear. Dish names are placeholders until Marawan supplies real ones.
+   link to the next section. No image, no stat, no card.
+   Headline: see `src/lib/copy.ts`. Never claim Google can't run JavaScript.
+2. **What Google sees.** The heading and the AI line only, left as they are until the
+   redesign replaces the section. It is no longer the page's centerpiece.
+
+   **Withdrawn 2026-10-02:** the 220 vs 0 proof tickets. Their measurement method is not
+   documented anywhere in this repo (an earlier commit called 220 "an illustrative count, not
+   a live restaurant"), so the owner took them off the page with nothing in their place. Do
+   not bring back the tickets, the 220, the 0, the dish checklist or the "Measured September
+   2026" footnote without a re-measurement whose method and raw output are committed to the
+   repo, and the owner's approval.
 3. **Here's the problem.** Three short paragraphs in a single text column beside the
    heading. Not cards. Search, invisible menu, apps take a cut and keep the customer.
 4. **How it works.** A true sequence, so numbers 1, 2, 3 are earned. One row each,
@@ -167,13 +168,11 @@ Only these numbers may appear on the site. Never invent another.
 
 | Allowed                                                      | How to say it                                   |
 |--------------------------------------------------------------|-------------------------------------------------|
-| 220 menu items Google can read on our live restaurant, vs 0  | "220 dishes Google can read. The other site: 0."|
 | 3 taps and 2 fields from menu to payment                     | "Three taps and two boxes to pay."              |
 | $0 for the restaurant                                        | "Nothing. Wuntab is free for the restaurant."   |
 | 5% online service fee, paid by the diner at checkout         | "They pay a 5% service fee at checkout. It's shown before they pay." |
 | 15% default tip with "None" always visible                   | "Tip starts at 15%. No tip is always an option."|
 | Marketplaces often take 20 to 30% of an order (from the brief) | Category claim with "often" or "up to". Never a named company. Confirm with Marawan before publish. |
-| One live restaurant in Orlando, measured head-to-head        | "Measured on a real restaurant in Orlando."     |
 
 **Pricing (confirmed by Marawan 2026-09-05):** the restaurant pays nothing. The diner
 pays a 5% online service fee, added at checkout and shown plainly before they pay.
@@ -186,13 +185,15 @@ Never: a monthly dollar amount, customer counts, testimonials, quotes, logos of
 restaurants, "trusted by", "#1", ranking promises, "guaranteed", star ratings,
 review schema, countdowns, or "only N spots left".
 
+Removed from the table on 2026-10-02: "220 dishes Google can read, vs 0" and "One live
+restaurant in Orlando, measured head-to-head". Neither may appear; see section 6, item 2.
+
 ## 9. Motion
 
-One orchestrated moment on the page: when the proof module scrolls into view, the
-right-hand ticket prints its lines top to bottom once and the 220 counts up as the
-lines print. That is the only scroll-triggered animation. It runs in a small
-`"use client"` island wrapped around the tickets; everything else stays a server
-component. Respect `prefers-reduced-motion` by rendering the finished state.
+No scroll-triggered animation. The one orchestrated moment used to be the proof
+ticket printing and the 220 counting up; it went with the tickets on 2026-10-02.
+Every section is a server component. Any future animation respects
+`prefers-reduced-motion` by rendering the finished state.
 
 Allowed elsewhere: 150ms color transitions on hover and focus, and `<details>` open
 state. Not allowed: fade-and-slide-up entrances on sections, hover lifts on cards,
@@ -204,8 +205,7 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   restaurant site (menu, dish page, checkout, the Clover ticket) go in `public/shots/`
   as WebP with explicit width and height, inside a 16px-radius frame on `ticket`
   stock. Rendered with `next/image`.
-- Until Marawan drops the Orlando screenshots, the proof tickets are typographic and
-  built from real dish names he supplies. Do not fake a screenshot.
+- Do not fake a screenshot.
 - No restaurant photos, menu scans, or live-site links until the owner's written OK.
 - No stock food photos. The JPGs in `public/demo/` are from the old site and must not
   appear on the page.
@@ -293,7 +293,6 @@ Do
 - White page, navy ink, saffron button, ticket-stock bands behind proof and pricing.
 - Big honest headline that a person would say out loud.
 - Real screenshots in frames as soon as they exist.
-- The proof tickets as the memorable thing. Keep everything else quiet.
 - Numbered steps only where the content is a sequence.
 - Leave white space. If a section feels empty, the copy is doing its job.
 
