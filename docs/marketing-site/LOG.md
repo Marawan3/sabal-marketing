@@ -26,9 +26,9 @@ Still open: 19 unproven claims stay on the page until platform access lets each 
 
 What changed: the design skill no longer allows "220 dishes Google can read, vs 0" or "One live restaurant in Orlando, measured head-to-head". It no longer calls the proof tickets the centerpiece, and its motion, image and do/don't sections were cleaned of them too. It records that the tickets come back only with a re-measurement whose method is committed, plus Marawan's approval. HANDOFF.md, ASSETS.md and COPY.md say the same. No site code changed.
 
-## 2026-10-02 · Marketing-site report: spec and capability register (not merged)
+## 2026-10-02 · PR #10: marketing-site spec and capability register (merged)
 
-**Branch:** `marketing/report` (commits `503e59c`, `3116f67`). Report only; nothing was built.
+**Merged by:** Claude, self-merge on green (docs only, approved by Marawan). Squash commit `6976b4e` on `main`, from branch `marketing/report`. Report only; nothing was built.
 
 What it holds:
 - `docs/marketing-site/SPEC.md`, committed unchanged. It's the source of truth for the redesign.
