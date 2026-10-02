@@ -17,6 +17,7 @@ Code proves what the software does, not what is switched on in production. Where
 - Get Started stays "Book a call" until self-serve signup is proven end to end.
 - PR #6 (`platform-site`) stays parked as source material. It will never be merged whole and is not to be touched.
 - Sabal Signal is off limits for now: `sabal-signal-website` and `sabal-reviews` are not to be read, edited or have PRs opened. Rows whose proof would live in Signal code stay Unknown, marked "needs Signal access".
+- **Later the same day the owner changed direction:** this register is now a **build list, not a publishing gate**. Every product in `SPEC.md` section 4 may be marketed as available, with no Coming Soon labels (SPEC sections 0, 2, 3 and 16, as amended). Statuses below still record what the platform code does today, so the platform team knows what to build.
 
 ## Conflicts with what is published today (owner action needed)
 
