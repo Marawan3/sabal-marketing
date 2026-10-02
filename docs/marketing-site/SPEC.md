@@ -1,9 +1,11 @@
 # WunTab.com redesign: spec
 
+> **Amended 2026-10-02 by the owner (Marawan).** Sections 0, 2, 3 and 16 below are replaced. Where any other section still says a product needs a Live register row, a Coming Soon label, a named provider, or unpublished pricing, the amended sections win.
+
 ## 0. How to use this spec
 
-- This spec is the **target**. It is not an inventory of what exists. Every capability listed as "approved" is approved to market **once the capability register proves it live** (section 3). Nothing gets a page, a nav link or a homepage mention because it appears here.
-- If this spec and the platform code disagree, the code wins and the page says less. Report the conflict instead of writing around it.
+- This spec is the **target**. The marketing site showcases everything WunTab provides, built or not. Every product in section 4 may be marketed as available, with no Coming Soon labels.
+- The capability register (section 3) is a **build list** for the platform team, not a publishing gate. Where the platform code does not yet do what a page says, that gap goes on the build list, which every PR lists. It does not hold the page back.
 - Items marked **[OWNER]** are decisions for the owner. Report what the code tells you and recommend, but don't resolve them yourself.
 - This file changes only with owner approval. Findings go in `REGISTER.md` and PR descriptions, not here.
 
@@ -40,20 +42,15 @@ That lifecycle is what WunTab is. The homepage and `/how-it-works` must make it 
 
 ## 2. Truth rules (every page, every PR)
 
-These override anything else in this spec.
+These override anything else in this spec. Only these rules apply.
 
-1. **No unproven capability.** A feature appears only if its register row is Live or Partial (section 3). Partial means the page describes only the live part.
-2. **Coming Soon is allowed for POS integrations only**, unless the owner adds to that list in writing.
-3. **No invented numbers.** No metrics, percentages, customer counts, revenue uplift or time saved unless sourced from real data the owner has approved for publication.
-4. **No invented proof.** Testimonials, logos, case studies and storefront examples must be real and approved by the owner per restaurant. No placeholder quotes, no "Trusted by" strip with nothing behind it.
-5. **No guarantees.** Never promise search ranking, indexing, Google position, traffic, or AI citations.
-6. **Google and JavaScript.** Never claim Google can't execute JavaScript. Explain the real architectural benefit: menus and pages served as crawlable HTML with structured data, so they don't depend on rendering to be understood.
-7. **Payments.** Never imply WunTab is the payment processor unless that is technically and legally true. Name or describe the processing partner as the register states.
-8. **Reviews.** No review gating. Review requests go to all customers on equal terms. A private rating never decides who gets asked for a public review.
-9. **Analytics.** Name only metrics the platform actually computes (register lists them).
-10. **AI.** AI is a WunTab capability, never the company identity. Not every feature is an AI feature.
-11. **Delivery.** Sell the restaurant outcome. Never present the internal delivery API as a developer product.
-12. **Empty means absent.** Nothing renders a container before it has contents. A section with no live products, no proof or no pricing does not render.
+1. **Pricing.** Diners pay a 5% service fee; restaurants pay $0. The copy matches `/terms`.
+2. **Payments.** Each restaurant has its own payment account and is the merchant of record. WunTab is never described as the processor.
+3. **No invented proof.** No invented testimonials, logos, customer counts or performance numbers. Real ones only, each approved by the owner.
+4. **SEO.** SEO copy never guarantees rankings or indexing, and never says Google can't read JavaScript.
+5. **Reviews.** Review requests are never described as going only to happy guests.
+6. **No provider names.** Delivery providers and POS systems are never named. Delivery is "third-party delivery". POS is "connects to your POS; if your POS isn't compatible, orders go to a kitchen printer".
+7. **The cut list (section 11) stands.**
 
 ---
 
@@ -72,14 +69,7 @@ The register lives in `docs/marketing-site/REGISTER.md`. It has one row per capa
 
 **Proof means the code that does the work.** A UI label, feature flag, route name, settings toggle or database column alone is not proof.
 
-**Publishing rules:**
-
-- **Live:** may be marketed.
-- **Partial:** may be marketed for the live part only.
-- **Coming:** may appear only with a Coming Soon label (POS integrations only).
-- **Not built / Unknown:** no page, no nav link, no homepage mention, no footer link, no sitemap entry, no structured data.
-
-A product page ships only when its core capability is Live. A nav group with no live items doesn't render.
+**The register is a build list, not a gate.** Every product in section 4 may have a page, a nav link, a homepage mention, a footer link, a sitemap entry and structured data, whatever its register status. There are no Coming Soon labels. Rows that are Not built, Partial or Unknown are the platform team's build list, and every marketing PR lists the ones its pages depend on.
 
 ---
 
@@ -340,14 +330,18 @@ Don't reintroduce these under other names: no "customer relationship management"
 
 ---
 
-## 16. Open owner decisions
+## 16. Owner decisions
 
-| Decision | Default until decided |
+Decided 2026-10-02 unless noted.
+
+| Decision | Decided |
 |---|---|
-| Name the delivery driver provider? | Say "third-party drivers" |
-| Name the payment processor? | Describe as "payment partner"; never imply WunTab processes |
-| Pricing source of truth | Pricing unpublished |
-| Which real restaurants may appear | None |
-| Get Started destination: self-serve signup or demo request | Whatever works end to end today, per the register |
-| Catering as a solutions page | Not built |
-| Additional Coming Soon items beyond POS | None |
+| Name the delivery driver provider? | No. Always "third-party delivery". |
+| Name the payment processor? | No. Each restaurant has its own payment account and is the merchant of record; WunTab is never described as the processor. |
+| Name POS systems? | No. "Connects to your POS; if your POS isn't compatible, orders go to a kitchen printer." |
+| Pricing source of truth | Diners pay a 5% service fee; restaurants pay $0. Copy matches `/terms`. |
+| Coming Soon labels | None. Every product in section 4 is marketed as available. |
+| The register | A build list, not a publishing gate. |
+| Get Started destination | "Book a call", until self-serve signup is proven end to end (decided earlier on 2026-10-02). |
+| Which real restaurants may appear | Still open: none until the owner approves each one. |
+| Catering as a solutions page | Still open: not built. |
