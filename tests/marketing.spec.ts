@@ -1,51 +1,225 @@
 import { expect, test } from "@playwright/test";
+import { builtProducts, products } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
-import { demoHref } from "../src/lib/site";
+import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
+import { allRoutes, demoHref } from "../src/lib/site";
 
-test("first-response HTML contains the headline, the AI line and the pricing", async ({
+/** Phase 1 (SPEC section 15): the pages this release publishes. */
+const phase1 = [
+  "/",
+  "/how-it-works",
+  "/pricing",
+  "/online-ordering",
+  "/delivery",
+  "/catering",
+  "/restaurant-websites",
+  "/restaurant-seo",
+  "/order-management",
+] as const;
+
+const marketingPages = phase1;
+
+test("every phase-1 page returns 200 and nothing else is a product route", async ({ request }) => {
+  for (const path of phase1) {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), path).toBe(200);
+  }
+  expect([...builtProducts].sort()).toEqual(
+    ["catering", "delivery", "online-ordering", "order-management", "restaurant-seo", "restaurant-websites"],
+  );
+  // A product without a page in this release is a 404, not a half-built page.
+  for (const product of products) {
+    if ((builtProducts as readonly string[]).includes(product.slug)) continue;
+    const response = await request.get(`/${product.slug}`, { maxRedirects: 0 });
+    expect(response.status(), product.slug).toBe(404);
+  }
+});
+
+test("homepage first-response HTML carries the platform headline and the lifecycle", async ({
   request,
 }) => {
-  const response = await request.get("/");
-  expect(response.status()).toBe(200);
-  const html = await response.text();
+  const html = await (await request.get("/")).text();
   expect(html).toContain(copy.hero.headline);
-  expect(html).toContain(copy.proof.aiLine);
-  expect(html).toContain(copy.pricing.body);
-});
-
-test("nav anchors exist and the book-a-call CTA is in the header", async ({
-  page,
-}) => {
-  await page.goto("/");
-  for (const id of ["proof", "how-it-works", "pricing", "faq", "cta"]) {
-    await expect(page.locator(`#${id}`)).toBeAttached();
+  for (const name of ["Discover", "Order", "Fulfill", "Understand", "Bring them back"]) {
+    expect(html).toContain(name);
   }
-
-  await page.locator('header a[href="/#proof"]').first().click();
-  await expect(page.locator("#proof")).toBeInViewport();
-
-  await expect(page.locator(`header a[href="${demoHref}"]`).first()).toBeVisible();
 });
 
-test("the header CTA stays visible on a phone", async ({ page }) => {
+test("pricing copy matches the service fee clause in /terms", async ({ request }) => {
+  // SPEC section 2, rule 1: diners pay 5%, restaurants pay $0, copy matches /terms.
+  expect(SERVICE_FEE_CLAUSE).toContain(copy.pricing.body);
+  for (const path of ["/", "/pricing"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toContain(copy.pricing.body);
+  }
+});
+
+test("no Coming Soon labels anywhere", async ({ request }) => {
+  for (const path of marketingPages) {
+    const html = (await (await request.get(path)).text()).toLowerCase();
+    expect(html, path).not.toContain("coming soon");
+    expect(html, path).not.toContain("not available yet");
+  }
+});
+
+test("no delivery provider or POS system is named, and WunTab is never the processor", async ({
+  request,
+}) => {
+  const banned = [/doordash/i, /\bburq\b/i, /uber ?eats/i, /clover/i, /\btoast\b/i, /square/i, /\bnmi\b/i, /twilio/i];
+  for (const path of marketingPages) {
+    const html = await (await request.get(path)).text();
+    for (const pattern of banned) {
+      expect(html, `${path} names ${pattern}`).not.toMatch(pattern);
+    }
+    expect(html, path).not.toMatch(/WunTab(?:&#x27;|')s payment processor/i);
+    expect(html, path).not.toMatch(/processed by WunTab/i);
+  }
+});
+
+test("SEO copy makes no guarantees and never says Google can't read JavaScript", async ({ request }) => {
+  for (const path of marketingPages) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).not.toMatch(/guarantee/i);
+    expect(html, path).not.toMatch(/Google (?:can(?:no|&#x27;|')t|cannot) (?:read|run|see)/i);
+  }
+});
+
+test("the unsourced 220 vs 0 proof stays off every page", async ({ page }) => {
+  for (const path of marketingPages) {
+    await page.goto(path);
+    const text = await page.locator("body").innerText();
+    expect(text, path).not.toMatch(/\b220\b/);
+    expect(text, path).not.toContain("Measured September 2026");
+  }
+});
+
+test("every product visual is a marked placeholder until real screenshots arrive", async ({ page }) => {
+  await page.goto("/order-management");
+  const placeholders = page.locator("[data-placeholder]");
+  expect(await placeholders.count()).toBeGreaterThan(0);
+  await expect(placeholders.first()).toContainText("Screenshot placeholder");
+});
+
+test("no link points at a page that does not exist", async ({ page, request }) => {
+  const seen = new Set<string>();
+  for (const path of marketingPages) {
+    await page.goto(path);
+    const hrefs = await page.locator("a[href^='/']").evaluateAll((els) =>
+      els.map((el) => (el as HTMLAnchorElement).getAttribute("href") ?? ""),
+    );
+    for (const href of hrefs) seen.add(href.split("#")[0] || "/");
+  }
+  for (const href of seen) {
+    const response = await request.get(href);
+    expect(response.status(), href).toBe(200);
+  }
+});
+
+test("titles, descriptions and canonicals are unique per page", async ({ request }) => {
+  const titles = new Set<string>();
+  const descriptions = new Set<string>();
+  for (const path of phase1) {
+    const html = await (await request.get(path)).text();
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? "";
+    const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+    const canonical = html.match(/<link rel="canonical" href="([^"]*)"/)?.[1] ?? "";
+    expect(title, `${path} title`).not.toBe("");
+    expect(description, `${path} description`).not.toBe("");
+    expect(new URL(canonical).pathname.replace(/\/$/, "") || "/", `${path} canonical`).toBe(path);
+    expect(titles.has(title), `${path} duplicate title`).toBe(false);
+    expect(descriptions.has(description), `${path} duplicate description`).toBe(false);
+    titles.add(title);
+    descriptions.add(description);
+  }
+});
+
+test("the sitemap lists published pages only", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  const locs = [...xml.matchAll(/<loc>([^<]*)<\/loc>/g)].map(
+    (m) => new URL(m[1]).pathname.replace(/\/$/, "") || "/",
+  );
+  expect(locs.sort()).toEqual([...allRoutes].sort());
+  for (const loc of locs) {
+    const response = await request.get(loc, { maxRedirects: 0 });
+    expect(response.status(), loc).toBe(200);
+  }
+});
+
+test("redirects: old one-page paths are real pages now; legal aliases still 301", async ({ request }) => {
+  for (const [from, to, status] of [
+    ["/demo", "/", 308],
+    ["/about", "/", 308],
+    ["/dpa", "/privacy", 308],
+    ["/privacy-policy", "/privacy", 301],
+    ["/terms-of-service", "/terms", 301],
+    ["/platform-terms", "/terms", 301],
+  ] as const) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect(response.status(), from).toBe(status);
+    expect(response.headers()["location"], from).toBe(to);
+  }
+  const accessibility = await request.get("/accessibility", { maxRedirects: 0 });
+  expect(accessibility.status()).toBe(404);
+});
+
+test("cut products do not exist as routes", async ({ request }) => {
+  for (const route of ["/grader", "/pos", "/inventory", "/crm", "/developers", "/api-docs"]) {
+    const response = await request.get(route, { maxRedirects: 0 });
+    expect(response.status(), route).toBe(404);
+  }
+});
+
+test("product mega-menu opens on hover and lists only pages that exist", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const product = page.getByRole("button", { name: "Product" });
+  await product.hover();
+  await expect(product).toHaveAttribute("aria-expanded", "true");
+  const panel = page.locator(`[id="${await product.getAttribute("aria-controls")}"]`);
+  for (const slug of builtProducts) {
+    await expect(panel.locator(`a[href="/${slug}"]`), slug).toBeVisible();
+  }
+  await expect(panel.locator("a")).toHaveCount(builtProducts.length);
+  // Hovering Pricing closes the menu.
+  await page.locator('header a[href="/pricing"]').first().hover();
+  await expect(product).toHaveAttribute("aria-expanded", "false");
+});
+
+test("mega-menu works from the keyboard and Escape returns focus", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const product = page.getByRole("button", { name: "Product" });
+  await product.focus();
+  await expect(product).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Escape");
+  await expect(product).toHaveAttribute("aria-expanded", "false");
+  await expect(product).toBeFocused();
+});
+
+test("the header Get Started stays visible on a phone and books a call", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(page.locator(`header a[href="${demoHref}"]`).first()).toBeVisible();
+  const cta = page.locator(`header a[href="${demoHref}"]`).first();
+  await expect(cta).toBeVisible();
+  await expect(cta).toHaveText(copy.cta.primary);
+  expect(demoHref).toContain("Book%20a%20call");
 });
 
-test("legal pages return 200", async ({ request }) => {
-  for (const path of ["/terms", "/privacy"]) {
-    const response = await request.get(path);
-    expect(response.status(), path).toBe(200);
+test("no page has horizontal scroll at 390", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of marketingPages) {
+    await page.goto(path);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, path).toBeLessThanOrEqual(1);
   }
 });
 
 test("rendered HTML never contains Sabal, except the entity name on legal pages", async ({
   request,
 }) => {
-  // The marketing brand is Wuntab. The only place "Sabal" may appear is the
-  // contracting entity named in the legal documents: Sabal Pay LLC, d/b/a Wuntab.
-  for (const path of ["/"]) {
+  for (const path of marketingPages) {
     const html = await (await request.get(path)).text();
     expect(html, path).not.toMatch(/sabal/i);
   }
@@ -58,38 +232,9 @@ test("rendered HTML never contains Sabal, except the entity name on legal pages"
   }
 });
 
-test("favicon and apple icon are served", async ({ request }) => {
-  for (const path of ["/favicon.ico", "/apple-icon.png", "/icon.svg"]) {
+test("legal pages return 200 and icons are served", async ({ request }) => {
+  for (const path of ["/terms", "/privacy", "/favicon.ico", "/apple-icon.png", "/icon.svg"]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
-  }
-});
-
-test("/platform-terms 301s to /terms and /accessibility is no longer redirected", async ({
-  request,
-}) => {
-  const platformTerms = await request.get("/platform-terms", { maxRedirects: 0 });
-  expect(platformTerms.status()).toBe(301);
-  expect(platformTerms.headers()["location"]).toBe("/terms");
-
-  const accessibility = await request.get("/accessibility", { maxRedirects: 0 });
-  expect(accessibility.status()).toBe(404);
-});
-
-test("the unsourced 220 vs 0 proof tickets stay off the page", async ({ page }) => {
-  // Withdrawn 2026-10-02: the measurement method is not documented anywhere.
-  // They come back only with a re-measurement whose method is committed.
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  const text = await page.locator("body").innerText();
-  expect(text).not.toMatch(/\b220\b/);
-  for (const gone of [
-    "dishes written into the page",
-    "A typical restaurant website",
-    "Measured September 2026",
-    "and 208 more",
-    "Samosa chaat",
-  ]) {
-    expect(text, gone).not.toContain(gone);
   }
 });
