@@ -15,6 +15,26 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 5. **Catering, careers and contact submissions are stored, but the restaurant isn't told and can't see them.** Only platform admins can (`packages/services/websites/submissions.ts:71-85`).
 6. **Possible defect:** on a site with more than one location, storefront checkout always uses the primary location (`apps/sites/app/%5Fsites/[siteId]/(ordering)/order/actions.ts:64, 100`). A test order on a two-location site would confirm it.
 7. **The kitchen display works but isn't linked from the dashboard menu.** Staff reach it at `/kds`.
+8. **Cancelling an order can text any 10-digit number on the order.** Recorded 2026-10-05 (sabal-ros `815ca6d`). Cancellation sends the customer a text (`apps/ros/server/services/order-cancellation-service.ts:431-433`). The phone check accepts any 10-digit number, including fictional 555 numbers (`apps/ros/server/services/customer-sms.ts:41-46`). This doesn't affect the demo seed: it runs on a database branch with a preview that has no Twilio credentials. It would matter if demo data were ever seeded on production, where a staff member cancelling a seeded order would trigger a real send. Fix skipped on the owner's instruction.
+
+---
+
+## 2026-10-05 · Demo order seed: dry run on a database branch (sabal-ros, not merged)
+
+**Not merged.** Branch `demo/seed-orders` in sabal-ros (commit `1a6f5c5`) holds the seed scripts and migration 0085. There is no PR to main.
+
+What it is: a guarded seed that gives the demo restaurant about 60 days of invented order history plus a live kitchen board, for product screenshots. It runs only on a Neon database branch (`demo-seed-dryrun`) made from production. Production was not written to. The demo's Clover connection on production was fingerprinted before and after the branch was set up, and it is unchanged.
+
+How it was checked:
+- 12 guard tests pass.
+- The dry run went seed, reset, reseed, then live:
+  - **Seed:** 1,459 orders.
+  - **Reset:** 0 left.
+  - **Reseed + live:** 1,467 orders.
+- Other restaurants' rows stayed flat at every step.
+- Every order total matches checkout's own pricing code.
+
+Full counts and the side-effects table are in `apps/ros/scripts/demo-orders/README.md` on that branch. The cancel-text gap is logged above as finding 8.
 
 ---
 
