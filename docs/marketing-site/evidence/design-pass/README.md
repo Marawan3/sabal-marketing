@@ -14,7 +14,7 @@ There are two builds of each, because `public/shots/` is still empty:
 | Preview | 390 | 19,989px | 4,784px |
 | Preview | 1440 | 14,450px | 6,242px |
 | Production | 390 | 14,472px | 4,071px |
-| Production | 1440 | 11,660px | 4,817px |
+| Production | 1440 | 11,660px | 4,727px |
 
 Once real shots replace the placeholders, the homepage will sit near the preview figures. Target: under 10,000px at 390, checked by `tests/design.spec.ts`.
 

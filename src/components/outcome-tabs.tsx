@@ -116,9 +116,15 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
               index === active ? "" : "lg:hidden"
             } ${tab.visual ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""}`}
           >
-            <ul className={tab.visual ? "lg:col-span-5" : "max-w-[44ch]"}>
+            {/* No screenshot yet: the lines spread across the panel instead of leaving its right half empty. */}
+            <ul className={tab.visual ? "lg:col-span-5" : "lg:grid lg:grid-cols-3 lg:gap-10"}>
               {tab.lines.map((line) => (
-                <li key={line} className="border-t border-ink/10 py-3 text-body text-ink/85 first:border-t-0 first:pt-0">
+                <li
+                  key={line}
+                  className={`border-t border-ink/10 py-3 text-body text-ink/85 first:border-t-0 first:pt-0 ${
+                    tab.visual ? "" : "lg:border-t-0 lg:border-l lg:py-0 lg:pl-6 lg:first:border-l-0 lg:first:pl-0"
+                  }`}
+                >
                   {line}
                 </li>
               ))}

@@ -177,3 +177,31 @@ test("Get Started carries the restaurant name into Book a call", () => {
     "https://cal.example.com/wuntab?a1=Saffron",
   );
 });
+
+test("with no shots uploaded, no panel is empty and none keeps a gap for its image", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      // Hidden frames leave nothing behind: no empty figure, no placeholder.
+      expect(await page.locator("main figure:not(:has(img))").count(), `${path} at ${width}`).toBe(0);
+      // Every panel carries something to read.
+      const empty = await page.locator("main [class*='rounded-[20px]']").evaluateAll((els) =>
+        els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim()).length,
+      );
+      expect(empty, `${path} at ${width}`).toBe(0);
+    }
+    // An outcome panel without its screenshot spreads its lines across the whole panel.
+    await page.goto("/");
+    for (const panel of await page.locator('[role="tabpanel"]:not(:has(figure))').all()) {
+      if (!(await panel.isVisible())) continue;
+      const fill = await panel.evaluate((el) => {
+        const list = el.querySelector("ul")!.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        const inner = el.getBoundingClientRect().width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        return list.width / inner;
+      });
+      expect(fill, `outcome lines fill the panel at ${width}`).toBeGreaterThan(0.95);
+    }
+  }
+});
