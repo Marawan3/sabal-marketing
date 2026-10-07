@@ -6,7 +6,8 @@ import { Chain, Flow } from "@/components/flow";
 import { JsonLd } from "@/components/json-ld";
 import { OrgDiagram } from "@/components/org-diagram";
 import { ProductLinks } from "@/components/product-links";
-import { availableShots, hasShot, ScreenFrame } from "@/components/screen-frame";
+import { isShotVisible, ScreenFrame, visibleShots } from "@/components/screen-frame";
+import { homeShots } from "@/lib/shot-placements";
 import { Section, SectionHead } from "@/components/section";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -72,12 +73,15 @@ export default function HomePage() {
   const delivery = bySlug.delivery;
   const guest = bySlug["guest-feedback"];
   const catering = bySlug.catering;
-  /** Hero screens that have a real file; a missing one is null and renders nothing. */
-  const heroScreens = copy.hero.screens.map((shot) => (hasShot(shot) ? shot : null));
-  const operationsShots = availableShots([
-    bySlug["order-management"].shots[0],
-    bySlug["menu-management"].shots[0],
-  ]);
+  /** Hero screens that render (file exists, or preview); a missing one is null. */
+  const heroScreens = homeShots.hero.shots.map((shot) => (isShotVisible(shot) ? shot : null));
+  const sellShot = visibleShots(homeShots.sell.shots)[0];
+  const discoveryShot = visibleShots(homeShots.discovery.shots)[0];
+  const deliveryShots = visibleShots(homeShots.delivery.shots);
+  const cateringShots = visibleShots(homeShots.catering.shots);
+  const growthShot = visibleShots(homeShots.growth.shots)[0];
+  const operationsShots = visibleShots(homeShots.operations.shots);
+  const analyticsShot = visibleShots(homeShots.analytics.shots)[0];
   return (
     <>
       <JsonLd data={faqSchema(copy.faq.items)} />
@@ -154,9 +158,9 @@ export default function HomePage() {
       <Section id="sell">
         <SectionHead kicker="Sell" heading={copy.sell.heading} sub={copy.sell.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          {hasShot(bySlug["online-ordering"].shots[0]) ? (
+          {sellShot ? (
             <div className="lg:col-span-4">
-              <ScreenFrame shot={bySlug["online-ordering"].shots[0]} />
+              <ScreenFrame shot={sellShot} />
             </div>
           ) : null}
           <div className="lg:col-span-8">
@@ -178,9 +182,9 @@ export default function HomePage() {
               columns={1}
             />
           </div>
-          {hasShot(bySlug["restaurant-websites"].shots[0]) ? (
+          {discoveryShot ? (
             <div className="lg:col-span-5">
-              <ScreenFrame shot={bySlug["restaurant-websites"].shots[0]} />
+              <ScreenFrame shot={discoveryShot} />
             </div>
           ) : null}
         </div>
@@ -192,9 +196,9 @@ export default function HomePage() {
         <div className="mt-14">
           <Flow steps={delivery.flow!.steps} dark />
         </div>
-        {availableShots(delivery.shots).length ? (
+        {deliveryShots.length ? (
           <div className="mt-14 grid gap-10 md:grid-cols-2">
-            {availableShots(delivery.shots).map((shot) => (
+            {deliveryShots.map((shot) => (
               <ScreenFrame key={shot.key} shot={shot} dark />
             ))}
           </div>
@@ -218,9 +222,9 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          {availableShots(catering.shots).length ? (
+          {cateringShots.length ? (
             <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7">
-              {availableShots(catering.shots).map((shot) => (
+              {cateringShots.map((shot) => (
                 <ScreenFrame key={shot.key} shot={shot} />
               ))}
             </div>
@@ -255,9 +259,9 @@ export default function HomePage() {
           <div className="lg:col-span-7">
             <LinkList items={copy.growth.items} />
           </div>
-          {hasShot(bySlug["restaurant-marketing"].shots[0]) ? (
+          {growthShot ? (
             <div className="lg:col-span-5">
-              <ScreenFrame shot={bySlug["restaurant-marketing"].shots[0]} />
+              <ScreenFrame shot={growthShot} />
             </div>
           ) : null}
         </div>
@@ -284,9 +288,9 @@ export default function HomePage() {
       <Section id="analytics" tone="ticket">
         <SectionHead kicker="Operate" heading={copy.analytics.heading} sub={copy.analytics.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          {hasShot(bySlug.analytics.shots[0]) ? (
+          {analyticsShot ? (
             <div className="lg:col-span-7">
-              <ScreenFrame shot={bySlug.analytics.shots[0]} />
+              <ScreenFrame shot={analyticsShot} />
             </div>
           ) : null}
           <ul className="space-y-4 lg:col-span-5">
