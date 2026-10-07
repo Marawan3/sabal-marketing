@@ -1,0 +1,110 @@
+{
+  "/ @360": {
+    "height": 4042,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @360": {
+    "height": 3211,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @360": {
+    "height": 1900,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @390": {
+    "height": 4024,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @390": {
+    "height": 3183,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @390": {
+    "height": 1878,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @1440": {
+    "height": 4663,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @1440": {
+    "height": 3611,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @1440": {
+    "height": 1765,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  }
+}

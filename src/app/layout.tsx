@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { JsonLd } from "@/components/json-ld";
@@ -11,11 +11,23 @@ import "./globals.css";
 
 export const dynamic = "error";
 
-const bricolage = Bricolage_Grotesque({
+/**
+ * Archivo, variable weight plus the width axis (62–125%): headlines run at
+ * 110% width, card titles at 104%, everything else at 100%.
+ *
+ * Fallbacks are metric-matched to Archivo so text doesn't re-wrap when the
+ * font arrives. They are declared in globals.css instead of next/font's
+ * automatic one, which only names local(Arial) (missing on Linux, where
+ * Liberation Sans carries Arial's metrics) and covers weight 400 only.
+ */
+const archivo = Archivo({
   subsets: ["latin"],
   weight: "variable",
+  axes: ["wdth"],
   display: "swap",
-  variable: "--font-bricolage",
+  variable: "--font-archivo",
+  adjustFontFallback: false,
+  fallback: ["Archivo Body Fallback", "ui-sans-serif", "system-ui", "sans-serif"],
 });
 
 export const viewport: Viewport = {
@@ -53,7 +65,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`h-full ${bricolage.variable}`}>
+    <html lang="en" className={`h-full ${archivo.variable}`}>
       <body className="min-h-full bg-paper text-ink antialiased">
         <JsonLd data={[organizationSchema(), webSiteSchema()]} />
         <a className="skip-link" href="#main">
