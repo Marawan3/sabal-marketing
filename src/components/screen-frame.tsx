@@ -21,13 +21,22 @@ const SIZES = {
   photo: { width: 1200, height: 1600, aspect: "aspect-[3/4]", wrap: "mx-auto w-full max-w-[320px]", radius: "rounded-[16px]" },
 } as const;
 
+/** True when the shot has a real file in public/shots/. Missing or undefined is false. */
+export function hasShot(shot: Shot | undefined | null): shot is Shot {
+  return Boolean(shot && findShot(shot.key));
+}
+
+/** Only the shots that have a real file, in their original order. */
+export function availableShots(shots: readonly Shot[]): Shot[] {
+  return shots.filter((shot) => hasShot(shot));
+}
+
 /**
- * A product screen. Renders the real image when public/shots/<key>.* exists.
- *
- * Until then it renders a placeholder that cannot be mistaken for the
- * product: a dashed frame, the words "Screenshot placeholder", what the shot
- * will show, and its file key. No device chrome, no drawn UI, nothing that
- * imitates a real screen (owner instruction, 2026-10-02).
+ * A product screen. Renders the real image when public/shots/<key>.* exists,
+ * and nothing at all when it does not: no box, no label, no reserved space
+ * (owner instruction, 2026-10-07, after placeholder boxes went live). Callers
+ * use hasShot()/availableShots() to drop the column or gallery around a
+ * missing shot, so the section keeps its text and loses only the visual.
  */
 export function ScreenFrame({
   shot,
@@ -44,23 +53,7 @@ export function ScreenFrame({
   const src = findShot(shot.key);
   const size = SIZES[shot.kind ?? "desktop"];
 
-  if (!src) {
-    return (
-      <figure className={`${size.wrap} ${className}`} data-placeholder={shot.key}>
-        <div
-          className={`flex ${size.aspect} w-full flex-col items-center justify-center gap-2 border-2 border-dashed p-5 text-center ${size.radius} ${
-            dark ? "border-paper/35 text-paper/80" : "border-ink/25 bg-paper/60 text-ink/72"
-          }`}
-        >
-          <span className="text-small font-medium">Screenshot placeholder</span>
-          <span className={`max-w-[28ch] text-body font-medium ${dark ? "text-paper" : "text-ink"}`}>{shot.label}</span>
-          <span className="font-mono text-[0.8125rem]">
-            {shot.key} · {size.width}×{size.height}
-          </span>
-        </div>
-      </figure>
-    );
-  }
+  if (!src) return null;
 
   return (
     <figure className={`${size.wrap} ${className}`}>

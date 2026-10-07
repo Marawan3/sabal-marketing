@@ -3,7 +3,7 @@ import { Flow } from "./flow";
 import { JsonLd } from "./json-ld";
 import { OrgDiagram } from "./org-diagram";
 import { ProductLinks } from "./product-links";
-import { ScreenFrame } from "./screen-frame";
+import { availableShots, ScreenFrame } from "./screen-frame";
 import { Section, SectionHead } from "./section";
 import { lifecycle, pillars, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -51,7 +51,8 @@ function whereItFits(slug: string) {
  */
 export function ProductPage({ product }: { product: Product }) {
   const pillar = pillars[product.pillar];
-  const [hero, ...rest] = product.shots;
+  // Only shots with a real file render; a missing one leaves no box and no space.
+  const [hero, ...rest] = availableShots(product.shots);
   const fits = whereItFits(product.slug);
   return (
     <>
@@ -138,7 +139,7 @@ export function ProductPage({ product }: { product: Product }) {
         </Section>
       ) : null}
 
-      {/* The product: the remaining screens (real once supplied, placeholders until then). */}
+      {/* The product: the remaining screens that have a real file. No file, no section. */}
       {rest.length ? (
         <Section tone="ticket">
           <h2 className="text-h2">In the product</h2>

@@ -93,13 +93,6 @@ test("the unsourced 220 vs 0 proof stays off every page", async ({ page }) => {
   }
 });
 
-test("every product visual is a marked placeholder until real screenshots arrive", async ({ page }) => {
-  await page.goto("/order-management");
-  const placeholders = page.locator("[data-placeholder]");
-  expect(await placeholders.count()).toBeGreaterThan(0);
-  await expect(placeholders.first()).toContainText("Screenshot placeholder");
-});
-
 test("no link points at a page that does not exist", async ({ page, request }) => {
   const seen = new Set<string>();
   for (const path of marketingPages) {
