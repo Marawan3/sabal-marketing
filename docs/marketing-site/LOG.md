@@ -20,6 +20,49 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## 2026-10-07 · PR #16: design pass on the homepage, product pages, nav and footer (merged)
+
+**Merged by:** Claude, on the owner's "merge" after reviewing the preview and the production screenshots. Squash commit `e33616f` on `main`, from branch `marketing/design-pass`.
+
+**Why:** the owner asked for a calmer, more visual site with less text, built to their brief and their reference notes (owner.com itself wasn't reachable from the session). They gave the patterns only: no wording, images or customer content were taken.
+
+**What changed:**
+- **Homepage, in the owner's order:**
+  - a hero with a "Your restaurant's name" field that opens Book a call with the name filled in;
+  - outcome tabs (More direct orders, More repeat customers, Less busywork);
+  - four product panels;
+  - how it works in three steps;
+  - one pricing card;
+  - What we believe, which stays hidden until the owner writes it;
+  - FAQ and the final call to action.
+- **Moved off the homepage:** the six-step walkthrough, integrations and multi-location are on `/how-it-works`. A customer stories row is built but shows nothing until real customers are added.
+- **Product pages:** the same panels and type. Capabilities are one-line chips. "Where it fits" was removed.
+- **Look:** headlines at weight 600, five text sizes site-wide, near-black text, one warm panel colour, a saffron accent, rounded panels, 14px buttons, more space between sections. The logo keeps its navy.
+- **Phones:** the header always shows the logo, Get Started and the menu. The menu opens full screen with an accordion for each of Sell, Grow and Operate. Card rows swipe sideways. Tap targets are 44px.
+- **Shots:** four landscape photo slots were added. `SHOTS.md` now reads 0 of 24 done. `ASSETS.md` has a source and license table for the photos, which the owner will send with Unsplash links.
+
+**Owner decisions on the PR:**
+- The pricing honesty test change was accepted. The homepage shows two short points; `/pricing` keeps the full clause.
+- The new styling on `/terms` and `/privacy` was accepted. No wording changed.
+- The email fallback stays for the name field.
+- The product-page chips stay.
+
+**How it was checked:**
+- **Tests:** 53 Playwright tests passed and 1 was skipped (the existing legal skip). The new `tests/design.spec.ts` covers:
+  - text sizes and headline sizes;
+  - tap targets;
+  - the phone header and menu at 360, 390 and 430;
+  - swipe rows and the tabs;
+  - homepage section order and height;
+  - the hidden sections;
+  - with zero shots, no empty panel and no gap where an image would go.
+- **Homepage height at 390:** 19,989px down to 4,784px with placeholders showing, and 14,472px down to 4,071px as wuntab.com shows it.
+- **Sideways scroll at 360:** 14px before, none after.
+- **Evidence:** `docs/marketing-site/evidence/design-pass/`.
+- **Not run:** Lighthouse, because it isn't installed in the session.
+
+---
+
 ## 2026-10-07 · PR #15: preview deployments show missing-shot placeholders; SHOTS.md generated (merged)
 
 **Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `71bec8b` on `main`, from branch `marketing/shots-preview`.
