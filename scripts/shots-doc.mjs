@@ -19,7 +19,7 @@ const { shotRows } = await jiti.import("../src/lib/shot-placements.ts");
 const { findShot, shotSize } = await jiti.import("../src/lib/shot-files.ts");
 
 const OUT = join(process.cwd(), "docs", "marketing-site", "SHOTS.md");
-const KIND = { desktop: "Desktop", phone: "Phone", tablet: "Tablet", photo: "Photo" };
+const KIND = { desktop: "Desktop", phone: "Phone", tablet: "Tablet", photo: "Photo (portrait)", scene: "Photo (landscape)" };
 
 const cell = (text) => String(text).replace(/\|/g, "\\|");
 
@@ -43,7 +43,7 @@ export function render() {
     "",
     `**${done} of ${placed.length} done.**`,
     "",
-    "Drop each file into `public/shots/` with the name shown, at the size shown (WebP preferred; PNG or JPG also work). wuntab.com shows nothing where a shot is missing. Preview deployments show a placeholder box with the file name and size in its place.",
+    "Drop each file into `public/shots/` with the name shown, at the size shown (WebP preferred; PNG or JPG also work). wuntab.com shows nothing where a shot is missing. Preview deployments show a placeholder box with the file name and size in its place. Photos can be licensed stock: record the source and license of each in `ASSETS.md`. Any screen inside a photo must be real WunTab UI, never a drawn mockup.",
     "",
     ...HEADER,
     ...placed.map((r) => row(r.shot, r.labels, r.placements.map((p) => `\`${p.page}\` ${p.section}`).join("<br>"))),

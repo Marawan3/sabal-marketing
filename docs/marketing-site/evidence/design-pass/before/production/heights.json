@@ -1,0 +1,50 @@
+{
+  "/ @1440": {
+    "height": 11660,
+    "overflowX": 0
+  },
+  "/online-ordering @1440": {
+    "height": 5142,
+    "overflowX": 0
+  },
+  "/order-management @1440": {
+    "height": 4866,
+    "overflowX": 0
+  },
+  "/ @390": {
+    "height": 14472,
+    "overflowX": 0
+  },
+  "/online-ordering @390": {
+    "height": 6514,
+    "overflowX": 0
+  },
+  "/order-management @390": {
+    "height": 5949,
+    "overflowX": 0
+  },
+  "/ @360": {
+    "height": 14899,
+    "overflowX": 14
+  },
+  "/online-ordering @360": {
+    "height": 6623,
+    "overflowX": 14
+  },
+  "/order-management @360": {
+    "height": 6131,
+    "overflowX": 14
+  },
+  "/ @430": {
+    "height": 14045,
+    "overflowX": 0
+  },
+  "/online-ordering @430": {
+    "height": 6514,
+    "overflowX": 0
+  },
+  "/order-management @430": {
+    "height": 5865,
+    "overflowX": 0
+  }
+}

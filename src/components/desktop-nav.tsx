@@ -40,7 +40,7 @@ const GROUP_COLS: Record<number, string> = {
 };
 
 const triggerClass =
-  "flex items-center gap-1.5 rounded-[6px] px-2 py-1.5 text-[0.9375rem] font-medium transition-colors duration-150";
+  "flex min-h-11 items-center gap-1.5 rounded-[10px] px-3 text-small font-medium transition-colors duration-150";
 
 export function DesktopNav({
   menus,
@@ -179,7 +179,7 @@ export function DesktopNav({
               hidden={!isOpen}
               className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 ${widths[menu.width]}`}
             >
-              <div className="rounded-[12px] border border-mist bg-paper shadow-lift">
+              <div className="rounded-[24px] border border-mist bg-paper shadow-lift">
                 <div
                   className={`grid gap-6 ${
                     menu.width === "wide"
@@ -192,20 +192,20 @@ export function DesktopNav({
                   {menu.groups.map((group, groupIndex) => (
                     <div key={group.title ?? groupIndex}>
                       {group.title ? (
-                        <p className="px-3 pb-2 text-small font-medium text-ink/72">{group.title}</p>
+                        <p className="px-3 pb-2 text-small font-medium text-ink/55">{group.title}</p>
                       ) : null}
                       <ul>
                         {group.items.map((item) => (
                           <li key={item.href}>
                             <SmartLink
                               href={item.href}
-                              className="block rounded-[6px] px-3 py-2 transition-colors duration-150 hover:bg-ticket focus-visible:bg-ticket"
+                              className="block rounded-[14px] px-3 py-2.5 transition-colors duration-150 hover:bg-ticket focus-visible:bg-ticket"
                             >
-                              <span className="block text-[0.9375rem] font-medium leading-snug">
+                              <span className="block text-small font-medium">
                                 {item.name}
                               </span>
                               {item.blurb ? (
-                                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-ink/72">
+                                <span className="mt-0.5 block text-small text-ink/70">
                                   {item.blurb}
                                 </span>
                               ) : null}

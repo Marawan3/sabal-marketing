@@ -1,5 +1,6 @@
-import { builtProducts, bySlug, lifecycle, products, type Product, type Shot } from "./catalog";
+import { builtProducts, bySlug, lifecycle, photos, products, type Product, type Shot } from "./catalog";
 import { copy } from "./copy";
+import { customerStories } from "./stories";
 
 /**
  * Which screenshot goes where. The pages read their shots from here, and
@@ -7,20 +8,40 @@ import { copy } from "./copy";
  * so the shot list can't drift from what the site renders.
  */
 
+const shotOf = (slug: string, key: string): Shot => {
+  const shot = bySlug[slug].shots.find((s) => s.key === key);
+  if (!shot) throw new Error(`${slug} has no shot ${key}`);
+  return shot;
+};
+
 /** Homepage sections and their shots, in page order. */
 export const homeShots = {
-  hero: { section: "Hero", shots: [...copy.hero.screens] as Shot[] },
-  sell: { section: copy.sell.heading, shots: [bySlug["online-ordering"].shots[0]] },
-  discovery: { section: copy.discovery.heading, shots: [bySlug["restaurant-websites"].shots[0]] },
-  delivery: { section: copy.delivery.heading, shots: bySlug.delivery.shots },
-  catering: { section: copy.catering.heading, shots: bySlug.catering.shots },
-  growth: { section: copy.growth.heading, shots: [bySlug["restaurant-marketing"].shots[0]] },
-  operations: {
-    section: copy.operations.heading,
-    shots: [bySlug["order-management"].shots[0], bySlug["menu-management"].shots[0]],
+  /** The storefront on a phone, next to the orders board. */
+  hero: { section: "Hero", shots: [shotOf("online-ordering", "site-menu"), shotOf("order-management", "orders-board")] },
+  outcomes: {
+    section: copy.outcomes.heading,
+    shots: [
+      shotOf("restaurant-websites", "site-home"),
+      shotOf("restaurant-marketing", "marketing-campaign"),
+      shotOf("order-management", "ordering-settings"),
+    ],
   },
-  analytics: { section: copy.analytics.heading, shots: [bySlug.analytics.shots[0]] },
+  products: {
+    section: copy.products.heading,
+    shots: [photos.orderingInHand, photos.deliveryHandoff, photos.cateringSpread, photos.kitchenScreen] as Shot[],
+  },
+  stories: { section: copy.stories.heading, shots: customerStories.map((story) => story.photo) as Shot[] },
 } satisfies Record<string, { section: string; shots: (Shot | undefined)[] }>;
+
+/** The outcome tab and its one shot, in the order the tabs show. */
+export function outcomeTabs() {
+  return copy.outcomes.items.map((item, index) => ({ ...item, shot: homeShots.outcomes.shots[index] }));
+}
+
+/** The four homepage product panels: product, photo. */
+export function productPanels() {
+  return copy.products.slugs.map((slug, index) => ({ product: bySlug[slug], shot: homeShots.products.shots[index] }));
+}
 
 /** A product page: the first shot is the hero, the rest go under "In the product". */
 export function productPageShots(product: Product): { hero: Shot | undefined; rest: Shot[] } {

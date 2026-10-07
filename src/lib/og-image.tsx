@@ -22,7 +22,7 @@ export function createOgImage(title: string) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <svg viewBox="0 0 56 56" width={56} height={56}>
-            <rect x="0" y="0" width="56" height="56" rx="14" fill={brand.ink} />
+            <rect x="0" y="0" width="56" height="56" rx="14" fill={brand.navy} />
             <polyline
               points="11,22 18,39 28,12 38,39 45,22"
               fill="none"
