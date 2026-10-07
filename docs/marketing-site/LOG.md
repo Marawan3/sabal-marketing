@@ -20,6 +20,35 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## 2026-10-07 · PR #17: site font switched from Bricolage Grotesque to Archivo (merged)
+
+**Merged by:** Claude, on the owner's "merge 17". Squash commit `8a2a60d` on `main`, from branch `marketing/archivo`.
+
+**Why:** the owner felt Bricolage Grotesque looked generic and chose Archivo, with exact settings.
+
+**What changed:**
+- **Font:** Archivo everywhere, with variable weight and its width axis. Bricolage is removed.
+- **Headlines:** heavier (750) and 10% wider, and set smaller to suit: 34px on a phone, 70px on desktop.
+- **Card titles:** 650 at 4% wider.
+- **Body text, buttons, nav and FAQ:** normal width.
+- **Text sizes:** still five site-wide.
+- **Headline length:** every page headline is at most 4 lines at 360 wide and 3 lines on desktop. The product-page headline was given more room to get there.
+- **Logo:** the WUNTAB wordmark is now drawn as outlines of its original lettering, so it looks the same as before whatever font the page uses.
+- **Fallback fonts:** sized to Archivo for each kind of text, so the page doesn't jump when the font arrives. At desktop width nothing moves. At 390, two single lines re-wrap.
+- **Mobile menu:** the Sell, Grow and Operate labels now use the nav style.
+
+**How it was checked:**
+- **Tests:** 56 Playwright tests passed and 1 was skipped (the existing legal skip). New tests cover:
+  - the font settings for each kind of text;
+  - no Bricolage left in the page or stylesheets;
+  - headline line limits on every page;
+  - no headline wider than its container;
+  - the outlined logo.
+- **Logo pixel comparison:** about 1.5% of inked pixels differ, all from edge anti-aliasing.
+- **Evidence:** before and after screenshots of the homepage, `/online-ordering` and `/pricing` at 360, 390 and 1440, in `docs/marketing-site/evidence/archivo/`.
+
+---
+
 ## 2026-10-07 · PR #16: design pass on the homepage, product pages, nav and footer (merged)
 
 **Merged by:** Claude, on the owner's "merge" after reviewing the preview and the production screenshots. Squash commit `e33616f` on `main`, from branch `marketing/design-pass`.
