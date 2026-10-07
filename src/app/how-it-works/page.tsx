@@ -2,7 +2,8 @@ import { SmartLink } from "@/components/smart-link";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink } from "@/components/cta-link";
-import { hasShot, ScreenFrame } from "@/components/screen-frame";
+import { isShotVisible, ScreenFrame } from "@/components/screen-frame";
+import { howItWorksShot } from "@/lib/shot-placements";
 import { Section } from "@/components/section";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -27,7 +28,7 @@ export default function HowItWorksPage() {
         </Container>
       </section>
       {lifecycle.map((stage, index) => {
-        const shot = bySlug[stage.products[0]].shots[0];
+        const shot = howItWorksShot(stage);
         return (
           <Section key={stage.name} tone={index % 2 === 0 ? "ticket" : "paper"}>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
@@ -55,7 +56,7 @@ export default function HowItWorksPage() {
                   })}
                 </ul>
               </div>
-              {hasShot(shot) ? (
+              {isShotVisible(shot) ? (
                 <div className="lg:col-span-6">
                   <ScreenFrame shot={shot} />
                 </div>

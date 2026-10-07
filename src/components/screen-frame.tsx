@@ -1,42 +1,23 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import Image from "next/image";
 import type { Shot } from "@/lib/catalog";
+import { findShot, showPlaceholders, shotSize } from "@/lib/shot-files";
 
-const SHOTS_DIR = join(process.cwd(), "public", "shots");
-const EXTENSIONS = ["webp", "png", "jpg"] as const;
-
-/** Resolve a real screenshot at build time, or null if it has not been dropped in yet. */
-export function findShot(key: string) {
-  for (const ext of EXTENSIONS) {
-    if (existsSync(join(SHOTS_DIR, `${key}.${ext}`))) return `/shots/${key}.${ext}`;
-  }
-  return null;
-}
-
-const SIZES = {
-  desktop: { width: 1440, height: 900, aspect: "aspect-[16/10]", wrap: "w-full", radius: "rounded-[16px]" },
-  phone: { width: 390, height: 844, aspect: "aspect-[390/844]", wrap: "mx-auto w-full max-w-[280px]", radius: "rounded-[24px]" },
-  tablet: { width: 1180, height: 820, aspect: "aspect-[1180/820]", wrap: "w-full", radius: "rounded-[20px]" },
-  photo: { width: 1200, height: 1600, aspect: "aspect-[3/4]", wrap: "mx-auto w-full max-w-[320px]", radius: "rounded-[16px]" },
-} as const;
-
-/** True when the shot has a real file in public/shots/. Missing or undefined is false. */
-export function hasShot(shot: Shot | undefined | null): shot is Shot {
-  return Boolean(shot && findShot(shot.key));
-}
-
-/** Only the shots that have a real file, in their original order. */
-export function availableShots(shots: readonly Shot[]): Shot[] {
-  return shots.filter((shot) => hasShot(shot));
-}
+export { isShotVisible, visibleShots } from "@/lib/shot-files";
 
 /**
- * A product screen. Renders the real image when public/shots/<key>.* exists,
- * and nothing at all when it does not: no box, no label, no reserved space
- * (owner instruction, 2026-10-07, after placeholder boxes went live). Callers
- * use hasShot()/availableShots() to drop the column or gallery around a
- * missing shot, so the section keeps its text and loses only the visual.
+ * A product screen. Renders the real image when public/shots/<key>.* exists.
+ *
+ * When the file is missing:
+ * - production renders nothing at all: no box, no label, no reserved space
+ *   (owner instruction, 2026-10-07);
+ * - preview deployments render a dashed placeholder with the words
+ *   "Screenshot placeholder", what the shot will show, and its file name and
+ *   size, so the owner can see where each missing shot goes.
+ *
+ * The switch is Vercel's own environment (see showPlaceholders()). Callers
+ * use isShotVisible()/visibleShots() so a column or gallery disappears with
+ * its frame. The placeholder never imitates a real screen: no device chrome,
+ * no drawn UI.
  */
 export function ScreenFrame({
   shot,
@@ -51,9 +32,26 @@ export function ScreenFrame({
   dark?: boolean;
 }) {
   const src = findShot(shot.key);
-  const size = SIZES[shot.kind ?? "desktop"];
+  const size = shotSize(shot);
 
-  if (!src) return null;
+  if (!src) {
+    if (!showPlaceholders()) return null;
+    return (
+      <figure className={`${size.wrap} ${className}`} data-placeholder={shot.key}>
+        <div
+          className={`flex ${size.aspect} w-full flex-col items-center justify-center gap-2 border-2 border-dashed p-5 text-center ${size.radius} ${
+            dark ? "border-paper/35 text-paper/80" : "border-ink/25 bg-paper/60 text-ink/72"
+          }`}
+        >
+          <span className="text-small font-medium">Screenshot placeholder</span>
+          <span className={`max-w-[28ch] text-body font-medium ${dark ? "text-paper" : "text-ink"}`}>{shot.label}</span>
+          <span className="font-mono text-[0.8125rem]">
+            {`${shot.key}.webp · ${size.width}×${size.height}`}
+          </span>
+        </div>
+      </figure>
+    );
+  }
 
   return (
     <figure className={`${size.wrap} ${className}`}>

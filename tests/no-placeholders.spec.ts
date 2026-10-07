@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { allRoutes } from "../src/lib/site";
@@ -35,4 +36,9 @@ test("no served page contains a screenshot placeholder", async ({ request }) => 
     expect(html, path).not.toContain(PHRASE);
     expect(html, path).not.toContain("data-placeholder");
   }
+});
+
+test("docs/marketing-site/SHOTS.md matches the shot catalog", () => {
+  const result = spawnSync(process.execPath, ["scripts/shots-doc.mjs", "--check"], { encoding: "utf8" });
+  expect(result.status, result.stderr || result.stdout).toBe(0);
 });
