@@ -6,13 +6,11 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
+    // /how-it-works, /pricing, /online-ordering and /restaurant-seo used to
+    // redirect to the one-page site; they are real pages now (phase 1).
     return [
-      { source: "/how-it-works", destination: "/#how-it-works", permanent: true },
-      { source: "/pricing", destination: "/#pricing", permanent: true },
       { source: "/demo", destination: "/", permanent: true },
       { source: "/about", destination: "/", permanent: true },
-      { source: "/online-ordering", destination: "/", permanent: true },
-      { source: "/restaurant-seo", destination: "/", permanent: true },
       { source: "/dpa", destination: "/privacy", permanent: true },
       // Legal aliases. 301 exactly (not Next's default 308) for older clients
       // and for app-store reviewers that follow only classic permanent redirects.

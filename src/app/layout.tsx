@@ -27,26 +27,26 @@ const indexing = shouldIndex();
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: `Wuntab: ${copy.hero.headline}`,
-    template: "%s | Wuntab",
+    default: `WunTab: ${copy.hero.headline}`,
+    template: "%s | WunTab",
   },
   description: site.description,
-  applicationName: "Wuntab",
-  authors: [{ name: "Wuntab" }],
-  creator: "Wuntab",
+  applicationName: "WunTab",
+  authors: [{ name: "WunTab" }],
+  creator: "WunTab",
   robots: indexing
     ? { index: true, follow: true }
     : { index: false, follow: false },
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Wuntab",
+    siteName: "WunTab",
     title: copy.hero.headline,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wuntab",
+    title: "WunTab",
     description: site.description,
   },
 };
