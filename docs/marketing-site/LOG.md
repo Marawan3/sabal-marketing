@@ -20,6 +20,24 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## 2026-10-07 · PR #14: hotfix, screenshot placeholders removed from the live site (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `b34195a` on `main`, from branch `marketing/hide-placeholders`.
+
+**Why:** after PR #13, 15 dashed "Screenshot placeholder" boxes were live on the homepage and product pages.
+
+**What changed:**
+- A screenshot frame with no real file in `public/shots/` now renders nothing: no box, no label, no reserved space. The column or gallery around it goes too.
+- Every section keeps its text.
+- When a real file lands, its frame returns on its own.
+
+**How it was checked:**
+- **New test:** `tests/no-placeholders.spec.ts` fails if "Screenshot placeholder" appears in any built or served page. It fails against the old code and passes on the fix.
+- **Full suite:** 37 passed, 1 skipped, built with production's indexing settings.
+- **Visual check:** the homepage, `/online-ordering` and `/how-it-works` at 390 and 1440.
+
+---
+
 ## 2026-10-07 · PR #13: phase 1 platform site (merged)
 
 **Merged by:** Claude, on Marawan's instruction ("merge 13"). The PR was marked owner-review-only. Squash commit `51135a3` on `main`, from branch `marketing/phase-1`. CI was green (Vercel) and the branch merged cleanly.
