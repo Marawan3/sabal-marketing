@@ -20,6 +20,23 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## 2026-10-07 · PR #13: phase 1 platform site (merged)
+
+**Merged by:** Claude, on Marawan's instruction ("merge 13"). The PR was marked owner-review-only. Squash commit `51135a3` on `main`, from branch `marketing/phase-1`. CI was green (Vercel) and the branch merged cleanly.
+
+What changed:
+- **Nine pages:** `/`, `/how-it-works`, `/pricing`, and six product pages (`/online-ordering`, `/delivery`, `/catering`, `/restaurant-websites`, `/restaurant-seo`, `/order-management`).
+- **Navigation:** a product mega-menu and an updated footer.
+- **Screens:** every product screen is still a marked placeholder. The real screenshots aren't captured yet.
+
+The site went live with two claims the PR flagged as not true in the platform today:
+- **The 5% diner service fee:** checkout charges none.
+- **The restaurant as merchant of record with its own payment account:** cards run on one platform account.
+
+Both are owner findings 1 and 2 above. The full build list is in the PR description.
+
+---
+
 ## 2026-10-05 · Demo order seed: dry run on a database branch (sabal-ros, not merged)
 
 **Not merged.** Branch `demo/seed-orders` in sabal-ros (commit `1a6f5c5`) holds the seed scripts and migration 0085. There is no PR to main.
