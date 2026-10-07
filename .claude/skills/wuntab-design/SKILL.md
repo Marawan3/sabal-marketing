@@ -16,10 +16,18 @@ Copy is draft until he says otherwise.
 The owner's brief for the design pass, as built. The older sections below are kept for
 their reasoning. Where they disagree with this section, this section wins.
 
-- **Type:** Bricolage Grotesque, headlines at weight 600 with tight tracking (-4% H1, -3% H2).
-  H1 36px at 390 up to 80px; H2 32px at 390 up to 56px; body 16px on phones, 18px on desktop.
-  **Five text sizes site-wide, no more:** `text-display`, `text-h2`, `text-h3`, `text-body`,
-  `text-small`. No arbitrary `text-[…]` sizes. `tests/design.spec.ts` counts them.
+- **Type (Archivo since 2026-10-07; Bricolage Grotesque is retired):** Archivo through
+  `next/font/google`, variable weight plus the width axis (`axes: ["wdth"]`).
+  H1 and H2: weight 750, width 110%, tracking -0.025em, line-height 1.02 (H1) and 1.05 (H2).
+  H3 and card titles: weight 650, width 104%, tracking -0.01em.
+  Body, buttons, inputs, nav and FAQ: width 100%, tracking 0; body 400 at line-height 1.5,
+  buttons and nav 500 to 600. Sizes: H1 34px at 390 to 70px at 1440, H2 30px to 50px, H3
+  22px, body 16px on phones and 18px on desktop, small 14px. The H1 runs at most 4 lines
+  at 360 and 3 at 1440. **Five text sizes site-wide, no more:** `text-display`, `text-h2`,
+  `text-h3`, `text-body`, `text-small`. No arbitrary `text-[…]` sizes. Fallbacks are
+  metric-matched Arial faces per role (body, 500, 600, card titles, headlines), declared
+  in `globals.css`, so nothing re-wraps when the font loads. `tests/design.spec.ts` checks
+  all of it.
 - **Color:** near-black text `--ink #1D1D1B` on white; secondary text is ink at 85%. One warm
   neutral for panels, `--ticket #F5EFE6`. One accent, saffron, for buttons and the hero art
   panel. The logo keeps its navy (`--navy #13213C`) as its own color. Dark panels use ink.
@@ -107,11 +115,14 @@ sections on the page (the final CTA band and, optionally, the proof module frame
 
 ## 4. Typography
 
-One family: **Bricolage Grotesque** (variable, Google Fonts) loaded with
-`next/font/google`, `display: "swap"`, preloaded, subsets `latin` only. It is warm,
-a little hand-made, and reads nothing like Inter. Fallback stack
-`ui-sans-serif, system-ui, sans-serif`. If Lighthouse mobile performance drops below
-95 because of the font, reduce the weights loaded before you drop the font.
+**Superseded 2026-10-07: the face is Archivo (see section 0).** The notes below are kept
+for their reasoning only. The old wordmark lettering is preserved as SVG outlines in
+`src/components/logo.tsx`, so the logo never depends on the page font.
+
+Formerly one family: Bricolage Grotesque (variable, Google Fonts) loaded with
+`next/font/google`, `display: "swap"`, preloaded, subsets `latin` only. If Lighthouse
+mobile performance drops below 95 because of the font, reduce the axes or weights loaded
+before you drop the font.
 
 Weights: 400 body, 500 buttons and nav, 700 headlines and stats. No 600.
 Numbers always `font-variant-numeric: tabular-nums`.
@@ -248,7 +259,8 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   appear on the page.
 - Icons: none, unless a check mark in a checklist. No icon grids.
 - Logo: geometry is locked (rounded-square tile, one-stroke W with the raised center
-  peak, WUNTAB wordmark caps / weight 500 / 3px tracking, tile + 14px gap lockup).
+  peak, WUNTAB wordmark caps / weight 500 / 3px tracking, tile + 14px gap lockup). The
+  wordmark is outlined SVG (Bricolage lettering, frozen 2026-10-07), not live text.
   Never symmetrize the W. Colors are ours: on light surfaces ink tile, saffron W, ink
   wordmark; on dark surfaces saffron tile, ink W, paper wordmark. Stroke width 6 at
   or under 24px, 5 at or under 40px, else 4.5. Source: `src/components/logo.tsx`,

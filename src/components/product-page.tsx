@@ -33,7 +33,7 @@ export function ProductPage({ product }: { product: Product }) {
       {/* Hero */}
       <section className="scroll-mt-20">
         <Container className="pt-12 pb-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-14">
-          <h1 className="max-w-[15ch] text-display">{product.headline}</h1>
+          <h1 className="max-w-[18ch] text-display">{product.headline}</h1>
           <p className="mt-5 max-w-[44ch] text-body text-ink/85 lg:mt-6">{product.sub}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
             <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>

@@ -4,6 +4,8 @@
 
 Geometry comes from `wuntab-rebrand-spec.md` §2 and is implemented exactly: rounded-square tile (rx 14/56), one-stroke W with the raised center peak, WUNTAB wordmark in caps at weight 500 with 3px tracking, horizontal lockup with a 14px gap. Never symmetrize the W.
 
+Since the switch to Archivo (2026-10-07) the wordmark is SVG outlines of its original Bricolage Grotesque lettering (weight 500, 18px, 3px tracking, kerned), so the logo looks the same whatever the page font is. Pixel check against the old live text: 177 of 10,325 inked pixels differ in the header and 498 of 33,055 in the footer, all by anti-aliasing only.
+
 Colors were recolored for this palette. Since the 2026-10-07 design pass the page text is near-black, and the logo keeps the navy as its own color (`--navy`) (Marawan, 2026-09-05: "the colors are yours"):
 
 | Surface | Tile | W stroke | Wordmark |

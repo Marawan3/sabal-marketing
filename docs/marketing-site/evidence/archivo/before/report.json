@@ -1,0 +1,110 @@
+{
+  "/ @360": {
+    "height": 4090,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "36px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @360": {
+    "height": 3245,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "36px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @360": {
+    "height": 1942,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "36px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @390": {
+    "height": 4071,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "37.14px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @390": {
+    "height": 3225,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "37.14px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @390": {
+    "height": 1920,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "37.14px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @1440": {
+    "height": 4727,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "80px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @1440": {
+    "height": 3691,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "80px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/pricing @1440": {
+    "height": 1783,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "80px",
+      "weight": "600",
+      "stretch": "100%",
+      "family": "\"Bricolage Grotesque\""
+    },
+    "headlinesWiderThanContainer": []
+  }
+}

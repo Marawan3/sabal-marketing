@@ -42,21 +42,101 @@ test("no more than five text sizes site-wide, at 390 and 1440", async ({ page })
 });
 
 test("headline sizes follow the brief", async ({ page }) => {
+  // Archivo at 110% width runs large, so headlines are set smaller than they were in Bricolage.
   for (const [width, h1, h2] of [
-    [390, [34, 38], [30, 36]],
-    [1440, [72, 80], [48, 64]],
+    [390, [33, 35], [30, 36]],
+    [1440, [68, 72], [48, 64]],
   ] as const) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     const size = (sel: string) => page.locator(sel).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-    const weight = await page.locator("h1").evaluate((el) => getComputedStyle(el).fontWeight);
-    expect(weight).toBe("600");
     const one = await size("h1");
     const two = await size("main h2");
     expect(one, `h1 at ${width}`).toBeGreaterThanOrEqual(h1[0]);
     expect(one, `h1 at ${width}`).toBeLessThanOrEqual(h1[1]);
     expect(two, `h2 at ${width}`).toBeGreaterThanOrEqual(h2[0]);
     expect(two, `h2 at ${width}`).toBeLessThanOrEqual(h2[1]);
+  }
+});
+
+test("Archivo is the only font, with the brief's weight, width and tracking per role", async ({ page, request }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  const style = (sel: string) =>
+    page.locator(sel).first().evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const px = parseFloat(cs.fontSize);
+      return {
+        family: cs.fontFamily.split(",")[0].replace(/"/g, "").trim(),
+        weight: cs.fontWeight,
+        stretch: cs.fontStretch,
+        tracking: cs.letterSpacing === "normal" ? 0 : +(parseFloat(cs.letterSpacing) / px).toFixed(3),
+        leading: +(parseFloat(cs.lineHeight) / px).toFixed(2),
+      };
+    });
+  expect(await style("h1")).toEqual({ family: "Archivo", weight: "750", stretch: "110%", tracking: -0.025, leading: 1.02 });
+  expect(await style("main h2")).toEqual({ family: "Archivo", weight: "750", stretch: "110%", tracking: -0.025, leading: 1.05 });
+  expect(await style("main h3")).toMatchObject({ family: "Archivo", weight: "650", stretch: "104%", tracking: -0.01 });
+  expect(await style("main p")).toEqual({ family: "Archivo", weight: "400", stretch: "100%", tracking: 0, leading: 1.5 });
+  for (const sel of ["main button[type=submit]", "header nav a:visible", "main summary"]) {
+    const s = await style(sel);
+    expect(s.family, sel).toBe("Archivo");
+    expect(s.stretch, sel).toBe("100%");
+    expect(s.tracking, sel).toBe(0);
+    expect(Number(s.weight), sel).toBeGreaterThanOrEqual(500);
+    expect(Number(s.weight), sel).toBeLessThanOrEqual(600);
+  }
+  expect(await page.evaluate(() => document.fonts.check("750 16px Archivo"))).toBe(true);
+  // Bricolage is gone from the page and its stylesheets.
+  const html = await (await request.get("/")).text();
+  expect(html.toLowerCase()).not.toContain("bricolage");
+  const sheets = await page.evaluate(() =>
+    Promise.all([...document.querySelectorAll<HTMLLinkElement>("link[rel=stylesheet]")].map((l) => fetch(l.href).then((r) => r.text()))),
+  );
+  for (const css of sheets) expect(css.toLowerCase()).not.toContain("bricolage");
+});
+
+test("H1s fit: at most 4 lines at 360 and 3 at 1440; no headline is wider than its container", async ({ page }) => {
+  for (const [width, maxLines] of [
+    [360, 4],
+    [390, 4],
+    [1440, 3],
+  ] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      await page.evaluate(() => document.fonts.ready);
+      const lines = await page
+        .locator("h1")
+        .evaluate((h) => Math.round(h.getBoundingClientRect().height / parseFloat(getComputedStyle(h).lineHeight)));
+      expect(lines, `${path} H1 at ${width}`).toBeLessThanOrEqual(maxLines);
+      const wide = await page.evaluate(() =>
+        [...document.querySelectorAll("h1, h2, h3")]
+          .filter((h) => {
+            const box = h.getBoundingClientRect();
+            if (!box.width) return false;
+            const parent = h.parentElement!.getBoundingClientRect();
+            return h.scrollWidth > h.clientWidth + 1 || box.right > parent.right + 1 || box.left < parent.left - 1;
+          })
+          .map((h) => h.textContent),
+      );
+      expect(wide, `${path} at ${width}`).toEqual([]);
+    }
+  }
+});
+
+test("the WUNTAB wordmark is drawn as outlines, not set in the page font", async ({ page }) => {
+  await page.goto("/");
+  for (const logo of await page.locator("[data-logo]").all()) {
+    const mark = logo.locator('svg[aria-label="WunTab"]');
+    await expect(mark).toHaveCount(1);
+    expect(await mark.locator("path").count()).toBe(1);
+    // Same box the live text had: 94.5 × 27.9 at logo size 28.
+    const box = await mark.boundingBox();
+    expect(box!.width).toBeCloseTo(94.5, 1);
+    expect(box!.height).toBeCloseTo(27.9, 1);
+    expect(await logo.evaluate((el) => (el as HTMLElement).innerText.trim())).toBe("");
   }
 });
 

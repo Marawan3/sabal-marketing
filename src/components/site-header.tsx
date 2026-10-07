@@ -43,7 +43,7 @@ function MobileLink({ href, children }: { href: string; children: React.ReactNod
 function MobileAccordion({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <details name="mobile-nav-group" className="group/acc border-b border-mist">
-      <summary className="flex min-h-14 cursor-pointer items-center justify-between text-h3">
+      <summary className="flex min-h-14 cursor-pointer items-center justify-between text-body font-semibold">
         {label}
         <svg
           aria-hidden
