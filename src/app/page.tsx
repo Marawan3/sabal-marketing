@@ -6,7 +6,7 @@ import { Chain, Flow } from "@/components/flow";
 import { JsonLd } from "@/components/json-ld";
 import { OrgDiagram } from "@/components/org-diagram";
 import { ProductLinks } from "@/components/product-links";
-import { ScreenFrame } from "@/components/screen-frame";
+import { availableShots, hasShot, ScreenFrame } from "@/components/screen-frame";
 import { Section, SectionHead } from "@/components/section";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -72,6 +72,12 @@ export default function HomePage() {
   const delivery = bySlug.delivery;
   const guest = bySlug["guest-feedback"];
   const catering = bySlug.catering;
+  /** Hero screens that have a real file; a missing one is null and renders nothing. */
+  const heroScreens = copy.hero.screens.map((shot) => (hasShot(shot) ? shot : null));
+  const operationsShots = availableShots([
+    bySlug["order-management"].shots[0],
+    bySlug["menu-management"].shots[0],
+  ]);
   return (
     <>
       <JsonLd data={faqSchema(copy.faq.items)} />
@@ -90,21 +96,30 @@ export default function HomePage() {
           {/*
             One composition, four screens: the website at the back, the
             customer's phone in front of it, the dashboard and kitchen screens
-            stepping down the right, and the lifecycle named underneath.
+            stepping down the right, and the lifecycle named underneath. Each
+            screen, and each column of them, renders only once its file exists.
           */}
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-0">
-            <div className="relative lg:col-span-8">
-              <ScreenFrame shot={copy.hero.screens[0]} priority />
-              <div className="mx-auto mt-6 w-[150px] sm:absolute sm:-bottom-8 sm:right-6 sm:mx-0 sm:mt-0 sm:w-[160px] lg:-right-12 lg:-bottom-10">
-                <ScreenFrame shot={copy.hero.screens[1]} />
-              </div>
+          {heroScreens.some(Boolean) ? (
+            <div className="mb-16 grid gap-6 lg:mb-20 lg:grid-cols-12 lg:gap-0">
+              {heroScreens[0] || heroScreens[1] ? (
+                <div className="relative lg:col-span-8">
+                  {heroScreens[0] ? <ScreenFrame shot={heroScreens[0]} priority /> : null}
+                  {heroScreens[1] ? (
+                    <div className="mx-auto mt-6 w-[150px] sm:absolute sm:-bottom-8 sm:right-6 sm:mx-0 sm:mt-0 sm:w-[160px] lg:-right-12 lg:-bottom-10">
+                      <ScreenFrame shot={heroScreens[1]} />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+              {heroScreens[2] || heroScreens[3] ? (
+                <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-5 lg:pl-16 lg:pt-14">
+                  {heroScreens[2] ? <ScreenFrame shot={heroScreens[2]} /> : null}
+                  {heroScreens[3] ? <ScreenFrame shot={heroScreens[3]} /> : null}
+                </div>
+              ) : null}
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-5 lg:pl-16 lg:pt-14">
-              <ScreenFrame shot={copy.hero.screens[2]} />
-              <ScreenFrame shot={copy.hero.screens[3]} />
-            </div>
-          </div>
-          <div className="mt-16 flex justify-center lg:mt-20">
+          ) : null}
+          <div className="flex justify-center">
             <Chain items={copy.hero.lifecycle} />
           </div>
         </Container>
@@ -139,9 +154,11 @@ export default function HomePage() {
       <Section id="sell">
         <SectionHead kicker="Sell" heading={copy.sell.heading} sub={copy.sell.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <ScreenFrame shot={bySlug["online-ordering"].shots[0]} />
-          </div>
+          {hasShot(bySlug["online-ordering"].shots[0]) ? (
+            <div className="lg:col-span-4">
+              <ScreenFrame shot={bySlug["online-ordering"].shots[0]} />
+            </div>
+          ) : null}
           <div className="lg:col-span-8">
             <ProductLinks
               slugs={["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"]}
@@ -161,9 +178,11 @@ export default function HomePage() {
               columns={1}
             />
           </div>
-          <div className="lg:col-span-5">
-            <ScreenFrame shot={bySlug["restaurant-websites"].shots[0]} />
-          </div>
+          {hasShot(bySlug["restaurant-websites"].shots[0]) ? (
+            <div className="lg:col-span-5">
+              <ScreenFrame shot={bySlug["restaurant-websites"].shots[0]} />
+            </div>
+          ) : null}
         </div>
       </Section>
 
@@ -173,11 +192,13 @@ export default function HomePage() {
         <div className="mt-14">
           <Flow steps={delivery.flow!.steps} dark />
         </div>
-        <div className="mt-14 grid gap-10 md:grid-cols-2">
-          {delivery.shots.map((shot) => (
-            <ScreenFrame key={shot.key} shot={shot} dark />
-          ))}
-        </div>
+        {availableShots(delivery.shots).length ? (
+          <div className="mt-14 grid gap-10 md:grid-cols-2">
+            {availableShots(delivery.shots).map((shot) => (
+              <ScreenFrame key={shot.key} shot={shot} dark />
+            ))}
+          </div>
+        ) : null}
         <p className="mt-10">
           <TextLink href="/delivery" className="text-paper decoration-paper/40 hover:decoration-paper">
             More about delivery
@@ -197,11 +218,13 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7">
-            {catering.shots.map((shot) => (
-              <ScreenFrame key={shot.key} shot={shot} />
-            ))}
-          </div>
+          {availableShots(catering.shots).length ? (
+            <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7">
+              {availableShots(catering.shots).map((shot) => (
+                <ScreenFrame key={shot.key} shot={shot} />
+              ))}
+            </div>
+          ) : null}
         </div>
         <p className="mt-10">
           <TextLink href="/catering">More about catering</TextLink>
@@ -232,9 +255,11 @@ export default function HomePage() {
           <div className="lg:col-span-7">
             <LinkList items={copy.growth.items} />
           </div>
-          <div className="lg:col-span-5">
-            <ScreenFrame shot={bySlug["restaurant-marketing"].shots[0]} />
-          </div>
+          {hasShot(bySlug["restaurant-marketing"].shots[0]) ? (
+            <div className="lg:col-span-5">
+              <ScreenFrame shot={bySlug["restaurant-marketing"].shots[0]} />
+            </div>
+          ) : null}
         </div>
       </Section>
 
@@ -245,10 +270,13 @@ export default function HomePage() {
           <div className="lg:col-span-5">
             <LinkList items={copy.operations.items} />
           </div>
-          <div className="grid gap-8 lg:col-span-7">
-            <ScreenFrame shot={bySlug["order-management"].shots[0]} />
-            <ScreenFrame shot={bySlug["menu-management"].shots[0]} />
-          </div>
+          {operationsShots.length ? (
+            <div className="grid gap-8 lg:col-span-7">
+              {operationsShots.map((shot) => (
+                <ScreenFrame key={shot.key} shot={shot} />
+              ))}
+            </div>
+          ) : null}
         </div>
       </Section>
 
@@ -256,9 +284,11 @@ export default function HomePage() {
       <Section id="analytics" tone="ticket">
         <SectionHead kicker="Operate" heading={copy.analytics.heading} sub={copy.analytics.sub} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <ScreenFrame shot={bySlug.analytics.shots[0]} />
-          </div>
+          {hasShot(bySlug.analytics.shots[0]) ? (
+            <div className="lg:col-span-7">
+              <ScreenFrame shot={bySlug.analytics.shots[0]} />
+            </div>
+          ) : null}
           <ul className="space-y-4 lg:col-span-5">
             {bySlug.analytics.capabilities.map((item) => (
               <li key={item} className="flex gap-3 text-body">

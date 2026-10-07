@@ -2,7 +2,7 @@ import { SmartLink } from "@/components/smart-link";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { CtaLink } from "@/components/cta-link";
-import { ScreenFrame } from "@/components/screen-frame";
+import { hasShot, ScreenFrame } from "@/components/screen-frame";
 import { Section } from "@/components/section";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -55,7 +55,11 @@ export default function HowItWorksPage() {
                   })}
                 </ul>
               </div>
-              <div className="lg:col-span-6">{shot ? <ScreenFrame shot={shot} /> : null}</div>
+              {hasShot(shot) ? (
+                <div className="lg:col-span-6">
+                  <ScreenFrame shot={shot} />
+                </div>
+              ) : null}
             </div>
           </Section>
         );
