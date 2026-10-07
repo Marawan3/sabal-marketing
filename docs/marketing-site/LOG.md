@@ -20,6 +20,24 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## 2026-10-07 · PR #15: preview deployments show missing-shot placeholders; SHOTS.md generated (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `71bec8b` on `main`, from branch `marketing/shots-preview`.
+
+**Why:** the owner wants to see where each missing screenshot goes without it showing on wuntab.com, and wants a shot list that can't drift from the site.
+
+**What changed:**
+- Preview deployments show a dashed box where a shot is missing, with what it should show, the file name and the size (for example `orders-board.webp · 1440×900`). wuntab.com still shows nothing, as after PR #14. The switch is Vercel's own `VERCEL_ENV` ("preview" vs "production"), so there's no flag to remember. Local builds behave like production.
+- [`docs/marketing-site/SHOTS.md`](SHOTS.md) is generated from the same list the pages read (`src/lib/shot-placements.ts`). One row per shot gives the file, size, what it should show, every page and section, and Missing or Done. Status depends on whether the file is in `public/shots/`. The count at the top reads **0 of 20 done**. Four catalog shots belong to products without a page yet. They're listed separately and not counted.
+- Every build regenerates it. On Vercel the build checks it instead, and fails if the committed copy is out of date. To refresh it, run `npm run shots`.
+
+**How it was checked:**
+- Locally, 41 Playwright tests passed and 1 was skipped (the existing legal-placeholder skip). New tests check three things: the production build contains no "Screenshot placeholder" text; a preview build shows a box for every missing shot on every page it belongs to, with its file name and size; and SHOTS.md matches the generator.
+- tsc, eslint, honesty, copy-lint and boundary-check are clean.
+- On the Vercel preview for the PR, the build log shows "shots-doc: SHOTS.md is up to date". `/order-management` showed the five boxes: orders-board, kitchen-ticket, order-drawer, ordering-settings and kds.
+
+---
+
 ## 2026-10-07 · PR #14: hotfix, screenshot placeholders removed from the live site (merged)
 
 **Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `b34195a` on `main`, from branch `marketing/hide-placeholders`.
