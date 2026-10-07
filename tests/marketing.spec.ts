@@ -35,23 +35,41 @@ test("every phase-1 page returns 200 and nothing else is a product route", async
   }
 });
 
-test("homepage first-response HTML carries the platform headline and the lifecycle", async ({
+test("homepage carries the headline; the lifecycle walkthrough lives on /how-it-works", async ({
+  page,
   request,
 }) => {
-  const html = await (await request.get("/")).text();
-  expect(html).toContain(copy.hero.headline);
-  for (const name of ["Discover", "Order", "Fulfill", "Understand", "Bring them back"]) {
-    expect(html).toContain(name);
+  await page.goto("/");
+  await expect(page.locator("h1")).toHaveText(copy.hero.headline);
+  const home = await page.locator("main").innerText();
+  const how = await (await request.get("/how-it-works")).text();
+  for (const name of ["Discover", "Fulfill", "Understand", "Build the relationship", "Bring them back"]) {
+    expect(home, `homepage repeats ${name}`).not.toContain(name);
+    expect(how).toContain(name);
   }
+  // Integrations moved off the homepage too.
+  expect(home).not.toContain(copy.integrations.heading);
+  expect(how).toContain(copy.integrations.heading.replace(/'/g, "&#x27;"));
 });
 
 test("pricing copy matches the service fee clause in /terms", async ({ request }) => {
   // SPEC section 2, rule 1: diners pay 5%, restaurants pay $0, copy matches /terms.
   expect(SERVICE_FEE_CLAUSE).toContain(copy.pricing.body);
-  for (const path of ["/", "/pricing"]) {
-    const html = await (await request.get(path)).text();
-    expect(html, path).toContain(copy.pricing.body);
-  }
+  const pricing = await (await request.get("/pricing")).text();
+  expect(pricing).toContain(copy.pricing.body);
+  // The homepage card is the short form. Each of its points restates the clause.
+  const clause = SERVICE_FEE_CLAUSE.toLowerCase();
+  expect(clause).toContain("free to the restaurant");
+  expect(clause).toContain("no monthly charge, no setup fee, and no per-order commission charged to the restaurant");
+  expect(clause).toContain("the customer pays a service fee of 5% of the order");
+  expect(clause).toContain("shown to the customer at checkout before payment is taken");
+  expect(copy.pricing.points).toEqual([
+    "No monthly charge, no setup fee, no commission.",
+    "Customers pay a 5% service fee, shown at checkout before they pay.",
+  ]);
+  const home = await (await request.get("/")).text();
+  expect(home).toContain(copy.pricing.line);
+  for (const point of copy.pricing.points) expect(home).toContain(point);
 });
 
 test("no Coming Soon labels anywhere", async ({ request }) => {
@@ -198,14 +216,16 @@ test("the header Get Started stays visible on a phone and books a call", async (
   expect(demoHref).toContain("Book%20a%20call");
 });
 
-test("no page has horizontal scroll at 390", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of marketingPages) {
-    await page.goto(path);
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow, path).toBeLessThanOrEqual(1);
+test("no page has horizontal scroll at 360, 390 or 430", async ({ page }) => {
+  for (const width of [360, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const path of [...marketingPages, "/terms", "/privacy"]) {
+      await page.goto(path);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, `${path} at ${width}`).toBeLessThanOrEqual(0);
+    }
   }
 });
 

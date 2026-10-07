@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
-import { CtaLink } from "@/components/cta-link";
+import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
+import { PriceCard } from "@/components/price-card";
 import { Section } from "@/components/section";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
-import { demoHref } from "@/lib/site";
 
 export const dynamic = "error";
 
@@ -25,38 +25,16 @@ export default function PricingPage() {
     <>
       <JsonLd data={faqSchema(pricingFaq)} />
       <section>
-        <Container className="pt-16 pb-12 sm:pt-24 lg:pt-28">
-          <h1 className="max-w-[16ch] text-display">{copy.pricing.heading}</h1>
-          <p className="mt-8 max-w-[48ch] text-lead text-ink/80">{copy.pricing.line}</p>
+        <Container className="pt-12 pb-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-14">
+          <h1 className="max-w-[15ch] text-display">{copy.pricing.heading}</h1>
         </Container>
       </section>
-      <Section tone="ticket">
-        <div className="max-w-[640px] ticket-shadow">
-          <div className="ticket px-6 pt-8 pb-12 sm:px-10 sm:pt-10 sm:pb-14">
-            <p className="text-stat">{copy.pricing.stat}</p>
-            <p className="mt-4 text-lead font-medium">{copy.pricing.line}</p>
-            <p className="mt-4 max-w-[52ch] text-body text-ink/80">{copy.pricing.body}</p>
-            <p className="mt-4 max-w-[52ch] text-small text-ink/72">{copy.pricing.more}</p>
-            <CtaLink href={demoHref} className="mt-8">
-              {copy.cta.talk}
-            </CtaLink>
-          </div>
-        </div>
-      </Section>
       <Section>
-        <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-          <h2 className="text-h2 lg:col-span-5">Pricing questions</h2>
-          <div className="faq divide-y divide-mist border-y border-mist lg:col-span-7">
-            {pricingFaq.map((item) => (
-              <details key={item.question} className="group">
-                <summary className="flex cursor-pointer items-center gap-4 py-5 text-h3">
-                  {item.question}
-                </summary>
-                <p className="max-w-[56ch] pb-6 text-body text-ink/80">{item.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
+        {/* The full terms, word for word as in SERVICE_FEE_CLAUSE (/terms). */}
+        <PriceCard lines={[copy.pricing.body, copy.pricing.more]} pricingLink={false} />
+      </Section>
+      <Section className="pb-8 sm:pb-10 lg:pb-14">
+        <Faq heading="Pricing questions" items={pricingFaq} />
       </Section>
     </>
   );

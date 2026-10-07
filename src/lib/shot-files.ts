@@ -20,10 +20,11 @@ export function findShot(key: string): string | null {
 }
 
 export const SHOT_SIZES = {
-  desktop: { width: 1440, height: 900, aspect: "aspect-[16/10]", wrap: "w-full", radius: "rounded-[16px]" },
+  desktop: { width: 1440, height: 900, aspect: "aspect-[16/10]", wrap: "w-full", radius: "rounded-[14px]" },
   phone: { width: 390, height: 844, aspect: "aspect-[390/844]", wrap: "mx-auto w-full max-w-[280px]", radius: "rounded-[24px]" },
   tablet: { width: 1180, height: 820, aspect: "aspect-[1180/820]", wrap: "w-full", radius: "rounded-[20px]" },
   photo: { width: 1200, height: 1600, aspect: "aspect-[3/4]", wrap: "mx-auto w-full max-w-[320px]", radius: "rounded-[16px]" },
+  scene: { width: 1600, height: 1000, aspect: "aspect-[16/10]", wrap: "w-full", radius: "rounded-[20px] lg:rounded-[24px]" },
 } as const;
 
 export function shotSize(shot: Shot) {

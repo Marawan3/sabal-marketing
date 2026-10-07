@@ -1,17 +1,20 @@
-import { SmartLink } from "@/components/smart-link";
 import type { Metadata } from "next";
+import { Beliefs } from "@/components/beliefs";
 import { Container } from "@/components/container";
-import { CtaLink, TextLink } from "@/components/cta-link";
-import { Chain, Flow } from "@/components/flow";
+import { TextLink } from "@/components/cta-link";
+import { CustomerStories } from "@/components/customer-stories";
+import { Faq } from "@/components/faq";
+import { FinalCta } from "@/components/final-cta";
+import { HeroSignup } from "@/components/hero-signup";
 import { JsonLd } from "@/components/json-ld";
-import { OrgDiagram } from "@/components/org-diagram";
-import { ProductLinks } from "@/components/product-links";
-import { isShotVisible, ScreenFrame, visibleShots } from "@/components/screen-frame";
-import { homeShots } from "@/lib/shot-placements";
-import { Section, SectionHead } from "@/components/section";
-import { bySlug, lifecycle, productHref } from "@/lib/catalog";
+import { OutcomeTabs } from "@/components/outcome-tabs";
+import { PriceCard } from "@/components/price-card";
+import { isShotVisible, ScreenFrame } from "@/components/screen-frame";
+import { Panel, Section, SectionHead } from "@/components/section";
+import { productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
+import { homeShots, outcomeTabs, productPanels } from "@/lib/shot-placements";
 import { demoHref, site } from "@/lib/site";
 
 export const dynamic = "error";
@@ -22,370 +25,135 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-function Check() {
-  return (
-    <svg
-      aria-hidden
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="mt-1 shrink-0"
-    >
-      <path d="M3.5 9.5l3.5 3.5 7.5-8" />
-    </svg>
-  );
-}
-
-/** A product name that links to its page once the page exists. */
-function ProductName({ slug, name, className }: { slug: string; name: string; className: string }) {
-  const href = productHref(slug);
-  return href ? (
-    <SmartLink href={href} className={className}>
-      {name}
-    </SmartLink>
-  ) : (
-    <span>{name}</span>
-  );
-}
-
-function LinkList({ items }: { items: readonly { name: string; slug: string }[] }) {
-  return (
-    <ul className="grid gap-x-12 sm:grid-cols-2">
-      {items.map((item) => (
-        <li key={item.name} className="border-t border-mist py-3 text-body font-medium">
-          <ProductName
-            slug={item.slug}
-            name={item.name}
-            className="underline decoration-transparent underline-offset-4 hover:decoration-ink"
-          />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
+/**
+ * The homepage, in the owner's order (2026-10-07): hero, outcome tabs,
+ * product panels, how it works, pricing, what we believe, FAQ, final call to
+ * action. Customer stories and beliefs render only once their data is real.
+ * The lifecycle walkthrough and capability lists live on /how-it-works and
+ * the product pages, not here.
+ */
 export default function HomePage() {
-  const delivery = bySlug.delivery;
-  const guest = bySlug["guest-feedback"];
-  const catering = bySlug.catering;
-  /** Hero screens that render (file exists, or preview); a missing one is null. */
-  const heroScreens = homeShots.hero.shots.map((shot) => (isShotVisible(shot) ? shot : null));
-  const sellShot = visibleShots(homeShots.sell.shots)[0];
-  const discoveryShot = visibleShots(homeShots.discovery.shots)[0];
-  const deliveryShots = visibleShots(homeShots.delivery.shots);
-  const cateringShots = visibleShots(homeShots.catering.shots);
-  const growthShot = visibleShots(homeShots.growth.shots)[0];
-  const operationsShots = visibleShots(homeShots.operations.shots);
-  const analyticsShot = visibleShots(homeShots.analytics.shots)[0];
+  const [phoneShot, boardShot] = homeShots.hero.shots;
+  const phone = isShotVisible(phoneShot) ? phoneShot : null;
+  const board = isShotVisible(boardShot) ? boardShot : null;
   return (
     <>
       <JsonLd data={faqSchema(copy.faq.items)} />
 
-      {/* 2. Platform hero */}
+      {/* a. Hero */}
       <section id="top" className="scroll-mt-20">
-        <Container className="pt-20 pb-16 sm:pt-28 lg:pt-32">
-          <h1 className="max-w-[18ch] text-display">{copy.hero.headline}</h1>
-          <p className="mt-8 max-w-[52ch] text-lead text-ink/80">{copy.hero.sub}</p>
-          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>
-            <TextLink href="/how-it-works">{copy.cta.secondary}</TextLink>
+        <Container className="pt-12 pb-8 text-center sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-14">
+          {/* One sentence per line from lg up; they flow together on phones. */}
+          <h1 className="mx-auto max-w-[15ch] text-display lg:max-w-none">
+            {copy.hero.headline.split(/(?<=\.) /).map((sentence, index) => (
+              <span key={sentence} className="lg:block">
+                {index > 0 ? " " : null}
+                {sentence}
+              </span>
+            ))}
+          </h1>
+          <p className="mx-auto mt-5 max-w-[40ch] text-body text-ink/85 lg:mt-6">{copy.hero.line}</p>
+          <div className="mt-8">
+            <HeroSignup
+              href={demoHref}
+              label={copy.hero.inputLabel}
+              button={copy.cta.primary}
+              nameParam={process.env.NEXT_PUBLIC_DEMO_NAME_PARAM}
+            />
           </div>
-        </Container>
-        <Container className="pb-20 lg:pb-28">
-          {/*
-            One composition, four screens: the website at the back, the
-            customer's phone in front of it, the dashboard and kitchen screens
-            stepping down the right, and the lifecycle named underneath. Each
-            screen, and each column of them, renders only once its file exists.
-          */}
-          {heroScreens.some(Boolean) ? (
-            <div className="mb-16 grid gap-6 lg:mb-20 lg:grid-cols-12 lg:gap-0">
-              {heroScreens[0] || heroScreens[1] ? (
-                <div className="relative lg:col-span-8">
-                  {heroScreens[0] ? <ScreenFrame shot={heroScreens[0]} priority /> : null}
-                  {heroScreens[1] ? (
-                    <div className="mx-auto mt-6 w-[150px] sm:absolute sm:-bottom-8 sm:right-6 sm:mx-0 sm:mt-0 sm:w-[160px] lg:-right-12 lg:-bottom-10">
-                      <ScreenFrame shot={heroScreens[1]} />
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-              {heroScreens[2] || heroScreens[3] ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:gap-5 lg:pl-16 lg:pt-14">
-                  {heroScreens[2] ? <ScreenFrame shot={heroScreens[2]} /> : null}
-                  {heroScreens[3] ? <ScreenFrame shot={heroScreens[3]} /> : null}
-                </div>
-              ) : null}
-            </div>
+          {phone || board ? (
+            <Panel tone="saffron" className="mt-12 overflow-hidden px-4 pt-8 pb-6 sm:px-10 sm:pt-12 lg:mt-16 lg:px-16 lg:pt-16 lg:pb-12">
+              <div className="flex items-end justify-center gap-3 sm:gap-6 lg:gap-10">
+                {phone ? (
+                  <div className="w-[34%] shrink-0 sm:w-[28%] lg:w-[22%]">
+                    <ScreenFrame shot={phone} caption={false} priority fill />
+                  </div>
+                ) : null}
+                {board ? (
+                  <div className={`min-w-0 flex-1 ${phone ? "mb-[8%]" : "max-w-[760px]"}`}>
+                    <ScreenFrame shot={board} caption={false} priority />
+                  </div>
+                ) : null}
+              </div>
+            </Panel>
           ) : null}
-          <div className="flex justify-center">
-            <Chain items={copy.hero.lifecycle} />
-          </div>
         </Container>
       </section>
 
-      {/* 3. Product proof: the lifecycle */}
-      <Section id="proof" tone="ticket">
-        <SectionHead heading={copy.proof.heading} sub={copy.proof.sub} />
-        <ol className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {lifecycle.map((stage, index) => (
-            <li key={stage.name} className="border-t border-ink/15 pt-5">
-              <p className="text-small tabular-nums text-ink/72">{index + 1}</p>
-              <h3 className="mt-2 text-h3">{stage.name}</h3>
-              <p className="mt-2 max-w-[36ch] text-body text-ink/80">{stage.body}</p>
-              <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-small font-medium">
-                {stage.products.map((slug) => (
-                  <li key={slug}>
-                    <ProductName
-                      slug={slug}
-                      name={bySlug[slug].name}
-                      className="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
-                    />
-                  </li>
-                ))}
-              </ul>
+      <CustomerStories />
+
+      {/* b. Outcomes as tabs */}
+      <Section id="outcomes">
+        <SectionHead heading={copy.outcomes.heading} />
+        <div className="mt-8 lg:mt-12">
+          <OutcomeTabs
+            tabs={outcomeTabs().map((tab) => ({
+              key: tab.key,
+              label: tab.label,
+              lines: tab.lines,
+              visual: isShotVisible(tab.shot) ? <ScreenFrame shot={tab.shot} caption={false} /> : null,
+            }))}
+          />
+        </div>
+      </Section>
+
+      {/* c. Product panels */}
+      <Section id="products">
+        <SectionHead heading={copy.products.heading} />
+        <div className="snap-row mt-8 lg:mt-12 lg:grid lg:grid-cols-2 lg:gap-6">
+          {productPanels().map(({ product, shot }) => {
+            const href = productHref(product.slug);
+            return (
+              <Panel key={product.slug} className="flex flex-col p-3 lg:p-4">
+                {isShotVisible(shot) ? <ScreenFrame shot={shot} caption={false} /> : null}
+                <div className="flex flex-1 flex-col p-3 pt-4 lg:p-5">
+                  <h3 className="max-w-[24ch] text-h3">{product.headline}</h3>
+                  {href ? (
+                    <div className="mt-auto pt-3">
+                      <TextLink href={href}>More about {product.name.toLowerCase()}</TextLink>
+                    </div>
+                  ) : null}
+                </div>
+              </Panel>
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* d. How it works */}
+      <Section id="how-it-works">
+        <SectionHead heading={copy.steps.heading} />
+        <ol className="snap-row mt-8 lg:mt-12 lg:grid lg:grid-cols-3 lg:gap-6">
+          {copy.steps.items.map((step, index) => (
+            <li key={step.title} className="rounded-[20px] bg-ticket p-6 lg:rounded-[24px] lg:p-8">
+              <p className="text-h3 tabular-nums text-ink/45">{index + 1}</p>
+              <h3 className="mt-8 text-h3 lg:mt-12">{step.title}</h3>
+              <p className="mt-2 text-body text-ink/85">{step.line}</p>
             </li>
           ))}
         </ol>
-      </Section>
-
-      {/* 4. Sell directly */}
-      <Section id="sell">
-        <SectionHead kicker="Sell" heading={copy.sell.heading} sub={copy.sell.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          {sellShot ? (
-            <div className="lg:col-span-4">
-              <ScreenFrame shot={sellShot} />
-            </div>
-          ) : null}
-          <div className="lg:col-span-8">
-            <ProductLinks
-              slugs={["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"]}
-              columns={2}
-            />
-          </div>
+        <div className="mt-4">
+          <TextLink href="/how-it-works">{copy.cta.secondary}</TextLink>
         </div>
       </Section>
 
-      {/* 5. Website + discovery */}
-      <Section id="discovery">
-        <SectionHead kicker="Grow" heading={copy.discovery.heading} sub={copy.discovery.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <ProductLinks
-              slugs={["restaurant-websites", "restaurant-seo", "online-menu", "listings"]}
-              columns={1}
-            />
-          </div>
-          {discoveryShot ? (
-            <div className="lg:col-span-5">
-              <ScreenFrame shot={discoveryShot} />
-            </div>
-          ) : null}
+      {/* e. Pricing */}
+      <Section id="pricing">
+        <SectionHead heading={copy.pricing.heading} />
+        <div className="mt-8 lg:mt-12">
+          <PriceCard lines={copy.pricing.points} />
         </div>
       </Section>
 
-      {/* 6. Delivery */}
-      <Section id="delivery" tone="ink">
-        <SectionHead kicker="Sell" heading={copy.delivery.heading} sub={copy.delivery.sub} dark />
-        <div className="mt-14">
-          <Flow steps={delivery.flow!.steps} dark />
-        </div>
-        {deliveryShots.length ? (
-          <div className="mt-14 grid gap-10 md:grid-cols-2">
-            {deliveryShots.map((shot) => (
-              <ScreenFrame key={shot.key} shot={shot} dark />
-            ))}
-          </div>
-        ) : null}
-        <p className="mt-10">
-          <TextLink href="/delivery" className="text-paper decoration-paper/40 hover:decoration-paper">
-            More about delivery
-          </TextLink>
-        </p>
-      </Section>
+      {/* f. What we believe: nothing until the owner writes it. */}
+      <Beliefs />
 
-      {/* 7. Catering */}
-      <Section id="catering">
-        <SectionHead kicker="Sell" heading={copy.catering.heading} sub={copy.catering.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <ul className="space-y-4 lg:col-span-5">
-            {catering.capabilities.map((item) => (
-              <li key={item} className="flex gap-3 text-body">
-                <Check />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          {cateringShots.length ? (
-            <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7">
-              {cateringShots.map((shot) => (
-                <ScreenFrame key={shot.key} shot={shot} />
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <p className="mt-10">
-          <TextLink href="/catering">More about catering</TextLink>
-        </p>
-      </Section>
-
-      {/* 8. Guest experience */}
-      <Section id="guest" tone="paper">
-        <SectionHead kicker="Grow" heading={copy.guest.heading} sub={copy.guest.sub} />
-        <div className="mt-14">
-          <Flow steps={guest.flow!.steps} />
-        </div>
-        <div className="mt-12 border-t border-ink/10 pt-8">
-          <p className="text-small font-medium text-ink/72">{copy.guest.chainIntro}</p>
-          <div className="mt-4">
-            <Chain items={copy.guest.chain} />
-          </div>
-        </div>
-        <div className="mt-12">
-          <ProductLinks slugs={["guest-feedback", "reviews", "loyalty"]} columns={3} />
-        </div>
-      </Section>
-
-      {/* 9. Customer growth */}
-      <Section id="growth" tone="ticket">
-        <SectionHead kicker="Grow" heading={copy.growth.heading} sub={copy.growth.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <LinkList items={copy.growth.items} />
-          </div>
-          {growthShot ? (
-            <div className="lg:col-span-5">
-              <ScreenFrame shot={growthShot} />
-            </div>
-          ) : null}
-        </div>
-      </Section>
-
-      {/* 10. Operations */}
-      <Section id="operations">
-        <SectionHead kicker="Operate" heading={copy.operations.heading} sub={copy.operations.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <LinkList items={copy.operations.items} />
-          </div>
-          {operationsShots.length ? (
-            <div className="grid gap-8 lg:col-span-7">
-              {operationsShots.map((shot) => (
-                <ScreenFrame key={shot.key} shot={shot} />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </Section>
-
-      {/* 11. Analytics */}
-      <Section id="analytics" tone="ticket">
-        <SectionHead kicker="Operate" heading={copy.analytics.heading} sub={copy.analytics.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          {analyticsShot ? (
-            <div className="lg:col-span-7">
-              <ScreenFrame shot={analyticsShot} />
-            </div>
-          ) : null}
-          <ul className="space-y-4 lg:col-span-5">
-            {bySlug.analytics.capabilities.map((item) => (
-              <li key={item} className="flex gap-3 text-body">
-                <Check />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      {/* 12. Multi-location */}
-      <Section id="scale">
-        <SectionHead kicker="Scale" heading={copy.scale.heading} sub={copy.scale.sub} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <ProductLinks slugs={["multi-location", "enterprise", "ai"]} columns={1} />
-          </div>
-          <div className="self-center lg:col-span-6">
-            <OrgDiagram />
-          </div>
-        </div>
-      </Section>
-
-      {/* 13. Integrations */}
-      <Section id="integrations">
-        <SectionHead kicker="Scale" heading={copy.integrations.heading} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <ul className="space-y-4 lg:col-span-7">
-            {copy.integrations.items.map((item) => (
-              <li key={item} className="flex gap-3 text-body">
-                <Check />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      {/* 14. Pricing */}
-      <Section id="pricing" tone="ticket">
-        <h2 className="text-h2">{copy.pricing.heading}</h2>
-        <div className="mt-14 max-w-[640px] ticket-shadow">
-          <div className="ticket px-6 pt-8 pb-12 sm:px-10 sm:pt-10 sm:pb-14">
-            <p className="text-stat">{copy.pricing.stat}</p>
-            <p className="mt-4 text-lead font-medium">{copy.pricing.line}</p>
-            <p className="mt-4 max-w-[52ch] text-body text-ink/80">{copy.pricing.body}</p>
-            <p className="mt-4 max-w-[52ch] text-small text-ink/72">{copy.pricing.more}</p>
-            <CtaLink href={demoHref} className="mt-8">
-              {copy.cta.primary}
-            </CtaLink>
-          </div>
-        </div>
-      </Section>
-
-      {/* 15. Customer proof: omitted until the owner approves real proof (SPEC section 2, rule 3). */}
-
-      {/* 16. FAQ */}
+      {/* g. FAQ, then the final call to action */}
       <Section id="faq">
-        <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-          <h2 className="text-h2 lg:col-span-5">{copy.faq.heading}</h2>
-          <div className="faq divide-y divide-mist border-y border-mist lg:col-span-7">
-            {copy.faq.items.map((item) => (
-              <details key={item.question} className="group">
-                <summary className="flex cursor-pointer items-center gap-4 py-5 text-h3">
-                  {item.question}
-                </summary>
-                <p className="max-w-[56ch] pb-6 text-body text-ink/80">{item.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
+        <Faq heading={copy.faq.heading} items={copy.faq.items} />
       </Section>
 
-      {/* 17. Final CTA */}
-      <Section id="cta" tone="ink">
-        <div className="text-center">
-          <h2 className="mx-auto max-w-[20ch] text-h2">{copy.finalCta.heading}</h2>
-          <p className="mx-auto mt-6 max-w-[44ch] text-lead text-paper/80">{copy.finalCta.body}</p>
-          <div className="mt-10">
-            <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>
-          </div>
-          <p className="mt-6 text-small text-paper/70">
-            or email{" "}
-            <SmartLink
-              href={`mailto:${site.contactEmail}`}
-              className="font-medium text-paper underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
-            >
-              {site.contactEmail}
-            </SmartLink>
-          </p>
-        </div>
-      </Section>
+      <FinalCta email />
     </>
   );
 }

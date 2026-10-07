@@ -2,47 +2,51 @@
 
 :root {
   --paper: #ffffff;
-  --ink: #13213c;
-  --ticket: #f6f1e7;
+  /* Near-black text (design pass, 2026-10-07). The logo keeps its navy tile. */
+  --ink: #1d1d1b;
+  --navy: #13213c;
+  /* The one warm neutral: panels and bands. */
+  --ticket: #f5efe6;
+  /* The one accent: buttons and the hero art panel. */
   --saffron: #f4a83a;
   --saffron-deep: #e2962c;
-  --tomato: #d9482b;
-  --mist: #e3e7ee;
+  --mist: #e8e4dd;
 }
 
+/*
+ * Five text sizes, site-wide: display (H1), h2, h3, body, small.
+ * Nothing else sets a font size; tests/design.spec.ts counts them.
+ */
 @theme inline {
   --color-paper: var(--paper);
   --color-ink: var(--ink);
+  --color-navy: var(--navy);
   --color-ticket: var(--ticket);
   --color-saffron: var(--saffron);
   --color-saffron-deep: var(--saffron-deep);
-  --color-tomato: var(--tomato);
   --color-mist: var(--mist);
   --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --shadow-lift:
-    0 1px 2px rgba(19, 33, 60, 0.06), 0 16px 40px -16px rgba(19, 33, 60, 0.22);
-  --text-display: clamp(2.625rem, 7.5vw, 4.75rem);
-  --text-display--line-height: 1.02;
-  --text-display--letter-spacing: -0.025em;
-  --text-display--font-weight: 700;
-  --text-h2: clamp(1.875rem, 4vw, 2.75rem);
-  --text-h2--line-height: 1.1;
-  --text-h2--letter-spacing: -0.015em;
-  --text-h2--font-weight: 700;
-  --text-h3: 1.25rem;
-  --text-h3--line-height: 1.3;
-  --text-h3--letter-spacing: -0.005em;
-  --text-h3--font-weight: 700;
-  --text-stat: clamp(3.5rem, 10vw, 6.5rem);
-  --text-stat--line-height: 0.95;
-  --text-stat--letter-spacing: -0.03em;
-  --text-stat--font-weight: 700;
-  --text-lead: 1.25rem;
-  --text-lead--line-height: 1.5;
-  --text-body: 1.0625rem;
-  --text-body--line-height: 1.6;
-  --text-small: 0.9375rem;
-  --text-small--line-height: 1.5;
+    0 1px 2px rgba(29, 29, 27, 0.06), 0 20px 48px -20px rgba(29, 29, 27, 0.28);
+  /* 36px at 390, 80px from about 1300 up. */
+  --text-display: clamp(2.25rem, 1.2rem + 4.6vw, 5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.04em;
+  --text-display--font-weight: 600;
+  /* 32px at 390, 56px on desktop. */
+  --text-h2: clamp(2rem, 1.35rem + 2.7vw, 3.5rem);
+  --text-h2--line-height: 1.04;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h2--font-weight: 600;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.02em;
+  --text-h3--font-weight: 600;
+  /* 16px on phones, 18px on desktop. */
+  --text-body: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  --text-body--line-height: 1.55;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
 }
 
 html {
@@ -59,8 +63,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-size: var(--text-body);
+  line-height: 1.55;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
@@ -84,7 +88,7 @@ body {
   left: 1rem;
   top: -100%;
   z-index: 80;
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--saffron);
   padding: 0.5rem 1rem;
   color: var(--ink);
@@ -95,28 +99,57 @@ body {
   top: 1rem;
 }
 
-/* Kitchen ticket: white receipt paper with a sawtooth bottom edge, sitting on a
-   ticket-stock band (the "counter") so the edge reads. */
-.ticket {
-  background: var(--paper);
-  padding-bottom: 10px;
-  -webkit-mask:
-    linear-gradient(#000, #000) top / 100% calc(100% - 10px) no-repeat,
-    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom /
-      20px 10px repeat-x;
-  mask:
-    linear-gradient(#000, #000) top / 100% calc(100% - 10px) no-repeat,
-    conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) bottom /
-      20px 10px repeat-x;
+/* A sideways row that snaps card by card, with the next card peeking in.
+   Below lg only: from lg up it is a plain block and callers lay it out. */
+@media (max-width: 1023.98px) {
+  .snap-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16px;
+    padding-inline: 16px;
+    margin-inline: -16px;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .snap-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .snap-row > * {
+    flex: 0 0 86%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
 }
 
-.ticket-shadow {
-  filter: drop-shadow(0 1px 2px rgba(19, 33, 60, 0.06))
-    drop-shadow(0 16px 24px rgba(19, 33, 60, 0.14));
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .snap-row {
+    padding-inline: 32px;
+    margin-inline: -32px;
+    scroll-padding-inline: 32px;
+  }
+
+  .snap-row > * {
+    flex-basis: 62%;
+  }
 }
 
 summary {
   list-style: none;
+}
+
+/* The full-screen mobile menu holds the page still while it is open. */
+html:has(.mobile-nav[open]) {
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  html:has(.mobile-nav[open]) {
+    overflow: auto;
+  }
 }
 
 summary::-webkit-details-marker {
@@ -127,7 +160,7 @@ summary::-webkit-details-marker {
   content: "+";
   margin-left: auto;
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: var(--text-h3);
   line-height: 1;
   color: var(--ink);
 }

@@ -21,69 +21,58 @@ export const copy = {
   },
   hero: {
     headline: "More direct orders. More repeat customers. One platform.",
+    /** Metadata description. The page itself shows `line`. */
     sub: "WunTab brings your website, online ordering, delivery, catering, guest experience, marketing, and restaurant operations together in one platform.",
-    /** One composition: the four screens share keys with the product pages. */
-    screens: [
-      { key: "site-home", label: "Your website", priority: "must" as const },
-      { key: "site-menu", label: "Customer ordering", kind: "phone" as const, priority: "must" as const },
-      { key: "orders-board", label: "Your dashboard", priority: "must" as const },
-      { key: "kitchen-ticket", label: "Kitchen ticket", kind: "photo" as const, priority: "must" as const },
-    ],
-    lifecycle: ["Website", "Ordering", "Dashboard", "Kitchen"],
+    line: "Your website, online ordering, delivery, and marketing, built and run for you.",
+    inputLabel: "Your restaurant's name",
   },
-  proof: {
-    heading: "One platform, from the first search to the next order.",
-    sub: "Every piece of WunTab feeds the next one. That loop is the product.",
-  },
-  sell: {
-    heading: "Give customers more ways to order from you.",
-    sub: "Every order goes through your brand and lands in your kitchen.",
-  },
-  discovery: {
-    heading: "Turn searches into orders.",
-    sub: "A website with your menu built in, made so search engines can read every dish.",
-  },
-  delivery: {
-    heading: "Delivery without building a fleet.",
-    sub: "Your customers order from you. WunTab requests the driver.",
-  },
-  catering: {
-    heading: "Turn big orders into easy orders.",
-    sub: "A catering menu, lead times, and minimums, ordered online and scheduled ahead.",
-  },
-  guest: {
-    heading: "Know what your guests think.",
-    sub: "A QR code or an NFC tap lets guests tell you how it went while they are still at the table.",
-    chain: ["Feedback", "Reviews", "Loyalty", "Repeat customer"],
-    chainIntro: "Then the loop continues:",
-  },
-  growth: {
-    heading: "Turn customers into regulars.",
-    sub: "Every direct order adds a real customer to your list. WunTab helps you bring them back.",
+  /** Homepage tabs. Shots are attached in src/lib/shot-placements.ts. At most three short lines each. */
+  outcomes: {
+    heading: "What changes when orders come to you.",
     items: [
-      { name: "Customer database", slug: "customers" },
-      { name: "Loyalty and rewards", slug: "loyalty" },
-      { name: "Text campaigns", slug: "sms-marketing" },
-      { name: "Automatic campaigns", slug: "restaurant-marketing" },
-      { name: "Push notifications", slug: "restaurant-app" },
+      {
+        key: "direct",
+        label: "More direct orders",
+        lines: [
+          "Customers order on your own website, under your name.",
+          "Pickup, delivery, catering, and orders for later.",
+          "Search engines can read every dish and price.",
+        ],
+      },
+      {
+        key: "repeat",
+        label: "More repeat customers",
+        lines: [
+          "Every direct order adds a real customer to your list.",
+          "Loyalty, texts, and automatic campaigns bring them back.",
+        ],
+      },
+      {
+        key: "busywork",
+        label: "Less busywork",
+        lines: [
+          "Every order in one place, from new to done.",
+          "Pause ordering or raise prep times in one tap.",
+          "Orders go into your POS, or to a kitchen printer.",
+        ],
+      },
     ],
   },
-  operations: {
-    heading: "Everything after Place Order.",
-    sub: "Menu, orders, kitchen, and payments, run from one dashboard.",
+  products: {
+    heading: "Everything you need to sell direct.",
+    /** Large panels on the homepage, in this order. */
+    slugs: ["online-ordering", "delivery", "catering", "order-management"],
+  },
+  steps: {
+    heading: "How it works",
     items: [
-      { name: "Menu management", slug: "menu-management" },
-      { name: "Order management", slug: "order-management" },
-      { name: "Kitchen display", slug: "kitchen-display" },
-      { name: "Payments", slug: "payments" },
-      { name: "Prep times", slug: "order-management" },
-      { name: "Availability controls", slug: "menu-management" },
+      { title: "We build your site", line: "Your website and menu, built and loaded by us." },
+      { title: "We connect your kitchen", line: "Orders go into your POS, or to a kitchen printer." },
+      { title: "You say yes", line: "You look it over, then customers start ordering." },
     ],
   },
-  analytics: {
-    heading: "Know what's working.",
-    sub: "Sales, orders, menu, customers, and feedback, reported from the same system that takes the orders.",
-  },
+  beliefs: { heading: "What we believe" },
+  stories: { heading: "Restaurants on WunTab" },
   scale: {
     heading: "One restaurant or fifty.",
     sub: "Locations, groups, and franchises on one account, with controls at the level you choose.",
@@ -101,6 +90,11 @@ export const copy = {
     stat: "$0",
     line: "WunTab is free for the restaurant.",
     /** Same terms as SERVICE_FEE_CLAUSE in src/lib/legal.ts. */
+    /** The homepage card: the same terms as the clause, shortened. */
+    points: [
+      "No monthly charge, no setup fee, no commission.",
+      "Customers pay a 5% service fee, shown at checkout before they pay.",
+    ],
     body: "There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken.",
     more: "Questions about delivery, catering, or several locations? Talk to us and we will walk through it.",
   },

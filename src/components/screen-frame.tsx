@@ -24,28 +24,35 @@ export function ScreenFrame({
   className = "",
   priority = false,
   dark = false,
+  caption = true,
+  fill = false,
 }: {
   shot: Shot;
   className?: string;
   priority?: boolean;
   /** On an ink band: lighter caption and frame edge. */
   dark?: boolean;
+  /** The one line under the frame. Off where the panel carries its own headline. */
+  caption?: boolean;
+  /** Fill the parent's width instead of the kind's default width (the parent sizes it). */
+  fill?: boolean;
 }) {
   const src = findShot(shot.key);
   const size = shotSize(shot);
+  const wrap = fill ? "w-full" : size.wrap;
 
   if (!src) {
     if (!showPlaceholders()) return null;
     return (
-      <figure className={`${size.wrap} ${className}`} data-placeholder={shot.key}>
+      <figure className={`${wrap} ${className}`} data-placeholder={shot.key}>
         <div
-          className={`flex ${size.aspect} w-full flex-col items-center justify-center gap-2 border-2 border-dashed p-5 text-center ${size.radius} ${
-            dark ? "border-paper/35 text-paper/80" : "border-ink/25 bg-paper/60 text-ink/72"
+          className={`flex ${size.aspect} w-full flex-col items-center justify-center gap-2 border-2 border-dashed p-4 text-center ${size.radius} ${
+            dark ? "border-paper/35 text-paper/80" : "border-ink/25 bg-paper/60 text-ink/70"
           }`}
         >
           <span className="text-small font-medium">Screenshot placeholder</span>
-          <span className={`max-w-[28ch] text-body font-medium ${dark ? "text-paper" : "text-ink"}`}>{shot.label}</span>
-          <span className="font-mono text-[0.8125rem]">
+          <span className={`max-w-[30ch] text-small font-medium ${dark ? "text-paper" : "text-ink"}`}>{shot.label}</span>
+          <span className="font-mono text-small">
             {`${shot.key}.webp · ${size.width}×${size.height}`}
           </span>
         </div>
@@ -54,9 +61,9 @@ export function ScreenFrame({
   }
 
   return (
-    <figure className={`${size.wrap} ${className}`}>
+    <figure className={`${wrap} ${className}`}>
       <div
-        className={`overflow-hidden border bg-paper shadow-lift ${size.radius} ${
+        className={`overflow-hidden border bg-paper ${shot.kind === "scene" ? "" : "shadow-lift"} ${size.radius} ${
           dark ? "border-paper/20" : "border-ink/10"
         }`}
       >
@@ -71,9 +78,9 @@ export function ScreenFrame({
           />
         </div>
       </div>
-      <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/72"}`}>
-        {shot.label}
-      </figcaption>
+      {caption ? (
+        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/70"}`}>{shot.label}</figcaption>
+      ) : null}
     </figure>
   );
 }

@@ -51,7 +51,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
         {doc.final ? (
           <>
             {doc.lastUpdated ? (
-              <p className="mt-4 text-body text-ink/72">
+              <p className="mt-4 text-body text-ink/70">
                 Last updated{" "}
                 <time dateTime={doc.lastUpdated}>{formatLegalDate(doc.lastUpdated)}</time>
               </p>

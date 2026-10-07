@@ -2,61 +2,68 @@ import type { ReactNode } from "react";
 import { Container } from "./container";
 
 const tones = {
-  paper: "bg-paper border-t border-mist",
+  paper: "bg-paper",
   ticket: "bg-ticket",
   ink: "on-dark bg-ink text-paper",
 } as const;
 
+/**
+ * Vertical rhythm: 64px between sections on phones, 80px from 640px, 112px
+ * from 1024px. White sections carry half of it on each side, so two in a row
+ * add up to one gap; a toned band carries the whole gap inside itself.
+ */
 export function Section({
   id,
   tone = "paper",
   children,
   className = "",
-  tight = false,
 }: {
   id?: string;
   tone?: keyof typeof tones;
   children: ReactNode;
   className?: string;
-  tight?: boolean;
 }) {
   return (
     <section id={id} className={`scroll-mt-20 ${tones[tone]} ${className}`}>
-      <Container className={tight ? "py-14 lg:py-20" : "py-20 lg:py-32"}>{children}</Container>
+      <Container className={tone === "paper" ? "py-8 sm:py-10 lg:py-14" : "py-16 sm:py-20 lg:py-28"}>
+        {children}
+      </Container>
     </section>
   );
 }
 
-/** Heading on the left, lead paragraph on the right, the site's standard opener. */
+/** A section opener: the heading, and at most one short line under it. Left-aligned. */
 export function SectionHead({
   heading,
   sub,
-  kicker,
-  as: Tag = "h2",
   dark = false,
+  className = "",
 }: {
   heading: string;
   sub?: string;
-  /** The pillar this section belongs to (Sell, Grow, Operate, Scale). Sentence case, never caps. */
-  kicker?: string;
-  as?: "h1" | "h2";
   dark?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-      <div className="lg:col-span-5">
-        {kicker ? (
-          <p className={`mb-3 text-small font-medium ${dark ? "text-paper/70" : "text-ink/72"}`}>
-            {kicker}
-          </p>
-        ) : null}
-        <Tag className={Tag === "h1" ? "text-display max-w-[16ch]" : "text-h2"}>{heading}</Tag>
-      </div>
+    <div className={className}>
+      <h2 className="max-w-[18ch] text-h2">{heading}</h2>
       {sub ? (
-        <p className={`max-w-[48ch] text-lead lg:col-span-7 ${dark ? "text-paper/80" : "text-ink/80"}`}>
-          {sub}
-        </p>
+        <p className={`mt-4 max-w-[44ch] text-body ${dark ? "text-paper/80" : "text-ink/85"}`}>{sub}</p>
       ) : null}
     </div>
   );
+}
+
+/** The soft, rounded panel the whole site is built from. */
+export function Panel({
+  children,
+  className = "",
+  tone = "ticket",
+}: {
+  children: ReactNode;
+  className?: string;
+  tone?: "ticket" | "paper" | "saffron" | "ink";
+}) {
+  const bg = { ticket: "bg-ticket", paper: "bg-paper", saffron: "bg-saffron", ink: "on-dark bg-ink text-paper" }[tone];
+  return <div className={`rounded-[20px] lg:rounded-[24px] ${bg} ${className}`}>{children}</div>;
 }

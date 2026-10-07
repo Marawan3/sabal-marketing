@@ -4,9 +4,10 @@
  */
 export const brand = {
   paper: "#FFFFFF",
-  ink: "#13213C",
-  ticket: "#F6F1E7",
+  ink: "#1D1D1B",
+  /** The logo tile only. */
+  navy: "#13213C",
+  ticket: "#F5EFE6",
   saffron: "#F4A83A",
-  tomato: "#D9482B",
-  mist: "#E3E7EE",
+  mist: "#E8E4DD",
 } as const;

@@ -22,7 +22,8 @@ export type Shot = {
   key: string;
   /** Caption shown under the frame, and the label of the empty slot. */
   label: string;
-  kind?: "desktop" | "phone" | "tablet" | "photo";
+  /** desktop, phone, tablet: screenshots. photo: portrait photo. scene: landscape photo. */
+  kind?: "desktop" | "phone" | "tablet" | "photo" | "scene";
   /** must: the site is incomplete without it. helpful: nice once it exists. */
   priority: "must" | "helpful";
 };
@@ -84,6 +85,38 @@ export const pillars: Record<
   },
 };
 
+/**
+ * Photos for the large panels on the homepage and product pages. Licensed
+ * stock is fine; record the source and license of each in ASSETS.md. Any
+ * screen inside a photo must be real WunTab UI, never a drawn mockup.
+ */
+export const photos = {
+  orderingInHand: {
+    key: "photo-ordering-in-hand",
+    label: "A hand holding a phone with a restaurant's WunTab ordering menu open",
+    kind: "scene",
+    priority: "must",
+  },
+  deliveryHandoff: {
+    key: "photo-delivery-handoff",
+    label: "A bagged delivery order handed over at a restaurant counter",
+    kind: "scene",
+    priority: "must",
+  },
+  cateringSpread: {
+    key: "photo-catering-spread",
+    label: "Catering trays laid out for a group order",
+    kind: "scene",
+    priority: "must",
+  },
+  kitchenScreen: {
+    key: "photo-kitchen-screen",
+    label: "A kitchen team working from a tablet showing the WunTab kitchen display",
+    kind: "scene",
+    priority: "helpful",
+  },
+} as const satisfies Record<string, Shot>;
+
 export const products: Product[] = [
   // ───────────────────────────── SELL ─────────────────────────────
   {
@@ -110,6 +143,7 @@ export const products: Product[] = [
       { key: "checkout-pickup", label: "Checkout with tip and promo code", kind: "phone", priority: "must" },
       { key: "checkout-schedule", label: "Choosing a later pickup time", kind: "phone", priority: "must" },
       { key: "order-tracking", label: "Order tracking after checkout", kind: "phone", priority: "must" },
+      photos.orderingInHand,
     ],
     related: ["online-menu", "delivery", "upsells", "loyalty", "order-management"],
     notes: [
@@ -189,6 +223,7 @@ export const products: Product[] = [
     shots: [
       { key: "checkout-delivery", label: "Delivery checkout with fee and arrival time", kind: "phone", priority: "must" },
       { key: "delivery-tracking", label: "Customer delivery tracking", kind: "phone", priority: "must" },
+      photos.deliveryHandoff,
     ],
     related: ["online-ordering", "catering", "order-management", "integrations"],
     notes: [
@@ -227,6 +262,7 @@ export const products: Product[] = [
     shots: [
       { key: "catering-page", label: "Catering page with the enquiry form", priority: "must" },
       { key: "catering-order", label: "Catering order with lead time and minimum", kind: "phone", priority: "must" },
+      photos.cateringSpread,
     ],
     related: ["online-ordering", "delivery", "order-management"],
     flow: {
@@ -604,6 +640,7 @@ export const products: Product[] = [
       { key: "ordering-settings", label: "Hours, pause ordering, and prep time", priority: "must" },
       { key: "kds", label: "Kitchen display on a tablet", kind: "tablet", priority: "must" },
       { key: "kitchen-ticket", label: "A printed kitchen ticket", kind: "photo", priority: "must" },
+      photos.kitchenScreen,
     ],
     related: ["kitchen-display", "delivery", "menu-management", "payments"],
     flow: {

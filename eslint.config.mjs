@@ -9,6 +9,8 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // The preview build the Playwright suite makes (playwright.config.ts).
+    ".next-preview/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

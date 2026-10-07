@@ -11,6 +11,43 @@ Wuntab-specific brief. Where the two disagree, this file wins.
 Owner: Marawan Elkabany. Every visual change ships as a preview he can react to.
 Copy is draft until he says otherwise.
 
+## 0. Design pass, 2026-10-07 (overrides sections 3 to 7, 9 and 10 where they conflict)
+
+The owner's brief for the design pass, as built. The older sections below are kept for
+their reasoning. Where they disagree with this section, this section wins.
+
+- **Type:** Bricolage Grotesque, headlines at weight 600 with tight tracking (-4% H1, -3% H2).
+  H1 36px at 390 up to 80px; H2 32px at 390 up to 56px; body 16px on phones, 18px on desktop.
+  **Five text sizes site-wide, no more:** `text-display`, `text-h2`, `text-h3`, `text-body`,
+  `text-small`. No arbitrary `text-[…]` sizes. `tests/design.spec.ts` counts them.
+- **Color:** near-black text `--ink #1D1D1B` on white; secondary text is ink at 85%. One warm
+  neutral for panels, `--ticket #F5EFE6`. One accent, saffron, for buttons and the hero art
+  panel. The logo keeps its navy (`--navy #13213C`) as its own color. Dark panels use ink.
+- **Shape:** panels 20px on phones, 24px from lg (`Panel` in `components/section.tsx`).
+  Buttons 14px radius, at least 44px tall. No sawtooth tickets any more.
+- **Spacing:** 64px between sections on phones, 80px from 640px, 112px from 1024px. White
+  sections carry half the gap on each side. Gutters 16px on phones, 32px, then 48px.
+- **Homepage, in this order and nothing else:** hero (centered headline, one line, a
+  "Your restaurant's name" input with Get Started that opens Book a call with the name
+  filled in, then the storefront phone next to the orders board on a saffron panel);
+  outcome tabs (More direct orders, More repeat customers, Less busywork: a soft panel with
+  one screenshot and up to three short lines); four product panels (online ordering,
+  delivery, catering, order management); how it works in three steps; one pricing card
+  matching `/terms`; What we believe (`src/lib/beliefs.ts`, renders nothing while
+  `[OWNER TO WRITE]` is left); FAQ; final call to action. Customer stories
+  (`src/lib/stories.ts`) render only with real entries. The lifecycle walkthrough,
+  capability lists and integrations live on `/how-it-works` and the product pages.
+- **Less text:** visuals plus at most one line each. No section has more than three short
+  lines of body text on a phone. Homepage under 10,000px tall at 390 (tested).
+- **Mobile (360, 390, 430):** the header always shows the logo, Get Started and a menu icon;
+  the menu opens full screen with an accordion per pillar. Rows of cards use `.snap-row`
+  (scroll snap, next card peeking) below lg. No horizontal page scroll at any width.
+- **Visuals:** every frame goes through `src/lib/catalog.ts` and
+  `src/lib/shot-placements.ts`, so `docs/marketing-site/SHOTS.md` stays complete. Missing
+  files are hidden on production and shown as placeholders on previews. Photos may be
+  licensed stock, recorded in `ASSETS.md`; screens inside photos must be real WunTab UI.
+- **Buttons say Get Started** (it books a call), not "Book a call", since 2026-10-02.
+
 ## 1. What we are designing for
 
 **Wuntab** builds and runs an independent restaurant's own website with online ordering.

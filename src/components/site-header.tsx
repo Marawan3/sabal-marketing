@@ -34,53 +34,56 @@ function buildMenus(): NavMenu[] {
 
 function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <SmartLink href={href} className="block rounded-[6px] px-3 py-2.5 text-[1rem] font-medium hover:bg-ticket">
+    <SmartLink href={href} className="flex min-h-12 items-center rounded-[14px] px-3 text-body font-medium hover:bg-ticket">
       {children}
     </SmartLink>
   );
 }
 
-function MobileAccordion({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function MobileAccordion({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <details name="mobile-nav" className="group border-t border-mist">
-      <summary className="flex cursor-pointer items-center justify-between py-3.5 text-[1rem] font-medium">
+    <details name="mobile-nav-group" className="group/acc border-b border-mist">
+      <summary className="flex min-h-14 cursor-pointer items-center justify-between text-h3">
         {label}
-        <span aria-hidden className="text-h3 leading-none text-ink/72 group-open:hidden">
-          +
-        </span>
-        <span aria-hidden className="hidden text-h3 leading-none text-ink/72 group-open:inline">
-          &minus;
-        </span>
+        <svg
+          aria-hidden
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform duration-150 group-open/acc:rotate-180"
+        >
+          <path d="M5 8l5 5 5-5" />
+        </svg>
       </summary>
-      <div className="pb-4">{children}</div>
+      <div className="-mx-3 pb-4">{children}</div>
     </details>
   );
 }
 
 export function SiteHeader() {
   const menus = buildMenus();
+  const pillarGroups = menus.flatMap((menu) => menu.groups);
   return (
     <header className="sticky top-0 z-40 border-b border-mist bg-paper">
-      <div className="relative mx-auto flex max-w-[1120px] items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-12">
-        <SmartLink href="/" className="shrink-0 justify-self-start rounded-[8px]" aria-label="WunTab home">
-          <Logo size={32} />
+      <div className="relative mx-auto flex h-[68px] max-w-[1120px] items-center justify-between gap-3 px-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6 lg:px-12">
+        <SmartLink href="/" className="flex min-h-11 shrink-0 items-center justify-self-start rounded-[8px]" aria-label="WunTab home">
+          <Logo size={28} />
         </SmartLink>
 
         <nav className="hidden lg:block" aria-label="Primary">
           <DesktopNav menus={menus} links={primaryLinks} />
         </nav>
 
-        <div className="flex items-center gap-3 justify-self-end">
+        <div className="flex items-center gap-2 justify-self-end sm:gap-3">
           {appHref ? (
             <SmartLink
               href={appHref}
-              className="hidden rounded-[6px] px-2 py-1.5 text-[0.9375rem] font-medium hover:text-ink/70 sm:inline-block"
+              className="hidden min-h-11 items-center rounded-[8px] px-2 text-small font-medium hover:text-ink/70 sm:inline-flex"
             >
               {copy.cta.login}
             </SmartLink>
@@ -89,8 +92,9 @@ export function SiteHeader() {
             {copy.cta.primary}
           </CtaLink>
 
-          <details className="group lg:hidden">
-            <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[8px] border border-mist">
+          {/* Below lg: a full-screen menu, one accordion per pillar. */}
+          <details className="mobile-nav group lg:hidden">
+            <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[14px] border border-mist">
               <span className="sr-only">Menu</span>
               <svg
                 aria-hidden
@@ -101,39 +105,55 @@ export function SiteHeader() {
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
+                className="group-open:hidden"
               >
                 <path d="M3 5h14M3 10h14M3 15h14" />
               </svg>
+              <svg
+                aria-hidden
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className="hidden group-open:block"
+              >
+                <path d="M5 5l10 10M15 5L5 15" />
+              </svg>
             </summary>
             <nav
-              className="absolute inset-x-0 top-full max-h-[85vh] overflow-y-auto border-b border-mist bg-paper px-5 pb-6 shadow-lift sm:px-8"
+              className="fixed inset-x-0 top-[69px] bottom-0 z-50 flex flex-col overflow-y-auto bg-paper px-4 pt-2 pb-8 sm:px-8"
               aria-label="Mobile"
             >
-              {menus.map((menu) => (
-                <MobileAccordion key={menu.key} label={menu.label}>
-                  {menu.groups.map((group, index) => (
-                    <div key={group.title ?? index} className={index > 0 ? "mt-3" : ""}>
-                      {group.title ? (
-                        <p className="px-3 pb-1 text-small font-medium text-ink/72">{group.title}</p>
-                      ) : null}
-                      <ul>
-                        {group.items.map((item) => (
-                          <li key={item.href}>
-                            <MobileLink href={item.href}>{item.name}</MobileLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+              {pillarGroups.map((group, index) => (
+                <MobileAccordion key={group.title ?? index} label={group.title ?? "Product"}>
+                  <ul>
+                    {group.items.map((item) => (
+                      <li key={item.href}>
+                        <MobileLink href={item.href}>{item.name}</MobileLink>
+                      </li>
+                    ))}
+                  </ul>
                 </MobileAccordion>
               ))}
-              <div className="border-t border-mist py-2">
+              <ul className="-mx-3 mt-4">
                 {primaryLinks.map((link) => (
-                  <MobileLink key={link.href} href={link.href}>
-                    {link.label}
-                  </MobileLink>
+                  <li key={link.href}>
+                    <MobileLink href={link.href}>{link.label}</MobileLink>
+                  </li>
                 ))}
-                {appHref ? <MobileLink href={appHref}>{copy.cta.login}</MobileLink> : null}
+                {appHref ? (
+                  <li>
+                    <MobileLink href={appHref}>{copy.cta.login}</MobileLink>
+                  </li>
+                ) : null}
+              </ul>
+              <div className="mt-auto pt-8">
+                <CtaLink href={demoHref} className="w-full">
+                  {copy.cta.primary}
+                </CtaLink>
               </div>
             </nav>
           </details>

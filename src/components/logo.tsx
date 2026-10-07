@@ -27,8 +27,8 @@ export function TileMark({
   className?: string;
   title?: string;
 }) {
-  const fill = tone === "light" ? "var(--ink)" : "var(--saffron)";
-  const stroke = tone === "light" ? "var(--saffron)" : "var(--ink)";
+  const fill = tone === "light" ? "var(--navy)" : "var(--saffron)";
+  const stroke = tone === "light" ? "var(--saffron)" : "var(--navy)";
   return (
     <svg
       viewBox="0 0 56 56"
@@ -62,9 +62,9 @@ export function Logo({
   size?: number;
   className?: string;
 }) {
-  const wordmark = tone === "light" ? "text-ink" : "text-paper";
+  const wordmark = tone === "light" ? "text-navy" : "text-paper";
   return (
-    <span className={`inline-flex items-center gap-[14px] ${className}`}>
+    <span data-logo className={`inline-flex items-center gap-[14px] ${className}`}>
       <TileMark size={size} tone={tone} />
       <span
         className={`font-medium uppercase tracking-[3px] ${wordmark}`}
