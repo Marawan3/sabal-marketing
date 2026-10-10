@@ -1,4 +1,5 @@
-import { existsSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Shot } from "./catalog";
 
@@ -17,6 +18,31 @@ export function findShot(key: string): string | null {
     if (existsSync(join(SHOTS_DIR, `${key}.${ext}`))) return `/shots/${key}.${ext}`;
   }
   return null;
+}
+
+/**
+ * Captures delivered with a white scrollbar gutter down the right edge, by
+ * file content (first 16 hex of SHA-256) and gutter width in source pixels.
+ * The frame hides the gutter; the file stays exactly as delivered (owner:
+ * "don't re-edit them", 2026-10-10). Keyed by content, so a retake without
+ * the gutter gets no trim.
+ */
+const RIGHT_GUTTER: Record<string, number> = {
+  "2cc2af15f4aa48c9": 15, // dash-overview.png, batch 1
+  "a32122034e7c650a": 15, // orders-board.png, batch 1
+  "74bba9580ecaaf65": 15, // order-drawer.png, batch 1
+  "ddad96b8aff2630f": 15, // kds.png, batch 1
+  "73b6ca88185acbd1": 15, // menu-editor.png, batch 1
+  "7f350fcfc5ef07f6": 15, // ordering-settings.png, batch 1
+  "a5c112075a348277": 15, // promotions.png, batch 1
+  "f525368101251097": 15, // menu-editor-options.png, batch 1
+};
+
+/** Source pixels to hide on the right of a shot file (its public path). */
+export function rightGutter(src: string): number {
+  const file = join(process.cwd(), "public", src);
+  const hash = createHash("sha256").update(readFileSync(file)).digest("hex").slice(0, 16);
+  return RIGHT_GUTTER[hash] ?? 0;
 }
 
 export const SHOT_SIZES = {

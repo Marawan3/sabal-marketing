@@ -42,7 +42,13 @@ export function ProductPage({ product }: { product: Product }) {
           {hero ? (
             <Panel className="mt-12 flex justify-center px-4 py-8 sm:px-10 sm:py-12 lg:mt-16 lg:p-16">
               <div className={hero.kind === "phone" || hero.kind === "photo" ? "w-[62%] max-w-[300px]" : "w-full max-w-[860px]"}>
-                <ScreenFrame shot={hero} caption={false} priority fill />
+                <ScreenFrame
+                  shot={hero}
+                  caption={false}
+                  priority
+                  fill
+                  sizes={hero.kind === "phone" || hero.kind === "photo" ? "(min-width: 1024px) 300px, 62vw" : "(min-width: 1024px) 860px, 92vw"}
+                />
               </div>
             </Panel>
           ) : product.visual === "org" ? (
@@ -77,7 +83,12 @@ export function ProductPage({ product }: { product: Product }) {
               <Panel key={shot.key} className="flex flex-col p-3 lg:p-4">
                 <div className="flex flex-1 items-center justify-center">
                   <div className={shot.kind === "phone" || shot.kind === "photo" ? "w-[62%] max-w-[260px] py-4" : "w-full"}>
-                    <ScreenFrame shot={shot} caption={false} fill />
+                    <ScreenFrame
+                      shot={shot}
+                      caption={false}
+                      fill
+                      sizes={shot.kind === "phone" || shot.kind === "photo" ? "(min-width: 1024px) 260px, 50vw" : "(min-width: 1024px) 520px, 82vw"}
+                    />
                   </div>
                 </div>
                 <p className="p-3 text-body font-medium lg:p-4">{shot.label}</p>

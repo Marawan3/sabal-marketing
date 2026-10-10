@@ -66,12 +66,12 @@ export default function HomePage() {
               <div className="flex items-end justify-center gap-3 sm:gap-6 lg:gap-10">
                 {phone ? (
                   <div className="w-[34%] shrink-0 sm:w-[28%] lg:w-[22%]">
-                    <ScreenFrame shot={phone} caption={false} priority fill />
+                    <ScreenFrame shot={phone} caption={false} priority fill sizes="(min-width: 1024px) 220px, 34vw" />
                   </div>
                 ) : null}
                 {board ? (
                   <div className={`min-w-0 flex-1 ${phone ? "mb-[8%]" : "max-w-[760px]"}`}>
-                    <ScreenFrame shot={board} caption={false} priority />
+                    <ScreenFrame shot={board} caption={false} priority sizes="(min-width: 1024px) 760px, 92vw" />
                   </div>
                 ) : null}
               </div>
@@ -105,7 +105,9 @@ export default function HomePage() {
             const href = productHref(product.slug);
             return (
               <Panel key={product.slug} className="flex flex-col p-3 lg:p-4">
-                {isShotVisible(shot) ? <ScreenFrame shot={shot} caption={false} /> : null}
+                {isShotVisible(shot) ? (
+                  <ScreenFrame shot={shot} caption={false} sizes="(min-width: 1024px) 520px, 82vw" />
+                ) : null}
                 <div className="flex flex-1 flex-col p-3 pt-4 lg:p-5">
                   <h3 className="max-w-[24ch] text-h3">{product.headline}</h3>
                   {href ? (

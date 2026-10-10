@@ -117,6 +117,13 @@ export const photos = {
   },
 } as const satisfies Record<string, Shot>;
 
+/** One menu item's availability (available, sold out, hidden) and modifier groups. */
+const menuItemOptions: Shot = {
+  key: "menu-editor-options",
+  label: "An item's availability, sold out, and modifiers",
+  priority: "must",
+};
+
 export const products: Product[] = [
   // ───────────────────────────── SELL ─────────────────────────────
   {
@@ -143,6 +150,8 @@ export const products: Product[] = [
       { key: "checkout-pickup", label: "Checkout with tip and promo code", kind: "phone", priority: "must" },
       { key: "checkout-schedule", label: "Choosing a later pickup time", kind: "phone", priority: "must" },
       { key: "order-tracking", label: "Order tracking after checkout", kind: "phone", priority: "must" },
+      { key: "promotions", label: "Promo codes, set up in your dashboard", priority: "must" },
+      menuItemOptions,
       photos.orderingInHand,
     ],
     related: ["online-menu", "delivery", "upsells", "loyalty", "order-management"],
@@ -612,7 +621,7 @@ export const products: Product[] = [
       "Availability by day and time",
       "Sold-out controls",
     ],
-    shots: [{ key: "menu-editor", label: "Menu editor", priority: "must" }],
+    shots: [{ key: "menu-editor", label: "Menu editor", priority: "must" }, menuItemOptions],
     related: ["online-menu", "online-ordering", "kiosk", "analytics"],
     notes: [
       "One menu powers your website, online ordering, kiosk, table ordering, and app.",
@@ -718,7 +727,10 @@ export const products: Product[] = [
       "New and repeat customer behavior",
       "Feedback trends and guest sentiment",
     ],
-    shots: [{ key: "analytics", label: "Analytics dashboard", priority: "must" }],
+    shots: [
+      { key: "dash-overview", label: "Sales, orders, average order, and tips at a glance", priority: "must" },
+      { key: "analytics", label: "Analytics dashboard", priority: "must" },
+    ],
     related: ["order-management", "customers", "guest-feedback", "menu-management"],
   },
   {
