@@ -4,6 +4,9 @@ import { findShot, rightGutter, showPlaceholders, shotSize } from "@/lib/shot-fi
 
 export { isShotVisible, visibleShots } from "@/lib/shot-files";
 
+/** The caption under every frame whose shot shows demo sales figures. */
+export const DEMO_CAPTION = "Demo restaurant";
+
 /**
  * A product screen. Renders the real image when public/shots/<key>.* exists.
  *
@@ -91,8 +94,11 @@ export function ScreenFrame({
           />
         </div>
       </div>
-      {caption ? (
-        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/70"}`}>{shot.label}</figcaption>
+      {caption || shot.demoFigures ? (
+        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/70"}`}>
+          {/* Sales numbers in the shot are the demo restaurant's, never WunTab's results. */}
+          {shot.demoFigures ? DEMO_CAPTION : shot.label}
+        </figcaption>
       ) : null}
     </figure>
   );

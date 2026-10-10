@@ -26,6 +26,12 @@ export type Shot = {
   kind?: "desktop" | "phone" | "tablet" | "photo" | "scene";
   /** must: the site is incomplete without it. helpful: nice once it exists. */
   priority: "must" | "helpful";
+  /**
+   * Figures in the screenshot that come from the demo restaurant (sales,
+   * growth, tips). Every frame showing it carries a "Demo restaurant" caption,
+   * and no page copy may quote any of them (owner, 2026-10-10; tested).
+   */
+  demoFigures?: readonly string[];
 };
 
 export type Flow = {
@@ -728,8 +734,14 @@ export const products: Product[] = [
       "Feedback trends and guest sentiment",
     ],
     shots: [
-      { key: "dash-overview", label: "Sales, orders, average order, and tips at a glance", priority: "must" },
-      { key: "analytics", label: "Analytics dashboard", priority: "must" },
+      {
+        key: "dash-overview",
+        label: "Sales, orders, average order, and tips at a glance",
+        priority: "must",
+        demoFigures: ["$13,421.76", "$12,518.17", "7.2%", "471", "9.5%", "$28.50", "$1,246.75", "7.1%"],
+      },
+      // Figures to be listed from the retake; the caption shows whatever they are.
+      { key: "analytics", label: "Analytics dashboard", priority: "must", demoFigures: [] },
     ],
     related: ["order-management", "customers", "guest-feedback", "menu-management"],
   },

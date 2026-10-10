@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
-import { builtProducts } from "../src/lib/catalog";
+import { builtProducts, products } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoHrefWithName } from "../src/lib/demo-href";
 import { customerStories } from "../src/lib/stories";
@@ -307,4 +307,40 @@ test("whichever shots exist, no panel is empty and none keeps a gap for a missin
       expect(slack, `outcome panel height at ${width}`).toBeLessThan(4);
     }
   }
+});
+
+test("frames with demo sales figures say Demo restaurant, and no copy quotes those figures", async ({ page }) => {
+  const demo = new Map(products.flatMap((p) => p.shots).filter((s) => s.demoFigures).map((s) => [s.key, s.demoFigures!]));
+  expect(demo.has("dash-overview")).toBe(true);
+  const figures = [...new Set([...demo.values()].flat())];
+  let framed = 0;
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      const frames = await page.locator("main figure:has(img)").evaluateAll((els) =>
+        els.map((el) => ({
+          src: decodeURIComponent(el.querySelector("img")!.getAttribute("src") ?? ""),
+          caption: el.querySelector("figcaption")?.textContent?.trim() ?? null,
+        })),
+      );
+      for (const frame of frames) {
+        const key = frame.src.match(/\/shots\/([a-z0-9-]+)\./)?.[1];
+        if (!key || !demo.has(key)) continue;
+        framed++;
+        expect(frame.caption, `${key} on ${path} at ${width}`).toBe("Demo restaurant");
+      }
+      // Page copy, title and description, with the screenshots themselves left out.
+      const copyText = await page.evaluate(() => {
+        const main = document.querySelector("main")!.cloneNode(true) as HTMLElement;
+        main.querySelectorAll("figure").forEach((f) => f.remove());
+        return [main.textContent, document.title, document.querySelector('meta[name="description"]')?.getAttribute("content")].join(" ");
+      });
+      for (const figure of figures) {
+        expect(copyText.includes(figure), `${path} quotes ${figure}`).toBe(false);
+      }
+    }
+  }
+  // dash-overview is on the site, so at least one frame was checked at each width.
+  expect(framed).toBeGreaterThanOrEqual(2);
 });
