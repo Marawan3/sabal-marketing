@@ -30,6 +30,40 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-10 · PR #18: screenshots batch 1 on the site (merged)
+
+**Merged by:** Claude, on the owner's "merge 18". Squash commit `5596dbb` on `main`, from branch `marketing/shots-batch1`.
+
+**Why:** the owner supplied the first real product screenshots, already edited: the "Clover map" tab, the "Coming soon" button and the "Pay at store" chips were removed.
+
+**What changed:**
+- **Eight screenshots** went into `public/shots/` exactly as delivered: dash-overview, orders-board, order-drawer, kds, menu-editor, menu-editor-options, ordering-settings and promotions.
+- **analytics.png was held back** because its top cards are cut off. A retake is coming (Follow-ups, item 3).
+- **Where they show:**
+  - the orders board in the homepage hero and the `/order-management` hero;
+  - the order drawer, ordering settings and kitchen display on `/order-management`, with ordering settings also in the homepage's "Less busywork" tab;
+  - the menu editor and the dashboard overview on `/how-it-works`;
+  - promo codes and an item's availability and modifiers on `/online-ordering`.
+- **Menu Management:** the item-options shot is set to appear there once that page exists, and it stays off `/order-management` (owner decision).
+- **Images load fast:** browsers get AVIF or WebP versions sized to the screen, with the PNG as a fallback. Each frame keeps its space so nothing jumps. Only the hero loads straight away; the rest load as you scroll.
+- **Scrollbar strip:** each capture has a 15px white strip down its right edge. The site hides it when showing the image; the files are untouched.
+- **Demo figures:** frames that show the demo restaurant's sales figures carry a "Demo restaurant" caption, and a test makes sure no page copy quotes those figures (owner decision).
+- **Phones:** in the homepage tabs, the swipe row now matches the height of the tab in view, so a short tab never sits over blank space.
+- **SHOTS.md:** 8 of 26 done.
+
+**Owner decisions on the PR:**
+- Keep the order drawer without the 5% fee for now, with a retake reminder logged.
+- Keep the demo figures, captioned.
+- Leave both logos as they are for now.
+- Log the cramped multi-location diagram as a follow-up.
+
+**How it was checked:**
+- **Tests:** 58 Playwright tests passed and 1 was skipped (the existing legal skip).
+- **Frames:** 30 frames were checked at 360, 390 and 1440. Every image loads and shows in full except the hidden strip, and no page scrolls sideways.
+- **Evidence:** before and after screenshots of the homepage, `/order-management`, `/online-ordering` and `/how-it-works`, in `docs/marketing-site/evidence/shots-batch1/`.
+
+---
+
 ## 2026-10-07 · PR #17: site font switched from Bricolage Grotesque to Archivo (merged)
 
 **Merged by:** Claude, on the owner's "merge 17". Squash commit `8a2a60d` on `main`, from branch `marketing/archivo`.
