@@ -17,6 +17,13 @@ Files: `src/components/logo.tsx` (React), `public/logo.svg` (static, used in JSO
 
 ## Product screenshots
 
+**Batch 1 (2026-10-10, from the owner):**
+- `dash-overview`, `orders-board`, `order-drawer`, `kds`, `menu-editor`, `menu-editor-options`, `ordering-settings` and `promotions`, as PNG.
+- They were captured from the demo restaurant on the Neon branch preview. The owner edited them before delivery, removing the "Clover map" tab, the "Coming soon" button and the "Pay at store" chips.
+- They are committed byte for byte as delivered. Do not re-edit them.
+- Each has a 15px white scrollbar gutter on its right edge. The frame hides it at display time (`RIGHT_GUTTER` in `src/lib/shot-files.ts`, keyed by file content); the files are unchanged.
+- `analytics.png` from the batch is held back. Its top cards are cut off, and no frame crops to the chart and top items. A retake is coming.
+
 Every screenshot and photo the site can show is listed in `docs/marketing-site/SHOTS.md`, generated from `src/lib/catalog.ts` and `src/lib/shot-placements.ts`. Files go in `public/shots/` under the name shown there. wuntab.com hides a frame until its file exists; preview deployments show a placeholder with the file name and size.
 
 ## Photos

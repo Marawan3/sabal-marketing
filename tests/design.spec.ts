@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
-import { builtProducts } from "../src/lib/catalog";
+import { builtProducts, products } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoHrefWithName } from "../src/lib/demo-href";
 import { customerStories } from "../src/lib/stories";
@@ -206,6 +206,21 @@ test("outcome tabs switch on desktop and follow the swipe on a phone", async ({ 
   await expect(page.getByRole("tab", { name: labels[2] })).toHaveAttribute("aria-selected", "true");
 });
 
+test("on phones the tab row is as tall as the panel in view, with no blank space under a short one", async ({ page }) => {
+  for (const width of [360, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/");
+    const row = page.locator('[role="tabpanel"]').first().locator("..");
+    const fit = (index: number) =>
+      row.evaluate((el, i) => el.getBoundingClientRect().height - (el.children[i] as HTMLElement).offsetHeight, index);
+    await expect.poll(() => fit(0), { message: `first panel at ${width}` }).toBeLessThan(2);
+    const last = copy.outcomes.items.length - 1;
+    await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
+    await expect(page.getByRole("tab").nth(last)).toHaveAttribute("aria-selected", "true");
+    await expect.poll(() => fit(last), { message: `last panel at ${width}` }).toBeLessThan(2);
+  }
+});
+
 test("homepage sections come in the owner's order, and nothing else", async ({ page }) => {
   await page.goto("/");
   const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
@@ -258,16 +273,17 @@ test("Get Started carries the restaurant name into Book a call", () => {
   );
 });
 
-test("with no shots uploaded, no panel is empty and none keeps a gap for its image", async ({ page }) => {
-  for (const width of [390, 1440]) {
+test("whichever shots exist, no panel is empty and none keeps a gap for a missing image", async ({ page }) => {
+  for (const width of [360, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const path of pages) {
       await page.goto(path);
       // Hidden frames leave nothing behind: no empty figure, no placeholder.
       expect(await page.locator("main figure:not(:has(img))").count(), `${path} at ${width}`).toBe(0);
-      // Every panel carries something to read.
+      // Every panel carries something to read or look at.
       const empty = await page.locator("main [class*='rounded-[20px]']").evaluateAll((els) =>
-        els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim()).length,
+        els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim() && !el.querySelector("img"))
+          .length,
       );
       expect(empty, `${path} at ${width}`).toBe(0);
     }
@@ -282,6 +298,49 @@ test("with no shots uploaded, no panel is empty and none keeps a gap for its ima
         return list.width / inner;
       });
       expect(fill, `outcome lines fill the panel at ${width}`).toBeGreaterThan(0.95);
+      // ...and is no taller than its lines: it doesn't stretch to match a panel that has a screenshot.
+      const slack = await panel.evaluate((el) => {
+        const style = getComputedStyle(el);
+        const inner = el.getBoundingClientRect().height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+        return inner - el.querySelector("ul")!.getBoundingClientRect().height;
+      });
+      expect(slack, `outcome panel height at ${width}`).toBeLessThan(4);
     }
   }
+});
+
+test("frames with demo sales figures say Demo restaurant, and no copy quotes those figures", async ({ page }) => {
+  const demo = new Map(products.flatMap((p) => p.shots).filter((s) => s.demoFigures).map((s) => [s.key, s.demoFigures!]));
+  expect(demo.has("dash-overview")).toBe(true);
+  const figures = [...new Set([...demo.values()].flat())];
+  let framed = 0;
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      const frames = await page.locator("main figure:has(img)").evaluateAll((els) =>
+        els.map((el) => ({
+          src: decodeURIComponent(el.querySelector("img")!.getAttribute("src") ?? ""),
+          caption: el.querySelector("figcaption")?.textContent?.trim() ?? null,
+        })),
+      );
+      for (const frame of frames) {
+        const key = frame.src.match(/\/shots\/([a-z0-9-]+)\./)?.[1];
+        if (!key || !demo.has(key)) continue;
+        framed++;
+        expect(frame.caption, `${key} on ${path} at ${width}`).toBe("Demo restaurant");
+      }
+      // Page copy, title and description, with the screenshots themselves left out.
+      const copyText = await page.evaluate(() => {
+        const main = document.querySelector("main")!.cloneNode(true) as HTMLElement;
+        main.querySelectorAll("figure").forEach((f) => f.remove());
+        return [main.textContent, document.title, document.querySelector('meta[name="description"]')?.getAttribute("content")].join(" ");
+      });
+      for (const figure of figures) {
+        expect(copyText.includes(figure), `${path} quotes ${figure}`).toBe(false);
+      }
+    }
+  }
+  // dash-overview is on the site, so at least one frame was checked at each width.
+  expect(framed).toBeGreaterThanOrEqual(2);
 });

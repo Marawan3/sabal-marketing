@@ -26,6 +26,12 @@ export type Shot = {
   kind?: "desktop" | "phone" | "tablet" | "photo" | "scene";
   /** must: the site is incomplete without it. helpful: nice once it exists. */
   priority: "must" | "helpful";
+  /**
+   * Figures in the screenshot that come from the demo restaurant (sales,
+   * growth, tips). Every frame showing it carries a "Demo restaurant" caption,
+   * and no page copy may quote any of them (owner, 2026-10-10; tested).
+   */
+  demoFigures?: readonly string[];
 };
 
 export type Flow = {
@@ -117,6 +123,13 @@ export const photos = {
   },
 } as const satisfies Record<string, Shot>;
 
+/** One menu item's availability (available, sold out, hidden) and modifier groups. */
+const menuItemOptions: Shot = {
+  key: "menu-editor-options",
+  label: "An item's availability, sold out, and modifiers",
+  priority: "must",
+};
+
 export const products: Product[] = [
   // ───────────────────────────── SELL ─────────────────────────────
   {
@@ -143,6 +156,8 @@ export const products: Product[] = [
       { key: "checkout-pickup", label: "Checkout with tip and promo code", kind: "phone", priority: "must" },
       { key: "checkout-schedule", label: "Choosing a later pickup time", kind: "phone", priority: "must" },
       { key: "order-tracking", label: "Order tracking after checkout", kind: "phone", priority: "must" },
+      { key: "promotions", label: "Promo codes, set up in your dashboard", priority: "must" },
+      menuItemOptions,
       photos.orderingInHand,
     ],
     related: ["online-menu", "delivery", "upsells", "loyalty", "order-management"],
@@ -612,7 +627,7 @@ export const products: Product[] = [
       "Availability by day and time",
       "Sold-out controls",
     ],
-    shots: [{ key: "menu-editor", label: "Menu editor", priority: "must" }],
+    shots: [{ key: "menu-editor", label: "Menu editor", priority: "must" }, menuItemOptions],
     related: ["online-menu", "online-ordering", "kiosk", "analytics"],
     notes: [
       "One menu powers your website, online ordering, kiosk, table ordering, and app.",
@@ -718,7 +733,16 @@ export const products: Product[] = [
       "New and repeat customer behavior",
       "Feedback trends and guest sentiment",
     ],
-    shots: [{ key: "analytics", label: "Analytics dashboard", priority: "must" }],
+    shots: [
+      {
+        key: "dash-overview",
+        label: "Sales, orders, average order, and tips at a glance",
+        priority: "must",
+        demoFigures: ["$13,421.76", "$12,518.17", "7.2%", "471", "9.5%", "$28.50", "$1,246.75", "7.1%"],
+      },
+      // Figures to be listed from the retake; the caption shows whatever they are.
+      { key: "analytics", label: "Analytics dashboard", priority: "must", demoFigures: [] },
+    ],
     related: ["order-management", "customers", "guest-feedback", "menu-management"],
   },
   {

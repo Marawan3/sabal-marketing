@@ -1,8 +1,11 @@
 import Image from "next/image";
 import type { Shot } from "@/lib/catalog";
-import { findShot, showPlaceholders, shotSize } from "@/lib/shot-files";
+import { findShot, rightGutter, showPlaceholders, shotSize } from "@/lib/shot-files";
 
 export { isShotVisible, visibleShots } from "@/lib/shot-files";
+
+/** The caption under every frame whose shot shows demo sales figures. */
+export const DEMO_CAPTION = "Demo restaurant";
 
 /**
  * A product screen. Renders the real image when public/shots/<key>.* exists.
@@ -26,6 +29,7 @@ export function ScreenFrame({
   dark = false,
   caption = true,
   fill = false,
+  sizes = "(min-width: 1024px) 560px, 92vw",
 }: {
   shot: Shot;
   className?: string;
@@ -36,6 +40,12 @@ export function ScreenFrame({
   caption?: boolean;
   /** Fill the parent's width instead of the kind's default width (the parent sizes it). */
   fill?: boolean;
+  /**
+   * How wide the frame renders, so the browser picks a small enough file
+   * (next/image serves AVIF or WebP from the PNG, and the PNG where neither
+   * is supported). Everything but the hero (priority) loads lazily.
+   */
+  sizes?: string;
 }) {
   const src = findShot(shot.key);
   const size = shotSize(shot);
@@ -60,6 +70,7 @@ export function ScreenFrame({
     );
   }
 
+  const gutter = rightGutter(src);
   return (
     <figure className={`${wrap} ${className}`}>
       <div
@@ -67,19 +78,27 @@ export function ScreenFrame({
           dark ? "border-paper/20" : "border-ink/10"
         }`}
       >
-        <div className={size.aspect}>
+        {/* Shown at the file's own aspect, less any right gutter, which is pushed out of view. */}
+        <div className="overflow-hidden" style={{ aspectRatio: `${size.width - gutter} / ${size.height}` }}>
           <Image
             src={src}
             alt={shot.label}
             width={size.width}
             height={size.height}
-            priority={priority}
-            className="h-full w-full object-cover object-top"
+            sizes={sizes}
+            // Next 16 deprecates `priority`: the hero loads eagerly at high priority, the rest lazily.
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
+            className="block h-auto max-w-none"
+            style={{ width: `${(size.width / (size.width - gutter)) * 100}%` }}
           />
         </div>
       </div>
-      {caption ? (
-        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/70"}`}>{shot.label}</figcaption>
+      {caption || shot.demoFigures ? (
+        <figcaption className={`mt-3 text-small ${dark ? "text-paper/75" : "text-ink/70"}`}>
+          {/* Sales numbers in the shot are the demo restaurant's, never WunTab's results. */}
+          {shot.demoFigures ? DEMO_CAPTION : shot.label}
+        </figcaption>
       ) : null}
     </figure>
   );

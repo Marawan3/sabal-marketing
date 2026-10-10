@@ -20,6 +20,16 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 ---
 
+## Follow-ups
+
+Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
+
+1. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
+2. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
+3. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+
+---
+
 ## 2026-10-07 · PR #17: site font switched from Bricolage Grotesque to Archivo (merged)
 
 **Merged by:** Claude, on the owner's "merge 17". Squash commit `8a2a60d` on `main`, from branch `marketing/archivo`.

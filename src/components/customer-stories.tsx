@@ -15,7 +15,7 @@ export function CustomerStories() {
       <div className="snap-row mt-10 lg:grid lg:grid-cols-3 lg:gap-6">
         {customerStories.map((story) => (
           <Panel key={story.restaurant} className="overflow-hidden p-3">
-            <ScreenFrame shot={story.photo} caption={false} fill />
+            <ScreenFrame shot={story.photo} caption={false} fill sizes="(min-width: 1024px) 340px, 82vw" />
             <div className="p-3">
               <p className="text-h3">{story.result}</p>
               <p className="mt-2 text-small text-ink/70">

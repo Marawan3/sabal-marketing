@@ -1,0 +1,146 @@
+{
+  "/ @360": {
+    "height": 4334,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/order-management @360": {
+    "height": 3615,
+    "overflowX": 0,
+    "h1": {
+      "lines": 2,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @360": {
+    "height": 3598,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/how-it-works @360": {
+    "height": 5285,
+    "overflowX": 0,
+    "h1": {
+      "lines": 2,
+      "size": "32.988px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @390": {
+    "height": 4335,
+    "overflowX": 0,
+    "h1": {
+      "lines": 4,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/order-management @390": {
+    "height": 3655,
+    "overflowX": 0,
+    "h1": {
+      "lines": 2,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @390": {
+    "height": 3587,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/how-it-works @390": {
+    "height": 5166,
+    "overflowX": 0,
+    "h1": {
+      "lines": 1,
+      "size": "34.017px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/ @1440": {
+    "height": 5320,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/order-management @1440": {
+    "height": 5187,
+    "overflowX": 0,
+    "h1": {
+      "lines": 2,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/online-ordering @1440": {
+    "height": 4211,
+    "overflowX": 0,
+    "h1": {
+      "lines": 3,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  },
+  "/how-it-works @1440": {
+    "height": 5105,
+    "overflowX": 0,
+    "h1": {
+      "lines": 2,
+      "size": "70px",
+      "weight": "750",
+      "stretch": "110%",
+      "family": "Archivo"
+    },
+    "headlinesWiderThanContainer": []
+  }
+}

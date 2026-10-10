@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 export type OutcomeTab = {
   key: string;
@@ -48,6 +48,25 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
       cancelAnimationFrame(frame);
     };
   }, []);
+
+  // Below lg the row is as tall as the panel in view, not the tallest one, so a
+  // short panel never sits over a blank space. It follows the swipe.
+  useLayoutEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+    const fit = () => {
+      const panel = row.children[active] as HTMLElement | undefined;
+      row.style.height = swipeable() && panel ? `${panel.offsetHeight}px` : "";
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    for (const panel of row.children) observer.observe(panel);
+    window.addEventListener("resize", fit);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, [active]);
 
   // Keep the active label in view in the tab strip (it scrolls sideways on phones).
   useEffect(() => {
@@ -105,7 +124,11 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
         })}
       </div>
 
-      <div ref={rowRef} className="snap-row mt-6 lg:mt-10">
+      {/* items-start: a panel without a screenshot keeps its own height instead of stretching to one with. */}
+      <div
+        ref={rowRef}
+        className="snap-row mt-6 items-start overflow-y-hidden transition-[height] duration-200 motion-reduce:transition-none lg:mt-10"
+      >
         {tabs.map((tab, index) => (
           <div
             key={tab.key}
