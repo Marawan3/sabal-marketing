@@ -1,4 +1,4 @@
-import { builtProducts, bySlug, lifecycle, photos, products, type Product, type Shot } from "./catalog";
+import { builtProducts, bySlug, lifecycle, photos, products, type Crop, type Product, type Shot } from "./catalog";
 import { copy } from "./copy";
 import { customerStories } from "./stories";
 
@@ -26,9 +26,16 @@ export const homeShots = {
       shotOf("order-management", "ordering-settings"),
     ],
   },
+  /** The one dark band: the kitchen display, large. */
+  kitchen: { section: copy.kitchen.heading, shots: [shotOf("order-management", "kds")] },
+  /**
+   * One small visual per product row, in copy.products.slugs order. Online
+   * ordering and order management show a crop of a real screen (ROW_CROPS);
+   * delivery and catering stay text-only until their photos arrive.
+   */
   products: {
     section: copy.products.heading,
-    shots: [photos.orderingInHand, photos.deliveryHandoff, photos.cateringSpread, photos.kitchenScreen] as Shot[],
+    shots: [shotOf("menu-management", "menu-editor"), photos.deliveryHandoff, photos.cateringSpread, shotOf("order-management", "kds")] as Shot[],
   },
   stories: { section: copy.stories.heading, shots: customerStories.map((story) => story.photo) as Shot[] },
 } satisfies Record<string, { section: string; shots: (Shot | undefined)[] }>;
@@ -38,9 +45,20 @@ export function outcomeTabs() {
   return copy.outcomes.items.map((item, index) => ({ ...item, shot: homeShots.outcomes.shots[index] }));
 }
 
-/** The four homepage product panels: product, photo. */
-export function productPanels() {
-  return copy.products.slugs.map((slug, index) => ({ product: bySlug[slug], shot: homeShots.products.shots[index] }));
+/** Small crops for the homepage product rows, in each file's own pixels. */
+const ROW_CROPS: Partial<Record<string, Crop>> = {
+  // The dish photo in the menu editor's item drawer, left of its "remove photo" button.
+  "menu-editor": { x: 998, y: 130, w: 192, h: 178 },
+  // One kitchen ticket (#1925, Preparing).
+  kds: { x: 405, y: 105, w: 355, h: 267 },
+};
+
+/** The four homepage product rows: product, its small visual, and the crop to show. */
+export function productRows() {
+  return copy.products.slugs.map((slug, index) => {
+    const shot = homeShots.products.shots[index];
+    return { product: bySlug[slug], shot, crop: shot ? ROW_CROPS[shot.key] : undefined };
+  });
 }
 
 /** A product page: the first shot is the hero, the rest go under "In the product". */

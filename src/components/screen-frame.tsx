@@ -1,5 +1,6 @@
 import Image from "next/image";
-import type { Shot } from "@/lib/catalog";
+import type { CSSProperties } from "react";
+import { phoneCrops, type Crop, type Shot } from "@/lib/catalog";
 import { findShot, rightGutter, showPlaceholders, shotSize } from "@/lib/shot-files";
 
 export { isShotVisible, visibleShots } from "@/lib/shot-files";
@@ -30,6 +31,8 @@ export function ScreenFrame({
   caption = true,
   fill = false,
   sizes = "(min-width: 1024px) 560px, 92vw",
+  phoneVw = 92,
+  crop,
 }: {
   shot: Shot;
   className?: string;
@@ -46,6 +49,14 @@ export function ScreenFrame({
    * is supported). Everything but the hero (priority) loads lazily.
    */
   sizes?: string;
+  /** About how much of a phone's width the frame takes, in vw (for the phone crop's file size). */
+  phoneVw?: number;
+  /**
+   * Show this part of the file at every width (a small product-row crop).
+   * Without it, phones get the shot's focal crop from phoneCrops and wider
+   * screens the whole frame. Pass full `sizes` yourself when you set it.
+   */
+  crop?: Crop;
 }) {
   const src = findShot(shot.key);
   const size = shotSize(shot);
@@ -71,26 +82,39 @@ export function ScreenFrame({
   }
 
   const gutter = rightGutter(src);
+  const full: Crop = { x: 0, y: 0, w: size.width - gutter, h: size.height };
+  const wide = crop ?? full;
+  const narrow = crop ?? phoneCrops[shot.key]?.crop ?? full;
+  // Each view: the box's aspect, and the image's width and offset within it.
+  const view = (r: Crop) => ({
+    ar: `${r.w} / ${r.h}`,
+    w: `${(size.width / r.w) * 100}%`,
+    l: `${(-r.x / r.w) * 100}%`,
+    t: `${(-r.y / r.h) * 100}%`,
+  });
+  const [v, p] = [view(wide), view(narrow)];
+  const style = {
+    "--shot-ar": v.ar, "--shot-w": v.w, "--shot-l": v.l, "--shot-t": v.t,
+    "--shot-ar-sm": p.ar, "--shot-w-sm": p.w, "--shot-l-sm": p.l, "--shot-t-sm": p.t,
+  } as CSSProperties;
+  const phoneSize = `(max-width: 767px) ${Math.round((phoneVw * size.width) / narrow.w)}vw`;
   return (
     <figure className={`${wrap} ${className}`}>
-      <div
-        className={`overflow-hidden border bg-paper ${shot.kind === "scene" ? "" : "shadow-lift"} ${size.radius} ${
-          dark ? "border-paper/20" : "border-ink/10"
-        }`}
-      >
-        {/* Shown at the file's own aspect, less any right gutter, which is pushed out of view. */}
-        <div className="overflow-hidden" style={{ aspectRatio: `${size.width - gutter} / ${size.height}` }}>
+      <div className={`overflow-hidden border bg-paper ${size.radius} ${dark ? "border-paper/20" : "border-ink/10"}`}>
+        {/*
+          One image, two views: the whole frame (less any right gutter) from
+          768px up, the shot's focal crop below. globals.css .shot-view.
+        */}
+        <div className="shot-view" style={style}>
           <Image
             src={src}
             alt={shot.label}
             width={size.width}
             height={size.height}
-            sizes={sizes}
+            sizes={crop ? sizes : `${phoneSize}, ${sizes}`}
             // Next 16 deprecates `priority`: the hero loads eagerly at high priority, the rest lazily.
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : undefined}
-            className="block h-auto max-w-none"
-            style={{ width: `${(size.width / (size.width - gutter)) * 100}%` }}
           />
         </div>
       </div>

@@ -4,13 +4,14 @@
   --paper: #ffffff;
   /* Near-black text (design pass, 2026-10-07). The logo keeps its navy tile. */
   --ink: #1d1d1b;
+  /* The logo's navy: the tile, and the one dark band on the homepage. */
   --navy: #13213c;
-  /* The one warm neutral: panels and bands. */
-  --ticket: #f5efe6;
-  /* The one accent: buttons and the hero art panel. */
+  /* The one accent: buttons, the hero art panel, step markers, the final band. */
   --saffron: #f4a83a;
   --saffron-deep: #e2962c;
-  --mist: #e8e4dd;
+  /* The one cool light neutral: hairlines and hover fills, used sparingly.
+     No beige anywhere (layout pass, 2026-10-11). */
+  --mist: #e6e9ef;
 }
 
 /*
@@ -21,11 +22,11 @@
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-navy: var(--navy);
-  --color-ticket: var(--ticket);
   --color-saffron: var(--saffron);
   --color-saffron-deep: var(--saffron-deep);
   --color-mist: var(--mist);
   --font-sans: var(--font-archivo);
+  /* Overlays only (the mega-menu). Cards and frames carry no shadow. */
   --shadow-lift:
     0 1px 2px rgba(29, 29, 27, 0.06), 0 20px 48px -20px rgba(29, 29, 27, 0.28);
   /* Archivo at 110% width runs larger than its size suggests:
@@ -178,41 +179,33 @@ body {
   line-gap-override: 0%;
 }
 
-/* A sideways row that snaps card by card, with the next card peeking in.
-   Below lg only: from lg up it is a plain block and callers lay it out. */
-@media (max-width: 1023.98px) {
-  .snap-row {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 16px;
-    padding-inline: 16px;
-    margin-inline: -16px;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-
-  .snap-row::-webkit-scrollbar {
-    display: none;
-  }
-
-  .snap-row > * {
-    flex: 0 0 86%;
-    min-width: 0;
-    scroll-snap-align: start;
-  }
+/* A screenshot frame's view of its file (components/screen-frame.tsx): the
+   whole frame from 768px up, the focal crop below. Variables set per frame. */
+.shot-view {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--shot-ar);
 }
 
-@media (min-width: 640px) and (max-width: 1023.98px) {
-  .snap-row {
-    padding-inline: 32px;
-    margin-inline: -32px;
-    scroll-padding-inline: 32px;
+.shot-view > img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+  width: var(--shot-w);
+  left: var(--shot-l);
+  top: var(--shot-t);
+}
+
+@media (max-width: 767.98px) {
+  .shot-view {
+    aspect-ratio: var(--shot-ar-sm);
   }
 
-  .snap-row > * {
-    flex-basis: 62%;
+  .shot-view > img {
+    width: var(--shot-w-sm);
+    left: var(--shot-l-sm);
+    top: var(--shot-t-sm);
   }
 }
 

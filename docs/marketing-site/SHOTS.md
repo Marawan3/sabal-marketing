@@ -13,11 +13,10 @@ Drop each file into `public/shots/` with the name shown, at the size shown (WebP
 | `site-home.webp` | Desktop 1440×900 | A restaurant website on its own domain | `/` What changes when orders come to you.<br>`/how-it-works` Discover<br>`/restaurant-websites` Hero | Missing |
 | `marketing-campaign.webp` | Desktop 1440×900 | Campaign builder | `/` What changes when orders come to you. | Missing |
 | `ordering-settings.webp` | Desktop 1440×900 | Hours, pause ordering, and prep time | `/` What changes when orders come to you.<br>`/order-management` In the product | Done (`ordering-settings.png`) |
-| `photo-ordering-in-hand.webp` | Photo (landscape) 1600×1000 | A hand holding a phone with a restaurant's WunTab ordering menu open | `/` Everything you need to sell direct.<br>`/online-ordering` In the product | Missing |
+| `kds.webp` | Tablet 1180×820 | Kitchen display on a tablet | `/` Every order on one screen in your kitchen.<br>`/` Everything you need to sell direct.<br>`/order-management` In the product | Done (`kds.png`) |
+| `menu-editor.webp` | Desktop 1440×900 | Menu editor | `/` Everything you need to sell direct.<br>`/how-it-works` Fulfill | Done (`menu-editor.png`) |
 | `photo-delivery-handoff.webp` | Photo (landscape) 1600×1000 | A bagged delivery order handed over at a restaurant counter | `/` Everything you need to sell direct.<br>`/delivery` In the product | Missing |
 | `photo-catering-spread.webp` | Photo (landscape) 1600×1000 | Catering trays laid out for a group order | `/` Everything you need to sell direct.<br>`/catering` In the product | Missing |
-| `photo-kitchen-screen.webp` | Photo (landscape) 1600×1000 | A kitchen team working from a tablet showing the WunTab kitchen display | `/` Everything you need to sell direct.<br>`/order-management` In the product | Missing |
-| `menu-editor.webp` | Desktop 1440×900 | Menu editor | `/how-it-works` Fulfill | Done (`menu-editor.png`) |
 | `dash-overview.webp` | Desktop 1440×900 | Sales, orders, average order, and tips at a glance | `/how-it-works` Understand | Done (`dash-overview.png`) |
 | `feedback-guest.webp` | Phone 390×844 | Guest feedback on a phone | `/how-it-works` Build the relationship | Missing |
 | `item-sheet.webp` | Phone 390×844 | An item with modifiers and add-ons | `/online-ordering` In the product | Missing |
@@ -26,14 +25,15 @@ Drop each file into `public/shots/` with the name shown, at the size shown (WebP
 | `order-tracking.webp` | Phone 390×844 | Order tracking after checkout | `/online-ordering` In the product | Missing |
 | `promotions.webp` | Desktop 1440×900 | Promo codes, set up in your dashboard | `/online-ordering` In the product | Done (`promotions.png`) |
 | `menu-editor-options.webp` | Desktop 1440×900 | An item's availability, sold out, and modifiers | `/online-ordering` In the product | Done (`menu-editor-options.png`) |
+| `photo-ordering-in-hand.webp` | Photo (landscape) 1600×1000 | A hand holding a phone with a restaurant's WunTab ordering menu open | `/online-ordering` In the product | Missing |
 | `checkout-delivery.webp` | Phone 390×844 | Delivery checkout with fee and arrival time | `/delivery` Hero | Missing |
 | `delivery-tracking.webp` | Phone 390×844 | Customer delivery tracking | `/delivery` In the product | Missing |
 | `catering-page.webp` | Desktop 1440×900 | Catering page with the enquiry form | `/catering` Hero | Missing |
 | `catering-order.webp` | Phone 390×844 | Catering order with lead time and minimum | `/catering` In the product | Missing |
 | `tag-page.webp` | Desktop 1440×900 | A cuisine page search engines can read | `/restaurant-seo` Hero | Missing |
 | `order-drawer.webp` | Desktop 1440×900 | One order in detail | `/order-management` In the product | Done (`order-drawer.png`) |
-| `kds.webp` | Tablet 1180×820 | Kitchen display on a tablet | `/order-management` In the product | Done (`kds.png`) |
 | `kitchen-ticket.webp` | Photo (portrait) 1200×1600 | A printed kitchen ticket | `/order-management` In the product | Missing |
+| `photo-kitchen-screen.webp` | Photo (landscape) 1600×1000 | A kitchen team working from a tablet showing the WunTab kitchen display | `/order-management` In the product | Missing |
 
 ## In the catalog, not on any page yet
 

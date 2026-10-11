@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 
 export type OutcomeTab = {
   key: string;
@@ -11,90 +11,24 @@ export type OutcomeTab = {
 };
 
 /**
- * Text tabs over one soft panel. From lg up, the tabs switch the panel and
- * the active tab is underlined. Below lg the panels sit in a sideways row
- * that snaps panel by panel, with the next one peeking in; swiping moves the
- * underline and tapping a tab scrolls to its panel.
+ * From lg up: text tabs, the active one underlined, switching one panel with
+ * the lines on the left and the screenshot on the right. No card behind it.
+ * Below lg there are no tabs and no swipe row: each outcome is stacked as
+ * its label, its lines, then its screenshot (the phone crop).
  */
 export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
   const [active, setActive] = useState(0);
   const baseId = useId();
-  const rowRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const swipeable = () => window.matchMedia("(max-width: 1023.98px)").matches;
-
-  // Below lg, follow the swipe.
-  useEffect(() => {
-    const row = rowRef.current;
-    if (!row) return;
-    let frame = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        if (!swipeable()) return;
-        const panels = [...row.children] as HTMLElement[];
-        const left = row.scrollLeft + row.clientWidth * 0.3;
-        let index = 0;
-        panels.forEach((panel, i) => {
-          if (panel.offsetLeft - row.offsetLeft <= left) index = i;
-        });
-        setActive(index);
-      });
-    };
-    row.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      row.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  // Below lg the row is as tall as the panel in view, not the tallest one, so a
-  // short panel never sits over a blank space. It follows the swipe.
-  useLayoutEffect(() => {
-    const row = rowRef.current;
-    if (!row) return;
-    const fit = () => {
-      const panel = row.children[active] as HTMLElement | undefined;
-      row.style.height = swipeable() && panel ? `${panel.offsetHeight}px` : "";
-    };
-    fit();
-    const observer = new ResizeObserver(fit);
-    for (const panel of row.children) observer.observe(panel);
-    window.addEventListener("resize", fit);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", fit);
-    };
-  }, [active]);
-
-  // Keep the active label in view in the tab strip (it scrolls sideways on phones).
-  useEffect(() => {
-    const tab = tabRefs.current[active];
-    const list = tab?.parentElement;
-    if (!tab || !list || list.scrollWidth <= list.clientWidth) return;
-    list.scrollTo({ left: tab.offsetLeft - list.offsetLeft - 16 });
-  }, [active]);
 
   const select = (index: number, focus = false) => {
     setActive(index);
     if (focus) tabRefs.current[index]?.focus();
-    const row = rowRef.current;
-    const panel = row?.children[index] as HTMLElement | undefined;
-    if (row && panel && swipeable()) {
-      const pad = parseFloat(getComputedStyle(row).scrollPaddingLeft) || 0;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      row.scrollTo({ left: panel.offsetLeft - row.offsetLeft - pad, behavior: reduce ? "auto" : "smooth" });
-    }
   };
 
   return (
     <div>
-      <div
-        role="tablist"
-        aria-label="Outcomes"
-        className="-mx-4 flex gap-6 overflow-x-auto border-b border-mist px-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:gap-10 lg:px-0"
-      >
+      <div role="tablist" aria-label="Outcomes" className="hidden gap-10 border-b border-mist lg:flex">
         {tabs.map((tab, index) => {
           const selected = index === active;
           return (
@@ -124,34 +58,34 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
         })}
       </div>
 
-      {/* items-start: a panel without a screenshot keeps its own height instead of stretching to one with. */}
-      <div
-        ref={rowRef}
-        className="snap-row mt-6 items-start overflow-y-hidden transition-[height] duration-200 motion-reduce:transition-none lg:mt-10"
-      >
+      <div className="divide-y divide-mist lg:mt-12 lg:divide-y-0">
         {tabs.map((tab, index) => (
           <div
             key={tab.key}
             role="tabpanel"
             id={`${baseId}-${tab.key}`}
             aria-labelledby={`${baseId}-${tab.key}-tab`}
-            className={`rounded-[20px] bg-ticket p-5 sm:p-8 lg:rounded-[24px] lg:p-12 ${
-              index === active ? "" : "lg:hidden"
-            } ${tab.visual ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""}`}
+            className={`py-8 first:pt-0 last:pb-0 lg:py-0 ${index === active ? "" : "lg:hidden"} ${
+              tab.visual ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""
+            }`}
           >
-            {/* No screenshot yet: the lines spread across the panel instead of leaving its right half empty. */}
-            <ul className={tab.visual ? "lg:col-span-5" : "lg:grid lg:grid-cols-3 lg:gap-10"}>
-              {tab.lines.map((line) => (
-                <li
-                  key={line}
-                  className={`border-t border-ink/10 py-3 text-body text-ink/85 first:border-t-0 first:pt-0 ${
-                    tab.visual ? "" : "lg:border-t-0 lg:border-l lg:py-0 lg:pl-6 lg:first:border-l-0 lg:first:pl-0"
-                  }`}
-                >
-                  {line}
-                </li>
-              ))}
-            </ul>
+            <div className={tab.visual ? "lg:col-span-5" : ""}>
+              {/* Phones have no tab strip, so each outcome is titled. */}
+              <h3 className="text-h3 lg:hidden">{tab.label}</h3>
+              {/* No screenshot yet: on desktop the lines spread across the width instead of leaving half of it empty. */}
+              <ul className={`mt-3 lg:mt-0 ${tab.visual ? "" : "lg:grid lg:grid-cols-3 lg:gap-10"}`}>
+                {tab.lines.map((line) => (
+                  <li
+                    key={line}
+                    className={`border-t border-mist py-3 text-body text-ink/85 first:border-t-0 first:pt-0 ${
+                      tab.visual ? "" : "lg:border-t-0 lg:border-l lg:py-0 lg:pl-6 lg:first:border-l-0 lg:first:pl-0"
+                    }`}
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
             {tab.visual ? <div className="mt-6 lg:col-span-7 lg:mt-0">{tab.visual}</div> : null}
           </div>
         ))}

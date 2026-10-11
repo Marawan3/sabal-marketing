@@ -34,6 +34,36 @@ export type Shot = {
   demoFigures?: readonly string[];
 };
 
+/** A rectangle in a shot file's own pixels. */
+export type Crop = { x: number; y: number; w: number; h: number };
+
+/**
+ * What a desktop or tablet shot shows on phones (under 768px wide): a focal
+ * crop about 440–480px of the source wide, so its text renders at a readable
+ * size (at least 9px at 360). Cut from the same file at display time; the
+ * file itself is never edited. textPx is the capture's body-text size at
+ * source, measured from the file, which tests/design.spec.ts uses to check
+ * the rendered size. Re-measure both when a file is retaken.
+ */
+export const phoneCrops: Record<string, { crop: Crop; textPx: number }> = {
+  // Title, status tabs, and the first four orders: number, time, name, items.
+  "orders-board": { crop: { x: 318, y: 92, w: 468, h: 528 }, textPx: 14 },
+  // The order drawer: status, customer, items, totals.
+  "order-drawer": { crop: { x: 981, y: 0, w: 444, h: 744 }, textPx: 14 },
+  // Open, prep time, ASAP quote, and the pause and prep controls.
+  "ordering-settings": { crop: { x: 312, y: 92, w: 480, h: 390 }, textPx: 14 },
+  // The New column: two tickets at close to real size.
+  kds: { crop: { x: 8, y: 72, w: 380, h: 528 }, textPx: 18 },
+  // The item drawer: photo, name, description.
+  "menu-editor": { crop: { x: 981, y: 0, w: 444, h: 560 }, textPx: 14 },
+  // Availability (available, sold out, hidden), options, modifier groups.
+  "menu-editor-options": { crop: { x: 981, y: 150, w: 444, h: 530 }, textPx: 14 },
+  // Restaurant name, net sales, and the sales chart.
+  "dash-overview": { crop: { x: 310, y: 90, w: 480, h: 550 }, textPx: 14 },
+  // The promo code table: code, name, discount.
+  promotions: { crop: { x: 300, y: 92, w: 480, h: 410 }, textPx: 14 },
+};
+
 export type Flow = {
   title: string;
   steps: string[];

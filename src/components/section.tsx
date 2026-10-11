@@ -3,8 +3,8 @@ import { Container } from "./container";
 
 const tones = {
   paper: "bg-paper",
-  ticket: "bg-ticket",
-  ink: "on-dark bg-ink text-paper",
+  navy: "on-dark bg-navy text-paper",
+  saffron: "bg-saffron text-ink",
 } as const;
 
 /**
@@ -54,16 +54,16 @@ export function SectionHead({
   );
 }
 
-/** The soft, rounded panel the whole site is built from. */
+/** A media panel: 20px corners, only where a screenshot needs a ground (the hero art). */
 export function Panel({
   children,
   className = "",
-  tone = "ticket",
+  tone = "saffron",
 }: {
   children: ReactNode;
   className?: string;
-  tone?: "ticket" | "paper" | "saffron" | "ink";
+  tone?: "saffron" | "mist";
 }) {
-  const bg = { ticket: "bg-ticket", paper: "bg-paper", saffron: "bg-saffron", ink: "on-dark bg-ink text-paper" }[tone];
-  return <div className={`rounded-[20px] lg:rounded-[24px] ${bg} ${className}`}>{children}</div>;
+  const bg = tone === "saffron" ? "bg-saffron" : "bg-mist";
+  return <div className={`rounded-[20px] ${bg} ${className}`}>{children}</div>;
 }

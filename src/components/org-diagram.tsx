@@ -11,7 +11,7 @@ export function OrgDiagram({ dark = false }: { dark?: boolean }) {
   return (
     <div className="mx-auto w-full max-w-[560px]" aria-label="One organization running several locations">
       <div
-        className={`mx-auto w-fit rounded-[14px] px-5 py-3 text-body font-medium ${
+        className={`mx-auto w-fit rounded-[12px] px-5 py-3 text-body font-medium ${
           dark ? "bg-saffron text-ink" : "bg-ink text-paper"
         }`}
       >
@@ -29,7 +29,7 @@ export function OrgDiagram({ dark = false }: { dark?: boolean }) {
           {locations.map((name) => (
             <li key={name} className="relative">
               <span className={`absolute left-1/2 -top-8 h-8 w-px ${line}`} aria-hidden />
-              <div className={`rounded-[14px] border p-4 ${box}`}>
+              <div className={`rounded-[12px] border p-4 ${box}`}>
                 <p className="text-small font-medium">{name}</p>
                 <p className={`mt-1 text-small ${muted}`}>Own menu, hours, and orders</p>
               </div>

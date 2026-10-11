@@ -1,10 +1,10 @@
 import { ScreenFrame } from "./screen-frame";
-import { Panel, Section } from "./section";
+import { Section } from "./section";
 import { copy } from "@/lib/copy";
 import { customerStories } from "@/lib/stories";
 
 /**
- * A swipeable row of real customers: photo, real result, owner's name.
+ * A row of real customers (stacked on phones): photo, real result, owner's name.
  * Renders nothing while src/lib/stories.ts is empty.
  */
 export function CustomerStories() {
@@ -12,17 +12,17 @@ export function CustomerStories() {
   return (
     <Section id="stories">
       <h2 className="max-w-[18ch] text-h2">{copy.stories.heading}</h2>
-      <div className="snap-row mt-10 lg:grid lg:grid-cols-3 lg:gap-6">
+      <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {customerStories.map((story) => (
-          <Panel key={story.restaurant} className="overflow-hidden p-3">
-            <ScreenFrame shot={story.photo} caption={false} fill sizes="(min-width: 1024px) 340px, 82vw" />
-            <div className="p-3">
+          <div key={story.restaurant}>
+            <ScreenFrame shot={story.photo} caption={false} fill sizes="(min-width: 1024px) 340px, 92vw" />
+            <div className="pt-4">
               <p className="text-h3">{story.result}</p>
               <p className="mt-2 text-small text-ink/70">
                 {story.owner}, {story.restaurant}
               </p>
             </div>
-          </Panel>
+          </div>
         ))}
       </div>
     </Section>

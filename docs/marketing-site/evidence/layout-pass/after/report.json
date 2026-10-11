@@ -1,0 +1,191 @@
+{
+  "heights": {
+    "/ @360": 6725,
+    "/order-management @360": 5203,
+    "/online-ordering @360": 4557,
+    "/ @390": 6778,
+    "/order-management @390": 5342,
+    "/online-ordering @390": 4511,
+    "/ @1440": 6825,
+    "/order-management @1440": 4798,
+    "/online-ordering @1440": 3924
+  },
+  "frames": [
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "orders-board",
+      "shownWidthPx": 310,
+      "sourceWidthShown": 468,
+      "bodyTextPx": 9.3
+    },
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "ordering-settings",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 9.5
+    },
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "kds",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 380,
+      "bodyTextPx": 15.4
+    },
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "menu-editor",
+      "shownWidthPx": 190,
+      "sourceWidthShown": 192,
+      "bodyTextPx": 13.9
+    },
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "kds",
+      "shownWidthPx": 190,
+      "sourceWidthShown": 355,
+      "bodyTextPx": 9.6
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "orders-board",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 468,
+      "bodyTextPx": 9.8
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "order-drawer",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 444,
+      "bodyTextPx": 10.3
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "ordering-settings",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 9.5
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "kds",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 380,
+      "bodyTextPx": 15.4
+    },
+    {
+      "page": "/online-ordering",
+      "width": 360,
+      "shot": "promotions",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 9.5
+    },
+    {
+      "page": "/online-ordering",
+      "width": 360,
+      "shot": "menu-editor-options",
+      "shownWidthPx": 326,
+      "sourceWidthShown": 444,
+      "bodyTextPx": 10.3
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "orders-board",
+      "shownWidthPx": 340,
+      "sourceWidthShown": 468,
+      "bodyTextPx": 10.2
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "ordering-settings",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 10.4
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "kds",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 380,
+      "bodyTextPx": 16.9
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "menu-editor",
+      "shownWidthPx": 190,
+      "sourceWidthShown": 192,
+      "bodyTextPx": 13.9
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "kds",
+      "shownWidthPx": 190,
+      "sourceWidthShown": 355,
+      "bodyTextPx": 9.6
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "orders-board",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 468,
+      "bodyTextPx": 10.6
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "order-drawer",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 444,
+      "bodyTextPx": 11.2
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "ordering-settings",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 10.4
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "kds",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 380,
+      "bodyTextPx": 16.9
+    },
+    {
+      "page": "/online-ordering",
+      "width": 390,
+      "shot": "promotions",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 480,
+      "bodyTextPx": 10.4
+    },
+    {
+      "page": "/online-ordering",
+      "width": 390,
+      "shot": "menu-editor-options",
+      "shownWidthPx": 356,
+      "sourceWidthShown": 444,
+      "bodyTextPx": 11.2
+    }
+  ]
+}

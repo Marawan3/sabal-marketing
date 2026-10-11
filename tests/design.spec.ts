@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
-import { builtProducts, products } from "../src/lib/catalog";
+import { builtProducts, phoneCrops, products } from "../src/lib/catalog";
+import { findShot } from "../src/lib/shot-files";
 import { copy } from "../src/lib/copy";
 import { demoHrefWithName } from "../src/lib/demo-href";
 import { customerStories } from "../src/lib/stories";
@@ -175,22 +176,22 @@ test("the phone header shows the logo, Get Started and a menu that opens full sc
   }
 });
 
-test("rows swipe sideways with the next card peeking in at 390", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  const rows = page.locator(".snap-row");
-  expect(await rows.count()).toBeGreaterThanOrEqual(3);
-  for (const row of await rows.all()) {
-    const style = await row.evaluate((el) => getComputedStyle(el).scrollSnapType);
-    expect(style).toContain("x");
-    expect(style).toContain("mandatory");
-    const second = await row.locator(":scope > *").nth(1).boundingBox();
-    expect(second!.x, "second card starts on screen").toBeLessThan(390);
-    expect(second!.x + second!.width, "second card runs off screen").toBeGreaterThan(390);
+test("nothing swipes sideways: no horizontal scroller in any page's content on phones", async ({ page }) => {
+  for (const width of [360, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const path of pages) {
+      await page.goto(path);
+      const scrollers = await page.evaluate(() =>
+        [...document.querySelectorAll("main *")]
+          .filter((el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.scrollWidth > el.clientWidth + 1)
+          .map((el) => el.className.toString().slice(0, 60)),
+      );
+      expect(scrollers, `${path} at ${width}`).toEqual([]);
+    }
   }
 });
 
-test("outcome tabs switch on desktop and follow the swipe on a phone", async ({ page }) => {
+test("outcome tabs switch on desktop; on phones each outcome is its label, its lines, then its screenshot", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const labels = copy.outcomes.items.map((item) => item.label);
@@ -201,31 +202,137 @@ test("outcome tabs switch on desktop and follow the swipe on a phone", async ({ 
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  const row = page.locator('[role="tabpanel"]').first().locator("..");
-  await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
-  await expect(page.getByRole("tab", { name: labels[2] })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tablist", { includeHidden: true })).toBeHidden();
+  const panels = page.locator('[role="tabpanel"]');
+  await expect(panels).toHaveCount(labels.length);
+  for (const [index, label] of labels.entries()) {
+    const panel = panels.nth(index);
+    await expect(panel).toBeVisible();
+    await expect(panel.locator("h3")).toHaveText(label);
+    // label above lines, lines above any screenshot
+    const order = await panel.evaluate((el) => {
+      const y = (sel: string) => el.querySelector(sel)?.getBoundingClientRect().top ?? null;
+      return [y("h3"), y("ul"), y("figure")];
+    });
+    expect(order[0]!).toBeLessThan(order[1]!);
+    if (order[2] !== null) expect(order[1]!).toBeLessThan(order[2]);
+  }
 });
 
-test("on phones the tab row is as tall as the panel in view, with no blank space under a short one", async ({ page }) => {
+test("on phones every screenshot is a focal crop whose body text renders at 9px or more", async ({ page }) => {
+  // Every desktop or tablet shot with a file has a crop defined in the catalog.
+  for (const shot of products.flatMap((p) => p.shots)) {
+    if ((shot.kind ?? "desktop") !== "desktop" && shot.kind !== "tablet") continue;
+    if (!findShot(shot.key)) continue;
+    expect(phoneCrops[shot.key], `phone crop for ${shot.key}`).toBeDefined();
+  }
+  let checked = 0;
   for (const width of [360, 390]) {
     await page.setViewportSize({ width, height: 844 });
-    await page.goto("/");
-    const row = page.locator('[role="tabpanel"]').first().locator("..");
-    const fit = (index: number) =>
-      row.evaluate((el, i) => el.getBoundingClientRect().height - (el.children[i] as HTMLElement).offsetHeight, index);
-    await expect.poll(() => fit(0), { message: `first panel at ${width}` }).toBeLessThan(2);
-    const last = copy.outcomes.items.length - 1;
-    await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
-    await expect(page.getByRole("tab").nth(last)).toHaveAttribute("aria-selected", "true");
-    await expect.poll(() => fit(last), { message: `last panel at ${width}` }).toBeLessThan(2);
+    for (const path of pages) {
+      await page.goto(path);
+      const frames = await page.locator("main figure img").evaluateAll((imgs) =>
+        imgs
+          .filter((img) => img.getBoundingClientRect().width > 0)
+          .map((img) => ({
+            key: decodeURIComponent(img.getAttribute("src") ?? "").match(/shots\/([a-z0-9-]+)\./)?.[1] ?? "",
+            source: Number(img.getAttribute("width")),
+            imgW: img.getBoundingClientRect().width,
+            boxW: img.parentElement!.getBoundingClientRect().width,
+          })),
+      );
+      for (const f of frames) {
+        const crop = phoneCrops[f.key];
+        if (!crop) continue;
+        checked++;
+        const text = (crop.textPx * f.imgW) / f.source;
+        const shown = (f.boxW * f.source) / f.imgW;
+        expect(text, `${f.key} body text on ${path} at ${width}`).toBeGreaterThanOrEqual(9);
+        expect(shown, `${f.key} shows a crop, not the whole frame, on ${path} at ${width}`).toBeLessThanOrEqual(560);
+        // The kitchen display shows about two tickets at close to real size.
+        if (f.key === "kds" && f.boxW > 300) expect(f.imgW / f.source, `kds scale on ${path}`).toBeGreaterThan(0.85);
+      }
+    }
   }
+  expect(checked).toBeGreaterThan(10);
+});
+
+test("palette: no beige anywhere, and no shadows on cards or frames", async ({ page }) => {
+  for (const path of [...pages, "/terms", "/privacy"]) {
+    await page.goto(path);
+    const found = await page.evaluate(() => {
+      const beige = [...document.querySelectorAll("body *")].filter((el) => {
+        const cs = getComputedStyle(el);
+        return [cs.backgroundColor, cs.borderTopColor, cs.color].some((c) => c.replace(/\s/g, "").startsWith("rgb(245,239,230"));
+      }).length;
+      const shadows = [...document.querySelectorAll("main *")].filter((el) => getComputedStyle(el).boxShadow !== "none").length;
+      return { beige, shadows };
+    });
+    expect(found, path).toEqual({ beige: 0, shadows: 0 });
+  }
+  const css = await page.evaluate(() =>
+    Promise.all([...document.querySelectorAll<HTMLLinkElement>("link[rel=stylesheet]")].map((l) => fetch(l.href).then((r) => r.text()))),
+  );
+  for (const sheet of css) expect(sheet.toLowerCase()).not.toContain("f5efe6");
+});
+
+test("shape: frames and panels 20px, buttons and inputs 12px, list rows square; pricing is the only card", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const radius = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  expect(await radius("main figure > div")).toBe("20px");
+  expect(await radius("#top input")).toBe("12px");
+  expect(await radius("#top button[type=submit]")).toBe("12px");
+  expect(await radius("#products li")).toBe("0px");
+  expect(await radius("#faq details")).toBe("0px");
+  // A card: a box with a border on all four sides and rounded corners, that isn't a frame, button, input or link.
+  const cards = await page.evaluate(() =>
+    [...document.querySelectorAll("main *")]
+      .filter((el) => !el.closest("figure") && !["A", "BUTTON", "INPUT", "SUMMARY"].includes(el.tagName))
+      .filter((el) => {
+        const cs = getComputedStyle(el);
+        const all = ["Top", "Right", "Bottom", "Left"].every((side) => parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0);
+        return all && parseFloat(cs.borderTopLeftRadius) > 0;
+      })
+      .map((el) => el.closest("section")?.id),
+  );
+  expect(cards).toEqual(["pricing"]);
+});
+
+test("steps: a row on desktop, a vertical list on phones, with saffron markers", async ({ page }) => {
+  for (const path of ["/", "/online-ordering"]) {
+    const list = path === "/" ? page.locator("#how-it-works ol").first() : page.locator("main section ol").first();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(path);
+    const desktop = await list.locator(":scope > li").evaluateAll((els) => els.map((el) => el.getBoundingClientRect().top));
+    expect(new Set(desktop.map(Math.round)).size, `${path} desktop row`).toBe(1);
+    const marker = await list.locator(":scope > li > span:not([aria-hidden])").first().evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(marker.replace(/\s/g, "")).toBe("rgb(244,168,58)");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(path);
+    const phone = await list.locator(":scope > li").evaluateAll((els) => els.map((el) => el.getBoundingClientRect()));
+    for (let i = 1; i < phone.length; i++) {
+      expect(phone[i].top, `${path} phone list`).toBeGreaterThan(phone[i - 1].top);
+      expect(Math.round(phone[i].left)).toBe(Math.round(phone[0].left));
+    }
+  }
+});
+
+test("bands: the kitchen display on navy, the final call to action on saffron", async ({ page }) => {
+  await page.goto("/");
+  const bg = (sel: string) => page.locator(sel).evaluate((el) => getComputedStyle(el).backgroundColor.replace(/\s/g, ""));
+  expect(await bg("#kitchen")).toBe("rgb(19,33,60)");
+  expect(await bg("#cta")).toBe("rgb(244,168,58)");
+  await expect(page.locator("#kitchen h2")).toHaveText(copy.kitchen.heading);
+  await expect(page.locator("#kitchen figure img")).toHaveCount(1);
 });
 
 test("homepage sections come in the owner's order, and nothing else", async ({ page }) => {
   await page.goto("/");
   const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
-  // Customer stories and beliefs render only once their data is real.
-  const expected = ["top", "outcomes", "products", "how-it-works", "pricing", "faq", "cta"];
+  // Customer stories and beliefs render only once their data is real; the kitchen band once its shot exists.
+  const expected = ["top", "outcomes", "kitchen", "products", "how-it-works", "pricing", "faq", "cta"];
+  if (!findShot("kds")) expected.splice(expected.indexOf("kitchen"), 1);
   if (customerStories.length) expected.splice(1, 0, "stories");
   if (publishedBeliefs().length) expected.splice(expected.indexOf("faq"), 0, "beliefs");
   expect(ids).toEqual(expected);
@@ -287,24 +394,19 @@ test("whichever shots exist, no panel is empty and none keeps a gap for a missin
       );
       expect(empty, `${path} at ${width}`).toBe(0);
     }
-    // An outcome panel without its screenshot spreads its lines across the whole panel.
-    await page.goto("/");
-    for (const panel of await page.locator('[role="tabpanel"]:not(:has(figure))').all()) {
-      if (!(await panel.isVisible())) continue;
-      const fill = await panel.evaluate((el) => {
-        const list = el.querySelector("ul")!.getBoundingClientRect();
-        const style = getComputedStyle(el);
-        const inner = el.getBoundingClientRect().width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-        return list.width / inner;
-      });
-      expect(fill, `outcome lines fill the panel at ${width}`).toBeGreaterThan(0.95);
-      // ...and is no taller than its lines: it doesn't stretch to match a panel that has a screenshot.
-      const slack = await panel.evaluate((el) => {
-        const style = getComputedStyle(el);
-        const inner = el.getBoundingClientRect().height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
-        return inner - el.querySelector("ul")!.getBoundingClientRect().height;
-      });
-      expect(slack, `outcome panel height at ${width}`).toBeLessThan(4);
+    // On desktop, an outcome panel without its screenshot spreads its lines across the whole width.
+    if (width === 1440) {
+      await page.goto("/");
+      for (const panel of await page.locator('[role="tabpanel"]:not(:has(figure))').all()) {
+        if (!(await panel.isVisible())) continue;
+        const fill = await panel.evaluate((el) => {
+          const list = el.querySelector("ul")!.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          const inner = el.getBoundingClientRect().width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+          return list.width / inner;
+        });
+        expect(fill, `outcome lines fill the panel at ${width}`).toBeGreaterThan(0.95);
+      }
     }
   }
 });

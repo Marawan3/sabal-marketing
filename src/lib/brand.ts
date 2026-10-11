@@ -7,7 +7,6 @@ export const brand = {
   ink: "#1D1D1B",
   /** The logo tile only. */
   navy: "#13213C",
-  ticket: "#F5EFE6",
   saffron: "#F4A83A",
-  mist: "#E8E4DD",
+  mist: "#E6E9EF",
 } as const;
