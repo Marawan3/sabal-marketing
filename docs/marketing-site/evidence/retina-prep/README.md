@@ -15,7 +15,7 @@ Both must be at least 1.00.
 
 ## Today: the 1x files (`RETINA_STRICT=1`, so the test fails)
 
-18 of 24 frames are below 1.00 on source.
+18 of 25 frames are below 1.00 on source.
 
 | Viewport | Page | Shot | Frame CSS px | Device px needed | File px covering it | Ratio (source) | Ratio (as delivered) |
 | 390 @3x | `/` | `orders-board` | 340 | 1020 | 468 | **0.46** | 0.46 |
