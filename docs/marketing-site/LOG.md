@@ -30,6 +30,39 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-11 · PR #19: layout pass, readable screenshots on phones, no beige (merged)
+
+**Merged by:** Claude, on the owner's "merge 19". Squash commit `0566c6e` on `main`, from branch `marketing/layout-pass`.
+
+**Why:** on phones the dashboard screenshots were shrunk so far that their text was 2.4–4.4px tall, which is unreadable. The owner also wanted the beige gone and a calmer, more deliberate layout.
+
+**What changed:**
+- **Readable screenshots on phones:** every screenshot now shows a close-up of its most important part instead of the whole screen. Screenshot text now renders at 9.3px or more on a 360-wide phone, and the kitchen display shows two tickets at near real size. The close-ups are set per screenshot in the catalog and cut from the same files when the page is shown; the files are not edited.
+- **Colour and shape:**
+  - The beige background is gone. The site now uses white, near-black text, the logo's navy and saffron, plus one pale cool grey for thin lines.
+  - Cards and screenshots no longer have shadows.
+  - Corners follow a hierarchy: screenshots and panels 20px, buttons and inputs 12px, list rows square.
+- **Homepage, top to bottom:**
+  - a wide orders board under the headline;
+  - the three outcomes without a card, stacked on phones;
+  - a new navy band with the kitchen display, the page's one bold moment ("Every order on one screen in your kitchen.");
+  - the four products as simple rows, with small real crops for online ordering and order management;
+  - the three steps joined by a line, a vertical list on phones;
+  - pricing as the only card;
+  - the FAQ;
+  - a saffron band to finish.
+  - Nothing on the page swipes sideways any more.
+- **Product pages and `/how-it-works`:** the same close-ups and rules. Steps are a vertical list on phones, and "What's included" is a plain two-column list.
+- **Step markers:** the numbers sit in saffron circles in ink, because saffron text on white is too faint to read.
+- **New copy:** one line under the kitchen band's headline, restating the existing Kitchen Display description.
+
+**How it was checked:**
+- **Tests:** 62 Playwright tests passed and 1 was skipped (the existing legal skip). New tests cover each rule: readable phone screenshots, no sideways scrolling, no beige or shadows, the corner hierarchy, the step layout, the bands and the section order.
+- **Homepage height at 390:** 4,335px became 6,778px. It's taller because the screenshots are now readable and the lists are vertical. It stays under the 10,000px limit.
+- **Evidence:** before and after screenshots of the homepage, `/order-management` and `/online-ordering` at 360, 390 and 1440, with per-frame text sizes, in `docs/marketing-site/evidence/layout-pass/`.
+
+---
+
 ## 2026-10-10 · PR #18: screenshots batch 1 on the site (merged)
 
 **Merged by:** Claude, on the owner's "merge 18". Squash commit `5596dbb` on `main`, from branch `marketing/shots-batch1`.
