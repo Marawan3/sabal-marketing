@@ -1,7 +1,10 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Browser, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
 import { builtProducts, phoneCrops, products } from "../src/lib/catalog";
-import { findShot, isShotVisible } from "../src/lib/shot-files";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { imageSize } from "../src/lib/image-size";
+import { findShot, isShotVisible, rightGutter, SCREENSHOT_QUALITY, shotSize } from "../src/lib/shot-files";
 import { FITS, homeShots } from "../src/lib/shot-placements";
 import { copy } from "../src/lib/copy";
 import { demoHrefWithName } from "../src/lib/demo-href";
@@ -12,6 +15,9 @@ import { customerStories } from "../src/lib/stories";
  * targets, the mobile header and menu, swipeable rows, the homepage order and
  * height, and the sections that wait on the owner.
  */
+/** The preview build (VERCEL_ENV=preview), served by playwright.config.ts. */
+const PREVIEW_URL = "http://127.0.0.1:3003";
+
 const pages = ["/", "/how-it-works", "/pricing", ...builtProducts.map((slug) => `/${slug}`)];
 
 /** Every distinct computed font size of visible text, outside the logo. */
@@ -353,7 +359,18 @@ test("whichever shots exist, no panel is empty and none keeps a gap for a missin
  * retakes land (tests/no-placeholders.spec.ts covers that side).
  */
 test.describe("on the preview build, where held screenshots still show", () => {
-  test.use({ baseURL: "http://127.0.0.1:3003" });
+  test.use({ baseURL: PREVIEW_URL });
+
+  test("retina: the file's pixels cover every frame at 390 (3x) and 1440 (2x)", async ({ browser }, testInfo) => {
+    const files = shotFiles();
+    const lowRes = [...files].filter(([, f]) => f.file.width < 3 * f.layout.width).map(([key]) => key);
+    // Expected to fail while any shot file is a 1x capture; lifts by itself once all are 3x,
+    // and then the test must pass. RETINA_STRICT=1 runs it without the mark.
+    test.fail(lowRes.length > 0 && !process.env.RETINA_STRICT, `1x files still in public/shots: ${lowRes.join(", ")}`);
+    const { report } = await checkResolution(browser, PREVIEW_URL);
+    await testInfo.attach("retina-report.md", { body: report, contentType: "text/markdown" });
+    console.log(report);
+  });
 
   test("on phones every screenshot is a focal crop whose body text renders at 9px or more", async ({ page }) => {
     // Every desktop or tablet shot with a file has a crop defined in the catalog.
@@ -460,4 +477,121 @@ test.describe("on the preview build, where held screenshots still show", () => {
     // dash-overview is on the site, so at least one frame was checked at each width.
     expect(framed).toBeGreaterThanOrEqual(2);
   });
+});
+
+/** Every shot on the site with a file, by key: its layout size and the file's pixel size. */
+function shotFiles() {
+  const out = new Map<string, { layout: { width: number; height: number }; file: { width: number; height: number }; src: string }>();
+  for (const shot of products.flatMap((p) => p.shots)) {
+    const src = findShot(shot.key);
+    if (!src || out.has(shot.key)) continue;
+    out.set(shot.key, { layout: shotSize(shot), file: imageSize(join(process.cwd(), "public", src)), src });
+  }
+  return out;
+}
+
+/**
+ * The resolution check, measured in a browser: at 390 (DPR 3) and 1440 (DPR 2), on every page, the
+ * file's pixels behind each visible frame must be at least the device pixels it is drawn at, both
+ * from the file and as next/image delivers it. Returns a markdown report; soft-asserts each frame.
+ */
+async function checkResolution(browser: Browser, baseURL: string) {
+  const files = shotFiles();
+  const rows: string[] = [];
+  for (const [width, dpr] of [
+    [390, 3],
+    [1440, 2],
+  ] as const) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: dpr, baseURL });
+    const page = await context.newPage();
+    for (const path of pages) {
+      await page.goto(path);
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.body.scrollHeight; y += 500) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 25));
+        }
+      });
+      await page.waitForLoadState("networkidle");
+      const frames = await page.locator("main figure img").evaluateAll((imgs) =>
+        imgs
+          .filter((img) => img.getBoundingClientRect().width > 0)
+          .map((img) => {
+            const el = img as HTMLImageElement;
+            return {
+              key: decodeURIComponent(el.getAttribute("src") ?? "").match(/shots\/([a-z0-9-]+)\./)?.[1] ?? "",
+              layoutW: Number(el.getAttribute("width")),
+              imgW: el.getBoundingClientRect().width,
+              boxW: el.parentElement!.getBoundingClientRect().width,
+              // The width next/image was asked for (naturalWidth is in CSS px for srcset images).
+              requested: Number(new URL(el.currentSrc, location.href).searchParams.get("w") ?? 0),
+            };
+          }),
+      );
+      for (const f of frames) {
+        const file = files.get(f.key)!.file;
+        const shownLayoutPx = (f.boxW * f.layoutW) / f.imgW; // how much of the layout is visible across
+        const sourcePx = (shownLayoutPx * file.width) / f.layoutW; // file pixels behind it
+        const devicePx = f.boxW * dpr; // device pixels drawn
+        const ratio = sourcePx / devicePx;
+        // What next/image actually sends: the requested width, never more than the file (it doesn't upscale).
+        const delivered = (Math.min(f.requested, file.width) * f.boxW) / f.imgW / devicePx;
+        rows.push(
+          `| ${width} @${dpr}x | \`${path}\` | \`${f.key}\` | ${Math.round(f.boxW)} | ${Math.round(devicePx)} | ${Math.round(sourcePx)} | **${ratio.toFixed(2)}** | ${delivered.toFixed(2)} |`,
+        );
+        expect.soft(ratio, `${f.key} on ${path} at ${width} (${dpr}x)`).toBeGreaterThanOrEqual(1);
+        expect.soft(delivered, `${f.key} as delivered on ${path} at ${width} (${dpr}x)`).toBeGreaterThanOrEqual(1);
+      }
+    }
+    await context.close();
+  }
+  return {
+    count: rows.length,
+    report: [
+      "| Viewport | Page | Shot | Frame CSS px | Device px needed | File px covering it | Ratio (source) | Ratio (as delivered) |",
+      "|---|---|---|---|---|---|---|---|",
+      ...rows,
+    ].join("\n"),
+  };
+}
+
+test("retina on production: every screenshot wuntab.com renders is sharp at 390 (3x) and 1440 (2x)", async ({ browser, baseURL }, testInfo) => {
+  // Production holds back any file that would fail (src/lib/shot-files.ts), so this must always pass.
+  const { report } = await checkResolution(browser, baseURL!);
+  await testInfo.attach("retina-production.md", { body: report, contentType: "text/markdown" });
+});
+
+test("screenshots are served at quality 90; photos at the default", async ({ page }) => {
+  // On the preview build, where the held 1x files still render.
+  await page.goto(`${PREVIEW_URL}/order-management`);
+  const srcsets = await page.locator("main figure img").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("srcset") ?? ""));
+  expect(srcsets.length).toBeGreaterThan(0);
+  for (const srcset of srcsets) expect(srcset).toContain(`q=${SCREENSHOT_QUALITY}`);
+  // And the optimizer really serves 90, not the nearest allowed quality.
+  const response = await page.request.get(`${PREVIEW_URL}/_next/image?url=%2Fshots%2Fkds.png&w=640&q=${SCREENSHOT_QUALITY}`);
+  expect(response.status()).toBe(200);
+});
+
+test("no shot file carries an untrimmed white gutter down its right edge", async ({ page }) => {
+  for (const [key, f] of shotFiles()) {
+    const data = "data:image/png;base64," + readFileSync(join(process.cwd(), "public", f.src)).toString("base64");
+    const whiteEdge = await page.evaluate(async (src) => {
+      const img = await new Promise<HTMLImageElement>((resolve) => {
+        const i = new Image();
+        i.onload = () => resolve(i);
+        i.src = src;
+      });
+      const c = document.createElement("canvas");
+      c.width = img.width;
+      c.height = img.height;
+      const ctx = c.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      const col = ctx.getImageData(img.width - 1, 0, 1, img.height).data;
+      for (let k = 0; k < col.length; k += 4) if (col[k] < 255 || col[k + 1] < 255 || col[k + 2] < 255) return false;
+      return true;
+    }, data);
+    // A pure-white last column is a scrollbar gutter: it needs a RIGHT_GUTTER entry (keyed by the
+    // file's content hash), or the frame shows a white strip. A new file has no entry until added.
+    if (whiteEdge) expect.soft(rightGutter(f.src), `${key}: white right edge with no gutter trim`).toBeGreaterThan(0);
+  }
 });

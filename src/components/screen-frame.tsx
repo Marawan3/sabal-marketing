@@ -1,7 +1,16 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { phoneCrops, type Crop, type Shot } from "@/lib/catalog";
-import { DEFAULT_FIT, findShot, passesResolution, rightGutter, showPlaceholders, shotSize, type FrameFit } from "@/lib/shot-files";
+import {
+  DEFAULT_FIT,
+  findShot,
+  passesResolution,
+  rightGutter,
+  shotQuality,
+  showPlaceholders,
+  shotSize,
+  type FrameFit,
+} from "@/lib/shot-files";
 
 export { isShotVisible, visibleShots } from "@/lib/shot-files";
 
@@ -126,6 +135,7 @@ export function ScreenFrame({
             width={size.width}
             height={size.height}
             sizes={crop ? sizes : `${phoneSize}, ${sizes}`}
+            quality={shotQuality(shot)}
             // Next 16 deprecates `priority`: the hero loads eagerly at high priority, the rest lazily.
             loading={priority ? "eager" : "lazy"}
             fetchPriority={priority ? "high" : undefined}

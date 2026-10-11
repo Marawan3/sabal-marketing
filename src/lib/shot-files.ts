@@ -23,7 +23,8 @@ export function findShot(key: string): string | null {
 
 /**
  * Captures delivered with a white scrollbar gutter down the right edge, by
- * file content (first 16 hex of SHA-256) and gutter width in source pixels.
+ * file content (first 16 hex of SHA-256) and gutter width in layout pixels
+ * (the 1440-wide space, so a 3x file's 45px gutter is 15).
  * The frame hides the gutter; the file stays exactly as delivered (owner:
  * "don't re-edit them", 2026-10-10). Keyed by content, so a retake without
  * the gutter gets no trim.
@@ -53,6 +54,17 @@ export const SHOT_SIZES = {
   photo: { width: 1200, height: 1600, aspect: "aspect-[3/4]", wrap: "mx-auto w-full max-w-[320px]", radius: "rounded-[20px]" },
   scene: { width: 1600, height: 1000, aspect: "aspect-[16/10]", wrap: "w-full", radius: "rounded-[20px]" },
 } as const;
+
+/**
+ * next/image quality for screenshots (desktop, phone and tablet kinds): text
+ * edges blur at the default 75. Photos keep the default. Must be listed in
+ * images.qualities in next.config.ts, or Next serves the nearest listed one.
+ */
+export const SCREENSHOT_QUALITY = 90;
+
+export function shotQuality(shot: Shot): number | undefined {
+  return shot.kind === "photo" || shot.kind === "scene" ? undefined : SCREENSHOT_QUALITY;
+}
 
 /** Media frames are 20px; buttons and inputs 12px; list rows square (layout pass, 2026-10-11). */
 export function shotSize(shot: Shot) {

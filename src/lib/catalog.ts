@@ -34,7 +34,11 @@ export type Shot = {
   demoFigures?: readonly string[];
 };
 
-/** A rectangle in a shot file's own pixels. */
+/**
+ * A rectangle in a shot's layout pixels: the 1440×900 space for desktop
+ * shots (1180×820 tablet), whatever the file's pixel density. A 3x capture
+ * (4320×2700) uses the same numbers.
+ */
 export type Crop = { x: number; y: number; w: number; h: number };
 
 /**
