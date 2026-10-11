@@ -3,7 +3,7 @@ import { Container } from "@/components/container";
 import { FinalCta } from "@/components/final-cta";
 import { OrgDiagram } from "@/components/org-diagram";
 import { isShotVisible, ScreenFrame } from "@/components/screen-frame";
-import { Panel, Section, SectionHead } from "@/components/section";
+import { Section, SectionHead } from "@/components/section";
 import { SmartLink } from "@/components/smart-link";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -24,15 +24,15 @@ function ProductChips({ slugs }: { slugs: readonly string[] }) {
     <ul className="mt-6 flex flex-wrap gap-2">
       {slugs.map((slug) => {
         const href = productHref(slug);
-        const chip = "inline-flex min-h-11 items-center rounded-[14px] px-4 text-small font-medium";
+        const chip = "inline-flex min-h-11 items-center rounded-[12px] border px-4 text-small font-medium";
         return (
           <li key={slug}>
             {href ? (
-              <SmartLink href={href} className={`${chip} bg-paper underline decoration-ink/30 underline-offset-4 hover:decoration-ink`}>
+              <SmartLink href={href} className={`${chip} border-ink/30 hover:border-ink`}>
                 {bySlug[slug].name}
               </SmartLink>
             ) : (
-              <span className={`${chip} border border-ink/10`}>{bySlug[slug].name}</span>
+              <span className={`${chip} border-mist text-ink/70`}>{bySlug[slug].name}</span>
             )}
           </li>
         );
@@ -43,7 +43,8 @@ function ProductChips({ slugs }: { slugs: readonly string[] }) {
 
 /**
  * The full lifecycle walkthrough, plus integrations and multi-location,
- * which moved here from the homepage in the 2026-10-07 design pass.
+ * which moved here from the homepage in the 2026-10-07 design pass. Frames
+ * show their focal crops on phones (layout pass, 2026-10-11).
  */
 export default function HowItWorksPage() {
   return (
@@ -55,26 +56,30 @@ export default function HowItWorksPage() {
         </Container>
       </section>
 
+      {/* The six stages: square rows between thin rules, no cards. */}
       <Section>
-        <ol className="grid gap-3 lg:gap-6">
+        <ol className="border-t border-ink/15">
           {lifecycle.map((stage, index) => {
             const shot = howItWorksShot(stage);
             const visible = isShotVisible(shot);
             return (
-              <li key={stage.name}>
-                <Panel className={`p-6 sm:p-8 lg:p-12 ${visible ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""}`}>
-                  <div className={visible ? "lg:col-span-5" : ""}>
-                    <p className="text-h3 tabular-nums text-ink/45">{index + 1}</p>
-                    <h2 className="mt-4 text-h2">{stage.name}</h2>
-                    <p className="mt-4 max-w-[44ch] text-body text-ink/85">{stage.body}</p>
-                    <ProductChips slugs={stage.products} />
+              <li
+                key={stage.name}
+                className={`border-b border-ink/15 py-10 lg:py-14 ${visible ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""}`}
+              >
+                <div className={visible ? "lg:col-span-5" : ""}>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-saffron text-body font-semibold tabular-nums">
+                    {index + 1}
+                  </span>
+                  <h2 className="mt-5 text-h2">{stage.name}</h2>
+                  <p className="mt-4 max-w-[44ch] text-body text-ink/85">{stage.body}</p>
+                  <ProductChips slugs={stage.products} />
+                </div>
+                {visible ? (
+                  <div className="mt-8 lg:col-span-7 lg:mt-0">
+                    <ScreenFrame shot={shot} caption={false} />
                   </div>
-                  {visible ? (
-                    <div className="mt-8 lg:col-span-7 lg:mt-0">
-                      <ScreenFrame shot={shot} caption={false} />
-                    </div>
-                  ) : null}
-                </Panel>
+                ) : null}
               </li>
             );
           })}
@@ -83,10 +88,11 @@ export default function HowItWorksPage() {
 
       <Section id="integrations">
         <SectionHead heading={copy.integrations.heading} />
-        <ul className="mt-8 flex flex-wrap gap-2 lg:mt-12 lg:gap-3">
+        <ul className="mt-8 grid gap-x-12 gap-y-3 sm:grid-cols-2 lg:mt-12">
           {copy.integrations.items.map((item) => (
-            <li key={item} className="rounded-[14px] bg-ticket px-4 py-3 text-body">
-              {item}
+            <li key={item} className="flex gap-3 text-body">
+              <span aria-hidden className="mt-[0.6em] h-2 w-2 shrink-0 bg-saffron" />
+              <span>{item}</span>
             </li>
           ))}
         </ul>
@@ -94,9 +100,9 @@ export default function HowItWorksPage() {
 
       <Section id="scale">
         <SectionHead heading={copy.scale.heading} sub={copy.scale.sub} />
-        <Panel className="mt-8 px-4 py-10 lg:mt-12 lg:p-16">
+        <div className="mt-8 lg:mt-12">
           <OrgDiagram />
-        </Panel>
+        </div>
       </Section>
 
       <FinalCta />

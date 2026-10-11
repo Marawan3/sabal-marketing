@@ -58,6 +58,11 @@ export const copy = {
       },
     ],
   },
+  /** The one dark band on the homepage. The line restates the Kitchen Display entry in catalog.ts. */
+  kitchen: {
+    heading: "Every order on one screen in your kitchen.",
+    line: "Orders show up in the order they came in, and your team moves each one from new to ready.",
+  },
   products: {
     heading: "Everything you need to sell direct.",
     /** Large panels on the homepage, in this order. */

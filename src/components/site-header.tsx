@@ -34,7 +34,7 @@ function buildMenus(): NavMenu[] {
 
 function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <SmartLink href={href} className="flex min-h-12 items-center rounded-[14px] px-3 text-body font-medium hover:bg-ticket">
+    <SmartLink href={href} className="flex min-h-12 items-center px-3 text-body font-medium hover:bg-mist">
       {children}
     </SmartLink>
   );
@@ -94,7 +94,7 @@ export function SiteHeader() {
 
           {/* Below lg: a full-screen menu, one accordion per pillar. */}
           <details className="mobile-nav group lg:hidden">
-            <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[14px] border border-mist">
+            <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[12px] border border-mist">
               <span className="sr-only">Menu</span>
               <svg
                 aria-hidden

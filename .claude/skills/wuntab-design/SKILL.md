@@ -56,6 +56,29 @@ their reasoning. Where they disagree with this section, this section wins.
   licensed stock, recorded in `ASSETS.md`; screens inside photos must be real WunTab UI.
 - **Buttons say Get Started** (it books a call), not "Book a call", since 2026-10-02.
 
+## 0b. Layout pass, 2026-10-11 (overrides section 0 where they conflict)
+
+- **Phone legibility comes first.** Under 768px a desktop or tablet screenshot never
+  shows its whole frame. It shows a focal crop about 440–480px of the source wide,
+  defined per shot in `phoneCrops` in `src/lib/catalog.ts` (with the capture's body-text
+  size), so screenshot text renders at 9px or more at 360. Crops are cut from the same
+  file at display time (`.shot-view` in `globals.css`); files are never edited. The
+  kitchen display at 390 shows about two tickets at close to real size. Tested.
+- **Palette:** white, ink `#1D1D1B`, the logo navy `#13213C`, saffron. The beige is gone;
+  one cool light neutral, `--mist #E6E9EF`, for hairlines and hover fills only. No
+  shadows on cards or frames (the mega-menu overlay keeps one).
+- **Shape:** media frames and panels 20px; buttons and inputs 12px; list rows square.
+- **Homepage, top to bottom:** hero (the orders board about 1100px wide on the saffron
+  panel, wider than the text column; its crop on phones); outcome tabs with no card
+  (desktop: lines left, screenshot right; phone: label, lines, crop); the kitchen band,
+  the page's one bold moment (logo navy, the kitchen display large, one headline, one
+  line); product rows between thin rules (title, one line, link, a small real crop where
+  one exists); how it works (three steps joined by a line, saffron markers, a vertical
+  list on phones); pricing (the only card: white, 1px ink border, the big $0); FAQ; the
+  final call to action as a saffron band with ink text. No swipe rows anywhere.
+- **Product pages:** the same crops; steps as a vertical numbered list on phones;
+  "What's included" as a plain two-column list with small saffron markers.
+
 ## 1. What we are designing for
 
 **Wuntab** builds and runs an independent restaurant's own website with online ordering.

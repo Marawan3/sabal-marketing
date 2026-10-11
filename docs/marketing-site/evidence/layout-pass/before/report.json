@@ -1,0 +1,143 @@
+{
+  "heights": {
+    "/ @360": 4334,
+    "/order-management @360": 3615,
+    "/online-ordering @360": 3598,
+    "/ @390": 4335,
+    "/order-management @390": 3655,
+    "/online-ordering @390": 3587,
+    "/ @1440": 5320,
+    "/order-management @1440": 5187,
+    "/online-ordering @1440": 4211
+  },
+  "frames": [
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "orders-board",
+      "shownWidthPx": 294,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.9
+    },
+    {
+      "page": "/",
+      "width": 360,
+      "shot": "ordering-settings",
+      "shownWidthPx": 240,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.4
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "orders-board",
+      "shownWidthPx": 294,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.9
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "order-drawer",
+      "shownWidthPx": 256,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.5
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "ordering-settings",
+      "shownWidthPx": 256,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.5
+    },
+    {
+      "page": "/order-management",
+      "width": 360,
+      "shot": "kds",
+      "shownWidthPx": 256,
+      "sourceWidthShown": 1165,
+      "bodyTextPx": 4
+    },
+    {
+      "page": "/online-ordering",
+      "width": 360,
+      "shot": "promotions",
+      "shownWidthPx": 256,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.5
+    },
+    {
+      "page": "/online-ordering",
+      "width": 360,
+      "shot": "menu-editor-options",
+      "shownWidthPx": 256,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.5
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "orders-board",
+      "shownWidthPx": 324,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 3.2
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "shot": "ordering-settings",
+      "shownWidthPx": 266,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.6
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "orders-board",
+      "shownWidthPx": 324,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 3.2
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "order-drawer",
+      "shownWidthPx": 282,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.8
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "ordering-settings",
+      "shownWidthPx": 282,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.8
+    },
+    {
+      "page": "/order-management",
+      "width": 390,
+      "shot": "kds",
+      "shownWidthPx": 282,
+      "sourceWidthShown": 1165,
+      "bodyTextPx": 4.4
+    },
+    {
+      "page": "/online-ordering",
+      "width": 390,
+      "shot": "promotions",
+      "shownWidthPx": 282,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.8
+    },
+    {
+      "page": "/online-ordering",
+      "width": 390,
+      "shot": "menu-editor-options",
+      "shownWidthPx": 282,
+      "sourceWidthShown": 1425,
+      "bodyTextPx": 2.8
+    }
+  ]
+}

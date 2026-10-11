@@ -23,7 +23,7 @@ export function HeroSignup({
   const [name, setName] = useState("");
   return (
     <form
-      className="mx-auto flex w-full max-w-[480px] items-center gap-1.5 rounded-[18px] border border-mist bg-paper p-1.5 shadow-lift focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink"
+      className="mx-auto flex w-full max-w-[480px] items-stretch gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         window.location.href = demoHrefWithName(href, name, nameParam);
@@ -40,7 +40,7 @@ export function HeroSignup({
         placeholder={label}
         value={name}
         onChange={(event) => setName(event.target.value)}
-        className="min-h-12 min-w-0 flex-1 bg-transparent px-2.5 text-body text-ink outline-none placeholder:text-ink/55"
+        className="min-h-12 min-w-0 flex-1 rounded-[12px] border border-ink/30 bg-paper px-3 text-body text-ink placeholder:text-ink/55 focus-visible:border-ink"
       />
       <button
         type="submit"

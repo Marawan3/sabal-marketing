@@ -5,7 +5,8 @@ import { FinalCta } from "./final-cta";
 import { JsonLd } from "./json-ld";
 import { OrgDiagram } from "./org-diagram";
 import { ScreenFrame, visibleShots } from "./screen-frame";
-import { Panel, Section, SectionHead } from "./section";
+import { Section, SectionHead } from "./section";
+import { Steps } from "./steps";
 import { SmartLink } from "./smart-link";
 import { bySlug, productHref, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -14,10 +15,10 @@ import { productPageShots } from "@/lib/shot-placements";
 import { demoHref } from "@/lib/site";
 
 /**
- * One template for every product page, built from the same panels, type and
- * text limits as the homepage: hero with its screen in a panel, the steps,
- * the product's screens (one line each), what's included, what it works
- * with, FAQ, final call to action. A section with nothing to show does not
+ * One template for every product page, on the homepage's rules (layout pass,
+ * 2026-10-11): hero with its screen, the steps, the product's screens (one
+ * line each, focal crops on phones), what's included, what it works with,
+ * FAQ, final call to action. No beige, no cards, no swipe rows. A section with nothing to show does not
  * render. The lifecycle walkthrough lives on /how-it-works.
  */
 export function ProductPage({ product }: { product: Product }) {
@@ -40,98 +41,95 @@ export function ProductPage({ product }: { product: Product }) {
             <TextLink href="/pricing">See pricing</TextLink>
           </div>
           {hero ? (
-            <Panel className="mt-12 flex justify-center px-4 py-8 sm:px-10 sm:py-12 lg:mt-16 lg:p-16">
-              <div className={hero.kind === "phone" || hero.kind === "photo" ? "w-[62%] max-w-[300px]" : "w-full max-w-[860px]"}>
+            <div className="mt-12 lg:mt-16">
+              <div className={hero.kind === "phone" || hero.kind === "photo" ? "mx-auto w-[62%] max-w-[300px]" : "w-full"}>
                 <ScreenFrame
                   shot={hero}
                   caption={false}
                   priority
                   fill
-                  sizes={hero.kind === "phone" || hero.kind === "photo" ? "(min-width: 1024px) 300px, 62vw" : "(min-width: 1024px) 860px, 92vw"}
+                  sizes={hero.kind === "phone" || hero.kind === "photo" ? "(min-width: 1024px) 300px, 62vw" : "(min-width: 1024px) 1024px, 92vw"}
                 />
               </div>
-            </Panel>
+            </div>
           ) : product.visual === "org" ? (
-            <Panel className="mt-12 px-4 py-10 lg:mt-16 lg:p-16">
+            <div className="mt-12 lg:mt-16">
               <OrgDiagram />
-            </Panel>
+            </div>
           ) : null}
         </Container>
       </section>
 
-      {/* The steps, one short line each */}
+      {/* The steps: a row joined by a line on desktop, a vertical numbered list on phones. */}
       {product.flow ? (
         <Section>
           <SectionHead heading={product.flow.title} />
-          <ol className="snap-row mt-8 lg:mt-12 lg:grid lg:auto-cols-fr lg:grid-flow-col lg:gap-4">
-            {product.flow.steps.map((step, index) => (
-              <li key={step} className="rounded-[20px] bg-ticket p-5 lg:rounded-[24px] lg:p-6">
-                <p className="text-h3 tabular-nums text-ink/45">{index + 1}</p>
-                <p className="mt-6 text-body font-medium lg:mt-10">{step}</p>
-              </li>
-            ))}
-          </ol>
-        </Section>
-      ) : null}
-
-      {/* The product's screens, each with one line */}
-      {rest.length ? (
-        <Section>
-          <SectionHead heading="In the product" />
-          <div className="snap-row mt-8 lg:mt-12 lg:grid lg:grid-cols-2 lg:gap-6">
-            {rest.map((shot) => (
-              <Panel key={shot.key} className="flex flex-col p-3 lg:p-4">
-                <div className="flex flex-1 items-center justify-center">
-                  <div className={shot.kind === "phone" || shot.kind === "photo" ? "w-[62%] max-w-[260px] py-4" : "w-full"}>
-                    <ScreenFrame
-                      shot={shot}
-                      caption={false}
-                      fill
-                      sizes={shot.kind === "phone" || shot.kind === "photo" ? "(min-width: 1024px) 260px, 50vw" : "(min-width: 1024px) 520px, 82vw"}
-                    />
-                  </div>
-                </div>
-                <p className="p-3 text-body font-medium lg:p-4">{shot.label}</p>
-              </Panel>
-            ))}
+          <div className="mt-8 lg:mt-12">
+            <Steps steps={product.flow.steps.map((line) => ({ line }))} />
           </div>
         </Section>
       ) : null}
 
-      {/* What's included: one line each */}
+      {/* The product's screens, each with one line. Stacked on phones (each its focal crop), two up on desktop. */}
+      {rest.length ? (
+        <Section>
+          <SectionHead heading="In the product" />
+          <div className="mt-8 grid gap-10 lg:mt-12 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-12">
+            {rest.map((shot) => {
+              const narrow = shot.kind === "phone" || shot.kind === "photo";
+              return (
+                <div key={shot.key}>
+                  <div className={narrow ? "mx-auto w-[62%] max-w-[260px]" : "w-full"}>
+                    <ScreenFrame
+                      shot={shot}
+                      caption={false}
+                      fill
+                      sizes={narrow ? "(min-width: 1024px) 260px, 50vw" : "(min-width: 1024px) 500px, 92vw"}
+                    />
+                  </div>
+                  <p className="mt-4 text-body font-medium">{shot.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </Section>
+      ) : null}
+
+      {/* What's included: a plain two-column list with small saffron markers. */}
       <Section>
         <SectionHead heading={product.capabilitiesTitle ?? "What's included"} sub={product.notes?.[0]} />
-        <ul className="mt-8 flex flex-wrap gap-2 lg:mt-12 lg:gap-3">
+        <ul className="mt-8 grid gap-x-12 gap-y-3 sm:grid-cols-2 lg:mt-12">
           {product.capabilities.map((item) => (
-            <li key={item} className="rounded-[14px] bg-ticket px-4 py-3 text-body">
-              {item}
+            <li key={item} className="flex gap-3 text-body">
+              <span aria-hidden className="mt-[0.6em] h-2 w-2 shrink-0 bg-saffron" />
+              <span>{item}</span>
             </li>
           ))}
         </ul>
       </Section>
 
-      {/* Works with */}
+      {/* Works with: square list rows between thin rules. */}
       {related.length ? (
         <Section>
           <SectionHead heading="Works with" />
-          <ul className="snap-row mt-8 lg:mt-12 lg:grid lg:grid-cols-3 lg:gap-4">
+          <ul className="mt-8 grid border-t border-ink/15 sm:grid-cols-2 sm:gap-x-12 lg:mt-12">
             {related.map((slug) => {
               const p = bySlug[slug];
               const href = productHref(slug);
               const body = (
                 <>
                   <span className="block text-h3">{p.name}</span>
-                  <span className="mt-2 block text-body text-ink/85">{p.blurb}</span>
+                  <span className="mt-1 block text-body text-ink/85">{p.blurb}</span>
                 </>
               );
               return (
-                <li key={slug} className="rounded-[20px] border border-mist lg:rounded-[24px]">
+                <li key={slug} className="border-b border-ink/15">
                   {href ? (
-                    <SmartLink href={href} className="block h-full rounded-[20px] p-5 hover:bg-ticket lg:rounded-[24px] lg:p-6">
+                    <SmartLink href={href} className="block py-5 hover:bg-mist">
                       {body}
                     </SmartLink>
                   ) : (
-                    <div className="h-full p-5 lg:p-6">{body}</div>
+                    <div className="py-5">{body}</div>
                   )}
                 </li>
               );
