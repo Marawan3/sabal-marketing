@@ -16,7 +16,7 @@ import { productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
 import { shotSize } from "@/lib/shot-files";
-import { homeShots, outcomeTabs, productRows } from "@/lib/shot-placements";
+import { FITS, homeShots, outcomeTabs, productRows } from "@/lib/shot-placements";
 import { demoHref, site } from "@/lib/site";
 
 export const dynamic = "error";
@@ -37,8 +37,9 @@ export const metadata: Metadata = {
  */
 export default function HomePage() {
   const [phoneShot, boardShot] = homeShots.hero.shots;
-  const phone = isShotVisible(phoneShot) ? phoneShot : null;
-  const board = isShotVisible(boardShot) ? boardShot : null;
+  // On production a screenshot shows only if it's sharp enough for its frame (shot-files.ts).
+  const phone = isShotVisible(phoneShot, FITS.heroPhone) ? phoneShot : null;
+  const board = isShotVisible(boardShot, FITS.heroBoard) ? boardShot : null;
   const [kitchenShot] = homeShots.kitchen.shots;
   return (
     <>
@@ -77,13 +78,14 @@ export default function HomePage() {
               <div className="mx-auto flex max-w-[1100px] items-end justify-center gap-6 lg:gap-10">
                 {phone ? (
                   <div className="hidden w-[24%] shrink-0 md:block">
-                    <ScreenFrame shot={phone} caption={false} priority fill sizes="(min-width: 1024px) 260px, 24vw" />
+                    <ScreenFrame shot={phone} fit={FITS.heroPhone} caption={false} priority fill sizes="(min-width: 1024px) 260px, 24vw" />
                   </div>
                 ) : null}
                 {board ? (
                   <div className="min-w-0 flex-1">
                     <ScreenFrame
                       shot={board}
+                      fit={FITS.heroBoard}
                       caption={false}
                       priority
                       phoneVw={87}
@@ -108,18 +110,21 @@ export default function HomePage() {
               key: tab.key,
               label: tab.label,
               lines: tab.lines,
-              visual: isShotVisible(tab.shot) ? <ScreenFrame shot={tab.shot} caption={false} /> : null,
+              visual: isShotVisible(tab.shot, FITS.outcome) ? (
+                <ScreenFrame shot={tab.shot} fit={FITS.outcome} caption={false} />
+              ) : null,
             }))}
           />
         </div>
       </Section>
 
       {/* c. The one bold moment: the kitchen display, large, on the logo navy. */}
-      {isShotVisible(kitchenShot) ? (
+      {/* A visual section: without its screenshot the whole band goes. */}
+      {isShotVisible(kitchenShot, FITS.kitchen) ? (
         <Section id="kitchen" tone="navy">
           <SectionHead heading={copy.kitchen.heading} sub={copy.kitchen.line} dark />
           <div className="mt-10 lg:mt-14">
-            <ScreenFrame shot={kitchenShot} caption={false} dark sizes="(min-width: 1024px) 1024px, 92vw" />
+            <ScreenFrame shot={kitchenShot} fit={FITS.kitchen} caption={false} dark sizes="(min-width: 1024px) 1024px, 92vw" />
           </div>
         </Section>
       ) : null}
@@ -130,7 +135,7 @@ export default function HomePage() {
         <ul className="mt-8 border-t border-ink/15 lg:mt-12">
           {productRows().map(({ product, shot, crop }) => {
             const href = productHref(product.slug);
-            const visible = isShotVisible(shot);
+            const visible = isShotVisible(shot, FITS.productRow, crop);
             // A crop shows a small part of a big file, so the file is fetched at the crop's scale.
             const k = visible && crop ? shotSize(shot).width / crop.w : 1;
             return (
@@ -150,6 +155,7 @@ export default function HomePage() {
                     <ScreenFrame
                       shot={shot}
                       crop={crop}
+                      fit={FITS.productRow}
                       caption={false}
                       fill
                       sizes={`(min-width: 1024px) ${Math.round(224 * k)}px, (min-width: 768px) ${Math.round(160 * k)}px, ${Math.round(192 * k)}px`}

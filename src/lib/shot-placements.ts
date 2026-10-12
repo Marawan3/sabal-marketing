@@ -1,6 +1,27 @@
 import { builtProducts, bySlug, lifecycle, photos, products, type Crop, type Product, type Shot } from "./catalog";
 import { copy } from "./copy";
+import type { FrameFit } from "./shot-files";
 import { customerStories } from "./stories";
+
+/**
+ * How wide each placement's frame renders, in CSS px at 390 and at 1440:
+ * upper bounds measured from the layout (layout pass, 2026-10-11). The
+ * resolution check (shot-files.ts) uses them to decide whether a file is
+ * sharp enough to show. phone: 0 means not shown on phones.
+ */
+export const FITS = {
+  heroBoard: { phone: 342, desktop: 1100 },
+  heroPhone: { phone: 0, desktop: 260 },
+  outcome: { phone: 358, desktop: 580 },
+  kitchen: { phone: 358, desktop: 1024 },
+  productRow: { phone: 192, desktop: 224 },
+  productHero: { phone: 358, desktop: 1024 },
+  productHeroNarrow: { phone: 240, desktop: 300 },
+  productScreen: { phone: 358, desktop: 500 },
+  productScreenNarrow: { phone: 240, desktop: 260 },
+  howItWorks: { phone: 358, desktop: 580 },
+  story: { phone: 358, desktop: 340 },
+} satisfies Record<string, FrameFit>;
 
 /**
  * Which screenshot goes where. The pages read their shots from here, and
