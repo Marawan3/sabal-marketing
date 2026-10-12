@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Shot } from "./catalog";
+import { phoneCrops, type Crop, type Shot } from "./catalog";
+import { imageSize } from "./image-size";
 
 /**
  * Where product screenshots live, how big each kind is, and whether a missing
@@ -70,12 +71,65 @@ export function showPlaceholders(): boolean {
   return process.env.VERCEL_ENV === "preview";
 }
 
-/** Renders: a real file exists, or this is a preview deployment. */
-export function isShotVisible(shot: Shot | null | undefined): shot is Shot {
-  return Boolean(shot) && (findShot(shot!.key) !== null || showPlaceholders());
+/**
+ * How wide a frame renders, in CSS px: at 390 (a phone) and at 1440 (a
+ * desktop). Upper bounds, declared per placement in shot-placements.ts
+ * (FITS). phone: 0 means the frame doesn't show on phones.
+ */
+export type FrameFit = { phone: number; desktop: number };
+
+/** The widest a frame gets anywhere: the full phone column, the full desktop container. */
+export const DEFAULT_FIT: FrameFit = { phone: 358, desktop: 1024 };
+
+/** The resolution check's two viewports (PR #20): a 3x phone and a 2x desktop. */
+export const CHECKED_VIEWPORTS = { phone: { width: 390, dpr: 3 }, desktop: { width: 1440, dpr: 2 } } as const;
+
+/**
+ * The resolution check: the file's pixels behind the frame's visible area,
+ * divided by the device pixels it's drawn at (rendered CSS width × DPR), at
+ * 390 (3x) and 1440 (2x). Below 1 at either, the screenshot is stretched and
+ * reads as blur. Phones show the focal crop (or a fixed crop); desktops the
+ * whole frame less any gutter. All in layout pixels, so a 3x file scores 3x.
+ */
+export function resolutionRatios(shot: Shot, src: string, fit: FrameFit = DEFAULT_FIT, crop?: Crop) {
+  const layout = shotSize(shot).width;
+  const density = imageSize(join(process.cwd(), "public", src)).width / layout;
+  const full = layout - rightGutter(src);
+  const narrow = crop?.w ?? phoneCrops[shot.key]?.crop.w ?? full;
+  const wide = crop?.w ?? full;
+  const { phone, desktop } = CHECKED_VIEWPORTS;
+  return {
+    phone: fit.phone ? (narrow * density) / (fit.phone * phone.dpr) : Infinity,
+    desktop: (wide * density) / (fit.desktop * desktop.dpr),
+  };
 }
 
-/** The shots that render, in their original order. */
-export function visibleShots(shots: readonly (Shot | null | undefined)[]): Shot[] {
-  return shots.filter(isShotVisible);
+export function passesResolution(shot: Shot, src: string, fit: FrameFit = DEFAULT_FIT, crop?: Crop): boolean {
+  const r = resolutionRatios(shot, src, fit, crop);
+  return r.phone >= 1 && r.desktop >= 1;
+}
+
+/**
+ * Renders here. On preview deployments: always (a real file, or the
+ * placeholder). On production (and locally): only when the file exists and
+ * passes the resolution check for this placement. A 1x capture is held back
+ * until its 3x retake replaces it, then comes back on its own, with no flag
+ * (owner, 2026-10-12). Callers pass the same fit (and crop) as the frame.
+ */
+export function isShotVisible(shot: Shot | null | undefined, fit?: FrameFit, crop?: Crop): shot is Shot {
+  if (!shot) return false;
+  if (showPlaceholders()) return true;
+  const src = findShot(shot.key);
+  return src !== null && passesResolution(shot, src, fit, crop);
+}
+
+/** The shots that render with this fit, in their original order. */
+export function visibleShots(shots: readonly (Shot | null | undefined)[], fit?: FrameFit): Shot[] {
+  return shots.filter((shot): shot is Shot => isShotVisible(shot, fit));
+}
+
+/** A file that exists but fails the check at the widest fit: held for a retake (SHOTS.md). */
+export function isHeld(shot: Shot): boolean {
+  const src = findShot(shot.key);
+  return src !== null && !passesResolution(shot, src);
 }

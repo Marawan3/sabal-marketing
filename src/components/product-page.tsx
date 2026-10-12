@@ -4,14 +4,14 @@ import { Faq } from "./faq";
 import { FinalCta } from "./final-cta";
 import { JsonLd } from "./json-ld";
 import { OrgDiagram } from "./org-diagram";
-import { ScreenFrame, visibleShots } from "./screen-frame";
+import { isShotVisible, ScreenFrame } from "./screen-frame";
 import { Section, SectionHead } from "./section";
 import { Steps } from "./steps";
 import { SmartLink } from "./smart-link";
-import { bySlug, productHref, type Product } from "@/lib/catalog";
+import { bySlug, productHref, type Product, type Shot } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
-import { productPageShots } from "@/lib/shot-placements";
+import { FITS, productPageShots } from "@/lib/shot-placements";
 import { demoHref } from "@/lib/site";
 
 /**
@@ -22,10 +22,14 @@ import { demoHref } from "@/lib/site";
  * render. The lifecycle walkthrough lives on /how-it-works.
  */
 export function ProductPage({ product }: { product: Product }) {
-  // Only shots that render (real file, or a preview deployment) take space.
+  // Only shots that render take space: on production a real file sharp enough
+  // for its frame (shot-files.ts), on previews anything (or its placeholder).
   const placed = productPageShots(product);
-  const hero = visibleShots([placed.hero])[0];
-  const rest = visibleShots(placed.rest);
+  const narrow = (shot: Shot) => shot.kind === "phone" || shot.kind === "photo";
+  const heroFit = (shot: Shot) => (narrow(shot) ? FITS.productHeroNarrow : FITS.productHero);
+  const screenFit = (shot: Shot) => (narrow(shot) ? FITS.productScreenNarrow : FITS.productScreen);
+  const hero = placed.hero && isShotVisible(placed.hero, heroFit(placed.hero)) ? placed.hero : undefined;
+  const rest = placed.rest.filter((shot) => isShotVisible(shot, screenFit(shot)));
   const related = product.related.filter((slug) => bySlug[slug]);
   return (
     <>
@@ -45,6 +49,7 @@ export function ProductPage({ product }: { product: Product }) {
               <div className={hero.kind === "phone" || hero.kind === "photo" ? "mx-auto w-[62%] max-w-[300px]" : "w-full"}>
                 <ScreenFrame
                   shot={hero}
+                  fit={heroFit(hero)}
                   caption={false}
                   priority
                   fill
@@ -82,6 +87,7 @@ export function ProductPage({ product }: { product: Product }) {
                   <div className={narrow ? "mx-auto w-[62%] max-w-[260px]" : "w-full"}>
                     <ScreenFrame
                       shot={shot}
+                      fit={screenFit(shot)}
                       caption={false}
                       fill
                       sizes={narrow ? "(min-width: 1024px) 260px, 50vw" : "(min-width: 1024px) 500px, 92vw"}

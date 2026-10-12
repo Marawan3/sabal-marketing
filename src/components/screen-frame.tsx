@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { phoneCrops, type Crop, type Shot } from "@/lib/catalog";
-import { findShot, rightGutter, showPlaceholders, shotSize } from "@/lib/shot-files";
+import { DEFAULT_FIT, findShot, passesResolution, rightGutter, showPlaceholders, shotSize, type FrameFit } from "@/lib/shot-files";
 
 export { isShotVisible, visibleShots } from "@/lib/shot-files";
 
@@ -18,6 +18,10 @@ export const DEMO_CAPTION = "Demo restaurant";
  *   "Screenshot placeholder", what the shot will show, and its file name and
  *   size, so the owner can see where each missing shot goes.
  *
+ * When the file exists but is too low-resolution for this frame (fails the
+ * resolution check at 390 3x or 1440 2x, see shot-files.ts), production
+ * renders nothing too, caption included, until a sharper file replaces it.
+ *
  * The switch is Vercel's own environment (see showPlaceholders()). Callers
  * use isShotVisible()/visibleShots() so a column or gallery disappears with
  * its frame. The placeholder never imitates a real screen: no device chrome,
@@ -33,6 +37,7 @@ export function ScreenFrame({
   sizes = "(min-width: 1024px) 560px, 92vw",
   phoneVw = 92,
   crop,
+  fit = DEFAULT_FIT,
 }: {
   shot: Shot;
   className?: string;
@@ -57,6 +62,12 @@ export function ScreenFrame({
    * screens the whole frame. Pass full `sizes` yourself when you set it.
    */
   crop?: Crop;
+  /**
+   * How wide this frame renders at 390 and 1440 (CSS px). On production the
+   * frame renders only if the file passes the resolution check at both; pass
+   * the same fit to isShotVisible() so the section agrees.
+   */
+  fit?: FrameFit;
 }) {
   const src = findShot(shot.key);
   const size = shotSize(shot);
@@ -80,6 +91,9 @@ export function ScreenFrame({
       </figure>
     );
   }
+
+  // A blurry (1x) file is held back on production until its 3x retake lands. Previews show it.
+  if (!showPlaceholders() && !passesResolution(shot, src, fit, crop)) return null;
 
   const gutter = rightGutter(src);
   const full: Crop = { x: 0, y: 0, w: size.width - gutter, h: size.height };

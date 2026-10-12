@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { findShot, shotSize } from "../src/lib/shot-files";
+import { products } from "../src/lib/catalog";
+import { findShot, isHeld, shotSize } from "../src/lib/shot-files";
 import { shotRows } from "../src/lib/shot-placements";
 
 /**
@@ -53,4 +54,16 @@ test("legal pages show no placeholder, even on preview", async ({ request }) => 
     const html = await (await request.get(path)).text();
     expect(html, path).not.toContain(PHRASE);
   }
+});
+
+test("held (1x) screenshots still show on previews, kitchen band included", async ({ page }) => {
+  const held = products.flatMap((p) => p.shots).filter(isHeld);
+  test.skip(held.length === 0, "no held screenshots");
+  await page.goto("/order-management");
+  for (const key of ["orders-board", "order-drawer", "ordering-settings", "kds"].filter((k) => held.some((s) => s.key === k))) {
+    await expect(page.locator(`main figure img[src*="${key}"]`).first(), key).toBeAttached();
+  }
+  await page.goto("/");
+  await expect(page.locator("#kitchen figure img")).toHaveCount(1);
+  await expect(page.locator("#top figure img")).toHaveCount(1);
 });

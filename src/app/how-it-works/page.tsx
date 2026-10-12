@@ -7,7 +7,7 @@ import { Section, SectionHead } from "@/components/section";
 import { SmartLink } from "@/components/smart-link";
 import { bySlug, lifecycle, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { howItWorksShot } from "@/lib/shot-placements";
+import { FITS, howItWorksShot } from "@/lib/shot-placements";
 
 export const dynamic = "error";
 
@@ -61,7 +61,7 @@ export default function HowItWorksPage() {
         <ol className="border-t border-ink/15">
           {lifecycle.map((stage, index) => {
             const shot = howItWorksShot(stage);
-            const visible = isShotVisible(shot);
+            const visible = isShotVisible(shot, FITS.howItWorks);
             return (
               <li
                 key={stage.name}
@@ -77,7 +77,7 @@ export default function HowItWorksPage() {
                 </div>
                 {visible ? (
                   <div className="mt-8 lg:col-span-7 lg:mt-0">
-                    <ScreenFrame shot={shot} caption={false} />
+                    <ScreenFrame shot={shot} fit={FITS.howItWorks} caption={false} />
                   </div>
                 ) : null}
               </li>
