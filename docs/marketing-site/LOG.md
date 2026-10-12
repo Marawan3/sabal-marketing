@@ -26,7 +26,31 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 1. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
 2. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
-3. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+3. **3x retakes of all batch-1 screenshots.** Recorded 2026-10-12 (PR #21). They are held off wuntab.com until then, and come back on their own when the sharper files land. The capture instructions were given in chat on 2026-10-11. PR #20 (quality 90, retina test) takes the files.
+4. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+
+---
+
+## 2026-10-12 · PR #21: hotfix, blurry screenshots held off wuntab.com until the 3x retakes (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `4cbe044` on `main`, from branch `marketing/hold-1x-shots`.
+
+**Why:** the batch-1 screenshots are 1x captures. On phones and retina screens they are stretched up to about 3 times their pixel size and look blurry.
+
+**What changed:**
+- **The rule:** wuntab.com shows a screenshot only if its file has enough pixels for the frame it sits in, at a 390-wide phone (3x) and a 1440-wide desktop (2x). This is the check from PR #20. Today none of the eight files passes, so all eight are hidden.
+- **No files deleted:** when a 3x file replaces a 1x file, it passes and shows again by itself; there is no flag to remember. Checked with temporary 3x copies, which were not kept.
+- **Previews:** preview deployments still show the screenshots, so the layout stays visible.
+- **The page without them:**
+  - the hero is just the headline, the name field and Get Started;
+  - the kitchen band is gone until its screenshot is back;
+  - every other section keeps its text with no gaps;
+  - the "Demo restaurant" caption goes with its image.
+- **SHOTS.md:** reads 0 of 26 done, with 8 marked "Held: 1x, awaiting 3x retake".
+
+**How it was checked:**
+- **Tests:** 64 Playwright tests passed and 1 was skipped (the existing legal skip). New tests check that no held screenshot or empty container appears on production, and that previews still show them.
+- **Homepage height on production:** 4,882px at 390 and 4,644px at 1440.
 
 ---
 
