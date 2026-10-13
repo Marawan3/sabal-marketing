@@ -24,10 +24,45 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
-2. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
-3. **3x retakes of all batch-1 screenshots.** Recorded 2026-10-12 (PR #21). They are held off wuntab.com until then, and come back on their own when the sharper files land. The capture instructions were given in chat on 2026-10-11. PR #20 (quality 90, retina test) takes the files.
-4. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+1. **Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.** Recorded 2026-10-13 (PR #22). The phone matches today's real checkout (platform finding 1): $12.00 + $0.78 tax + $2.40 tip = $15.18. The owner merged it as is. Options raised in the PR: keep it until the fee is in checkout, show a fee line, or end the story before the totals.
+2. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. Swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+3. **Hero: wording.** Recorded 2026-10-13 (PR #22). The phone uses the product's own labels ("Add item", "Pay", "Order received", "Ready by"), not the brief's ("Add to order", "Place order", "Order placed. Ready at"). The owner merged it with the product's labels.
+4. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
+5. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
+6. **3x retakes of all batch-1 screenshots.** Recorded 2026-10-12 (PR #21). They are held off wuntab.com until then, and come back on their own when the sharper files land. The capture instructions were given in chat on 2026-10-11. PR #20 (quality 90, retina test) takes the files.
+7. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+
+---
+
+## 2026-10-13 · PR #22: the hero is a live phone that orders from the demo restaurant (merged)
+
+**Merged by:** Claude, on the owner's "merge". Squash commit `119f62f` on `main`, from branch `marketing/hero-phone`.
+
+**Why:** the owner wanted a moving hero: a phone drawn in HTML and CSS with real text, not a video or a screenshot.
+
+**What changed:**
+- **The hero, at every width, is now a phone on the saffron panel.** On the demo restaurant's storefront (Palm&Stone Kitchen), a diner:
+  - opens Spiced Lamb Meatballs ($12.00);
+  - picks spice level Hot;
+  - adds it, checks out and pays $15.18;
+  - sees "Order received" and "Ready by" a time 20 minutes after the visitor's own clock.
+- **Then the order reaches the kitchen.** On desktop, ticket #1930 slides into the New column of the kitchen display beside the phone. On phones, the phone turns over to show that ticket. About 14 seconds, then it loops.
+- **Everything on the screens is real.** The dishes, prices, options, tax, prep time and brand colour are the demo's own, read from its database. The layouts and labels are the storefront's and the kitchen display's. The only picture is the dish photo.
+- **Behaviour:**
+  - It plays only while on screen and while the tab is visible.
+  - A pause/play button sits in the corner.
+  - Only position and fade animate.
+  - With reduced motion it shows the confirmation and the ticket as a still.
+  - Screen readers hear one sentence.
+- **The orders board screenshot** no longer appears in the hero. It stays in the catalog for `/order-management`.
+
+**How it was checked:**
+- **Tests:** 74 Playwright tests passed and 1 was skipped (the existing legal skip), including 10 new ones for the animation.
+- **Script added:** 1,989 bytes (864 gzipped).
+- **Layout shift:** zero at 390 and 1440 through a full loop.
+- **Evidence** (recordings, stills, measurements): `docs/marketing-site/evidence/hero-phone/`.
+
+**Open:** three follow-ups above: the 5% fee, the dish photo and the wording.
 
 ---
 
