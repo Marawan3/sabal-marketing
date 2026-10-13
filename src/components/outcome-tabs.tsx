@@ -11,10 +11,11 @@ export type OutcomeTab = {
 };
 
 /**
- * From lg up: text tabs, the active one underlined, switching one panel with
- * the lines on the left and the visual on the right. No card behind it.
- * Below lg there are no tabs and no swipe row: each outcome is stacked as
- * its label, its lines, then its visual.
+ * Text tabs at every width, the active one underlined, switching one panel.
+ * From lg up the panel has the lines on the left and the visual on the right.
+ * On phones (since 2026-10-13) the three tabs share the width, labels
+ * wrapping onto two lines; tap to switch, no swiping, and the panel is the
+ * lines over the visual. No card behind it.
  */
 export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
   const [active, setActive] = useState(0);
@@ -28,7 +29,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Outcomes" className="hidden gap-10 border-b border-mist lg:flex">
+      <div role="tablist" aria-label="Outcomes" className="grid grid-cols-3 gap-3 border-b border-mist lg:flex lg:gap-10">
         {tabs.map((tab, index) => {
           const selected = index === active;
           return (
@@ -48,7 +49,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
                 if (event.key === "ArrowRight") select((index + 1) % tabs.length, true);
                 if (event.key === "ArrowLeft") select((index - 1 + tabs.length) % tabs.length, true);
               }}
-              className={`-mb-px min-h-12 shrink-0 border-b-2 text-body font-medium transition-colors duration-150 ${
+              className={`-mb-px min-h-12 shrink-0 border-b-2 pb-2 text-left text-small leading-tight font-medium transition-colors duration-150 lg:pb-0 lg:text-body ${
                 selected ? "border-ink text-ink" : "border-transparent text-ink/60 hover:text-ink"
               }`}
             >
@@ -58,22 +59,19 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
         })}
       </div>
 
-      <div className="divide-y divide-mist lg:mt-12 lg:divide-y-0">
+      <div className="mt-6 lg:mt-12">
         {tabs.map((tab, index) => (
           <div
             key={tab.key}
             role="tabpanel"
             id={`${baseId}-${tab.key}`}
             aria-labelledby={`${baseId}-${tab.key}-tab`}
-            className={`py-8 first:pt-0 last:pb-0 lg:py-0 ${index === active ? "" : "lg:hidden"} ${
-              tab.visual ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""
-            }`}
+            // Only the active panel shows; the desktop grid goes on it alone, or it would undo "hidden".
+            className={index !== active ? "hidden" : tab.visual ? "lg:grid lg:grid-cols-12 lg:items-center lg:gap-12" : ""}
           >
             <div className={tab.visual ? "lg:col-span-5" : ""}>
-              {/* Phones have no tab strip, so each outcome is titled. */}
-              <h3 className="text-h3 lg:hidden">{tab.label}</h3>
               {/* No visual: on desktop the lines spread across the width instead of leaving half of it empty. */}
-              <ul className={`mt-3 lg:mt-0 ${tab.visual ? "" : "lg:grid lg:grid-cols-3 lg:gap-10"}`}>
+              <ul className={`${tab.visual ? "" : "lg:grid lg:grid-cols-3 lg:gap-10"}`}>
                 {tab.lines.map((line) => (
                   <li
                     key={line}

@@ -116,6 +116,10 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Phones at 390:** every visual is full width with 16px gutters, and its text renders at
   9px or more. Inside a device `--k` never drops below 0.6429px, so the device lays out
   narrower instead of shrinking its text.
+- **Homepage on phones:**
+  - The outcomes are tabs at every width: one panel at a time, tap to switch, the active tab underlined, no swiping.
+  - The product rows are text only below 768px.
+  - The homepage stays under 7,000px at 390 (tested).
 - All of the above is tested in `tests/visuals.spec.ts`.
 
 ## 1. What we are designing for
