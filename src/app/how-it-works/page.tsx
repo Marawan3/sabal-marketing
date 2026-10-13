@@ -10,7 +10,7 @@ import { CateringPhone } from "@/components/visuals/catering-phone";
 import { DashboardCard } from "@/components/visuals/dashboard-card";
 import { DeliveryPhone } from "@/components/visuals/delivery-phone";
 import { Ground } from "@/components/visuals/ground";
-import { KitchenBoard } from "@/components/visuals/kitchen-board";
+import { OrdersDashboard } from "@/components/visuals/orders-dashboard";
 import { SearchResult } from "@/components/visuals/search-result";
 import { StorefrontPhone } from "@/components/visuals/storefront-phone";
 import { SmartLink } from "@/components/smart-link";
@@ -59,7 +59,7 @@ const stageVisuals: ReactNode[] = [
     <StorefrontPhone cut />
   </Ground>,
   <Ground key="fulfill">
-    <KitchenBoard />
+    <OrdersDashboard />
   </Ground>,
   <Ground key="understand">
     <DashboardCard />

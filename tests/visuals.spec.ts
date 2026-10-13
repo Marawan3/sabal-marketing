@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
-import { demoDashboard, demoDelivery, demoSite } from "../src/lib/demo-data";
+import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoSettings, demoSite } from "../src/lib/demo-data";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
 
 /**
@@ -19,6 +19,8 @@ const home: Record<string, string> = {
   search: "/restaurant-seo",
   receipt: "/pricing",
   flow: "/delivery",
+  orders: "/order-management",
+  settings: "/order-management",
 };
 const names = Object.keys(home) as (keyof typeof copy.visuals)[];
 const pages = ["/", "/how-it-works", "/pricing", "/online-ordering", "/delivery", "/catering", "/restaurant-websites", "/restaurant-seo", "/order-management"];
@@ -137,6 +139,9 @@ for (const width of [390, 1440]) {
       search: (el) => el.getByText("Hummus & Warm Pita", { exact: true }),
       receipt: (el) => el.getByText("Paid by card", { exact: true }),
       flow: (el) => el.getByText("Customer receives it", { exact: true }),
+      // Desktop: the drawer is open. Phones: the focal crop of the list.
+      orders: (el) => (width >= 1024 ? el.getByText("Mark ready", { exact: true }) : el.locator('[data-row="1930"]')),
+      settings: (el) => el.getByText(demoSettings.prep[1], { exact: true }),
     };
     for (const name of names) {
       await page.goto(home[name]);
@@ -249,5 +254,46 @@ test("the visuals tell the truth: the demo's dishes, prices, labels and arithmet
   const dash = visual(page, "dashboard");
   for (const text of ["Net sales", demoDashboard.netSales, demoDashboard.change, "Orders", demoDashboard.orders, "Average order", demoDashboard.averageOrder, "Last 30 days"]) {
     await expect(dash).toContainText(text);
+  }
+});
+
+test("the orders dashboard and the kitchen board show the same orders; the settings card moves prep time from 20 to 25", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/order-management");
+  const orders = visual(page, "orders");
+  const kitchen = visual(page, "kitchen");
+  const tickets = [demoKitchen.moving, ...demoKitchen.new, ...demoKitchen.preparing, ...demoKitchen.ready];
+  expect(new Set(demoOrders.rows.map((r) => r.number))).toEqual(new Set(tickets.map((t) => t.number)));
+  for (const row of demoOrders.rows) {
+    const ticket = tickets.find((t) => t.number === row.number)!;
+    await expect(orders.locator(`[data-row="${row.number}"]`)).toContainText(row.who);
+    expect(row.who.startsWith(ticket.who), `#${row.number}`).toBe(true);
+    await expect(kitchen).toContainText(`#${row.number}`);
+  }
+  // The drawer adds up, with the hero's service fee line.
+  const cents = (t: string) => Math.round(Number(t.replace(/[$,]/g, "")) * 100);
+  const o = demoOrders.open;
+  expect(cents(o.total)).toBe(cents(o.subtotal) + cents(o.fee) + cents(o.tax) + cents(o.tip));
+  expect(o.items.reduce((sum, item) => sum + cents(item.price), 0)).toBe(cents(o.subtotal));
+  await expect(orders).toContainText("Mark ready");
+  await expect(orders).toContainText(o.total);
+  // The tabs and the sidebar are there on desktop.
+  for (const tab of ["Active", "Scheduled", "Completed"]) await expect(orders).toContainText(tab);
+  await expect(orders).toContainText("Overview");
+  // Settings: the real labels, and prep time and the ASAP quote both end five minutes up.
+  const settings = visual(page, "settings");
+  for (const label of ["Accepting orders", "Current prep", "ASAP quote", "Closes at", "Pause online ordering", "Adjust prep time"]) {
+    await expect(settings).toContainText(label);
+  }
+  expect(demoSettings.prep).toEqual(["20 min", "25 min"]);
+  expect(demoSettings.quote).toEqual(["20–30 min", "25–35 min"]);
+});
+
+test("the kitchen board shows only in the homepage kitchen band and /order-management's steps", async ({ page }) => {
+  const where: Record<string, string[]> = { "/": ["kitchen"], "/order-management": [""] };
+  for (const path of pages) {
+    await page.goto(path);
+    const sections = await page.locator('main [data-visual="kitchen"]').evaluateAll((els) => els.map((el) => el.closest("section")?.id ?? ""));
+    expect(sections, path).toEqual(where[path] ?? []);
   }
 });
