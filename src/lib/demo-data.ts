@@ -115,3 +115,60 @@ export const demoCatering = {
   hint: "Include any allergies or dietary preferences we should plan around — please don't share medical details.",
   promise: "Your message goes to the restaurant. They reply when they can.",
 };
+
+/**
+ * The orders dashboard (the Orders screen and its order drawer, after batch
+ * 1's orders-board and order-drawer captures), with the kitchen board's
+ * orders so the two agree. Names, items, placed times and prep times are the
+ * captures'. Totals use the hero's arithmetic: subtotal, the diner's 5%
+ * service fee, tax 6.5% and the order's tip. The real dashboard has no
+ * service fee yet, so its totals there are lower by the fee.
+ */
+const orderTotal = (subtotal: number, tip: number) =>
+  money(subtotal + Math.round((subtotal * SERVICE_FEE_PERCENT) / 100) + Math.round((subtotal * TAX_BP) / 10000) + tip);
+
+export const demoOrders = {
+  location: demoOrder.location,
+  tabs: [
+    { label: "Active", count: 4 },
+    { label: "Scheduled", count: 0 },
+    { label: "Completed", count: 912 },
+    { label: "Cancelled", count: 19 },
+    { label: "Awaiting payment", count: 0 },
+  ],
+  narrow: [
+    { label: "In progress", count: 1 },
+    { label: "Ready", count: 1 },
+  ],
+  rows: [
+    { number: 1925, placed: "3:37 PM", who: "Mateo E.", items: "Pickup · 2 items", prep: "Prep by 3:57 PM", status: "Preparing", total: orderTotal(2100, 0) },
+    { number: 1924, placed: "3:38 PM", who: "Grace L.", items: "Pickup · 1 item", prep: "Ready since 3:41 PM", status: "Ready", total: orderTotal(1500, 300) },
+    { number: 1929, placed: "3:41 PM", who: "Leila P.", items: "Pickup · 1 item", prep: "Prep by 4:01 PM", status: "New", total: orderTotal(1150, 200) },
+    { number: 1930, placed: "3:42 PM", who: "Priya M.", items: "Pickup · 1 item", prep: "Prep by 4:02 PM", status: "New", total: demoOrder.total },
+  ],
+  /** The drawer: #1925, the order being prepared. */
+  open: {
+    number: 1925,
+    placed: "Placed 3:37 PM",
+    who: "Mateo E.",
+    items: [
+      { qty: 1, name: "Crispy Falafel (5 pcs)", mods: "Extra pita", price: money(950) },
+      { qty: 1, name: "Falafel Pita", mods: "", price: money(1150) },
+    ],
+    subtotal: money(2100),
+    fee: money(Math.round((2100 * SERVICE_FEE_PERCENT) / 100)),
+    tax: money(Math.round((2100 * TAX_BP) / 10000)),
+    tip: money(0),
+    total: orderTotal(2100, 0),
+  },
+};
+
+/** The Online ordering settings card (batch 1's ordering-settings capture). Prep time goes from 20 to 25 minutes. */
+export const demoSettings = {
+  title: "Online ordering",
+  sub: `Availability and preparation times for ${demoOrder.location}.`,
+  prep: ["20 min", "25 min"],
+  /** The ASAP quote is prep time to prep time plus ten, as the product computes it. */
+  quote: ["20–30 min", "25–35 min"],
+  closes: "11:00 PM",
+};

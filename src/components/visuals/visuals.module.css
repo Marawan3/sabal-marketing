@@ -1154,3 +1154,512 @@
     top: 21px;
   }
 }
+
+/* ---------- The orders dashboard (desktop-shaped) ---------- */
+
+.od {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.odFrame {
+  --k: max(calc(100cqw / 1440), 0.6429px);
+  position: relative;
+  display: flex;
+  height: calc(var(--k) * 680);
+  overflow: hidden;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #18181b;
+  font-size: calc(var(--k) * 15);
+  line-height: 1.4;
+}
+
+.odDim {
+  display: block;
+  color: #71717a;
+  font-weight: 400;
+}
+
+.odSide {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: calc(var(--k) * 6);
+  width: calc(var(--k) * 288);
+  padding: calc(var(--k) * 16) calc(var(--k) * 12);
+  background: #09090b;
+  color: #e4e4e7;
+}
+
+.odBrand {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 12);
+  margin: 0 calc(var(--k) * 8) calc(var(--k) * 24);
+  letter-spacing: 0.08em;
+}
+
+.odTile {
+  display: flex;
+  width: calc(var(--k) * 32);
+  height: calc(var(--k) * 32);
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--k) * 8);
+  background: #c2410c;
+  color: #fff;
+  font-weight: 700;
+}
+
+.odNav {
+  padding: calc(var(--k) * 10) calc(var(--k) * 16);
+  border-radius: calc(var(--k) * 8);
+  color: #d4d4d8;
+}
+
+.odNavOn {
+  background: rgb(0 62 128 / 0.25);
+  color: #a7c7e3;
+  font-weight: 600;
+}
+
+.odOrg {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 12);
+  margin-top: auto;
+  padding: calc(var(--k) * 12);
+  border-radius: calc(var(--k) * 8);
+  background: #18181b;
+}
+
+.odAvatar {
+  display: flex;
+  width: calc(var(--k) * 32);
+  height: calc(var(--k) * 32);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #27272a;
+  font-size: calc(var(--k) * 14);
+}
+
+.odMain {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.odTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(var(--k) * 64);
+  padding: 0 calc(var(--k) * 24);
+  border-bottom: 1px solid #e4e4e7;
+  background: #fff;
+}
+
+.odPage {
+  padding: calc(var(--k) * 28) calc(var(--k) * 32);
+}
+
+.odH1 {
+  font-size: calc(var(--k) * 24);
+  font-weight: 600;
+}
+
+.odTabs {
+  display: flex;
+  gap: calc(var(--k) * 4);
+  margin-top: calc(var(--k) * 20);
+  overflow: hidden;
+  border-bottom: 1px solid #e4e4e7;
+  white-space: nowrap;
+}
+
+.odTab {
+  padding: calc(var(--k) * 10) calc(var(--k) * 12);
+  color: #52525b;
+  font-weight: 500;
+}
+
+.odTabOn {
+  border-bottom: calc(var(--k) * 2) solid #003e80;
+  color: #003e80;
+  font-weight: 600;
+}
+
+.odCount {
+  margin-left: calc(var(--k) * 6);
+  padding: 0 calc(var(--k) * 6);
+  border-radius: calc(var(--k) * 6);
+  background: #f4f4f5;
+  color: #52525b;
+  font-size: calc(var(--k) * 14);
+}
+
+.odNarrow {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
+  margin: calc(var(--k) * 14) 0;
+}
+
+.odNarrow .odDim {
+  display: inline;
+  font-size: calc(var(--k) * 14);
+}
+
+.odChip {
+  padding: calc(var(--k) * 6) calc(var(--k) * 12);
+  border-radius: 9999px;
+  background: #f4f4f5;
+}
+
+.odList {
+  overflow: hidden;
+  border: 1px solid #e4e4e7;
+  border-radius: calc(var(--k) * 10);
+  background: #fff;
+}
+
+.odRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: calc(var(--k) * 12) calc(var(--k) * 96) minmax(0, 1fr) calc(var(--k) * 170) calc(var(--k) * 100) calc(var(--k) * 84);
+  align-items: center;
+  gap: calc(var(--k) * 12);
+  padding: calc(var(--k) * 12) calc(var(--k) * 16);
+  border-bottom: 1px solid #f4f4f5;
+}
+
+.odRow > * {
+  position: relative;
+}
+
+/* The picked row: a tint that fades in. */
+.odRow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #eaf1f8;
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+.odRow[data-row="1925"]::before {
+  opacity: 1;
+}
+
+.odDot {
+  width: calc(var(--k) * 8);
+  height: calc(var(--k) * 8);
+  border-radius: 9999px;
+}
+
+.odDot[data-status="Ready"] {
+  background: #10b981;
+}
+
+.odDot[data-status="Preparing"] {
+  background: #f59e0b;
+}
+
+.odPrep {
+  color: #3f3f46;
+  font-size: calc(var(--k) * 14);
+}
+
+.odStatus {
+  justify-self: start;
+  padding: calc(var(--k) * 2) calc(var(--k) * 8);
+  border-radius: calc(var(--k) * 6);
+  font-size: calc(var(--k) * 14);
+  font-weight: 600;
+}
+
+.odStatus[data-status="Ready"] {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.odStatus[data-status="Preparing"] {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.odTotal {
+  justify-self: end;
+}
+
+.odShade {
+  position: absolute;
+  inset: 0;
+  background: rgb(9 9 11 / 0.35);
+  transition: opacity var(--fade);
+}
+
+.odDrawer {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: calc(var(--k) * 448);
+  background: #fff;
+  transition: transform var(--move);
+}
+
+.odDrawerHead {
+  display: flex;
+  justify-content: space-between;
+  padding: calc(var(--k) * 18) calc(var(--k) * 20);
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.odDrawerBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(var(--k) * 20);
+  padding: calc(var(--k) * 20);
+}
+
+.odLabel {
+  margin-bottom: calc(var(--k) * 6);
+  color: #71717a;
+  font-size: calc(var(--k) * 14);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.odLine {
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--k) * 12);
+  padding: calc(var(--k) * 4) 0;
+}
+
+.odLine .odDim {
+  font-size: calc(var(--k) * 14);
+}
+
+.odTotals {
+  padding-top: calc(var(--k) * 12);
+  border-top: 1px solid #e4e4e7;
+}
+
+.odGrand {
+  margin-top: calc(var(--k) * 4);
+  padding-top: calc(var(--k) * 8);
+  border-top: 1px solid #e4e4e7;
+  font-size: calc(var(--k) * 17);
+}
+
+.odActions {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 8);
+  padding: calc(var(--k) * 16) calc(var(--k) * 20);
+  border-top: 1px solid #e4e4e7;
+}
+
+.odPrimary,
+.odSecondary {
+  display: flex;
+  height: calc(var(--k) * 40);
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--k) * 6);
+  font-weight: 600;
+}
+
+.odPrimary {
+  background: #003e80;
+  color: #fff;
+}
+
+.odButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--k) * 8);
+}
+
+.odSecondary {
+  border: 1px solid #e4e4e7;
+}
+
+.odDanger {
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+/* Without room for the sidebar: the list and the drawer. */
+@container (max-width: 899px) {
+  .odSide {
+    display: none;
+  }
+}
+
+/* Phones and small rows: a focal crop of the order list, prep time under the customer. */
+@container (max-width: 599px) {
+  .odFrame {
+    height: calc(var(--k) * 500);
+  }
+  .odTop,
+  .odShade,
+  .odDrawer {
+    display: none;
+  }
+  .odPage {
+    padding: calc(var(--k) * 20) calc(var(--k) * 16);
+  }
+  .odRow {
+    grid-template-columns: calc(var(--k) * 10) calc(var(--k) * 84) minmax(0, 1fr) auto;
+  }
+  .odPrep {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .odStatus {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .odTotal {
+    grid-column: 4;
+    grid-row: 2;
+  }
+  .odRow::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vis:not([data-s~="1"]) .odRow[data-row="1925"]::before,
+  .vis:not([data-s~="2"]) .odShade {
+    opacity: 0;
+  }
+  .vis:not([data-s~="2"]) .odDrawer {
+    transform: translateX(101%);
+  }
+}
+
+/* ---------- The online ordering settings card ---------- */
+
+.set {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  color: #18181b;
+}
+
+.setTitle {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.setCard {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.setOpen {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.setPill {
+  padding: 3px 12px;
+  border-radius: 9999px;
+  background: #d1fae5;
+  color: #047857;
+  font-weight: 600;
+}
+
+.setStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.setLabel {
+  color: #52525b;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.setValue {
+  margin-top: 2px;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+/* Two values in one place: the second shows at the end. */
+.flip {
+  display: grid;
+}
+
+.flip > * {
+  grid-area: 1 / 1;
+  transition: transform var(--move), opacity var(--fade);
+}
+
+.flip > :first-child {
+  opacity: 0;
+  transform: translateY(-40%);
+}
+
+.setQuick {
+  margin: 18px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.setButton {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 160ms ease;
+}
+
+.setPause {
+  border: 1px solid #facc15;
+  background: #fefce8;
+  color: #92400e;
+}
+
+.setAdjust {
+  border: 1px solid #e4e4e7;
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vis:not([data-s~="2"]) .flip > :first-child {
+    opacity: 1;
+    transform: none;
+  }
+  .vis:not([data-s~="2"]) .flip > :last-child {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+  .vis[data-s~="1"]:not([data-s~="2"]) .setAdjust {
+    transform: scale(0.98);
+  }
+}

@@ -17,6 +17,7 @@ import { DashboardCard } from "@/components/visuals/dashboard-card";
 import { DeliveryPhone } from "@/components/visuals/delivery-phone";
 import { Ground } from "@/components/visuals/ground";
 import { KitchenBoard } from "@/components/visuals/kitchen-board";
+import { OrdersDashboard } from "@/components/visuals/orders-dashboard";
 import { Receipt } from "@/components/visuals/receipt";
 import { StorefrontPhone } from "@/components/visuals/storefront-phone";
 import { Panel, Section, SectionHead } from "@/components/section";
@@ -54,7 +55,7 @@ const outcomeVisuals: Record<string, ReactNode> = {
   ),
   busywork: (
     <Ground>
-      <KitchenBoard />
+      <OrdersDashboard />
     </Ground>
   ),
 };
@@ -78,7 +79,7 @@ const productVisuals: Record<string, ReactNode> = {
   ),
   "order-management": (
     <Ground>
-      <KitchenBoard />
+      <OrdersDashboard />
     </Ground>
   ),
 };

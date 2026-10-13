@@ -13,6 +13,8 @@ import { DeliveryFlow } from "./visuals/delivery-flow";
 import { DeliveryPhone } from "./visuals/delivery-phone";
 import { Ground } from "./visuals/ground";
 import { KitchenBoard } from "./visuals/kitchen-board";
+import { OrdersDashboard } from "./visuals/orders-dashboard";
+import { SettingsCard } from "./visuals/settings-card";
 import { SearchResult } from "./visuals/search-result";
 import { StorefrontPhone } from "./visuals/storefront-phone";
 import { bySlug, productHref, type Faq as FaqItem, type Product } from "@/lib/catalog";
@@ -49,7 +51,7 @@ const heroVisuals: Record<string, ReactNode> = {
   ),
   "order-management": (
     <Ground>
-      <KitchenBoard />
+      <OrdersDashboard />
     </Ground>
   ),
 };
@@ -61,7 +63,8 @@ const heroVisuals: Record<string, ReactNode> = {
  */
 function pageFaq(product: Product): FaqItem[] {
   const items: FaqItem[] = [...(product.faq ?? [])];
-  items.push({
+  // /order-management shows its list on the page, beside the settings card.
+  if (product.slug !== "order-management") items.push({
     question: product.capabilitiesTitle === "What we build in" ? "What do you build in?" : "What's included?",
     answer: `${product.capabilities.join(". ")}.`,
   });
@@ -109,6 +112,39 @@ export function ProductPage({ product }: { product: Product }) {
             <DeliveryFlow />
           </div>
         </Section>
+      ) : null}
+
+      {/* /order-management: the kitchen display for the steps, then what's included beside the settings card. */}
+      {product.slug === "order-management" && product.flow ? (
+        <>
+          <Section>
+            <SectionHead heading={product.flow.title} />
+            <div className="mt-8 lg:mt-12">
+              <Ground>
+                <KitchenBoard />
+              </Ground>
+            </div>
+          </Section>
+          <Section>
+            <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+              <div className="lg:col-span-5">
+                <SectionHead heading={product.capabilitiesTitle ?? "What's included"} />
+                <ul className="mt-6">
+                  {product.capabilities.map((item) => (
+                    <li key={item} className="border-t border-mist py-3 text-body text-ink/85 first:border-t-0 first:pt-0">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="lg:col-span-7">
+                <Ground>
+                  <SettingsCard />
+                </Ground>
+              </div>
+            </div>
+          </Section>
+        </>
       ) : null}
 
       {/* Works with: the related products as one row of links. */}
