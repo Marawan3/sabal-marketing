@@ -24,8 +24,8 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Homepage height at 390: 8,070 px, target under 7,000.** Recorded 2026-10-13 (PR #25). Hiding the product-row visuals on phones and capping the outcome visuals at 60% of the screen got it from 9,799 px to 8,070 px. The outcome tabs (2,064 px) are the rest, because all three stack on phones. Option raised: tabs on phones too, showing one outcome at a time (about −1,100 px). This would reverse the earlier "no tabs on phones" decision. Waiting on the owner.
-2. **Catering visual vs. the product.** Recorded 2026-10-13 (PR #24). In progress: PR #26 rewrites /catering and the homepage row around the request form (open, waiting on one question). The product has no catering checkout (no lead time, minimum, catering menu or "Order received"); catering is an enquiry form. The catering phone shows the real form. The /catering page's own claims (lead times, minimums, paying online) predate this and should be checked against the product. Owner to decide whether to show the planned flow as a labelled mockup.
+1. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
+2. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
 3. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
 4. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
 5. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet. The owner said to leave them as they are for now (2026-10-13).
@@ -36,6 +36,52 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 10. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
 11. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
 12. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-13 · PR #28: outcome tabs on phones (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `45d064b` on `main`, from branch `marketing/outcome-tabs-phones`.
+
+**Why:** the homepage was still 8,037 px at 390. The target is under 7,000.
+
+**What changed:**
+- **Tabs on phones:** the homepage outcomes are now tabs at every width. One panel shows at a time; tap a tab to switch.
+  - The active tab is underlined.
+  - No swiping: the three tabs share the width, with labels on two lines when needed.
+- **Each panel on phones:** the lines, then the visual, at most 60% of the screen's height.
+- **Desktop:** unchanged.
+
+**Result:**
+- **390:** 6,770 px, from 8,037 px.
+- **1440:** unchanged at 8,462 px.
+
+**How it was checked:**
+- **Tests:** 79 Playwright tests passed and 1 was skipped (the existing legal skip).
+- **Outcome test:** now covers phones and desktop.
+- **Height test:** now requires under 7,000 px at 390.
+- **Live:** confirmed on wuntab.com after the deploy.
+
+---
+
+## 2026-10-13 · PR #26: catering describes the request form the product has (merged)
+
+**Merged by:** Claude, on the owner's instruction after their answer. Squash commit `366f49b` on `main`, from branch `marketing/catering-truth`.
+
+**Why:** /catering promised a catering menu, lead times, minimums and paying online. The product has a catering request form only.
+
+**What changed:**
+- **/catering and the homepage row:**
+  - The headline is now "Take catering requests on your own website."
+  - The line: customers send the date, the headcount and what they need; you reply and confirm.
+- **What's included, the steps and the FAQ** describe the request form. Each request goes to the restaurant, which replies and confirms. The owner confirmed WunTab staff forward every request today.
+- **Removed until built:** the catering menu, lead times, minimums, online payment and catering delivery.
+- **"catering requests" elsewhere:** the homepage "More direct orders" tab and the /how-it-works Order stage now say this, not catering orders.
+- **Before-and-after copy:** in the PR description and `COPY.md`.
+
+**How it was checked:**
+- **Tests:** 79 Playwright tests passed and 1 was skipped (the existing legal skip).
+- **Live:** confirmed on wuntab.com. /catering carries the new headline and none of the removed claims.
 
 ---
 
