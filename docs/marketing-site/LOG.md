@@ -24,18 +24,60 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
-2. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
-3. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
-4. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
-5. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet. The owner said to leave them as they are for now (2026-10-13).
-6. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
-7. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-8. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
-9. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
-10. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
-11. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
-12. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+1. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
+2. **/integrations and the payment account.** Recorded 2026-10-13 (PR #29). The Payments line ("into your own payment account"), step 2 and the FAQ answer "Who gets the money?" repeat the site's existing claim that each restaurant has its own payment account. Platform finding 2 above says the code settles to one platform merchant account. The POS line is the owner's wording; platform finding 4 says non-Clover kitchens get a text message, not a printed ticket. Both are for the owner to confirm or change.
+3. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
+4. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
+5. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
+6. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
+7. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet. The owner said to leave them as they are for now (2026-10-13).
+8. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+9. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+10. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
+11. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
+12. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
+13. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
+14. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-13 · PR #29: competitive upgrade (merged)
+
+**Merged by:** Claude, on the owner's instruction after the trust-line wording change. Squash commit `bbe90d1` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
+
+**Why:** the competitors lead with a trust line, offer a form on the page, and have pages for business types and integrations. This matches that, keeping built visuals, plain copy and short pages.
+
+**What changed:**
+- **Colours:** two greys only, `--ink` and `--ink-muted` (#6e6e6d, 64% ink: a true 60% fails contrast on warm). `--warm` (#faf7f2) is on at most two sections a page. 65 colours in use before, 33 after.
+- **Homepage hero:** the trust line "$0 for the restaurant · No lock-in · Your customers, your data". The owner changed "No contract" to "No lock-in". There's also a small $0 card under the name field.
+- **Savings calculator** between products and how it works. The 15–30% range is from the apps' published delivery commission; sources are in COPY.md.
+- **Product pages:** one template. Hero → how it works (a built step diagram) → what's included in two columns → proof slot → works with → FAQ → final band.
+- **New pages:** /integrations, four /solutions pages, /about (no longer redirects) and /contact. The form emails hello@ through `/api/contact`.
+- **Navigation:** Solutions and Company menus.
+- **Footer:** Product, Solutions, Company and Legal columns.
+- **Final band:** "20-minute call. We show WunTab on your own menu. No pressure." and "Or send a message".
+- **Proof:** the homepage row and the product pages read one list and stay empty until there's a real customer.
+- **Hero:** starts playing at 20% visible (owner accepted), so it plays on a 1440×900 screen.
+
+**Result:**
+- **Homepage at 390:** 6,727 px with motion and 6,928 px with reduced motion, both under 7,000 and both tested.
+- **Homepage at 1440:** 8,990 px.
+- **What left the homepage to make room:**
+  - The "More about" links
+  - Four FAQ questions the page already answers
+  - The footer blurb
+  - The old line above the final button
+  - Some phone padding
+
+**How it was checked:**
+- **Tests:** 92 Playwright tests passed and 1 was skipped. They include `tests/upgrade.spec.ts`, and its contact test submits through a stand-in email server.
+- **Repo checks:** honesty, copy-lint, boundary-check, lint and tsc pass.
+- **Contrast:** AA on every page at both widths.
+- **Evidence:** `docs/marketing-site/evidence/competitive-upgrade/`.
+
+**Follow-ups:**
+- **Contact form:** switch on sending (follow-up 1).
+- **Payment-account claim:** check it on /integrations (follow-up 2).
 
 ---
 
