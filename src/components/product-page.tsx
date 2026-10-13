@@ -17,7 +17,11 @@ import { KitchenBoard } from "./visuals/kitchen-board";
 import { OrdersDashboard } from "./visuals/orders-dashboard";
 import { SettingsCard } from "./visuals/settings-card";
 import { SearchResult } from "./visuals/search-result";
-import { StepFlow } from "./visuals/step-flow";
+import { LoyaltyPhone } from "./visuals/loyalty-phone";
+import { MenuEditor } from "./visuals/menu-editor";
+import { MenuPhone, UpsellPhone } from "./visuals/menu-phones";
+import { Receipt } from "./visuals/receipt";
+import { StepFlow, stepFlowSlugs } from "./visuals/step-flow";
 import { StorefrontPhone } from "./visuals/storefront-phone";
 import { bySlug, productHref, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -56,6 +60,37 @@ const heroVisuals: Record<string, ReactNode> = {
       <OrdersDashboard />
     </Ground>
   ),
+  // The secondary pages (owner, 2026-10-13).
+  "online-menu": (
+    <Ground>
+      <MenuPhone />
+    </Ground>
+  ),
+  upsells: (
+    <Ground>
+      <UpsellPhone />
+    </Ground>
+  ),
+  loyalty: (
+    <Ground>
+      <LoyaltyPhone />
+    </Ground>
+  ),
+  "kitchen-display": (
+    <Ground>
+      <KitchenBoard />
+    </Ground>
+  ),
+  "menu-management": (
+    <Ground>
+      <MenuEditor />
+    </Ground>
+  ),
+  payments: (
+    <Ground>
+      <Receipt />
+    </Ground>
+  ),
 };
 
 /**
@@ -63,7 +98,9 @@ const heroVisuals: Record<string, ReactNode> = {
  * flow diagram and /order-management its kitchen board, with the steps
  * listed over it. /integrations has the owner's one visual here (an order
  * flowing from the storefront to the kitchen) and none in its hero, so the
- * same four steps don't show twice.
+ * same four steps don't show twice. /payments has its flow here and the
+ * receipt in the hero. The other secondary pages list their steps under
+ * the hero's visual.
  */
 function howItWorks(product: Product): ReactNode {
   const flow = product.flow!;
@@ -79,11 +116,14 @@ function howItWorks(product: Product): ReactNode {
         </div>
       </>
     );
-  return (
-    <Ground>
-      <StepFlow slug={product.slug} />
-    </Ground>
-  );
+  if (stepFlowSlugs.includes(product.slug))
+    return (
+      <Ground>
+        <StepFlow slug={product.slug} />
+      </Ground>
+    );
+  // The other secondary pages: the steps as a list; their one visual is the hero's.
+  return <Steps steps={flow.steps.map((line) => ({ line }))} />;
 }
 
 /** "Works with": the related products as one row of links. Every item links to a page (owner, 2026-10-13). */

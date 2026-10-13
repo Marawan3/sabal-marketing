@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
-import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoSettings, demoSite } from "../src/lib/demo-data";
+import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoReward, demoSettings, demoSite, demoSms } from "../src/lib/demo-data";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
 
 /**
@@ -21,7 +21,15 @@ const home: Record<string, string> = {
   flow: "/delivery",
   orders: "/order-management",
   settings: "/order-management",
+  // The secondary pages and /how-it-works (2026-10-13).
+  menu: "/online-menu",
+  upsell: "/upsells",
+  loyalty: "/loyalty",
+  editor: "/menu-management",
+  sms: "/how-it-works",
 };
+/** Visuals that show the hero's one dish photo (the only picture any visual carries). */
+const withDishPhoto = ["menu", "upsell", "editor"];
 const names = Object.keys(home) as (keyof typeof copy.visuals)[];
 const pages = [
   "/",
@@ -34,6 +42,12 @@ const pages = [
   "/restaurant-seo",
   "/order-management",
   "/integrations",
+  "/online-menu",
+  "/upsells",
+  "/loyalty",
+  "/kitchen-display",
+  "/menu-management",
+  "/payments",
   "/solutions/independent-restaurants",
   "/solutions/quick-service",
   "/solutions/full-service",
@@ -70,7 +84,10 @@ test("each visual is built: real text, decorative for screen readers with one se
     await expect(el, name).toHaveCount(1);
     await expect(el.locator(":scope > [aria-hidden='true']")).toHaveCount(1);
     await expect(el.locator(":scope > .sr-only")).toHaveText(copy.visuals[name] as string);
-    await expect(el.locator("img, video, canvas, figure, iframe, picture"), name).toHaveCount(0);
+    await expect(el.locator("video, canvas, figure, iframe, picture"), name).toHaveCount(0);
+    const imgs = await el.locator("img").evaluateAll((els) => els.map((img) => img.getAttribute("src") ?? ""));
+    if (withDishPhoto.includes(name)) for (const src of imgs) expect(src, name).toBe(demoOrder.dish.photo);
+    else expect(imgs, name).toEqual([]);
     expect((await el.innerText()).trim().length, name).toBeGreaterThan(20);
   }
 });
@@ -159,6 +176,11 @@ for (const width of [390, 1440]) {
       // Desktop: the drawer is open. Phones: the focal crop of the list.
       orders: (el) => (width >= 1024 ? el.getByText("Mark ready", { exact: true }) : el.locator('[data-row="1930"]')),
       settings: (el) => el.getByText(demoSettings.prep[1], { exact: true }),
+      menu: (el) => el.getByText(demoOrder.dish.name, { exact: true }),
+      upsell: (el) => el.getByText("Goes well with", { exact: true }),
+      loyalty: (el) => el.getByText(demoReward.title, { exact: true }),
+      editor: (el) => el.getByText("Save changes", { exact: true }),
+      sms: (el) => el.getByText(demoSms.confirmed, { exact: true }),
     };
     for (const name of names) {
       await page.goto(home[name]);
@@ -307,8 +329,8 @@ test("the orders dashboard and the kitchen board show the same orders; the setti
   expect(demoSettings.quote).toEqual(["20–30 min", "25–35 min"]);
 });
 
-test("the kitchen board shows only in the homepage kitchen band and /order-management's steps", async ({ page }) => {
-  const where: Record<string, string[]> = { "/": ["kitchen"], "/order-management": ["how"] };
+test("the kitchen board shows only in the homepage kitchen band, /order-management's steps and /kitchen-display's hero", async ({ page }) => {
+  const where: Record<string, string[]> = { "/": ["kitchen"], "/order-management": ["how"], "/kitchen-display": [""] };
   for (const path of pages) {
     await page.goto(path);
     const sections = await page.locator('main [data-visual="kitchen"]').evaluateAll((els) => els.map((el) => el.closest("section")?.id ?? ""));

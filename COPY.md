@@ -198,3 +198,151 @@ Removed until built: a separate catering menu, advance ordering with scheduling,
 The two other lines that described catering as an online order now say "catering requests":
 - **Homepage, More direct orders:** Pickup, delivery, catering requests, and orders for later.
 - **/how-it-works, Order:** They order online, for delivery, at the table, at a kiosk, or in your app, and send catering requests.
+
+---
+
+# Filling the dead ends (2026-10-13, PR #30)
+
+Product facts below were checked against sabal-ros `main` at `a5418d4`, read-only. Each file:line is in that repo at that commit.
+
+## Homepage: founding restaurants (in the customer row's slot)
+
+**We're new. That works in your favor.**
+- The people who built WunTab set up your restaurant themselves.
+- You get a direct line, not a ticket queue.
+- Founding restaurants shape what we build next.
+
+Get Started (Book a call).
+
+The customer row (`src/components/customer-stories.tsx`) stays built for when there are real customers.
+
+**What left the homepage to make room:** the FAQ. All five of its questions are still asked on /pricing, the product pages or the solution pages.
+
+## /about
+
+**What we believe** is the owner's text, word for word:
+- **Your customers should be yours.** When someone orders from your restaurant, you should know who they are and be able to reach them again. Marketplaces keep that relationship for themselves. We hand it to you.
+- **A restaurant shouldn't pay to sell its own food.** We charge the restaurant nothing. Customers pay a small fee at checkout, so we only earn when you sell. If you don't grow, neither do we.
+- **Software should arrive finished.** Most restaurant software is a login and a manual. We build your site, load your menu and connect your kitchen before you touch anything. You get something that works on day one.
+
+**Founder section:** a name, a photo and four sentences, in `src/lib/founder.ts`. It renders nothing while any field is `[OWNER]`.
+
+## /pricing: WunTab next to a delivery app
+
+The table sits under the $0 card; the receipt was already beside the card. No app is named on the page.
+
+**What the restaurant pays per order**
+- *WunTab:* "$0. No monthly charge, no setup fee, no commission." Source: SERVICE_FEE_CLAUSE in /terms (`src/lib/legal.ts`).
+- *Delivery apps:* "15–30% commission on each delivery order." Source: the largest app's US merchant pricing page, which lists 15%, 25% and 30% plans (merchants.doordash.com/en-us/products/pricing). The second-largest's plans run 20–30%.
+
+**What the customer pays**
+- *WunTab:* "Your menu prices, tax, any tip, and a 5% service fee shown before they pay. Delivery adds the driver's fee." Sources:
+  - SERVICE_FEE_CLAUSE.
+  - The delivery fee is the courier's quote, passed to the diner (`packages/services/delivery/quote-service.ts:294-295`, `placement.ts:412, 424`).
+  - Known conflict: checkout code has no 5% fee yet (REGISTER.md, Conflict 1).
+- *Delivery apps:* "Menu prices, plus the app's service fee (often 15% of the order) and a delivery fee." Source: the largest app's consumer help page "What fees do I pay?" (help.doordash.com/en-us/consumers/article/what-fees-do-i-pay): the service fee is usually 15% of the subtotal, plus a delivery fee that varies.
+
+**Whose name is on the order**
+- *WunTab:* "Yours. They order on your own website." Source: /terms 1.1 (your website, on your own domain, with your branding).
+- *Delivery apps:* "The app's. They order in the app." Source: the same pricing page, whose commission applies to "orders placed in the DoorDash App".
+
+**Who gets the customer's details**
+- *WunTab:* "You. Your customer list is yours, and you can take it with you." Source: /terms 1.2 ("What is yours: ... your customer list"); export by hand within 30 days (`src/lib/legal.ts`, export clause).
+- *Delivery apps:* "The app. The customer's account, email and phone sit with the app." Source: the largest app's consumer privacy policy, whose user profile holds name, email, delivery address and phone (help.doordash.com/en-us/consumers/article/consumer-privacy-policy-ca-english).
+- **Caveat:** help.doordash.com doesn't resolve from the session's network, so this and the fees page were read through search results, not opened directly. Worth a look before merging.
+
+**Who gets paid: left out.** The row was asked for, but WunTab's honest answer today is not "you". Cards are charged on one platform merchant account, and money "does not currently settle to the restaurant's own account":
+- The code comment saying so: `apps/ros/app/(dashboard)/settings/payments/page.tsx:12-16`.
+- The single key: `packages/db/env.ts:369-380`.
+- Where it's used: `packages/services/payments/nmi.ts:61`.
+
+The row returns when settlement does.
+
+## The six secondary pages
+
+All six follow the product template. They're linked from the footer and from their parent pages' Works with, not from the mega-menu.
+
+### /online-menu
+- **Headline:** Your menu is your storefront.
+- **Line:** Categories, photos, prices and choices, on your own website, ready to order from.
+- **Visual:** the storefront phone on its menu screen.
+- **Included:** the menu by category with photo, price and description; choices and add-ons with prices; search; a Most ordered list; sold-out dishes come off the menu.
+- **Sources:**
+  - Categories and adapter: `packages/ui/ordering/public-menu-adapter.ts:73-114`.
+  - Clean theme pills, "Search the menu", "Most ordered": `packages/ui/storefront/clean/ordering-menu.tsx:193, 298, 303`.
+  - Item sheet photo, price and modifiers: `packages/ui/storefront/clean/item-sheet.tsx:224-302`.
+- **Sold out:** diners never see a "Sold out" label. Sold-out items are filtered out of the public menu (`packages/db/migrations/0006_menu_rls.sql:278-287`), so the page says they "come off the menu".
+
+### /upsells (Recommended Add-ons)
+- **Headline:** Suggest the side when they pick the dish.
+- **Line:** Pick add-ons for each dish. Customers see them under "Goes well with" when they open it.
+- **Visual:** the dish sheet with two "Goes well with" rows. The clean theme shows at most two (`packages/ui/storefront/clean/goes-well-with.ts:4`).
+- **Rule-based only, as built:**
+  - **The restaurant's picks:** "Recommended add-ons", up to 4 per dish (`apps/ros/app/(dashboard)/menu/_components/recommendation-editor.tsx:25, 110-120`).
+  - **Then the most-ordered dishes:** `goes-well-with.ts:7-39`.
+  - **"Complete your order" in the cart:** `packages/ui/ordering/v2/cart-upsell-strip.tsx:40-42`.
+  - **No AI or "smart":** the code says "No randomness, no scoring, no ranking, no model" (`packages/ui/ordering/recommendations.ts:7-10`).
+- **Renamed:** "Smart Upsells" became "Recommended Add-ons". On /online-ordering, "Smart upsells that suggest the extra naan or the drink" became "Recommended add-ons when a customer picks a dish".
+
+### /loyalty (build commitment)
+- **Headline:** Give regulars a reason to come back.
+- **Line:** Customers earn a reward for coming back. You decide what it is and when they get it.
+- **Visual:** a reward card on the order confirmation. The confirmation's own strings are from `packages/ui/storefront/clean/confirmation.tsx:42-92`; the reward ("Thanks for coming back. Your next Hummus & Warm Pita is on us.") is an example.
+- **Status:** not built (`packages/ui/storefront/themes/clean-home.tsx:41-42`). REGISTER.md records it as a build commitment. No points, tiers or app on the page.
+
+### /kitchen-display
+- **Headline:** Orders on a screen, in the order they came in.
+- **Line:** Every order in New, Preparing and Ready. Your team taps each one along.
+- **Visual:** the kitchen board.
+- **Sources:**
+  - Columns: `apps/ros/app/(kds)/kds/_lib/kds-thresholds.ts:162-166`.
+  - Buttons Start / Ready / Complete: `:193-197`.
+  - "Live": `kds-board.tsx:134-141`.
+  - "Recently completed": `:255`.
+- **Removed:** "Order printing" left this page; printing is Clover-only (REGISTER.md, Conflict 4).
+
+### /menu-management
+- **Headline:** Change the menu once. It changes everywhere.
+- **Line:** Edit a dish in one place. Your website and online ordering show it the moment you save.
+- **Visual:** the menu editor's item drawer, from batch 1's menu-editor captures.
+- **Labels:**
+  - "Edit item details", "Photo", "Item name", "Category", "Price", "Prep (min)": `item-editor-drawer.tsx:181-326`.
+  - Availability "Available / Sold Out / Hidden": `:365`, `packages/domain/menu-status.ts:1-3`.
+  - "Modifier groups": `:419`, "Optional · N options" `:440`.
+  - "Save changes": `:198-218`.
+- **Live on save:** there is no publish step, and every storefront route is `force-dynamic` (`apps/sites/.../menu/page.tsx:22`).
+- **Availability per location:** `menu-repository.ts:583-598`.
+- **Removed (not built):** "Availability by day and time", and the note "One menu powers your website, online ordering, kiosk, table ordering, and app". There is no kiosk, table ordering or app.
+
+### /payments
+- **Headline:** A fast checkout, and a paid order straight to your kitchen.
+- **Line:** Customers pay by card or Apple Pay. The order goes to your kitchen as soon as the payment clears.
+- **Visuals:** the receipt in the hero; "How a payment moves" as Checkout → Card check → Paid → Kitchen.
+  - You asked for "Checkout → Paid → your account". The third step is the kitchen, because settlement isn't to the restaurant's account (above).
+- **Removed (contradicted by code):** the old headline "Money to your bank for you" and the note "Every restaurant has its own payment account and is the merchant of record".
+- **Security line**, verified at these lines: "Card numbers go into our payment partner's secure fields and never reach WunTab. We keep only the card brand and last four digits."
+  - The card is collected in the payment partner's hosted fields, and only a token comes back: `packages/ui/ordering/nmi-payment-step.tsx:4, 9-12, 72-82`.
+  - Only `{ paymentId, paymentToken }` is sent onward: `:122`.
+  - The server's sale call carries only `payment_token`: `packages/services/payments/nmi.ts:103`.
+  - Stored: `method_type`, `method_brand` and `method_last4` only (`packages/db/schema/payments.ts:59-66`). The header says "WHAT IS DELIBERATELY ABSENT: card numbers, CVC" (`:22-24`).
+  - The dashboard's own wording: "Card details are entered in the processor's hosted fields and never reach Wuntab's servers." (`apps/ros/app/(dashboard)/settings/payments/page.tsx:77-78`).
+  - A search for pan, cardNumber, card_number, ccnumber, cvv, cvc and expiry columns found none.
+- **Other sources:**
+  - "Paid": `packages/domain/ordering/payment-status.ts:76`.
+  - The order goes to the kitchen on the paid webhook: REGISTER.md, Clover step 2.
+  - Cancel and refund from the dashboard: `apps/ros/server/services/order-cancellation-service.ts:432`.
+
+## Works with
+- Every item on every product, solution and /how-it-works page now links to a page. Products without a page are left out rather than shown unlinked.
+- "Restaurant Listings" is gone from every list.
+
+## Demo link
+- "See a live WunTab restaurant" points at https://demo.wuntab.com.
+- It sits in the homepage products section and in /restaurant-websites' hero links.
+- It's behind `NEXT_PUBLIC_SHOW_DEMO_LINK`, which is off. Set it to `true` in Vercel once the demo menu has photos. It adds about 60px to the homepage at 390, which still stays under 7,000.
+
+## /how-it-works
+- **Build the relationship:** the reward card on the order confirmation (the /loyalty visual).
+- **Bring them back:** the customer's text on a lock screen, in the product's own words: "Your order #1930 at Palm&Stone Kitchen is confirmed." / "Pickup in about 20 minutes (around {time})." (`packages/domain/ordering/confirmation-sms.ts:67, 77`).
+  - You asked for a "Your order's ready" style text. The product sends no ready text, only the confirmation and a cancellation (`packages/services/messaging/customer-sms.ts`), so the visual uses the real one.
+- The stage chips list only products that have a page.

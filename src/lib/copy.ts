@@ -67,6 +67,12 @@ export const copy = {
       "The menu editor in the WunTab dashboard: the demo restaurant's Spiced Lamb Meatballs with its photo, name, category, price, availability set to Available, and its two modifier groups.",
     loyalty:
       "An animation: the demo restaurant's order confirmation on a phone, where a reward card appears for a returning customer: their next Hummus & Warm Pita is on the restaurant.",
+    menu:
+      "The demo restaurant's online menu on a phone: the Small Plates & Mezze category with each dish's name, price and description, and a photo of the Spiced Lamb Meatballs.",
+    upsell:
+      "The demo restaurant's dish sheet for Spiced Lamb Meatballs on a phone, with two suggestions under Goes well with: Hummus & Warm Pita and Stuffed Grape Leaves.",
+    sms:
+      "A text message on a phone's lock screen from the demo restaurant: Your order #1930 at Palm&Stone Kitchen is confirmed. Pickup in about 20 minutes.",
     demoCaption: "Demo restaurant",
     searchCaption: "Illustration. We don't promise rankings.",
   },
@@ -173,7 +179,8 @@ export const copy = {
      * /pricing's comparison, under the $0 card (owner, 2026-10-13). Every
      * cell's source is in COPY.md: WunTab's are /terms and the privacy
      * policy; the apps' are the largest delivery app's own public merchant
-     * and help pages (never named here).
+     * and help pages (never named here). "Who gets paid" is left out until
+     * settlement goes to the restaurant's own account (REGISTER.md, Conflict 2).
      */
     compare: {
       heading: "WunTab next to a delivery app",
@@ -187,7 +194,7 @@ export const copy = {
         },
         {
           label: "What the customer pays",
-          us: "Your menu prices, tax, any tip, and a 5% service fee shown before they pay.",
+          us: "Your menu prices, tax, any tip, and a 5% service fee shown before they pay. Delivery adds the driver's fee.",
           them: "Menu prices, plus the app's service fee (often 15% of the order) and a delivery fee.",
         },
         {
@@ -199,11 +206,6 @@ export const copy = {
           label: "Who gets the customer's details",
           us: "You. Your customer list is yours, and you can take it with you.",
           them: "The app. The customer's account, email and phone sit with the app.",
-        },
-        {
-          label: "Who gets paid",
-          us: "You. Payments settle to your own account.",
-          them: "The app collects the payment and pays you out, after its commission.",
         },
       ],
     },

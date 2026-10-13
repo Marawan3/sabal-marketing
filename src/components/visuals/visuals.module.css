@@ -1860,7 +1860,7 @@
 }
 
 .rewardLabel {
-  font-size: calc(var(--k) * 11);
+  font-size: calc(var(--k) * 14);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1878,4 +1878,93 @@
     opacity: 0;
     transform: translateY(calc(var(--k) * 16));
   }
+}
+
+/* ---------- The dish sheet with "Goes well with" (menu-phones.tsx) ---------- */
+
+.upsell {
+  isolation: isolate;
+}
+
+.upPhoto {
+  height: calc(var(--k) * 200);
+  overflow: hidden;
+}
+
+.upPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upBody {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 18);
+  padding: calc(var(--k) * 16);
+}
+
+.upPairs {
+  padding-top: calc(var(--k) * 14);
+  border-top: 1px solid var(--sf-line);
+  transition: transform var(--move), opacity var(--fade);
+}
+
+.oneLine {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .upsell:not([data-s~="1"]) .upPairs {
+    opacity: 0;
+    transform: translateY(calc(var(--k) * 16));
+  }
+}
+
+/* ---------- The confirmation text on a lock screen (menu-phones.tsx) ---------- */
+
+.lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--k) * 56) calc(var(--k) * 12) 0;
+  background: #003e80;
+  color: var(--paper);
+}
+
+.lockTime {
+  font-size: calc(var(--k) * 64);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.lockDate {
+  margin-top: calc(var(--k) * 8);
+  font-size: calc(var(--k) * 15);
+}
+
+.note {
+  width: 100%;
+  margin-top: calc(var(--k) * 40);
+  padding: calc(var(--k) * 12) calc(var(--k) * 14);
+  border-radius: calc(var(--k) * 18);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: calc(var(--k) * 14);
+  line-height: 1.35;
+}
+
+.noteHead {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-muted);
+  font-size: calc(var(--k) * 14);
+}
+
+.noteFrom {
+  margin-top: calc(var(--k) * 4);
+  font-weight: 600;
 }

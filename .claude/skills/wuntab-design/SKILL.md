@@ -157,6 +157,31 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Height:** the homepage stays under 7,000px at 390 with motion and with reduced motion
   (tested). Anything new on a page means something else leaves or shrinks.
 
+## 0e. Filling the dead ends, 2026-10-13 (adds to 0d)
+
+- **Secondary product pages:** /online-menu, /upsells, /loyalty, /kitchen-display,
+  /menu-management and /payments.
+  - They use the product template. Each has one visual in the hero, and its steps listed in
+    How it works (/payments has its flow there).
+  - They are linked from the footer and from their parents' Works with, never the mega-menu
+    (`secondaryProducts` in catalog.ts).
+- **Works with always links.** A product without a page is left out, never shown unlinked.
+  Restaurant Listings is gone.
+- **Say only what the product does** (check the product repo first):
+  - Sold-out dishes come off the menu; there's no "Sold out" label.
+  - Add-ons are the restaurant's picks plus most-ordered dishes, under "Goes well with". No AI.
+  - The only customer texts are the confirmation and the cancellation.
+  - Money settles to one platform account today: never write "your account" or "merchant of
+    record" in new copy.
+  - Loyalty is a build commitment (REGISTER.md): outcome-level words only.
+- **Homepage:** founding restaurants ("We're new. That works in your favor.") hold the customer
+  row's slot. The FAQ left the homepage.
+- **/pricing:** WunTab next to a delivery app, a real table, every cell sourced in COPY.md, no
+  app named.
+- **/about:** the owner's beliefs. The founder section is the one place besides the hero dish
+  where a photo may appear, and only once `src/lib/founder.ts` is filled.
+- **Demo link:** "See a live WunTab restaurant" sits behind `NEXT_PUBLIC_SHOW_DEMO_LINK` (off).
+
 ## 1. What we are designing for
 
 **Wuntab** builds and runs an independent restaurant's own website with online ordering.

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { createServer, type Server } from "node:http";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../src/lib/catalog";
+import { builtProducts, bySlug, productHref, secondaryProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { contactEmailText, readContact } from "../src/lib/contact";
 import { companyLinks, legalNav } from "../src/lib/site";
@@ -107,10 +107,12 @@ test("product pages: hero visual, how it works, what's included in two columns, 
       await page.goto(`/${slug}`);
       const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
       expect(ids, slug).toEqual(["", "how", "included", "works-with", "faq", "cta"]);
-      // A built visual in the hero (except /integrations, whose one visual is its steps) and in how it works.
+      // One built visual per page at least: in the hero (not /integrations, whose one visual is its steps),
+      // and in how it works for the main pages and /payments. The other secondary pages list their steps.
       const heroVisuals = await page.locator("main > section").first().locator("[data-demo]").count();
       expect(heroVisuals, slug).toBe(slug === "integrations" ? 0 : 1);
-      expect(await page.locator("#how [data-demo]").count(), slug).toBeGreaterThanOrEqual(1);
+      const listsSteps = secondaryProducts.has(slug) && slug !== "payments";
+      expect(await page.locator("#how [data-demo]").count(), slug).toBe(listsSteps ? 0 : 1);
       const steps = bySlug[slug].flow!.steps;
       expect(steps.length, slug).toBeGreaterThanOrEqual(3);
       expect(steps.length, slug).toBeLessThanOrEqual(6);

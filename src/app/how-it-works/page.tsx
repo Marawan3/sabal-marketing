@@ -6,9 +6,9 @@ import { OrgDiagram } from "@/components/org-diagram";
 import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
 import { Section, SectionHead } from "@/components/section";
-import { CateringPhone } from "@/components/visuals/catering-phone";
 import { DashboardCard } from "@/components/visuals/dashboard-card";
-import { DeliveryPhone } from "@/components/visuals/delivery-phone";
+import { LoyaltyPhone } from "@/components/visuals/loyalty-phone";
+import { SmsPhone } from "@/components/visuals/menu-phones";
 import { Ground } from "@/components/visuals/ground";
 import { OrdersDashboard } from "@/components/visuals/orders-dashboard";
 import { SearchResult } from "@/components/visuals/search-result";
@@ -27,24 +27,23 @@ export const metadata: Metadata = {
   alternates: { canonical: "/how-it-works" },
 };
 
-/** Product names as chips; a product links once its page exists. */
+/** The stage's products that have a page, as links (2026-10-13: every chip links somewhere). */
 function ProductChips({ slugs }: { slugs: readonly string[] }) {
+  const chip = "inline-flex min-h-11 items-center rounded-[12px] border border-ink-muted px-4 text-small font-medium hover:border-ink";
+  if (!slugs.some((slug) => productHref(slug))) return null;
   return (
     <ul className="mt-6 flex flex-wrap gap-2">
-      {slugs.map((slug) => {
+      {slugs.flatMap((slug) => {
         const href = productHref(slug);
-        const chip = "inline-flex min-h-11 items-center rounded-[12px] border px-4 text-small font-medium";
-        return (
-          <li key={slug}>
-            {href ? (
-              <SmartLink href={href} className={`${chip} border-ink-muted hover:border-ink`}>
-                {bySlug[slug].name}
-              </SmartLink>
-            ) : (
-              <span className={`${chip} border-mist text-ink-muted`}>{bySlug[slug].name}</span>
-            )}
-          </li>
-        );
+        return href
+          ? [
+              <li key={slug}>
+                <SmartLink href={href} className={chip}>
+                  {bySlug[slug].name}
+                </SmartLink>
+              </li>,
+            ]
+          : [];
       })}
     </ul>
   );
@@ -64,11 +63,13 @@ const stageVisuals: ReactNode[] = [
   <Ground key="understand">
     <DashboardCard />
   </Ground>,
+  // Build the relationship: the reward card (owner, 2026-10-13; loyalty is a build commitment).
   <Ground key="relationship" bleed>
-    <DeliveryPhone cut />
+    <LoyaltyPhone cut />
   </Ground>,
+  // Bring them back: the customer's text, in the product's words (it has no "ready" text).
   <Ground key="back" bleed>
-    <CateringPhone cut />
+    <SmsPhone cut />
   </Ground>,
 ];
 

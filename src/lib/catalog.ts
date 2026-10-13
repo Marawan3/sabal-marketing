@@ -91,7 +91,7 @@ export const products: Product[] = [
       "Your full menu with photos, modifiers, and add-ons",
       "Promo codes",
       "Tips at checkout",
-      "Smart upsells that suggest the extra naan or the drink",
+      "Recommended add-ons when a customer picks a dish",
       "Customer accounts with favorites and one-tap reorder",
       "Order tracking and automatic order updates for the customer",
     ],
@@ -131,19 +131,39 @@ export const products: Product[] = [
   {
     slug: "online-menu",
     name: "Online Menu",
-    blurb: "A menu people can order from.",
+    blurb: "Your menu as your storefront.",
     pillar: "sell",
     inMenu: false,
-    headline: "A menu people can read, and order from.",
-    sub: "Categories, items, photos, prices, and modifiers, connected straight to ordering.",
+    headline: "Your menu is your storefront.",
+    sub: "Categories, photos, prices and choices, on your own website, ready to order from.",
     capabilities: [
-      "Menu categories and items",
-      "Photos for every dish",
-      "Modifiers and add-ons",
-      "Prices and availability, always current",
-      "Tap any item to order it",
+      "Your menu by category, with a photo, price and description for each dish",
+      "Choices and add-ons, like spice level and extras, with their prices",
+      "Search across the whole menu",
+      "A Most ordered list once orders come in",
+      "Mark a dish sold out and it comes off the menu until you put it back",
     ],
-    related: ["online-ordering", "menu-management", "restaurant-seo"],
+    flow: {
+      title: "How your menu gets online",
+      question: "How does my menu get online?",
+      steps: [
+        "We load your menu, photos and prices",
+        "Customers open it on your website",
+        "They pick a dish and its options",
+        "Sold-out dishes stay off until you put them back",
+      ],
+    },
+    related: ["online-ordering", "menu-management", "upsells", "restaurant-seo"],
+    faq: [
+      {
+        question: "What happens when a dish runs out?",
+        answer: "Mark it sold out in your dashboard. It comes off your online menu straight away, until you mark it available again.",
+      },
+      {
+        question: "Can customers see photos?",
+        answer: "Yes. Each dish can have a photo, shown on the menu and when the customer opens the dish.",
+      },
+    ],
   },
   {
     slug: "delivery",
@@ -289,17 +309,40 @@ export const products: Product[] = [
   },
   {
     slug: "upsells",
-    name: "Smart Upsells",
-    blurb: "Suggest add-ons while they order.",
+    name: "Recommended Add-ons",
+    blurb: "Suggest add-ons when they pick a dish.",
     pillar: "sell",
     inMenu: false,
-    headline: "The right add-on at the right moment.",
-    sub: "Suggest a drink, a side, or a dessert while the customer is already ordering.",
+    /*
+     * Rule-based only, as built (owner, 2026-10-13): the restaurant's own
+     * picks per dish, then its most-ordered dishes. No "smart", no AI.
+     */
+    headline: "Suggest the side when they pick the dish.",
+    sub: "Pick add-ons for each dish. Customers see them under “Goes well with” when they open it.",
     capabilities: [
-      "Suggested add-ons during ordering",
-      "Suggestions based on what is in the cart",
+      "Up to four add-ons per dish, picked by you",
+      "Shown under “Goes well with” when a customer opens the dish",
+      "Your most-ordered dishes fill in where you haven't picked any",
+      "Nothing already in the cart is suggested again",
+      "A “Complete your order” strip in the cart",
     ],
-    related: ["online-ordering", "menu-management", "analytics"],
+    flow: {
+      title: "How a suggestion works",
+      question: "How does a suggestion work?",
+      steps: [
+        "You pick add-ons for a dish in your menu editor",
+        "A customer opens that dish",
+        "Your picks show under Goes well with",
+        "One tap adds one to the order",
+      ],
+    },
+    related: ["online-menu", "menu-management", "online-ordering"],
+    faq: [
+      {
+        question: "Who decides what's suggested?",
+        answer: "You do. Pick up to four add-ons for each dish in your menu editor. Where you haven't, your most-ordered dishes fill in.",
+      },
+    ],
   },
 
   // ───────────────────────────── GROW ─────────────────────────────
@@ -459,14 +502,35 @@ export const products: Product[] = [
     blurb: "Give regulars a reason to come back.",
     pillar: "grow",
     inMenu: true,
+    /*
+     * A build commitment (REGISTER.md, owner 2026-10-13): outcome-level words
+     * only. No points math, no tiers, no app.
+     */
     headline: "Give regulars a reason to come back.",
-    sub: "Rewards that live in the customer's account, right next to their favorites and their reorder button.",
+    sub: "Customers earn a reward for coming back. You decide what it is and when they get it.",
     capabilities: [
-      "Rewards for repeat orders",
-      "Tied to customer accounts, favorites, and order history",
-      "Works with your email and text campaigns",
+      "A reward for customers who come back",
+      "You choose the reward",
+      "You choose when they earn it",
+      "They see it when their order is confirmed",
     ],
-    related: ["customers", "restaurant-marketing", "online-ordering", "restaurant-app"],
+    flow: {
+      title: "How a reward works",
+      question: "How does a reward work?",
+      steps: [
+        "You choose a reward and when it's earned",
+        "A customer comes back and orders",
+        "They see the reward with their order",
+        "They use it next time",
+      ],
+    },
+    related: ["online-ordering", "upsells", "online-menu"],
+    faq: [
+      {
+        question: "What can the reward be?",
+        answer: "Whatever you choose, like a free side or a dish on the house, and you decide when customers earn it.",
+      },
+    ],
   },
   {
     slug: "customers",
@@ -528,18 +592,35 @@ export const products: Product[] = [
     pillar: "operate",
     inMenu: true,
     headline: "Change the menu once. It changes everywhere.",
-    sub: "Manage categories, items, prices, photos, and availability in one place. Every ordering surface updates.",
+    sub: "Edit a dish in one place. Your website and online ordering show it the moment you save.",
     capabilities: [
-      "Categories and items",
-      "Prices",
+      "Dishes, categories and descriptions",
       "Photos",
-      "Modifiers and add-ons",
-      "Availability by day and time",
-      "Sold-out controls",
+      "Prices",
+      "Modifier groups, like spice level and extras",
+      "Available, Sold Out or Hidden, per location",
+      "Dietary labels: vegetarian, vegan, gluten-free, spicy, halal",
     ],
-    related: ["online-menu", "online-ordering", "kiosk", "analytics"],
-    notes: [
-      "One menu powers your website, online ordering, kiosk, table ordering, and app.",
+    flow: {
+      title: "How a menu change goes live",
+      question: "How does a menu change go live?",
+      steps: [
+        "Open the dish in your menu editor",
+        "Change the price, photo or availability",
+        "Save",
+        "Your website and online ordering show it straight away",
+      ],
+    },
+    related: ["online-menu", "upsells", "online-ordering", "order-management"],
+    faq: [
+      {
+        question: "Is there a publish button?",
+        answer: "No. Save the dish and the change is live on your website and online ordering.",
+      },
+      {
+        question: "Can a dish be sold out at one location only?",
+        answer: "Yes. Availability is set for each location.",
+      },
     ],
   },
   {
@@ -592,30 +673,73 @@ export const products: Product[] = [
     pillar: "operate",
     inMenu: true,
     headline: "Orders on a screen, in the order they came in.",
-    sub: "A kitchen display that moves each order through preparation, with printing when you want paper.",
+    sub: "Every order in New, Preparing and Ready. Your team taps each one along.",
     capabilities: [
-      "Incoming orders on a kitchen screen",
-      "Move orders through preparation",
-      "Order printing",
+      "New, Preparing and Ready columns",
+      "A running timer on every ticket",
+      "Start, Ready and Complete buttons",
+      "Live: new orders appear as they come in",
+      "Recently completed orders at the bottom",
     ],
-    related: ["order-management", "online-ordering"],
+    flow: {
+      title: "How an order moves across the screen",
+      question: "How does an order move across the screen?",
+      steps: [
+        "A paid order lands in New",
+        "Tap Start and it moves to Preparing",
+        "Tap Ready when it's done",
+        "Tap Complete when it's picked up",
+      ],
+    },
+    related: ["order-management", "online-ordering", "menu-management"],
+    faq: [
+      {
+        question: "What do I need to run it?",
+        answer: "A tablet or screen with a web browser, signed in to WunTab.",
+      },
+    ],
   },
   {
     slug: "payments",
     name: "Payments",
-    blurb: "Fast checkout, paid into your own account.",
+    blurb: "Card and Apple Pay at checkout.",
     pillar: "operate",
     inMenu: true,
-    headline: "A fast checkout for them. Money to your bank for you.",
-    sub: "Customers pay in a few taps. The money goes into your own payment account.",
+    /*
+     * How money moves, as built (the product repo at a5418d4, 2026-10-13). Card numbers
+     * are tokenized in the payment partner's hosted fields; WunTab stores
+     * brand and last four only (sources in COPY.md). Settlement is one
+     * platform account today, so nothing here says "your account".
+     */
+    headline: "A fast checkout, and a paid order straight to your kitchen.",
+    sub: "Customers pay by card or Apple Pay. The order goes to your kitchen as soon as the payment clears.",
     capabilities: [
-      "Card checkout in a few taps",
-      "Tips at checkout",
-      "Payment integrations",
+      "Card and Apple Pay at checkout",
+      "Tips at checkout, with no tip always an option",
+      "The order goes to your kitchen once it's paid",
+      "Cancel and refund an order from your dashboard",
+      "Card numbers go into our payment partner's secure fields and never reach WunTab. We keep only the card brand and last four digits",
     ],
-    related: ["online-ordering", "integrations", "analytics"],
-    notes: [
-      "Every restaurant has its own payment account and is the merchant of record. WunTab connects your checkout to it.",
+    flow: {
+      title: "How a payment moves",
+      question: "How does a payment move?",
+      steps: [
+        "The customer pays by card or Apple Pay",
+        "Our payment partner checks the card",
+        "The order shows Paid",
+        "It goes to your kitchen",
+      ],
+    },
+    related: ["online-ordering", "integrations", "order-management", "kitchen-display"],
+    faq: [
+      {
+        question: "Is card data safe?",
+        answer: "Card numbers go into our payment partner's secure fields and never reach WunTab's servers. We keep only the card brand and the last four digits.",
+      },
+      {
+        question: "Which ways can customers pay?",
+        answer: "Card or Apple Pay, at checkout.",
+      },
     ],
   },
   {

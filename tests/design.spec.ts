@@ -88,7 +88,7 @@ test("Archivo is the only font, with the brief's weight, width and tracking per 
   expect(await style("main h2")).toEqual({ family: "Archivo", weight: "750", stretch: "110%", tracking: -0.025, leading: 1.05 });
   expect(await style("main h3")).toMatchObject({ family: "Archivo", weight: "650", stretch: "104%", tracking: -0.01 });
   expect(await style("main h1 + p")).toEqual({ family: "Archivo", weight: "400", stretch: "100%", tracking: 0, leading: 1.5 });
-  for (const sel of ["main button[type=submit]", "header nav a:visible", "main summary"]) {
+  for (const sel of ["main button[type=submit]", "header nav a:visible"]) {
     const s = await style(sel);
     expect(s.family, sel).toBe("Archivo");
     expect(s.stretch, sel).toBe("100%");
@@ -96,6 +96,13 @@ test("Archivo is the only font, with the brief's weight, width and tracking per 
     expect(Number(s.weight), sel).toBeGreaterThanOrEqual(500);
     expect(Number(s.weight), sel).toBeLessThanOrEqual(600);
   }
+  // The FAQ's questions, on /pricing (the homepage FAQ left on 2026-10-13).
+  await page.goto("/pricing");
+  const summary = await style("main summary");
+  expect(summary.family).toBe("Archivo");
+  expect(Number(summary.weight)).toBeGreaterThanOrEqual(500);
+  expect(Number(summary.weight)).toBeLessThanOrEqual(600);
+  await page.goto("/");
   expect(await page.evaluate(() => document.fonts.check("750 16px Archivo"))).toBe(true);
   // Bricolage is gone from the page and its stylesheets.
   const html = await (await request.get("/")).text();

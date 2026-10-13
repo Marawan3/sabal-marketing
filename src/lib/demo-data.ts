@@ -203,3 +203,23 @@ export const demoReward = {
   title: "Thanks for coming back.",
   body: "Your next Hummus & Warm Pita is on us.",
 };
+
+/**
+ * "Goes well with" on the dish sheet (the clean theme shows at most two):
+ * the restaurant's own picks for Spiced Lamb Meatballs, from the demo menu.
+ */
+export const demoPairings = ["Hummus & Warm Pita", "Stuffed Grape Leaves"].map(
+  (name) => demoOrder.rows.find((row) => row.name === name)!,
+);
+
+/**
+ * The customer's confirmation text, in the product's words
+ * (packages/domain/ordering/confirmation-sms.ts:67, 77 at the product repo at a5418d4).
+ * There is no "ready" text in the product; this is the one it sends.
+ */
+export const demoSms = {
+  from: demoOrder.restaurant,
+  confirmed: `Your order #${demoOrder.ticket.number} at ${demoOrder.restaurant} is confirmed.`,
+  /** Then "Pickup in about 20 minutes (around {time})", the visitor's own time plus 20, as the hero does. */
+  pickup: "Pickup in about 20 minutes",
+};
