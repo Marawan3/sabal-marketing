@@ -44,6 +44,26 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-13 · PR #31: payments, the intended merchant-account model (merged)
+
+**Merged by:** Claude, on the owner's instruction. Squash commit `87080e8` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
+
+**Why:** the owner decided the site describes the intended payments model. Each restaurant has its own merchant account with our payment partner and is paid through it, and WunTab takes 5% from the customer at checkout.
+
+**What changed:**
+- **/payments:** the flow ends at "Your account". The steps end with "The money goes to your own merchant account". The page adds a line on the 5% and a "Who gets paid?" FAQ. The verified card-data line stays.
+- **/pricing:** the "Who gets paid" row is back: "You, through your own merchant account." The delivery-app side reads "The app collects the payment and pays you out, after its commission".
+- **REGISTER.md:** per-restaurant merchant accounts are a build commitment, next to the 5% fee (Conflicts 1 and 2). Today's code still settles to one platform account.
+- **Processor name:** a new test fails if the payment processor is named on any page or in `src`. The one exception is /privacy. The owner kept that exemption on 2026-10-13, because the published privacy policy names its subprocessors.
+- **Follow-up closed:** "/integrations and the payment account". Its line and the FAQs stay, as the owner asked.
+
+**How it was checked:**
+- **Tests:** 100 Playwright tests passed and 1 was skipped.
+- **Repo checks:** honesty, copy-lint, boundary-check, lint and tsc pass.
+- **Evidence:** `docs/marketing-site/evidence/fill-dead-ends/merchant-account/`.
+
+---
+
 ## 2026-10-13 · PR #30: filling the dead ends (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 30"). Squash commit `9c36113` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
