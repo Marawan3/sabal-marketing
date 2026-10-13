@@ -1038,7 +1038,7 @@
   transform: none;
 }
 .wrap[data-s~="9"] .checkout .page {
-  transform: translateY(calc(var(--k) * -452));
+  transform: translateY(calc(var(--k) * -500));
 }
 .wrap[data-s~="11"] .confirm {
   transform: none;

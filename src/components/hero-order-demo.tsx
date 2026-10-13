@@ -323,6 +323,10 @@ function CheckoutScreen() {
             </span>
           </div>
           <div className={s.line}>
+            <span>{c.feeLabel}</span>
+            <span>{c.fee}</span>
+          </div>
+          <div className={s.line}>
             <span>Taxes and fees ⓘ</span>
             <span>{c.tax}</span>
           </div>

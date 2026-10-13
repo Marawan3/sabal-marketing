@@ -2,7 +2,8 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
-import { demoOrder } from "../src/lib/demo-order";
+import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
+import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
 import { LOOP } from "../src/lib/hero-demo-timeline";
 
 /**
@@ -29,6 +30,39 @@ test("a drawn phone: real text, decorative for screen readers with one sentence,
   // The real dishes and prices, as text.
   for (const row of demoOrder.rows) await expect(demo(page).getByText(row.name, { exact: true }).first()).toBeAttached();
   await expect(demo(page).getByText(demoOrder.dish.price, { exact: true }).first()).toBeAttached();
+});
+
+test("checkout shows the diner's service fee as /pricing and /terms state it, and every total agrees", async ({ page, request }) => {
+  // The same percentage as the terms, the pricing page and the homepage pricing card.
+  expect(SERVICE_FEE_CLAUSE).toContain(`service fee of ${SERVICE_FEE_PERCENT}% of the order`);
+  for (const path of ["/pricing", "/terms"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toMatch(new RegExp(`service fee(?: of)? ${SERVICE_FEE_PERCENT}%|${SERVICE_FEE_PERCENT}% service fee`));
+  }
+  await page.goto("/");
+  const checkout = demo(page).locator('[data-screen="checkout"]');
+  const cents = (text: string) => Math.round(Number(text.replace(/[$,]/g, "")) * 100);
+  const row = async (label: string) => {
+    const line = checkout.locator("div", { has: page.getByText(label, { exact: true }) }).last();
+    return cents((await line.locator("span").last().textContent())!.trim());
+  };
+  const subtotal = cents(demoOrder.dish.price);
+  const fee = await row(`Service fee (${SERVICE_FEE_PERCENT}%)`);
+  const tax = await row("Taxes and fees ⓘ");
+  const tip = await row("Tip");
+  const total = await row("Total");
+  expect(fee).toBe(Math.round((subtotal * SERVICE_FEE_PERCENT) / 100));
+  expect(total).toBe(subtotal + fee + tax + tip);
+  // The fee sits between the subtotal (the items row) and the total.
+  const text = (await checkout.innerText()).replace(/\s+/g, " ");
+  const at = (needle: string) => text.indexOf(needle);
+  const feeLabel = `Service fee (${SERVICE_FEE_PERCENT}%)`;
+  expect(at("1 item")).toBeLessThan(at(feeLabel));
+  expect(at(feeLabel)).toBeLessThan(at("Total"));
+  // The Pay button and the confirmation carry the same total.
+  await expect(checkout.locator("[data-paying]").last()).toContainText(demoOrder.total);
+  await expect(demo(page).locator('[data-screen="confirm"]')).toContainText(`Total${demoOrder.total}`);
+  expect(cents(demoOrder.total)).toBe(total);
 });
 
 test("the pause button is labelled, 44px, and the only control", async ({ page }) => {

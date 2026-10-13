@@ -73,7 +73,7 @@ Read on 2026-10-13 from the demo storefront's database (the dev branch, which de
 - **Arithmetic, done the product's way.**
   - Tax $0.78.
   - Tip at the default 20%: $2.40.
-  - Total $15.18.
+  - Total $15.18 at merge. Since 2026-10-13 (the owner's decision on the PR #22 follow-up) the checkout also shows "Service fee (5%)": 5% of the $12.00 subtotal, $0.60. That makes the total $15.78, on the checkout, the Pay button and the confirmation. The live checkout doesn't show this fee yet.
   - The cart bar shows subtotal plus tax: $12.78.
 - **Layouts and strings.**
   - Storefront: the clean theme's menu rows, item sheet, sticky bar, checkout and confirmation.

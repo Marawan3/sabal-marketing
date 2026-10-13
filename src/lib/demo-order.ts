@@ -10,10 +10,25 @@ import { ARRIVES_AT } from "./hero-demo-timeline";
  * the ones in the kds screenshot (public/shots/kds.png). Labels are the
  * storefront's and the kitchen display's own strings.
  *
- * Arithmetic, done the product's way: tax 6.5% of $12.00 is $0.78; the tip
- * defaults to 20% of the subtotal, $2.40; total $15.18. The cart bar shows
- * subtotal plus tax, $12.78. No service fee: the checkout has none today.
+ * The money is worked out below, not typed in, so every figure agrees:
+ * tax 6.5% of the $12.00 subtotal is $0.78; the tip defaults to 20% of the
+ * subtotal, $2.40; the cart bar shows subtotal plus tax, $12.78, as the
+ * storefront computes it.
+ *
+ * The service fee line is the owner's decision (2026-10-13, PR #22
+ * follow-up): the diner's 5% service fee, on the subtotal, as /pricing and
+ * /terms describe it (SERVICE_FEE_CLAUSE in legal.ts). The live checkout
+ * doesn't show it yet (LOG.md, platform finding 1). Total $15.78.
  */
+const SUBTOTAL = 1200;
+const TAX_BP = 650;
+export const SERVICE_FEE_PERCENT = 5;
+const TIP_PERCENT = 20;
+const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+const tax = Math.round((SUBTOTAL * TAX_BP) / 10000);
+const fee = Math.round((SUBTOTAL * SERVICE_FEE_PERCENT) / 100);
+const tip = Math.round((SUBTOTAL * TIP_PERCENT) / 100);
+
 export const demoOrder = {
   restaurant: "Palm&Stone Kitchen",
   location: "Brickell",
@@ -55,7 +70,7 @@ export const demoOrder = {
   ],
   dish: {
     name: "Spiced Lamb Meatballs",
-    price: "$12.00",
+    price: money(SUBTOTAL),
     description: "Tender lamb meatballs simmered in tomato sauce, topped with mint yogurt.",
     /** Cropped from the menu editor screenshot (ASSETS.md) until the original file is in the repo. */
     photo: "/hero-demo/spiced-lamb-meatballs.webp",
@@ -84,12 +99,14 @@ export const demoOrder = {
   pick: "Hot",
   addLabel: "Add item",
   cartLabel: "View cart · 1 item",
-  cartAmount: "$12.78",
-  total: "$15.18",
+  cartAmount: money(SUBTOTAL + tax),
+  total: money(SUBTOTAL + fee + tax + tip),
   checkout: {
     items: "1 item",
-    tax: "$0.78",
-    tip: "$2.40",
+    feeLabel: `Service fee (${SERVICE_FEE_PERCENT}%)`,
+    fee: money(fee),
+    tax: money(tax),
+    tip: money(tip),
     tipOptions: ["None", "10%", "15%", "20%", "Other"],
     tipChosen: "20%",
     name: "Priya Medina",
