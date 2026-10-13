@@ -24,20 +24,63 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
-2. **/integrations and the payment account.** Recorded 2026-10-13 (PR #29). The Payments line ("into your own payment account"), step 2 and the FAQ answer "Who gets the money?" repeat the site's existing claim that each restaurant has its own payment account. Platform finding 2 above says the code settles to one platform merchant account. The POS line is the owner's wording; platform finding 4 says non-Clover kitchens get a text message, not a printed ticket. Both are for the owner to confirm or change.
-3. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
-4. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
-5. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
-6. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
-7. ~~**/how-it-works stage visuals.**~~ Done in PR #30 (2026-10-13): "Build the relationship" shows the loyalty reward card, and "Bring them back" shows the customer's confirmation text in the product's own words. The product sends no "ready" text, so the visual doesn't claim one.
-8. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
-9. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-10. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
-11. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
-12. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
-13. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
-14. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+1. **/about founder section.** Recorded 2026-10-13 (PR #30). Fill `src/lib/founder.ts`: the name, a photo in `public/about/` with its pixel size, and four sentences. It renders nothing until then.
+2. **Demo storefront link.** Recorded 2026-10-13 (PR #30). Set `NEXT_PUBLIC_SHOW_DEMO_LINK=true` in Vercel once the demo menu has photos.
+3. **/pricing comparison sources.** Recorded 2026-10-13 (PR #30). The delivery-app cells for customer fees and customer data cite the largest app's help pages. These were read through search results, because help.doordash.com doesn't resolve from the session. Owner to open them and confirm.
+4. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
+5. **/integrations and the payment account.** Recorded 2026-10-13 (PR #29). The Payments line ("into your own payment account"), step 2 and the FAQ answer "Who gets the money?" repeat the site's existing claim that each restaurant has its own payment account. Platform finding 2 above says the code settles to one platform merchant account. The POS line is the owner's wording; platform finding 4 says non-Clover kitchens get a text message, not a printed ticket. Both are for the owner to confirm or change.
+6. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
+7. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
+8. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
+9. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
+10. ~~**/how-it-works stage visuals.**~~ Done in PR #30 (2026-10-13): "Build the relationship" shows the loyalty reward card, and "Bring them back" shows the customer's confirmation text in the product's own words. The product sends no "ready" text, so the visual doesn't claim one.
+11. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+12. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+13. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
+14. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
+15. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
+16. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
+17. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-13 · PR #30: filling the dead ends (merged)
+
+**Merged by:** Claude, on the owner's instruction ("merge 30"). Squash commit `9c36113` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
+
+**Why:** close the dead ends (Works with items that went nowhere), and add what a new company can honestly back: founding restaurants, a sourced comparison, and pages for what the product does.
+
+**What changed:**
+- **Six secondary product pages** on the template: /online-menu, /upsells (renamed "Recommended Add-ons"), /loyalty, /kitchen-display, /menu-management and /payments.
+  - They're linked from the footer and their parents' Works with, not the mega-menu.
+  - Every fact was checked in sabal-ros `main` at `a5418d4`; the file:line references are in COPY.md.
+- **Loyalty:** not built. It's a build commitment in REGISTER.md, so the page uses outcome-level words only.
+- **Works with:** every item links to a page. Restaurant Listings is gone.
+- **Homepage:** "We're new. That works in your favor." takes the customer row's slot. The FAQ left the homepage to make room.
+- **/pricing:** WunTab next to a delivery app, with four sourced rows and no app named.
+- **/about:** the owner's three beliefs, and a founder section that renders nothing until filled.
+- **Demo link:** "See a live WunTab restaurant" sits behind `NEXT_PUBLIC_SHOW_DEMO_LINK`, which is off.
+- **/how-it-works:** the reward card, and the customer's real confirmation text.
+
+**Left out, because the code contradicts it:**
+- "→ your account" on /payments, and a "Who gets paid" row. Money settles to one platform account (REGISTER.md, Conflict 2).
+- A "your order's ready" text. The product doesn't send one.
+- A "Sold out" label. Sold-out dishes are removed from the menu instead.
+
+**Verified and published:** the /payments security line. Card numbers are tokenized in the payment partner's hosted fields and never reach WunTab; only the card brand and last four are stored.
+
+**Result:** homepage at 390 is 6,732 px with motion and 6,933 px with reduced motion, both under 7,000.
+
+**How it was checked:**
+- **Tests:** 99 Playwright tests passed and 1 was skipped. They include `tests/fill.spec.ts`.
+- **Repo checks:** honesty, copy-lint, boundary-check, lint and tsc pass.
+- **Evidence:** `docs/marketing-site/evidence/fill-dead-ends/`.
+
+**Follow-ups:**
+- **Founder section:** fill `src/lib/founder.ts`.
+- **Demo link:** switch the flag on when the demo menu has photos.
+- **Comparison table:** check its two sources from help.doordash.com.
+- **Follow-up 5:** still open (the "own payment account" claims on /integrations and in the FAQ).
 
 ---
 
@@ -76,8 +119,8 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 - **Evidence:** `docs/marketing-site/evidence/competitive-upgrade/`.
 
 **Follow-ups:**
-- **Contact form:** switch on sending (follow-up 1).
-- **Payment-account claim:** check it on /integrations (follow-up 2).
+- **Contact form:** switch on sending (follow-up 4).
+- **Payment-account claim:** check it on /integrations (follow-up 5).
 
 ---
 
