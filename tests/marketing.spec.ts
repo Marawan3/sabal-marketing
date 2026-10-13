@@ -15,6 +15,13 @@ const phase1 = [
   "/restaurant-websites",
   "/restaurant-seo",
   "/order-management",
+  "/integrations",
+  "/solutions/independent-restaurants",
+  "/solutions/quick-service",
+  "/solutions/full-service",
+  "/solutions/multi-location",
+  "/about",
+  "/contact",
 ] as const;
 
 const marketingPages = phase1;
@@ -25,7 +32,7 @@ test("every phase-1 page returns 200 and nothing else is a product route", async
     expect(response.status(), path).toBe(200);
   }
   expect([...builtProducts].sort()).toEqual(
-    ["catering", "delivery", "online-ordering", "order-management", "restaurant-seo", "restaurant-websites"],
+    ["catering", "delivery", "integrations", "online-ordering", "order-management", "restaurant-seo", "restaurant-websites"],
   );
   // A product without a page in this release is a 404, not a half-built page.
   for (const product of products) {
@@ -159,7 +166,6 @@ test("the sitemap lists published pages only", async ({ request }) => {
 test("redirects: old one-page paths are real pages now; legal aliases still 301", async ({ request }) => {
   for (const [from, to, status] of [
     ["/demo", "/", 308],
-    ["/about", "/", 308],
     ["/dpa", "/privacy", 308],
     ["/privacy-policy", "/privacy", 301],
     ["/terms-of-service", "/terms", 301],
@@ -169,6 +175,8 @@ test("redirects: old one-page paths are real pages now; legal aliases still 301"
     expect(response.status(), from).toBe(status);
     expect(response.headers()["location"], from).toBe(to);
   }
+  // /about is a page again (owner, 2026-10-13).
+  expect((await request.get("/about", { maxRedirects: 0 })).status()).toBe(200);
   const accessibility = await request.get("/accessibility", { maxRedirects: 0 });
   expect(accessibility.status()).toBe(404);
 });

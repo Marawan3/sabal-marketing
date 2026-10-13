@@ -25,7 +25,7 @@ function Paragraph({ text }: { text: string }) {
       <SmartLink
         key={`${at}-${match[2]}`}
         href={match[2]}
-        className="underline decoration-ink/40 underline-offset-4 hover:decoration-ink"
+        className="underline decoration-ink-muted underline-offset-4 hover:decoration-ink"
       >
         {match[1]}
       </SmartLink>,
@@ -51,7 +51,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
         {doc.final ? (
           <>
             {doc.lastUpdated ? (
-              <p className="mt-4 text-body text-ink/70">
+              <p className="mt-4 text-body text-ink-muted">
                 Last updated{" "}
                 <time dateTime={doc.lastUpdated}>{formatLegalDate(doc.lastUpdated)}</time>
               </p>

@@ -2,8 +2,11 @@
 
 :root {
   --paper: #ffffff;
-  /* Near-black text (design pass, 2026-10-07). The logo keeps its navy tile. */
+  /* Near-black text (design pass, 2026-10-07). The logo keeps its navy tile.
+     Two greys only (2026-10-13): ink, and ink-muted for secondary text and
+     control borders, 64% ink on white (5.1:1 on paper, 4.8:1 on warm). */
   --ink: #1d1d1b;
+  --ink-muted: #6e6e6d;
   /* The logo's navy: the tile, and the one dark band on the homepage. */
   --navy: #13213c;
   /* The one accent: buttons, the hero art panel, step markers, the final band. */
@@ -12,6 +15,8 @@
   /* The one cool light neutral: hairlines and hover fills, used sparingly.
      No beige anywhere (layout pass, 2026-10-11). */
   --mist: #e6e9ef;
+  /* A section background, on at most two sections a page (2026-10-13). */
+  --warm: #faf7f2;
 }
 
 /*
@@ -21,6 +26,8 @@
 @theme inline {
   --color-paper: var(--paper);
   --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-warm: var(--warm);
   --color-navy: var(--navy);
   --color-saffron: var(--saffron);
   --color-saffron-deep: var(--saffron-deep);

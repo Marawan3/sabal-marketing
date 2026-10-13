@@ -48,7 +48,7 @@ export function TextLink({
   return (
     <SmartLink
       href={href}
-      className={`inline-flex min-h-11 items-center font-medium underline decoration-ink/30 underline-offset-4 transition-colors duration-150 hover:decoration-ink ${className}`}
+      className={`inline-flex min-h-11 items-center font-medium underline decoration-ink-muted underline-offset-4 transition-colors duration-150 hover:decoration-ink ${className}`}
     >
       {children}
     </SmartLink>

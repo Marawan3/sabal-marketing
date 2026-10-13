@@ -11,7 +11,7 @@ export function Faq({ heading, items }: { heading: string; items: readonly FaqIt
             <summary className="flex min-h-14 cursor-pointer items-center gap-4 py-4 text-body font-medium">
               {item.question}
             </summary>
-            <p className="max-w-[56ch] pb-6 text-body text-ink/85">{item.answer}</p>
+            <p className="max-w-[56ch] pb-6 text-body text-ink-muted">{item.answer}</p>
           </details>
         ))}
       </div>

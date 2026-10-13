@@ -20,6 +20,12 @@ export default defineConfig({
       url: baseURL,
       reuseExistingServer: false,
       timeout: 120_000,
+      // The contact handler sends to a stand-in email API that tests/upgrade.spec.ts runs on 3998.
+      env: {
+        ...(process.env as Record<string, string>),
+        CONTACT_EMAIL_API_KEY: "test-key",
+        CONTACT_EMAIL_ENDPOINT: "http://127.0.0.1:3998/emails",
+      },
     },
   ],
   projects: [

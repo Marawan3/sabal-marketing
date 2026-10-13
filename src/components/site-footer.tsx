@@ -1,25 +1,39 @@
 import { SmartLink } from "./smart-link";
 import { Logo } from "./logo";
-import { byPillar, pillars, productHref, type Pillar } from "@/lib/catalog";
+import { megaMenu, bySlug, productHref, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { legalNav, primaryLinks, site } from "@/lib/site";
+import { companyLinks, legalNav, primaryLinks, site } from "@/lib/site";
 
-const order: Pillar[] = ["sell", "grow", "operate", "scale"];
+/** Every product page, in mega-menu order, then How it works and Pricing. */
+const productLinks = [
+  ...megaMenu.flatMap((group) =>
+    group.slugs.flatMap((slug) => {
+      const href = productHref(slug);
+      return href ? [{ href, label: bySlug[slug].name }] : [];
+    }),
+  ),
+  ...primaryLinks,
+];
+
+const solutionLinks = solutions.map((s) => ({ href: solutionHref(s.slug), label: s.name }));
 
 function Column({
   title,
   links,
+  className = "",
 }: {
   title: string;
   links: readonly { href: string; label: string }[];
+  className?: string;
 }) {
   return (
-    <div>
-      <p className="text-small font-medium text-paper/55">{title}</p>
-      <ul className="mt-2">
+    <div className={className}>
+      <p className="text-small font-medium text-paper/80">{title}</p>
+      {/* Phones: the links wrap in a row, so four columns stay short; from lg, one per line. */}
+      <ul className="mt-1 flex flex-wrap gap-x-5 lg:mt-2 lg:block">
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper/85 hover:text-paper">
+            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
               {link.label}
             </SmartLink>
           </li>
@@ -32,41 +46,35 @@ function Column({
 export function SiteFooter() {
   return (
     <footer className="on-dark bg-ink text-paper">
-      <div className="mx-auto max-w-[1120px] px-4 py-14 sm:px-8 lg:px-12 lg:py-20">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4">
-          {/* Every product page that exists, by pillar. A pillar with no pages yet is left out. */}
-          {order.map((pillar) => {
-            const links = byPillar(pillar).flatMap((p) => {
-              const href = productHref(p.slug);
-              return href ? [{ href, label: p.name }] : [];
-            });
-            return links.length ? (
-              <Column key={pillar} title={pillars[pillar].name} links={links} />
-            ) : null;
-          })}
-          <Column title="WunTab" links={primaryLinks} />
+      <div className="mx-auto max-w-[1120px] px-4 py-8 sm:px-8 sm:py-14 lg:px-12 lg:py-20">
+        {/* Phones: Product and Solutions full width, Company and Legal side by side. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-4">
+          {/* Four columns (owner, 2026-10-13): Product, Solutions, Company, Legal. */}
+          <Column title="Product" links={productLinks} className="col-span-2 lg:col-span-1" />
+          <Column title="Solutions" links={solutionLinks} className="col-span-2 lg:col-span-1" />
+          <Column title="Company" links={companyLinks} />
+          <Column title="Legal" links={legalNav} />
         </div>
-        <div className="mt-12 flex flex-col gap-6 border-t border-paper/15 pt-8 md:flex-row md:items-end md:justify-between">
-          <div>
+        {/* The logo and the year on one line; the address and the contact link under them. */}
+        <div className="mt-8 border-t border-paper/15 pt-6 lg:mt-12 lg:pt-8">
+          <div className="flex items-center justify-between gap-4">
             <Logo tone="dark" size={28} />
-            <p className="mt-4 max-w-xs text-small text-paper/80">{copy.footer.blurb}</p>
+            <p className="text-small text-paper/80">© {new Date().getFullYear()} WunTab</p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-x-6">
             <SmartLink
               href={`mailto:${site.contactEmail}`}
-              className="mt-1 inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
+              className="inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
             >
               {site.contactEmail}
             </SmartLink>
+            <SmartLink
+              href="/contact"
+              className="inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
+            >
+              {copy.finalCta.message}
+            </SmartLink>
           </div>
-          <ul className="flex flex-wrap items-center gap-x-6 text-small text-paper/80">
-            {legalNav.map((item) => (
-              <li key={item.href}>
-                <SmartLink href={item.href} className="inline-flex min-h-11 items-center hover:text-paper">
-                  {item.label}
-                </SmartLink>
-              </li>
-            ))}
-            <li>© {new Date().getFullYear()} WunTab</li>
-          </ul>
         </div>
       </div>
     </footer>

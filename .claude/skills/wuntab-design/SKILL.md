@@ -122,6 +122,41 @@ their reasoning. Where they disagree with this section, this section wins.
   - The homepage stays under 7,000px at 390 (tested).
 - All of the above is tested in `tests/visuals.spec.ts`.
 
+## 0d. Competitive upgrade, 2026-10-13 (overrides 0 to 0c, 3, 7, 8 and 12 where they conflict)
+
+- **Two greys.** `--ink` (#1d1d1b) and `--ink-muted` (#6e6e6d, 64% ink on white: 5.1:1 on
+  paper, 4.8:1 on warm). No other grey, no Tailwind grey utility, no `ink/NN` opacity. On
+  dark grounds the footer's two values serve: paper at 80% for text, paper at 15% for rules.
+  Hairlines and light fills stay `--mist`. Scrims inside visuals are ink at an opacity.
+  Tested in `tests/upgrade.spec.ts`.
+- **One warm.** `--warm` (#faf7f2) is a section background (`Section tone="warm"`), on at
+  most two sections a page. The homepage uses it once, for the calculator; product and
+  solution pages for "What's included".
+- **Homepage hero:** the trust line over the headline (saffron dot, then "$0 for the
+  restaurant · No lock-in · Your customers, your data") and the small $0 card under the
+  name field. Nothing else in the hero changes.
+- **Savings calculator** (homepage, between products and how it works): orders a week and
+  average order, both empty until the owner types; the result is "Between $X and $Y" a
+  year at 15% and 30%, with the assumption under it. 15–30% is an allowed number, as the
+  apps' published commission on delivery orders (sources in COPY.md, never named on the
+  site). Real text, no library.
+- **Product pages** follow one template: hero with its visual, how it works (the steps
+  and one built visual: `StepFlow`, the delivery flow, or the kitchen board), what's
+  included (a two-column list, on warm), the proof slot, works with, FAQ, final band.
+- **Proof** comes from `src/lib/stories.ts` only: the homepage row and each product page's
+  slot. Empty stays empty, with no demo fallback.
+- **Pages:** /integrations, four /solutions pages, /about and /contact. Navigation:
+  Product, Solutions, How it works, Pricing, Company (About, Contact). Footer: Product,
+  Solutions, Company, Legal.
+- **Forms:** the hero's name field, and /contact, which posts to `/api/contact` and emails
+  hello@. That is the one API route. Its key is `CONTACT_EMAIL_API_KEY`, the site's own,
+  never the product's. Get Started still books a call everywhere; the final band and the
+  footer add "Or send a message".
+- **Final band:** heading, button, then "20-minute call. We show WunTab on your own menu.
+  No pressure." and the link to /contact.
+- **Height:** the homepage stays under 7,000px at 390 with motion and with reduced motion
+  (tested). Anything new on a page means something else leaves or shrinks.
+
 ## 1. What we are designing for
 
 **Wuntab** builds and runs an independent restaurant's own website with online ordering.

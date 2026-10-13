@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
-import { builtProducts } from "../src/lib/catalog";
+import { builtProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoDashboard } from "../src/lib/demo-data";
 import { demoHrefWithName } from "../src/lib/demo-href";
@@ -11,7 +11,15 @@ import { customerStories } from "../src/lib/stories";
  * targets, the mobile header and menu, swipeable rows, the homepage order and
  * height, and the sections that wait on the owner.
  */
-const pages = ["/", "/how-it-works", "/pricing", ...builtProducts.map((slug) => `/${slug}`)];
+const pages = [
+  "/",
+  "/how-it-works",
+  "/pricing",
+  ...builtProducts.map((slug) => `/${slug}`),
+  ...solutions.map((s) => solutionHref(s.slug)),
+  "/about",
+  "/contact",
+];
 
 /** Every distinct computed font size of visible text, outside the logo and the hero's drawn phone (its type is the storefront's). */
 async function fontSizes(page: Page) {
@@ -79,7 +87,7 @@ test("Archivo is the only font, with the brief's weight, width and tracking per 
   expect(await style("h1")).toEqual({ family: "Archivo", weight: "750", stretch: "110%", tracking: -0.025, leading: 1.02 });
   expect(await style("main h2")).toEqual({ family: "Archivo", weight: "750", stretch: "110%", tracking: -0.025, leading: 1.05 });
   expect(await style("main h3")).toMatchObject({ family: "Archivo", weight: "650", stretch: "104%", tracking: -0.01 });
-  expect(await style("main p")).toEqual({ family: "Archivo", weight: "400", stretch: "100%", tracking: 0, leading: 1.5 });
+  expect(await style("main h1 + p")).toEqual({ family: "Archivo", weight: "400", stretch: "100%", tracking: 0, leading: 1.5 });
   for (const sel of ["main button[type=submit]", "header nav a:visible", "main summary"]) {
     const s = await style(sel);
     expect(s.family, sel).toBe("Archivo");
@@ -147,7 +155,8 @@ test("tap targets are at least 44px tall on a phone", async ({ page }) => {
     await page.goto(path);
     const small = await page.evaluate(() =>
       [...document.querySelectorAll("a, button, summary, input")]
-        .filter((el) => !el.closest("p") && !el.classList.contains("skip-link"))
+        // Not the skip link, and not the contact form's off-screen trap (aria-hidden: no one taps it).
+        .filter((el) => !el.closest("p") && !el.classList.contains("skip-link") && !el.closest("[aria-hidden='true']"))
         .map((el) => ({ el, rect: el.getBoundingClientRect() }))
         .filter(({ rect }) => rect.width > 0 && rect.height > 0 && rect.height < 44)
         .map(({ el, rect }) => `${el.tagName} "${(el.textContent ?? "").trim().slice(0, 40)}" ${Math.round(rect.height)}px`),
@@ -267,10 +276,9 @@ test("steps: a row on desktop, a vertical list on phones, with saffron markers",
 test("homepage sections come in the owner's order, and nothing else", async ({ page }) => {
   await page.goto("/");
   const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
-  // Customer stories and beliefs render only once their data is real.
-  const expected = ["top", "outcomes", "kitchen", "products", "how-it-works", "pricing", "faq", "cta"];
+  // Customer stories render only once their data is real. The beliefs live on /about since 2026-10-13.
+  const expected = ["top", "outcomes", "kitchen", "products", "savings", "how-it-works", "pricing", "faq", "cta"];
   if (customerStories.length) expected.splice(1, 0, "stories");
-  if (publishedBeliefs().length) expected.splice(expected.indexOf("faq"), 0, "beliefs");
   expect(ids).toEqual(expected);
   await expect(page.getByLabel(copy.hero.inputLabel)).toBeVisible();
   for (const slug of copy.products.slugs) {
@@ -278,11 +286,14 @@ test("homepage sections come in the owner's order, and nothing else", async ({ p
   }
 });
 
-test("homepage is under 7,000px tall at 390", async ({ page }) => {
+test("homepage is under 7,000px tall at 390, with motion and with reduced motion", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  const height = await page.evaluate(() => document.documentElement.scrollHeight);
-  expect(height).toBeLessThan(7_000);
+  for (const reducedMotion of ["no-preference", "reduce"] as const) {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto("/");
+    const height = await page.evaluate(() => document.documentElement.scrollHeight);
+    expect(height, reducedMotion).toBeLessThan(7_000);
+  }
 });
 
 test("homepage product rows: on phones a title, one line and a link; the visual from 768px", async ({ page }) => {
@@ -301,9 +312,11 @@ test("What we believe stays hidden until the owner writes it", async ({ request 
   const written = beliefs.map((_, i) => ({ title: `Belief ${i}`, body: ["One.", "Two."] }));
   expect(publishedBeliefs(written)).toEqual(written);
   expect(publishedBeliefs([...written.slice(0, 2), { title: "Belief", body: [OWNER_TO_WRITE] }])).toEqual([]);
-  const html = await (await request.get("/")).text();
-  expect(html).not.toContain(OWNER_TO_WRITE);
-  expect(html).not.toContain(copy.beliefs.heading);
+  for (const path of ["/", "/about"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).not.toContain(OWNER_TO_WRITE);
+    expect(html, path).not.toContain(copy.beliefs.heading);
+  }
 });
 
 test("customer stories render nothing while there are none", async ({ request }) => {
@@ -344,7 +357,7 @@ test("no panel is empty, and every section's visual is a built one", async ({ pa
   }
 });
 
-test("shape: panels 20px, buttons and inputs 12px, list rows square; pricing is the only card", async ({ page }) => {
+test("shape: panels 20px, buttons and inputs 12px, list rows square; the hero's $0 card and pricing are the only cards", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const radius = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
@@ -364,7 +377,8 @@ test("shape: panels 20px, buttons and inputs 12px, list rows square; pricing is 
       })
       .map((el) => el.closest("section")?.id),
   );
-  expect(cards).toEqual(["pricing"]);
+  // The hero's small $0 card (owner, 2026-10-13) and the pricing card.
+  expect(cards).toEqual(["top", "pricing"]);
 });
 
 test("bands: the kitchen display on navy, the final call to action on saffron", async ({ page }) => {

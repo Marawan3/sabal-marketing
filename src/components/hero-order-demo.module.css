@@ -18,18 +18,18 @@
 
 .wrap {
   --sf-action: #0f766e;
-  --sf-ink: #111111;
-  --sf-body: #3f3f46;
-  --sf-meta: #646b78;
-  --sf-line: #e5e7eb;
-  --sf-alt: #f5f5f4;
-  --kd-bg: #09090b;
-  --kd-card: #18181b;
-  --kd-rule: #27272a;
-  --kd-edge: #3f3f46;
-  --kd-dim: #52525b;
-  --kd-meta: #a1a1aa;
-  --kd-text: #fafafa;
+  --sf-ink: var(--ink);
+  --sf-body: var(--ink-muted);
+  --sf-meta: var(--ink-muted);
+  --sf-line: var(--mist);
+  --sf-alt: var(--mist);
+  --kd-bg: var(--ink);
+  --kd-card: var(--ink);
+  --kd-rule: color-mix(in oklab, var(--paper) 15%, transparent);
+  --kd-edge: color-mix(in oklab, var(--paper) 15%, transparent);
+  --kd-dim: var(--ink-muted);
+  --kd-meta: color-mix(in oklab, var(--paper) 80%, transparent);
+  --kd-text: var(--paper);
   --kd-live: #10b981;
   --kd-action: #003e80;
   --move: 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -91,7 +91,7 @@
   position: absolute;
   inset: 0;
   border-radius: calc(var(--k) * 60);
-  background: #0b0b0c;
+  background: var(--ink);
   backface-visibility: hidden;
 }
 
@@ -123,7 +123,7 @@
   height: calc(var(--k) * 35);
   margin-left: calc(var(--k) * -60);
   border-radius: calc(var(--k) * 18);
-  background: #000;
+  background: var(--ink);
 }
 
 .status {
@@ -136,7 +136,7 @@
   justify-content: space-between;
   padding: calc(var(--k) * 4) calc(var(--k) * 30) 0 calc(var(--k) * 44);
   background: #fff;
-  color: #000;
+  color: var(--ink);
   font-size: calc(var(--k) * 16);
   font-weight: 600;
 }
@@ -415,7 +415,7 @@
   height: calc(var(--k) * 56);
   margin: calc(var(--k) * -28) 0 0 calc(var(--k) * -28);
   border-radius: 9999px;
-  background: rgb(17 17 17 / 0.18);
+  background: color-mix(in oklab, var(--ink) 18%, transparent);
   opacity: 0;
   pointer-events: none;
 }
@@ -441,7 +441,7 @@
   position: absolute;
   z-index: 3;
   inset: 0;
-  background: rgb(0 0 0 / 0.4);
+  background: color-mix(in oklab, var(--ink) 40%, transparent);
   opacity: 0;
   transition: opacity var(--fade);
 }
@@ -550,7 +550,7 @@
   flex-shrink: 0;
   width: calc(var(--k) * 20);
   height: calc(var(--k) * 20);
-  border: calc(var(--k) * 1.5) solid #767676;
+  border: calc(var(--k) * 1.5) solid var(--ink-muted);
   border-radius: 9999px;
   background: #fff;
 }

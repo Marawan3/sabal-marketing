@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Beliefs } from "@/components/beliefs";
 import { Container } from "@/components/container";
 import { TextLink } from "@/components/cta-link";
 import { CustomerStories } from "@/components/customer-stories";
@@ -11,6 +10,8 @@ import { HeroSignup } from "@/components/hero-signup";
 import { JsonLd } from "@/components/json-ld";
 import { OutcomeTabs } from "@/components/outcome-tabs";
 import { PriceCard } from "@/components/price-card";
+import { SmartLink } from "@/components/smart-link";
+import { SavingsCalculator } from "@/components/savings-calculator";
 import { Steps } from "@/components/steps";
 import { CateringPhone } from "@/components/visuals/catering-phone";
 import { DashboardCard } from "@/components/visuals/dashboard-card";
@@ -35,11 +36,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * The homepage, in the owner's order: hero, outcome tabs, the kitchen band,
- * product rows, how it works, pricing, what we believe, FAQ, final call to
- * action. Every section is a headline, at most two short lines and one built
+ * The homepage, in the owner's order: hero (with the trust line and the $0
+ * card), outcome tabs, the kitchen band, product rows, the savings calculator,
+ * how it works, pricing, FAQ, final call to action. What we believe moved to
+ * /about (2026-10-13). Every section is a headline, at most two short lines and one built
  * visual (2026-10-13): no screenshots, no photos. The pricing card is the
- * only card. Customer stories and beliefs render only once their data is real.
+ * only card besides the hero's small $0 card. Customer stories render only
+ * once their data is real.
  */
 /** One visual per outcome tab (owner, 2026-10-13). */
 const outcomeVisuals: Record<string, ReactNode> = {
@@ -84,14 +87,28 @@ const productVisuals: Record<string, ReactNode> = {
   ),
 };
 
+/** The homepage FAQ leaves out the questions the page itself already answers (copy.faq.leftOffHome). */
+const homeFaq = copy.faq.items.filter((item) => !copy.faq.leftOffHome.includes(item.question));
+
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={faqSchema(copy.faq.items)} />
+      <JsonLd data={faqSchema(homeFaq)} />
 
       {/* a. Hero */}
       <section id="top" className="scroll-mt-20">
-        <Container className="pt-12 pb-10 text-center sm:pt-20 lg:pt-24 lg:pb-14">
+        <Container className="pt-8 pb-10 text-center sm:pt-20 lg:pt-24 lg:pb-14">
+          {/* The trust line: a saffron dot, then the three facts (owner, 2026-10-13). */}
+          <p className="mx-auto mb-5 max-w-[34ch] text-small font-medium text-balance lg:mb-6 lg:max-w-none">
+            <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-saffron align-middle" />
+            {/* Each fact stays whole ("No lock-in" must not break at its hyphen), and a line never starts with a dot. */}
+            {copy.hero.trust.split(" · ").map((fact, i, all) => (
+              <span key={fact}>
+                <span className="whitespace-nowrap">{i < all.length - 1 ? `${fact} ·` : fact}</span>
+                {i < all.length - 1 ? " " : null}
+              </span>
+            ))}
+          </p>
           {/* One sentence per line from lg up; they flow together on phones. */}
           <h1 className="mx-auto max-w-[15ch] text-display lg:max-w-none">
             {copy.hero.headline.split(/(?<=\.) /).map((sentence, index) => (
@@ -101,7 +118,7 @@ export default function HomePage() {
               </span>
             ))}
           </h1>
-          <p className="mx-auto mt-5 max-w-[40ch] text-body text-ink/85 lg:mt-6">{copy.hero.line}</p>
+          <p className="mx-auto mt-5 max-w-[40ch] text-body text-ink-muted lg:mt-6">{copy.hero.line}</p>
           <div className="mt-8">
             <HeroSignup
               href={demoHref}
@@ -109,6 +126,10 @@ export default function HomePage() {
               button={copy.cta.primary}
               nameParam={process.env.NEXT_PUBLIC_DEMO_NAME_PARAM}
             />
+            {/* The $0 pricing fact, moved up; the full pricing section stays lower down. */}
+            <p className="mx-auto mt-3 max-w-[480px] rounded-[12px] border border-mist px-4 py-3 text-small">
+              <span className="font-semibold">{copy.hero.price.lead}</span> {copy.hero.price.rest}
+            </p>
           </div>
         </Container>
         {/*
@@ -143,7 +164,7 @@ export default function HomePage() {
       {/* c. The one bold moment: the kitchen display, large, on the logo navy. */}
       <Section id="kitchen" tone="navy">
         <SectionHead heading={copy.kitchen.heading} sub={copy.kitchen.line} dark />
-        <div className="mt-10 lg:mt-14">
+        <div className="mt-8 lg:mt-14">
           <KitchenBoard />
         </div>
       </Section>
@@ -151,20 +172,27 @@ export default function HomePage() {
       {/* d. Products: four rows between thin rules. Title, one line, link, and the product's own visual. */}
       <Section id="products">
         <SectionHead heading={copy.products.heading} />
-        <ul className="mt-8 border-t border-ink/15 lg:mt-12">
+        <ul className="mt-8 border-t border-mist lg:mt-12">
           {copy.products.slugs.map((slug) => {
             const product = bySlug[slug];
             const href = productHref(slug);
             return (
-              <li key={slug} className="flex flex-col gap-5 border-b border-ink/15 py-6 md:flex-row md:items-center md:gap-10 lg:py-10">
+              <li key={slug} className="flex flex-col gap-5 border-b border-mist py-5 md:flex-row md:items-center md:gap-10 lg:py-10">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-h3">{product.name}</h3>
-                  <p className="mt-2 max-w-[44ch] text-body text-ink/85">{product.headline}</p>
-                  {href ? (
-                    <TextLink href={href} className="mt-1">
-                      More about {product.name.toLowerCase()}
-                    </TextLink>
-                  ) : null}
+                  {/* The name is the link (2026-10-13: the "More about" line went to make room for the calculator). */}
+                  <h3 className="text-h3">
+                    {href ? (
+                      <SmartLink
+                        href={href}
+                        className="-my-[9px] inline-flex min-h-11 items-center underline decoration-ink-muted decoration-2 underline-offset-4 hover:decoration-ink"
+                      >
+                        {product.name}
+                      </SmartLink>
+                    ) : (
+                      product.name
+                    )}
+                  </h3>
+                  <p className="mt-2 max-w-[44ch] text-body text-ink-muted">{product.headline}</p>
                 </div>
                 {/* Phones: title, one line, link. The visual shows from 768px, at the small size. */}
                 <div className="hidden w-full shrink-0 md:block md:w-[340px] lg:w-[400px]">{productVisuals[slug]}</div>
@@ -174,13 +202,23 @@ export default function HomePage() {
         </ul>
       </Section>
 
+      {/* The savings calculator, on warm: the owner's own numbers, the apps' published 15–30%. */}
+      <Section id="savings" tone="warm">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12">
+          <SectionHead heading={copy.savings.heading} className="lg:col-span-5" />
+          <div className="lg:col-span-7">
+            <SavingsCalculator />
+          </div>
+        </div>
+      </Section>
+
       {/* e. How it works: three steps joined by a line; a vertical list on phones. */}
       <Section id="how-it-works">
         <SectionHead heading={copy.steps.heading} />
         <div className="mt-8 lg:mt-12">
           <Steps steps={copy.steps.items} />
         </div>
-        <div className="mt-6">
+        <div className="mt-4 lg:mt-6">
           <TextLink href="/how-it-works">{copy.cta.secondary}</TextLink>
         </div>
       </Section>
@@ -200,15 +238,12 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* What we believe: nothing until the owner writes it. */}
-      <Beliefs />
-
       {/* g. FAQ, then h. the final call to action: a saffron band. */}
       <Section id="faq">
-        <Faq heading={copy.faq.heading} items={copy.faq.items} />
+        <Faq heading={copy.faq.heading} items={homeFaq} />
       </Section>
 
-      <FinalCta email />
+      <FinalCta />
     </>
   );
 }

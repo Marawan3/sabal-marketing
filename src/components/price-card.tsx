@@ -18,13 +18,13 @@ export function PriceCard({
   visual?: ReactNode;
 }) {
   return (
-    <div className="grid gap-8 rounded-[20px] border border-ink bg-paper p-6 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-12 lg:p-14">
+    <div className="grid gap-8 rounded-[20px] border border-ink bg-paper p-5 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-12 lg:p-14">
       <div className={visual ? "lg:col-span-6" : "lg:col-span-12"}>
         <p className="text-display tabular-nums">{copy.pricing.stat}</p>
         <p className="mt-4 max-w-[20ch] text-h3">{copy.pricing.line}</p>
         <ul className="mt-6">
           {lines.map((line) => (
-            <li key={line} className="border-t border-mist py-3 text-body text-ink/85 first:border-t-0 first:pt-0">
+            <li key={line} className="border-t border-mist py-3 text-body text-ink-muted first:border-t-0 first:pt-0">
               {line}
             </li>
           ))}
@@ -35,7 +35,7 @@ export function PriceCard({
         </div>
       </div>
       {/* Phones: the visual runs to the card's border, full width like every visual. */}
-      {visual ? <div className="-mx-6 sm:mx-0 lg:col-span-6">{visual}</div> : null}
+      {visual ? <div className="-mx-5 sm:mx-0 lg:col-span-6">{visual}</div> : null}
     </div>
   );
 }
