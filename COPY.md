@@ -38,7 +38,7 @@ Four rows, each the product page's headline, a link and the product's visual:
 
 - Take orders on your own website, under your own name. · More about online ordering · *storefront phone*
 - Delivery without building a delivery fleet. · More about delivery · *delivery phone*
-- Turn big orders into easy orders. · More about catering · *catering phone*
+- Take catering requests on your own website. · More about catering · *catering phone*
 - Every order, from new to done. · More about order management · *kitchen board*
 
 ## d. How it works
@@ -115,3 +115,18 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 ## Footer
 
 Restaurant websites, online ordering, delivery, and marketing, built and run for you.
+
+## /catering (rewritten 2026-10-13)
+
+Matches the product: a catering request form, not a catering checkout.
+
+- **Headline:** Take catering requests on your own website.
+- **Line:** Customers send the date, the headcount and what they need. You reply and confirm the order with them.
+- **Visual:** the catering phone (the demo's catering page and its request form).
+- **What's included?** A catering page on your website. A request form for the event date, the number of guests and the details. A note asking customers about allergies and dietary needs. Each request goes to the restaurant, which replies and confirms.
+- **How does a catering request work?** 1. Customer opens the catering page on your website. 2. Sends the event date, the number of guests and the details. 3. The request goes to the restaurant. 4. You reply with a plan and a price. 5. You confirm the order with the customer.
+- **Can customers order catering online?** They send a catering request on your website: the event date, the number of guests and what they need. You reply and confirm the order with them.
+- **Do customers pay for catering online?** No. You agree the order and the price with the customer when you confirm it.
+- **Mega-menu line:** Take catering requests on your website.
+
+Removed until built: a separate catering menu, advance ordering with scheduling, lead times, minimum order amounts, catering delivery, and the three questions about them.
