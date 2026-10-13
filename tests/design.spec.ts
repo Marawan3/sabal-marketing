@@ -191,39 +191,37 @@ test("nothing swipes sideways: no horizontal scroller in any page's content on p
   }
 });
 
-test("outcome tabs switch on desktop; on phones each outcome is its label, its lines, then its visual", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+test("outcome tabs switch at every width: one panel at a time, the active tab underlined, text above its visual", async ({ page }) => {
   const labels = copy.outcomes.items.map((item) => item.label);
-  await expect(page.getByRole("tab")).toHaveText(labels);
-  await page.getByRole("tab", { name: labels[2] }).click();
-  await expect(page.getByRole("tab", { name: labels[2] })).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator('[role="tabpanel"]:visible')).toHaveCount(1);
-
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await expect(page.getByRole("tablist", { includeHidden: true })).toBeHidden();
-  const panels = page.locator('[role="tabpanel"]');
-  await expect(panels).toHaveCount(labels.length);
-  for (const [index, label] of labels.entries()) {
-    const panel = panels.nth(index);
-    await expect(panel).toBeVisible();
-    await expect(panel.locator("h3")).toHaveText(label);
-    // label above lines, lines above the visual
-    const order = await panel.evaluate((el) => {
-      const y = (sel: string) => el.querySelector(sel)?.getBoundingClientRect().top ?? null;
-      return [y("h3"), y("ul"), y("[data-demo]")];
-    });
-    expect(order[0]!).toBeLessThan(order[1]!);
-    expect(order[1]!).toBeLessThan(order[2]!);
-    // At most two short lines per section (2026-10-13).
-    expect(await panel.locator("li").count()).toBeLessThanOrEqual(2);
-    // The visual takes at most 60% of the screen's height (2026-10-13).
-    const visualHeight = await panel.locator("[data-demo]").evaluate((el) => el.parentElement!.parentElement!.getBoundingClientRect().height);
-    expect(visualHeight, label).toBeLessThanOrEqual(0.6 * 844 + 1);
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+    await page.goto("/");
+    await expect(page.getByRole("tab")).toHaveText(labels);
+    await expect(page.locator('[role="tabpanel"]:visible')).toHaveCount(1);
+    for (const [index, label] of labels.entries()) {
+      const tab = page.getByRole("tab", { name: label });
+      await tab.click();
+      await expect(tab).toHaveAttribute("aria-selected", "true");
+      const underline = await tab.evaluate((el) => getComputedStyle(el).borderBottomColor.replace(/\s/g, ""));
+      expect(underline, `${label} at ${width}`).not.toBe("rgba(0,0,0,0)");
+      const panels = page.locator('[role="tabpanel"]:visible');
+      await expect(panels).toHaveCount(1);
+      await expect(page.locator('[role="tabpanel"]').nth(index)).toBeVisible();
+      const panel = panels.first();
+      // At most two short lines, then the visual under them on phones.
+      expect(await panel.locator("li").count()).toBeLessThanOrEqual(2);
+      if (width === 390) {
+        const [ul, visual] = await panel.evaluate((el) => [el.querySelector("ul")!.getBoundingClientRect().top, el.querySelector("[data-demo]")!.getBoundingClientRect().top]);
+        expect(ul).toBeLessThan(visual);
+        const visualHeight = await panel.locator("[data-demo]").evaluate((el) => el.parentElement!.parentElement!.getBoundingClientRect().height);
+        expect(visualHeight, label).toBeLessThanOrEqual(0.6 * 844 + 1);
+      }
+    }
+    // Tap only: the tab strip never scrolls sideways.
+    const strip = await page.getByRole("tablist").evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth, overflow: getComputedStyle(el).overflowX }));
+    expect(strip.scroll, `tab strip at ${width}`).toBeLessThanOrEqual(strip.client + 1);
   }
 });
-
 
 test("palette: no beige anywhere, and no shadows on cards or frames", async ({ page }) => {
   for (const path of [...pages, "/terms", "/privacy"]) {
@@ -280,11 +278,11 @@ test("homepage sections come in the owner's order, and nothing else", async ({ p
   }
 });
 
-test("homepage is under 10,000px tall at 390", async ({ page }) => {
+test("homepage is under 7,000px tall at 390", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
-  expect(height).toBeLessThan(10_000);
+  expect(height).toBeLessThan(7_000);
 });
 
 test("homepage product rows: on phones a title, one line and a link; the visual from 768px", async ({ page }) => {
