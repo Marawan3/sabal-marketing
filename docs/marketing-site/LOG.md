@@ -24,13 +24,56 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
-2. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-3. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
-4. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
-5. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
-6. **3x retakes of all batch-1 screenshots.** Recorded 2026-10-12 (PR #21). They are held off wuntab.com until then, and come back on their own when the sharper files land. The capture instructions were given in chat on 2026-10-11. PR #20 (quality 90, retina test) takes the files.
-7. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+1. **Catering visual vs. the product.** Recorded 2026-10-13 (PR #24). The product has no catering checkout (no lead time, minimum, catering menu or "Order received"); catering is an enquiry form. The catering phone shows the real form. The /catering page's own claims (lead times, minimums, paying online) predate this and should be checked against the product. Owner to decide whether to show the planned flow as a labelled mockup.
+2. **Receipt visual.** Recorded 2026-10-13 (PR #24). The product sends diners no receipt (an SMS only), and the 5% fee isn't in checkout yet; the receipt is an illustration of the charges.
+3. **Delivery phone examples.** Recorded 2026-10-13 (PR #24). The demo has delivery switched off, so the $4.99 delivery fee and the address are examples; the real tip label "Dasher tip" is shown as "Tip" because it names the provider.
+4. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet.
+5. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+6. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+7. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
+8. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
+9. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
+10. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
+11. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-13 · PR #24: built visuals site-wide, in place of screenshots and photos (merged)
+
+**Merged by:** Claude, on the owner's "merge". Squash commit `0208562` on `main`, from branch `marketing/built-visuals`. PR #20 closed as superseded.
+
+**Why:** the owner wanted every screenshot and photo replaced with visuals built like the hero phone: real text and shapes, sharp at any size. One visual per section, and short text.
+
+**What changed:**
+- **Eight new visuals**, in the hero phone's style with the demo restaurant's real dishes, prices and labels:
+  - the delivery, catering and storefront phones;
+  - a kitchen board on a tablet;
+  - the dashboard card, captioned "Demo restaurant";
+  - a search result;
+  - a receipt;
+  - the delivery flow diagram.
+- **How they move:**
+  - Each one plays once when it scrolls into view, then holds its last frame. Only the hero loops.
+  - One thing moves at a time.
+  - Anything over five seconds has a pause button.
+  - With reduced motion, each shows its final state as a still.
+- **Where they are:**
+  - **Homepage:** the outcome tabs, the kitchen band (which is back), the product rows, and the pricing card, which gets the receipt.
+  - **/how-it-works:** one visual per stage.
+  - **Product pages:** one visual in each page's hero, plus the flow diagram on /delivery.
+  - **/pricing:** the receipt.
+  - The multi-location diagram now stacks on phones.
+- **Copy:** every section is now a headline, at most two short lines and its visual. Longer text moved into the FAQs word for word; no fact or price changed (COPY.md).
+- **Removed:** the screenshot pipeline: the shot list, SHOTS.md, the screenshot files, frames, crops, placeholders and their tests.
+
+**How it was checked:**
+- **Tests:** 76 Playwright tests passed and 1 was skipped (the existing legal skip), including the new visuals tests.
+- **Script:** pages load less JavaScript than before, except /pricing (+2.5 KB). One shared 2.3 KB player runs everything.
+- **Layout shift:** zero.
+- **Evidence:** `docs/marketing-site/evidence/built-visuals/`.
+- **Live:** confirmed on wuntab.com after the deploy. The homepage serves its 10 visuals and no screenshots.
+
+**Open:** four follow-ups above (catering, receipt, delivery examples, two stage visuals).
 
 ---
 
