@@ -26,6 +26,16 @@ Files: `src/components/logo.tsx` (React), `public/logo.svg` (static, used in JSO
 
 Every screenshot and photo the site can show is listed in `docs/marketing-site/SHOTS.md`, generated from `src/lib/catalog.ts` and `src/lib/shot-placements.ts`. Files go in `public/shots/` under the name shown there. wuntab.com hides a frame until its file exists; preview deployments show a placeholder with the file name and size.
 
+## Hero animation (2026-10-13)
+
+The homepage hero is a phone and a kitchen display drawn in HTML and CSS (`src/components/hero-order-demo.tsx`), not a video or a screenshot. Its one picture is the dish photo:
+
+| File | What it shows | Source | Added |
+|---|---|---|---|
+| `public/hero-demo/spiced-lamb-meatballs.webp` | The demo menu's photo of Spiced Lamb Meatballs | Cropped from `public/shots/menu-editor.png` (batch 1; the photo panel of the item editor, 174×174 at x 1008, y 132, clear of the editor's remove button), saved as WebP at quality 90. The photo itself is the demo menu's AI-generated dish photo. | 2026-10-13 |
+
+The crop is only 174px wide, so the item sheet shows it softer than the rest of the phone. The original is the 1024×1024 file in the demo's photo storage, which this session's network could not reach. When the original is in the repo, replace this file (same name, any size) and change `photoSize` in `src/lib/demo-order.ts`.
+
 ## Photos
 
 Licensed stock is allowed for the panel photos (owner, 2026-10-07). Each one must be recorded below with its source and license before it ships. Any screen inside a photo must be real WunTab UI, never a drawn mockup. No customer photos without the customer's agreement (see `src/lib/stories.ts`).

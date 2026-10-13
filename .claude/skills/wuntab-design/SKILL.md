@@ -68,8 +68,10 @@ their reasoning. Where they disagree with this section, this section wins.
   one cool light neutral, `--mist #E6E9EF`, for hairlines and hover fills only. No
   shadows on cards or frames (the mega-menu overlay keeps one).
 - **Shape:** media frames and panels 20px; buttons and inputs 12px; list rows square.
-- **Homepage, top to bottom:** hero (the orders board about 1100px wide on the saffron
-  panel, wider than the text column; its crop on phones); outcome tabs with no card
+- **Homepage, top to bottom:** hero (since 2026-10-13: a live phone drawn in HTML and
+  CSS on the saffron panel, wider than the text column. It orders from the demo
+  restaurant and the order lands on the kitchen display beside it; on phones the phone
+  turns over to the ticket. See section 9); outcome tabs with no card
   (desktop: lines left, screenshot right; phone: label, lines, crop); the kitchen band,
   the page's one bold moment (logo navy, the kitchen display large, one headline, one
   line); product rows between thin rules (title, one line, link, a small real crop where
@@ -261,9 +263,17 @@ restaurant in Orlando, measured head-to-head". Neither may appear; see section 6
 
 ## 9. Motion
 
-No scroll-triggered animation. The one orchestrated moment used to be the proof
-ticket printing and the 220 counting up; it went with the tickets on 2026-10-02.
-Every section is a server component. Any future animation respects
+No scroll-triggered animation. The one orchestrated moment is the hero's order story
+(2026-10-13, `src/components/hero-order-demo.tsx`): a phone drawn in HTML and CSS with
+real text, the demo restaurant's real dishes and prices, and the storefront's and the
+kitchen display's own layouts and strings. Never a drawn mockup of a screen that doesn't
+exist, and never a screenshot inside it except the dish photo. Its rules, all tested in
+`tests/hero-demo.spec.ts`: it plays only while on screen and the tab is visible; it has a
+pause/play button; only transform and opacity animate; every box reserves its space from
+the first paint (no layout shift); with `prefers-reduced-motion` it shows the finished
+state as a still (the confirmation and the ticket); it is `aria-hidden` with one
+sentence for screen readers. Its script stays around 2 KB.
+Every other section is a server component, and any future animation respects
 `prefers-reduced-motion` by rendering the finished state.
 
 Allowed elsewhere: 150ms color transitions on hover and focus, and `<details>` open

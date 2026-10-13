@@ -72,11 +72,9 @@ test("held screenshots render nothing on production, and leave no empty containe
       if (!shown.length) expect(await page.locator("main figcaption").count(), `caption left behind on ${path}`).toBe(0);
     }
     await page.goto("/");
-    // Hero: text, the name field and Get Started; no saffron block without its board.
-    if (!isShotVisible(homeShots.hero.shots[1], FITS.heroBoard)) {
-      await expect(page.locator("#top div.bg-saffron")).toHaveCount(0);
-      await expect(page.getByLabel(copy.hero.inputLabel)).toBeVisible();
-    }
+    // Hero: text, the name field and Get Started, then the drawn phone, which needs no screenshot.
+    await expect(page.getByLabel(copy.hero.inputLabel)).toBeVisible();
+    await expect(page.locator("#top [data-demo]")).toBeVisible();
     // The kitchen band goes with its screenshot.
     if (!isShotVisible(homeShots.kitchen.shots[0], FITS.kitchen)) await expect(page.locator("#kitchen")).toHaveCount(0);
   }

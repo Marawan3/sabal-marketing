@@ -14,14 +14,14 @@ import { customerStories } from "../src/lib/stories";
  */
 const pages = ["/", "/how-it-works", "/pricing", ...builtProducts.map((slug) => `/${slug}`)];
 
-/** Every distinct computed font size of visible text, outside the logo. */
+/** Every distinct computed font size of visible text, outside the logo and the hero's drawn phone (its type is the storefront's). */
 async function fontSizes(page: Page) {
   return page.evaluate(() => {
     const sizes = new Set<string>();
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const el = node.parentElement;
-      if (!el || !node.textContent?.trim() || el.closest("[data-logo], script, style, noscript, .sr-only")) continue;
+      if (!el || !node.textContent?.trim() || el.closest("[data-logo], [data-demo], script, style, noscript, .sr-only")) continue;
       const rect = el.getBoundingClientRect();
       if (!rect.width || !rect.height || getComputedStyle(el).visibility === "hidden") continue;
       sizes.add(getComputedStyle(el).fontSize);
@@ -405,7 +405,7 @@ test.describe("on the preview build, where held screenshots still show", () => {
     // A card: a box with a border on all four sides and rounded corners, that isn't a frame, button, input or link.
     const cards = await page.evaluate(() =>
       [...document.querySelectorAll("main *")]
-        .filter((el) => !el.closest("figure") && !["A", "BUTTON", "INPUT", "SUMMARY"].includes(el.tagName))
+        .filter((el) => !el.closest("figure, [data-demo]") && !["A", "BUTTON", "INPUT", "SUMMARY"].includes(el.tagName))
         .filter((el) => {
           const cs = getComputedStyle(el);
           const all = ["Top", "Right", "Bottom", "Left"].every((side) => parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0);

@@ -25,6 +25,13 @@ export const copy = {
     sub: "WunTab brings your website, online ordering, delivery, catering, guest experience, marketing, and restaurant operations together in one platform.",
     line: "Your website, online ordering, delivery, and marketing, built and run for you.",
     inputLabel: "Your restaurant's name",
+    /** The hero animation: one sentence for screen readers, and its pause button. */
+    demo: {
+      description:
+        "An animation: on a phone, a diner orders Spiced Lamb Meatballs, spice level Hot, from Palm&Stone Kitchen, our demo restaurant, and the order arrives as a new ticket on the kitchen display.",
+      pause: "Pause the animation",
+      play: "Play the animation",
+    },
   },
   /** Homepage tabs. Shots are attached in src/lib/shot-placements.ts. At most three short lines each. */
   outcomes: {

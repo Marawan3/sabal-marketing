@@ -1,0 +1,1140 @@
+/*
+ * The hero's order story, drawn in HTML and CSS (hero-order-demo.tsx).
+ *
+ * Every size inside a device is written in the device's own pixels, times
+ * --k: the phone screen is 390 wide (an iPhone viewport) and the kitchen
+ * display 900, and --k turns one of those pixels into CSS pixels at whatever
+ * width the box renders. So the text is real text at any size, and nothing
+ * inside moves the page: each box reserves its space with aspect-ratio.
+ *
+ * The story steps are words in data-s on .wrap ("0 1 2 ..."), added by
+ * hero-demo-player.tsx. A rule for step N matches from N onwards. Only
+ * transform and opacity change.
+ *
+ * Colours are the products' own: the demo restaurant's brand colour and the
+ * storefront's neutrals (packages/ui/storefront tokens), and the kitchen
+ * display's zinc and blue.
+ */
+
+.wrap {
+  --sf-action: #0f766e;
+  --sf-ink: #111111;
+  --sf-body: #3f3f46;
+  --sf-meta: #646b78;
+  --sf-line: #e5e7eb;
+  --sf-alt: #f5f5f4;
+  --kd-bg: #09090b;
+  --kd-card: #18181b;
+  --kd-rule: #27272a;
+  --kd-edge: #3f3f46;
+  --kd-dim: #52525b;
+  --kd-meta: #a1a1aa;
+  --kd-text: #fafafa;
+  --kd-live: #10b981;
+  --kd-action: #003e80;
+  --move: 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --fade: 280ms ease;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4%;
+    max-width: 980px;
+    margin-inline: auto;
+  }
+}
+
+.sys {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  letter-spacing: 0;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- The phone ---------- */
+
+.phoneBox {
+  container-type: inline-size;
+  position: relative;
+  width: min(280px, 72vw);
+  aspect-ratio: 414 / 868;
+  perspective: 1600px;
+}
+
+@media (min-width: 1024px) {
+  .phoneBox {
+    width: 30.6%;
+  }
+}
+
+.flipper {
+  --k: calc(100cqw / 414);
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 800ms cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--k) * 60);
+  background: #0b0b0c;
+  backface-visibility: hidden;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.screen {
+  position: absolute;
+  inset: calc(var(--k) * 12);
+  overflow: hidden;
+  border-radius: calc(var(--k) * 48);
+  background: #fff;
+  color: var(--sf-body);
+  font-size: calc(var(--k) * 16);
+}
+
+.back .screen {
+  background: var(--kd-bg);
+  color: var(--kd-text);
+}
+
+.island {
+  position: absolute;
+  z-index: 6;
+  top: calc(var(--k) * 11);
+  left: 50%;
+  width: calc(var(--k) * 120);
+  height: calc(var(--k) * 35);
+  margin-left: calc(var(--k) * -60);
+  border-radius: calc(var(--k) * 18);
+  background: #000;
+}
+
+.status {
+  position: absolute;
+  z-index: 5;
+  inset: 0 0 auto;
+  height: calc(var(--k) * 47);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--k) * 4) calc(var(--k) * 30) 0 calc(var(--k) * 44);
+  background: #fff;
+  color: #000;
+  font-size: calc(var(--k) * 16);
+  font-weight: 600;
+}
+
+.back .status {
+  background: var(--kd-bg);
+  color: #fff;
+}
+
+.statusTime {
+  display: inline-block;
+  min-width: calc(var(--k) * 54);
+  text-align: center;
+}
+
+.statusIcons {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 6);
+}
+
+.statusIcons svg {
+  display: block;
+  height: calc(var(--k) * 12);
+  width: auto;
+}
+
+/* Each screen fills the phone below the status bar and moves as one piece. */
+.layer {
+  position: absolute;
+  inset: calc(var(--k) * 47) 0 0;
+  overflow: hidden;
+  background: #fff;
+  transition: transform var(--move), opacity var(--fade);
+}
+
+/* ---------- Storefront pieces ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  height: calc(var(--k) * 56);
+  padding: 0 calc(var(--k) * 16);
+  background: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.brand {
+  color: var(--sf-action);
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  gap: calc(var(--k) * 8);
+  height: calc(var(--k) * 56);
+  align-items: center;
+  padding: 0 calc(var(--k) * 16);
+  background: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+}
+
+.round,
+.pill {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--k) * 40);
+  border-radius: 9999px;
+  background: var(--sf-alt);
+  color: var(--sf-body);
+}
+
+.round {
+  width: calc(var(--k) * 40);
+}
+
+.round svg,
+.icon {
+  width: calc(var(--k) * 18);
+  height: calc(var(--k) * 18);
+}
+
+.pill {
+  padding: 0 calc(var(--k) * 16);
+}
+
+.pillOn {
+  background: var(--sf-action);
+  color: #fff;
+  font-weight: 600;
+}
+
+.pillRing {
+  background: #fff;
+  border: calc(var(--k) * 1) solid var(--sf-line);
+}
+
+.pillRingOn {
+  background: #fff;
+  border: calc(var(--k) * 2) solid var(--sf-action);
+  color: var(--sf-ink);
+  font-weight: 600;
+}
+
+.menuBody {
+  position: absolute;
+  inset: calc(var(--k) * 112) 0 0;
+  overflow: hidden;
+}
+
+.scroll {
+  transition: transform 900ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.h2 {
+  padding: calc(var(--k) * 20) calc(var(--k) * 16) calc(var(--k) * 4);
+  color: var(--sf-ink);
+  font-size: calc(var(--k) * 24);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.rows {
+  padding: 0 calc(var(--k) * 16);
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--k) * 16);
+  padding: calc(var(--k) * 16) 0;
+  border-bottom: calc(var(--k) * 1) solid var(--sf-line);
+}
+
+.rowText {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(var(--k) * 4);
+}
+
+.name {
+  color: var(--sf-ink);
+  font-weight: 600;
+}
+
+.price {
+  color: var(--sf-ink);
+  font-weight: 700;
+}
+
+.meta {
+  color: var(--sf-meta);
+  font-size: calc(var(--k) * 14);
+  line-height: 1.45;
+}
+
+.clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: calc(var(--k) * 96);
+  height: calc(var(--k) * 96);
+}
+
+.thumb img,
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb img {
+  border-radius: calc(var(--k) * 12);
+}
+
+.add {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--k) * 40);
+  height: calc(var(--k) * 40);
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--sf-ink);
+  align-self: center;
+}
+
+.thumb .add {
+  position: absolute;
+  right: calc(var(--k) * -4);
+  bottom: calc(var(--k) * -4);
+}
+
+.add svg {
+  width: calc(var(--k) * 20);
+  height: calc(var(--k) * 20);
+}
+
+.inCart {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--sf-action);
+  color: #fff;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+/* The page-level bar and the sheet's footer bar. */
+.cartBar {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  padding: calc(var(--k) * 12) calc(var(--k) * 16) calc(var(--k) * 16);
+  transform: translateY(110%);
+  transition: transform var(--move);
+}
+
+.action {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(var(--k) * 56);
+  padding: 0 calc(var(--k) * 20);
+  border-radius: 9999px;
+  background: var(--sf-action);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 160ms ease;
+}
+
+.swap {
+  position: relative;
+  display: grid;
+}
+
+.swap > * {
+  grid-area: 1 / 1;
+  transition: opacity var(--fade);
+}
+
+.swap > :last-child {
+  opacity: 0;
+}
+
+/* Taps: a soft ring where the finger lands. */
+.tap {
+  position: absolute;
+  z-index: 4;
+  width: calc(var(--k) * 56);
+  height: calc(var(--k) * 56);
+  margin: calc(var(--k) * -28) 0 0 calc(var(--k) * -28);
+  border-radius: 9999px;
+  background: rgb(17 17 17 / 0.18);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes tap {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+/* ---------- The item sheet ---------- */
+
+.backdrop {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: rgb(0 0 0 / 0.4);
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+.sheet {
+  position: absolute;
+  z-index: 4;
+  inset: calc(var(--k) * 21) 0 0;
+  overflow: hidden;
+  border-radius: calc(var(--k) * 12) calc(var(--k) * 12) 0 0;
+  background: #fff;
+  transform: translateY(102%);
+  transition: transform var(--move);
+}
+
+.grabber {
+  display: flex;
+  height: calc(var(--k) * 32);
+  align-items: center;
+  justify-content: center;
+}
+
+.grabber span {
+  width: calc(var(--k) * 40);
+  height: calc(var(--k) * 4);
+  border-radius: 9999px;
+  background: var(--sf-alt);
+}
+
+.close {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--k) * 12);
+  right: calc(var(--k) * 12);
+  display: flex;
+  width: calc(var(--k) * 40);
+  height: calc(var(--k) * 40);
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--sf-ink);
+}
+
+.photo {
+  aspect-ratio: 4 / 3;
+}
+
+.sheetBody {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 32);
+  padding: calc(var(--k) * 16) calc(var(--k) * 20) 0;
+}
+
+.title {
+  color: var(--sf-ink);
+  font-size: calc(var(--k) * 24);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 4);
+}
+
+.group {
+  border-top: calc(var(--k) * 1) solid var(--sf-line);
+  padding-top: calc(var(--k) * 16);
+}
+
+.groupHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: calc(var(--k) * 8);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 16);
+  min-height: calc(var(--k) * 44);
+  padding: calc(var(--k) * 8) 0;
+}
+
+.option + .option {
+  border-top: calc(var(--k) * 1) solid var(--sf-line);
+}
+
+.option .swap {
+  flex: 1;
+}
+
+.delta {
+  margin-left: auto;
+}
+
+.radio,
+.check {
+  position: relative;
+  flex-shrink: 0;
+  width: calc(var(--k) * 20);
+  height: calc(var(--k) * 20);
+  border: calc(var(--k) * 1.5) solid #767676;
+  border-radius: 9999px;
+  background: #fff;
+}
+
+.check {
+  border-radius: calc(var(--k) * 3);
+}
+
+.radio i {
+  position: absolute;
+  inset: calc(var(--k) * -1.5);
+  border: calc(var(--k) * 5.5) solid var(--sf-action);
+  border-radius: 9999px;
+  background: #fff;
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+.sheetFoot {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  gap: calc(var(--k) * 8);
+  padding: calc(var(--k) * 12) calc(var(--k) * 16) calc(var(--k) * 16);
+  background: #fff;
+}
+
+.stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: calc(var(--k) * 22);
+  height: calc(var(--k) * 56);
+  padding: 0 calc(var(--k) * 22);
+  border: calc(var(--k) * 1) solid var(--sf-line);
+  border-radius: 9999px;
+  color: var(--sf-ink);
+}
+
+/* ---------- Checkout ---------- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 32);
+  padding: calc(var(--k) * 12) calc(var(--k) * 16) calc(var(--k) * 32);
+  transition: transform 900ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.pageHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pageHead > div {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
+}
+
+.back44 {
+  display: flex;
+  width: calc(var(--k) * 44);
+  height: calc(var(--k) * 44);
+  align-items: center;
+  justify-content: center;
+  color: var(--sf-ink);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 12);
+  padding: calc(var(--k) * 16);
+  border: calc(var(--k) * 1) solid var(--sf-line);
+  border-radius: calc(var(--k) * 12);
+  color: var(--sf-ink);
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--k) * 12);
+}
+
+.withIcon {
+  display: flex;
+  gap: calc(var(--k) * 12);
+  align-items: flex-start;
+}
+
+.withIcon .icon {
+  flex-shrink: 0;
+  margin-top: calc(var(--k) * 3);
+}
+
+.rule {
+  border-top: calc(var(--k) * 1) solid var(--sf-line);
+  padding-top: calc(var(--k) * 12);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--k) * 8);
+}
+
+.total {
+  font-size: calc(var(--k) * 24);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 4);
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  height: calc(var(--k) * 44);
+  padding: 0 calc(var(--k) * 12);
+  border: calc(var(--k) * 1) solid var(--sf-line);
+  border-radius: calc(var(--k) * 12);
+  color: var(--sf-ink);
+}
+
+.cardFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--k) * 8);
+  margin-top: calc(var(--k) * 8);
+}
+
+.cardFields > :first-child {
+  grid-column: 1 / -1;
+}
+
+.cardFields .input {
+  color: var(--sf-meta);
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
+  min-height: calc(var(--k) * 44);
+}
+
+.payBar {
+  margin: 0 calc(var(--k) * -16);
+  padding: calc(var(--k) * 12) calc(var(--k) * 16) calc(var(--k) * 16);
+  display: flex;
+}
+
+/* ---------- Confirmation ---------- */
+
+.done {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 24);
+  padding: calc(var(--k) * 40) calc(var(--k) * 16) 0;
+}
+
+.doneHead {
+  text-align: center;
+  color: var(--sf-ink);
+}
+
+.ready {
+  display: inline-block;
+  min-width: calc(var(--k) * 72);
+  text-align: right;
+}
+
+.link {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-align: right;
+}
+
+.doneCta {
+  display: flex;
+  padding: 0 calc(var(--k) * 16);
+}
+
+.cover {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+/* ---------- The kitchen display ---------- */
+
+.boardBox {
+  container-type: inline-size;
+  display: none;
+  position: relative;
+  width: 65.4%;
+  aspect-ratio: 900 / 884;
+}
+
+@media (min-width: 1024px) {
+  .boardBox {
+    display: block;
+  }
+}
+
+.board {
+  --k: calc(100cqw / 900);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--kd-bg);
+  color: var(--kd-text);
+  font-size: calc(var(--k) * 16);
+}
+
+.kHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(var(--k) * 68);
+  padding: 0 calc(var(--k) * 24);
+  border-bottom: calc(var(--k) * 1) solid var(--kd-rule);
+}
+
+.kHead > div {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 16);
+}
+
+.kPlace {
+  font-size: calc(var(--k) * 20);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.kMeta {
+  color: var(--kd-meta);
+  font-size: calc(var(--k) * 14);
+}
+
+.kSound {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 6);
+  height: calc(var(--k) * 44);
+  padding: 0 calc(var(--k) * 16);
+  border: calc(var(--k) * 1) solid var(--kd-edge);
+  border-radius: calc(var(--k) * 6);
+  font-size: calc(var(--k) * 14);
+  font-weight: 600;
+}
+
+.kSound svg {
+  width: calc(var(--k) * 14);
+  height: calc(var(--k) * 14);
+  color: #fbbf24;
+}
+
+.kLive {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
+}
+
+.kLive i {
+  width: calc(var(--k) * 8);
+  height: calc(var(--k) * 8);
+  border-radius: 9999px;
+  background: var(--kd-live);
+}
+
+.kClock {
+  display: inline-block;
+  min-width: calc(var(--k) * 64);
+  text-align: right;
+}
+
+.kCols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(var(--k) * 1);
+  height: 100%;
+  background: var(--kd-rule);
+}
+
+.kCol {
+  background: var(--kd-bg);
+}
+
+.kColHead {
+  padding: calc(var(--k) * 8) calc(var(--k) * 16);
+  color: var(--kd-meta);
+  font-size: calc(var(--k) * 14);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kCount {
+  display: inline-grid;
+  margin-left: calc(var(--k) * 8);
+  color: var(--kd-dim);
+}
+
+.kCount > *,
+.kActive > * {
+  grid-area: 1 / 1;
+  transition: opacity var(--fade);
+}
+
+.kCount > :last-child,
+.kActive > :last-child {
+  opacity: 0;
+}
+
+.kActive {
+  display: inline-grid;
+}
+
+.kTickets {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 12);
+  padding: 0 calc(var(--k) * 16) calc(var(--k) * 24);
+}
+
+.ticket {
+  padding: calc(var(--k) * 16);
+  border: calc(var(--k) * 2) solid var(--kd-edge);
+  border-radius: calc(var(--k) * 8);
+  background: var(--kd-card);
+  color: var(--kd-text);
+  line-height: 1.5;
+}
+
+.tHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--k) * 8);
+  font-size: calc(var(--k) * 30);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tWho {
+  margin-top: calc(var(--k) * 4);
+  color: var(--kd-meta);
+  font-size: calc(var(--k) * 14);
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.tItems {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 8);
+  margin-top: calc(var(--k) * 12);
+}
+
+.tItem {
+  display: flex;
+  gap: calc(var(--k) * 8);
+  font-size: calc(var(--k) * 18);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.tItem span:first-child {
+  color: var(--kd-meta);
+}
+
+.tMod {
+  margin: calc(var(--k) * 2) 0 0 calc(var(--k) * 28);
+  color: var(--kd-meta);
+  font-size: calc(var(--k) * 16);
+  line-height: 1.5;
+}
+
+.tGo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--k) * 64);
+  margin-top: calc(var(--k) * 16);
+  border-radius: calc(var(--k) * 6);
+  background: var(--kd-action);
+  color: #fff;
+  font-size: calc(var(--k) * 20);
+  font-weight: 700;
+}
+
+/* The new ticket keeps its slot from the first paint and shows on step 12. */
+.arrive {
+  opacity: 0;
+  transform: translateX(calc(var(--k) * -60));
+  transition: transform var(--move), opacity var(--fade);
+}
+
+/* The phone's back: the same display, one column wide. */
+.kPhone {
+  position: absolute;
+  inset: calc(var(--k) * 47) 0 0;
+}
+
+.kPhone .kHead {
+  height: calc(var(--k) * 60);
+  padding: 0 calc(var(--k) * 16);
+}
+
+.kPhone .kColHead {
+  padding-top: calc(var(--k) * 12);
+}
+
+/* The reduced-motion still, on phones: the ticket under the phone. */
+.stillBox {
+  container-type: inline-size;
+  display: none;
+  width: min(280px, 72vw);
+}
+
+.stillBox > div {
+  --k: calc(100cqw / 358);
+}
+
+/* ---------- The story ---------- */
+
+.wrap[data-s~="1"] .scroll {
+  transform: translateY(calc(var(--k) * -96));
+}
+.wrap[data-s~="2"]:not([data-s~="3"]) [data-tap="2"],
+.wrap[data-s~="4"]:not([data-s~="5"]) [data-tap="4"],
+.wrap[data-s~="5"]:not([data-s~="6"]) [data-tap="5"],
+.wrap[data-s~="7"]:not([data-s~="8"]) [data-tap="7"],
+.wrap[data-s~="10"]:not([data-s~="11"]) [data-tap="10"] {
+  animation: tap 600ms ease-out both;
+}
+.wrap[data-s~="3"] .backdrop {
+  opacity: 1;
+}
+.wrap[data-s~="3"] .sheet {
+  transform: none;
+}
+.wrap[data-s~="4"] .radio i,
+.wrap[data-s~="4"] [data-pick] > :last-child,
+.wrap[data-s~="6"] .inCart,
+.wrap[data-s~="10"] [data-paying] > :last-child,
+.wrap[data-s~="12"] .kCount > :last-child,
+.wrap[data-s~="12"] .kActive > :last-child {
+  opacity: 1;
+}
+.wrap[data-s~="4"] [data-pick] > :first-child,
+.wrap[data-s~="10"] [data-paying] > :first-child,
+.wrap[data-s~="12"] .kCount > :first-child,
+.wrap[data-s~="12"] .kActive > :first-child {
+  opacity: 0;
+}
+.wrap[data-s~="5"]:not([data-s~="6"]) .sheet .action,
+.wrap[data-s~="7"]:not([data-s~="8"]) .cartBar .action,
+.wrap[data-s~="10"]:not([data-s~="11"]) .payBar .action {
+  transform: scale(0.97);
+}
+.wrap[data-s~="6"] .backdrop {
+  opacity: 0;
+}
+.wrap[data-s~="6"] .sheet {
+  transform: translateY(102%);
+}
+.wrap[data-s~="6"] .cartBar {
+  transform: none;
+}
+.wrap[data-s~="8"] .checkout {
+  transform: none;
+}
+.wrap[data-s~="9"] .checkout .page {
+  transform: translateY(calc(var(--k) * -452));
+}
+.wrap[data-s~="11"] .confirm {
+  transform: none;
+}
+.wrap[data-s~="12"] .arrive {
+  opacity: 1;
+  transform: none;
+}
+.wrap[data-s~="13"] .cover {
+  opacity: 1;
+}
+.wrap[data-s~="13"] .arrive {
+  opacity: 0;
+  transform: none;
+}
+
+.checkout,
+.confirm {
+  z-index: 5;
+  transform: translateX(101%);
+}
+
+/* Phones flip over to the kitchen's side; the back's ticket lands after the turn. */
+@media (max-width: 1023.98px) {
+  .wrap[data-s~="12"] .flipper {
+    transform: rotateY(180deg);
+  }
+  .wrap[data-s~="13"] .flipper {
+    transform: none;
+  }
+  .wrap[data-s~="12"] .back .arrive {
+    transition-delay: 650ms;
+  }
+}
+
+/* Back to the start without playing it backwards. */
+.wrap[data-reset] *,
+.wrap[data-reset] {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* No motion: the end of the story, held still. */
+@media (prefers-reduced-motion: reduce) {
+  .wrap *,
+  .wrap {
+    transition: none !important;
+    animation: none !important;
+  }
+  .wrap .confirm,
+  .wrap .arrive {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .wrap .flipper {
+    transform: none !important;
+  }
+  .wrap .kCount > :first-child,
+  .wrap .kActive > :first-child {
+    opacity: 0 !important;
+  }
+  .wrap .kCount > :last-child,
+  .wrap .kActive > :last-child {
+    opacity: 1 !important;
+  }
+  .wrap .playPause {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 1023.98px) {
+  .stillBox {
+    display: block;
+  }
+}
+
+.playPause {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  transition: background-color 150ms ease;
+}
+
+.playPause:hover {
+  background: var(--mist);
+}
+
+.playPause svg {
+  width: 18px;
+  height: 18px;
+}
