@@ -50,6 +50,10 @@ export const copy = {
     receipt:
       "An order's charges, line by line: the dish, subtotal, the customer's 5% service fee, tax, tip and total.",
     flow: "An animated diagram of a delivery order's six steps, from the customer's phone to WunTab, your kitchen, a driver and the customer.",
+    orders:
+      "An animation of the WunTab orders dashboard for the demo restaurant: the order list with status, prep time and totals, then one order's details opening, with its items, totals and the Mark ready button.",
+    settings:
+      "The online ordering settings: accepting orders, prep time, the ASAP quote and closing time, with controls to pause ordering and adjust prep time. Prep time goes from 20 to 25 minutes.",
     demoCaption: "Demo restaurant",
     searchCaption: "Illustration. We don't promise rankings.",
   },
