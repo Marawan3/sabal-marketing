@@ -6,6 +6,7 @@ import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../
 import { copy } from "../src/lib/copy";
 import { contactEmailText, readContact } from "../src/lib/contact";
 import { companyLinks, legalNav } from "../src/lib/site";
+import { OWNER, publishedFounder } from "../src/lib/founder";
 import { customerStories, storiesFor } from "../src/lib/stories";
 import { yearlyRange } from "../src/components/savings-calculator";
 
@@ -121,7 +122,7 @@ test("product pages: hero visual, how it works, what's included in two columns, 
   }
 });
 
-test("proof slots: the homepage row and every product page read one list, and render nothing while it is empty", async ({ request }) => {
+test("proof slots: every product page reads the stories list and renders nothing while it is empty", async ({ request }) => {
   expect(customerStories).toEqual([]);
   const story = { restaurant: "R", owner: "O", result: "X", products: ["delivery"] };
   expect(storiesFor("delivery", [story])).toEqual([story]);
@@ -162,11 +163,20 @@ test("solution pages: four product pages each, with their own one line", async (
   }
 });
 
-test("/about: beliefs stay hidden, who it's for, and the hello@ address", async ({ page }) => {
+test("/about: the beliefs, who it's for, and the hello@ address; the founder waits for the owner", async ({ page }) => {
   const response = await page.goto("/about");
   expect(response!.status()).toBe(200);
   expect(response!.url()).toMatch(/\/about$/);
-  await expect(page.locator("main")).not.toContainText(copy.beliefs.heading);
+  await expect(page.locator("#beliefs")).toContainText(copy.beliefs.heading);
+  await expect(page.locator("#beliefs h3")).toHaveCount(3);
+  // The founder section renders nothing while src/lib/founder.ts holds [OWNER].
+  expect(publishedFounder()).toBeNull();
+  await expect(page.locator("#founder")).toHaveCount(0);
+  await expect(page.locator("main")).not.toContainText(OWNER);
+  const filled = { name: "A Founder", photo: "/about/founder.webp", photoWidth: 640, photoHeight: 800, sentences: ["One.", "Two.", "Three.", "Four."] as [string, string, string, string] };
+  expect(publishedFounder(filled)).toEqual(filled);
+  expect(publishedFounder({ ...filled, sentences: ["One.", "Two.", "Three.", OWNER] })).toBeNull();
+  expect(publishedFounder({ ...filled, photo: OWNER })).toBeNull();
   for (const s of solutions) await expect(page.locator(`#for a[href="${solutionHref(s.slug)}"]`)).toBeVisible();
   await expect(page.locator('main a[href="mailto:hello@wuntab.com"]')).toBeVisible();
 });

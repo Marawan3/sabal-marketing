@@ -318,7 +318,7 @@ export const products: Product[] = [
       "Direct online ordering on every page",
       "Built so search engines can read every dish and price",
     ],
-    related: ["restaurant-seo", "online-ordering", "online-menu", "listings"],
+    related: ["restaurant-seo", "online-ordering", "online-menu"],
     flow: {
       title: "How we build your website",
       question: "How do you build my website?",
@@ -363,7 +363,7 @@ export const products: Product[] = [
       "Your menu, discoverable item by item",
       "Business listings that match your website",
     ],
-    related: ["menu-check", "restaurant-websites", "listings", "online-menu"],
+    related: ["menu-check", "restaurant-websites", "online-menu"],
     flow: {
       title: "How your menu goes into the page",
       question: "What goes into the page?",
@@ -448,7 +448,7 @@ export const products: Product[] = [
       "Google review requests sent to customers",
       "Review monitoring across your locations",
     ],
-    related: ["guest-feedback", "listings", "restaurant-marketing"],
+    related: ["guest-feedback", "restaurant-marketing"],
     notes: [
       "We ask every customer, not just the happy ones. Review requests follow Google's rules.",
     ],
@@ -666,7 +666,7 @@ export const products: Product[] = [
       "Menus, hours, and orders per location",
       "Feedback and analytics across locations",
     ],
-    related: ["enterprise", "analytics", "guest-feedback", "listings"],
+    related: ["enterprise", "analytics", "guest-feedback"],
     visual: "org",
   },
   {
@@ -755,7 +755,18 @@ export const builtProducts = [
   "restaurant-seo",
   "order-management",
   "integrations",
+  // Secondary pages (owner, 2026-10-13): linked from the footer and from
+  // their parent pages' Works with, not from the mega-menu.
+  "online-menu",
+  "upsells",
+  "loyalty",
+  "kitchen-display",
+  "menu-management",
+  "payments",
 ] as const;
+
+/** Built pages that stay out of the mega-menu. */
+export const secondaryProducts = new Set<string>(["online-menu", "upsells", "loyalty", "kitchen-display", "menu-management", "payments"]);
 
 const built = new Set<string>(builtProducts);
 
@@ -879,7 +890,7 @@ export const lifecycle: { name: string; body: string; products: string[] }[] = [
   {
     name: "Discover",
     body: "A customer finds you through your website, search, listings, or a campaign.",
-    products: ["restaurant-websites", "restaurant-seo", "listings", "restaurant-marketing"],
+    products: ["restaurant-websites", "restaurant-seo", "restaurant-marketing"],
   },
   {
     name: "Order",

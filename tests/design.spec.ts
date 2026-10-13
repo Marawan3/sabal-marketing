@@ -276,9 +276,8 @@ test("steps: a row on desktop, a vertical list on phones, with saffron markers",
 test("homepage sections come in the owner's order, and nothing else", async ({ page }) => {
   await page.goto("/");
   const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
-  // Customer stories render only once their data is real. The beliefs live on /about since 2026-10-13.
-  const expected = ["top", "outcomes", "kitchen", "products", "savings", "how-it-works", "pricing", "faq", "cta"];
-  if (customerStories.length) expected.splice(1, 0, "stories");
+  // Founding restaurants hold the customer row's slot (2026-10-13); the FAQ left for it. The beliefs live on /about.
+  const expected = ["top", "founding", "outcomes", "kitchen", "products", "savings", "how-it-works", "pricing", "cta"];
   expect(ids).toEqual(expected);
   await expect(page.getByLabel(copy.hero.inputLabel)).toBeVisible();
   for (const slug of copy.products.slugs) {
@@ -306,23 +305,30 @@ test("homepage product rows: on phones a title, one line and a link; the visual 
   for (const row of await page.locator("#products li").all()) await expect(row.locator("[data-demo]")).toBeVisible();
 });
 
-test("What we believe stays hidden until the owner writes it", async ({ request }) => {
-  expect(beliefs.some((b) => b.title === OWNER_TO_WRITE)).toBe(true);
-  expect(publishedBeliefs()).toEqual([]);
-  const written = beliefs.map((_, i) => ({ title: `Belief ${i}`, body: ["One.", "Two."] }));
-  expect(publishedBeliefs(written)).toEqual(written);
-  expect(publishedBeliefs([...written.slice(0, 2), { title: "Belief", body: [OWNER_TO_WRITE] }])).toEqual([]);
-  for (const path of ["/", "/about"]) {
-    const html = await (await request.get(path)).text();
-    expect(html, path).not.toContain(OWNER_TO_WRITE);
-    expect(html, path).not.toContain(copy.beliefs.heading);
-  }
+test("What we believe: the owner's three on /about, and a placeholder still hides them all", async ({ request }) => {
+  // Written by the owner on 2026-10-13.
+  expect(beliefs.map((b) => b.title)).toEqual([
+    "Your customers should be yours.",
+    "A restaurant shouldn't pay to sell its own food.",
+    "Software should arrive finished.",
+  ]);
+  expect(publishedBeliefs()).toEqual(beliefs);
+  // The guard stays: one placeholder anywhere and nothing renders.
+  expect(publishedBeliefs([...beliefs.slice(0, 2), { title: "Belief", body: [OWNER_TO_WRITE] }])).toEqual([]);
+  expect(publishedBeliefs([...beliefs.slice(0, 2), { title: OWNER_TO_WRITE, body: ["One."] }])).toEqual([]);
+  const about = await (await request.get("/about")).text();
+  expect(about).toContain(copy.beliefs.heading);
+  for (const b of beliefs) expect(about).toContain(b.title.replace("'", "&#x27;"));
+  const home = await (await request.get("/")).text();
+  expect(home).not.toContain(copy.beliefs.heading);
+  for (const html of [about, home]) expect(html).not.toContain(OWNER_TO_WRITE);
 });
 
-test("customer stories render nothing while there are none", async ({ request }) => {
+test("customer stories render nothing while there are none; founding restaurants hold their slot", async ({ request }) => {
   expect(customerStories).toEqual([]);
   const html = await (await request.get("/")).text();
   expect(html).not.toContain(copy.stories.heading);
+  expect(html).toContain(copy.founding.heading.replace("'", "&#x27;"));
 });
 
 test("Get Started carries the restaurant name into Book a call", () => {
@@ -365,7 +371,6 @@ test("shape: panels 20px, buttons and inputs 12px, list rows square; the hero's 
   expect(await radius("#top input")).toBe("12px");
   expect(await radius("#top button[type=submit]")).toBe("12px");
   expect(await radius("#products li")).toBe("0px");
-  expect(await radius("#faq details")).toBe("0px");
   // A card: a box with a border on all four sides and rounded corners, that isn't a visual, button, input or link.
   const cards = await page.evaluate(() =>
     [...document.querySelectorAll("main *")]

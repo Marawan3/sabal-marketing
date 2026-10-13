@@ -1,19 +1,16 @@
 import { SmartLink } from "./smart-link";
 import { Logo } from "./logo";
-import { megaMenu, bySlug, productHref, solutionHref, solutions } from "@/lib/catalog";
+import { builtProducts, bySlug, megaMenu, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { companyLinks, legalNav, primaryLinks, site } from "@/lib/site";
 
-/** Every product page, in mega-menu order, then How it works and Pricing. */
+/** Every product page: the mega-menu's, in its order, then the secondary pages, then How it works and Pricing. */
 const productLinks = [
-  ...megaMenu.flatMap((group) =>
-    group.slugs.flatMap((slug) => {
-      const href = productHref(slug);
-      return href ? [{ href, label: bySlug[slug].name }] : [];
-    }),
-  ),
-  ...primaryLinks,
-];
+  ...megaMenu.flatMap((group) => group.slugs).filter((slug) => productHref(slug) && !secondaryProducts.has(slug)),
+  ...builtProducts.filter((slug) => secondaryProducts.has(slug)),
+]
+  .map((slug) => ({ href: productHref(slug)!, label: bySlug[slug].name }))
+  .concat(primaryLinks.map((l) => ({ href: l.href, label: l.label })));
 
 const solutionLinks = solutions.map((s) => ({ href: solutionHref(s.slug), label: s.name }));
 

@@ -1717,3 +1717,165 @@
     transform: scale(0.98);
   }
 }
+
+/* ---------- The menu editor's item drawer (menu-editor.tsx) ---------- */
+
+.me {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--mist);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.meHead {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mist);
+}
+
+.meTitle {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.meSub {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.meBody {
+  padding: 14px 16px 16px;
+}
+
+.meTop {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 14px;
+}
+
+.meLabel {
+  margin: 12px 0 6px;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.meTop .meLabel {
+  margin-top: 0;
+}
+
+.mePhoto {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+}
+
+.meFields {
+  display: grid;
+  gap: 10px;
+}
+
+.mePair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.meInput {
+  padding: 8px 10px;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meSeg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.meSeg > span {
+  padding: 8px 4px;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.meSeg > .meOn {
+  border-color: #d1fae5;
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 500;
+}
+
+.meGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+}
+
+.meGroupName {
+  font-weight: 500;
+}
+
+.meSave {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  border-radius: 8px;
+  background: #003e80;
+  color: var(--paper);
+  font-weight: 600;
+}
+
+/* ---------- The loyalty reward card on the order confirmation (loyalty-phone.tsx) ---------- */
+
+.loyalty {
+  isolation: isolate;
+}
+
+.reward {
+  padding: calc(var(--k) * 14) calc(var(--k) * 16);
+  border-radius: calc(var(--k) * 12);
+  background: var(--sf-action);
+  color: var(--paper);
+  font-size: calc(var(--k) * 14);
+  line-height: 1.35;
+  transition: transform var(--move), opacity var(--fade);
+}
+
+.rewardLabel {
+  font-size: calc(var(--k) * 11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.rewardTitle {
+  margin-top: calc(var(--k) * 2);
+  font-size: calc(var(--k) * 17);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .loyalty:not([data-s~="1"]) .reward {
+    opacity: 0;
+    transform: translateY(calc(var(--k) * 16));
+  }
+}
