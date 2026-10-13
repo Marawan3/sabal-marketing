@@ -706,15 +706,19 @@ export const products: Product[] = [
     pillar: "operate",
     inMenu: true,
     /*
-     * How money moves, as built (the product repo at a5418d4, 2026-10-13). Card numbers
-     * are tokenized in the payment partner's hosted fields; WunTab stores
-     * brand and last four only (sources in COPY.md). Settlement is one
-     * platform account today, so nothing here says "your account".
+     * The intended model (owner, 2026-10-13): each restaurant has its own
+     * merchant account with our payment partner and is paid through it;
+     * WunTab's 5% comes from the customer at checkout. Both are build
+     * commitments in REGISTER.md. Card numbers are tokenized in the payment
+     * partner's hosted fields; WunTab stores brand and last four only
+     * (sources in COPY.md). The partner is never named on the site.
      */
     headline: "A fast checkout, and a paid order straight to your kitchen.",
-    sub: "Customers pay by card or Apple Pay. The order goes to your kitchen as soon as the payment clears.",
+    sub: "Customers pay by card or Apple Pay. The order goes to your kitchen, and the money to your own merchant account.",
     capabilities: [
       "Card and Apple Pay at checkout",
+      "Paid through your own merchant account with our payment partner",
+      "WunTab's 5% comes from the customer at checkout, not from you",
       "Tips at checkout, with no tip always an option",
       "The order goes to your kitchen once it's paid",
       "Cancel and refund an order from your dashboard",
@@ -726,12 +730,16 @@ export const products: Product[] = [
       steps: [
         "The customer pays by card or Apple Pay",
         "Our payment partner checks the card",
-        "The order shows Paid",
-        "It goes to your kitchen",
+        "The order shows Paid and goes to your kitchen",
+        "The money goes to your own merchant account",
       ],
     },
     related: ["online-ordering", "integrations", "order-management", "kitchen-display"],
     faq: [
+      {
+        question: "Who gets paid?",
+        answer: "You, through your own merchant account with our payment partner. WunTab takes 5% from the customer at checkout, not from you.",
+      },
       {
         question: "Is card data safe?",
         answer: "Card numbers go into our payment partner's secure fields and never reach WunTab's servers. We keep only the card brand and the last four digits.",

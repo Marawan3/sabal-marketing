@@ -251,12 +251,11 @@ The table sits under the $0 card; the receipt was already beside the card. No ap
 - *Delivery apps:* "The app. The customer's account, email and phone sit with the app." Source: the largest app's consumer privacy policy, whose user profile holds name, email, delivery address and phone (help.doordash.com/en-us/consumers/article/consumer-privacy-policy-ca-english).
 - **Caveat:** help.doordash.com doesn't resolve from the session's network, so this and the fees page were read through search results, not opened directly. Worth a look before merging.
 
-**Who gets paid: left out.** The row was asked for, but WunTab's honest answer today is not "you". Cards are charged on one platform merchant account, and money "does not currently settle to the restaurant's own account":
-- The code comment saying so: `apps/ros/app/(dashboard)/settings/payments/page.tsx:12-16`.
-- The single key: `packages/db/env.ts:369-380`.
-- Where it's used: `packages/services/payments/nmi.ts:61`.
-
-The row returns when settlement does.
+**Who gets paid** (restored by the owner, 2026-10-13, PR #31)
+- *WunTab:* "You, through your own merchant account."
+  - Source: the owner's decision to describe the intended model. Each restaurant has its own merchant account with our payment partner and is paid through it.
+  - It is a **build commitment** in REGISTER.md, next to the 5% fee. Today's code still settles to one platform account (REGISTER.md, Conflict 2).
+- *Delivery apps:* "The app collects the payment and pays you out, after its commission." Source: the largest app's "How DoorDash Marketplace Works" page, which describes weekly deposits to your bank account, with daily payouts through Fast Pay (merchants.doordash.com/en-us/marketplace/how-it-works-for-restaurants).
 
 ## The six secondary pages
 
@@ -316,21 +315,29 @@ All six follow the product template. They're linked from the footer and from the
 
 ### /payments
 - **Headline:** A fast checkout, and a paid order straight to your kitchen.
-- **Line:** Customers pay by card or Apple Pay. The order goes to your kitchen as soon as the payment clears.
-- **Visuals:** the receipt in the hero; "How a payment moves" as Checkout → Card check → Paid → Kitchen.
-  - You asked for "Checkout → Paid → your account". The third step is the kitchen, because settlement isn't to the restaurant's account (above).
-- **Removed (contradicted by code):** the old headline "Money to your bank for you" and the note "Every restaurant has its own payment account and is the merchant of record".
-- **Security line**, verified at these lines: "Card numbers go into our payment partner's secure fields and never reach WunTab. We keep only the card brand and last four digits."
-  - The card is collected in the payment partner's hosted fields, and only a token comes back: `packages/ui/ordering/nmi-payment-step.tsx:4, 9-12, 72-82`.
+- **Line:** Customers pay by card or Apple Pay. The order goes to your kitchen, and the money to your own merchant account.
+- **Visuals:** the receipt in the hero; "How a payment moves" as Checkout → Card check → Paid → Your account.
+- **Steps:**
+  1. The customer pays by card or Apple Pay.
+  2. Our payment partner checks the card.
+  3. The order shows Paid and goes to your kitchen.
+  4. The money goes to your own merchant account.
+- **The intended model (owner, 2026-10-13):**
+  - "Paid through your own merchant account with our payment partner".
+  - "WunTab's 5% comes from the customer at checkout, not from you".
+  - FAQ **Who gets paid?** "You, through your own merchant account with our payment partner. WunTab takes 5% from the customer at checkout, not from you."
+  - Both are **build commitments** in REGISTER.md: the per-restaurant merchant account next to the 5% fee.
+- **The payment partner is never named on the site.** A test checks every page. The one exception is the privacy policy, which names it as a subprocessor (`src/lib/legal.ts:174`, approved legal text).
+- **Security line**, verified: "Card numbers go into our payment partner's secure fields and never reach WunTab. We keep only the card brand and last four digits."
+  - Hosted fields return a token: `packages/ui/ordering/nmi-payment-step.tsx:4, 9-12, 72-82`.
   - Only `{ paymentId, paymentToken }` is sent onward: `:122`.
-  - The server's sale call carries only `payment_token`: `packages/services/payments/nmi.ts:103`.
-  - Stored: `method_type`, `method_brand` and `method_last4` only (`packages/db/schema/payments.ts:59-66`). The header says "WHAT IS DELIBERATELY ABSENT: card numbers, CVC" (`:22-24`).
-  - The dashboard's own wording: "Card details are entered in the processor's hosted fields and never reach Wuntab's servers." (`apps/ros/app/(dashboard)/settings/payments/page.tsx:77-78`).
-  - A search for pan, cardNumber, card_number, ccnumber, cvv, cvc and expiry columns found none.
+  - The sale call carries only `payment_token`: `packages/services/payments/nmi.ts:103`.
+  - Stored: brand and last four only, with card numbers and CVC "deliberately absent": `packages/db/schema/payments.ts:22-24, 59-66`.
+  - The dashboard: "Card details are entered in the processor's hosted fields and never reach Wuntab's servers" (`apps/ros/app/(dashboard)/settings/payments/page.tsx:77-78`).
 - **Other sources:**
   - "Paid": `packages/domain/ordering/payment-status.ts:76`.
   - The order goes to the kitchen on the paid webhook: REGISTER.md, Clover step 2.
-  - Cancel and refund from the dashboard: `apps/ros/server/services/order-cancellation-service.ts:432`.
+  - Cancel and refund: `apps/ros/server/services/order-cancellation-service.ts:432`.
 
 ## Works with
 - Every item on every product, solution and /how-it-works page now links to a page. Products without a page are left out rather than shown unlinked.

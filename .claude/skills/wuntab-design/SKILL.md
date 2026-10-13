@@ -171,8 +171,10 @@ their reasoning. Where they disagree with this section, this section wins.
   - Sold-out dishes come off the menu; there's no "Sold out" label.
   - Add-ons are the restaurant's picks plus most-ordered dishes, under "Goes well with". No AI.
   - The only customer texts are the confirmation and the cancellation.
-  - Money settles to one platform account today: never write "your account" or "merchant of
-    record" in new copy.
+  - Payments describe the intended model (owner, 2026-10-13): each restaurant is paid through
+    its own merchant account with our payment partner, and WunTab's 5% comes from the
+    customer. Both are build commitments in REGISTER.md. The payment partner is never named
+    (tested on every page; the privacy policy is the one exception).
   - Loyalty is a build commitment (REGISTER.md): outcome-level words only.
 - **Homepage:** founding restaurants ("We're new. That works in your favor.") hold the customer
   row's slot. The FAQ left the homepage.
