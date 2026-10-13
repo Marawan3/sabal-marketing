@@ -17,55 +17,10 @@
 
 export type Pillar = "sell" | "grow" | "operate" | "scale";
 
-export type Shot = {
-  /** File key: public/shots/<key>.webp (or .png). Keys are shared across pages on purpose. */
-  key: string;
-  /** Caption shown under the frame, and the label of the empty slot. */
-  label: string;
-  /** desktop, phone, tablet: screenshots. photo: portrait photo. scene: landscape photo. */
-  kind?: "desktop" | "phone" | "tablet" | "photo" | "scene";
-  /** must: the site is incomplete without it. helpful: nice once it exists. */
-  priority: "must" | "helpful";
-  /**
-   * Figures in the screenshot that come from the demo restaurant (sales,
-   * growth, tips). Every frame showing it carries a "Demo restaurant" caption,
-   * and no page copy may quote any of them (owner, 2026-10-10; tested).
-   */
-  demoFigures?: readonly string[];
-};
-
-/** A rectangle in a shot file's own pixels. */
-export type Crop = { x: number; y: number; w: number; h: number };
-
-/**
- * What a desktop or tablet shot shows on phones (under 768px wide): a focal
- * crop about 440–480px of the source wide, so its text renders at a readable
- * size (at least 9px at 360). Cut from the same file at display time; the
- * file itself is never edited. textPx is the capture's body-text size at
- * source, measured from the file, which tests/design.spec.ts uses to check
- * the rendered size. Re-measure both when a file is retaken.
- */
-export const phoneCrops: Record<string, { crop: Crop; textPx: number }> = {
-  // Title, status tabs, and the first four orders: number, time, name, items.
-  "orders-board": { crop: { x: 318, y: 92, w: 468, h: 528 }, textPx: 14 },
-  // The order drawer: status, customer, items, totals.
-  "order-drawer": { crop: { x: 981, y: 0, w: 444, h: 744 }, textPx: 14 },
-  // Open, prep time, ASAP quote, and the pause and prep controls.
-  "ordering-settings": { crop: { x: 312, y: 92, w: 480, h: 390 }, textPx: 14 },
-  // The New column: two tickets at close to real size.
-  kds: { crop: { x: 8, y: 72, w: 380, h: 528 }, textPx: 18 },
-  // The item drawer: photo, name, description.
-  "menu-editor": { crop: { x: 981, y: 0, w: 444, h: 560 }, textPx: 14 },
-  // Availability (available, sold out, hidden), options, modifier groups.
-  "menu-editor-options": { crop: { x: 981, y: 150, w: 444, h: 530 }, textPx: 14 },
-  // Restaurant name, net sales, and the sales chart.
-  "dash-overview": { crop: { x: 310, y: 90, w: 480, h: 550 }, textPx: 14 },
-  // The promo code table: code, name, discount.
-  promotions: { crop: { x: 300, y: 92, w: 480, h: 410 }, textPx: 14 },
-};
-
 export type Flow = {
   title: string;
+  /** The same steps asked as a question, for the FAQ (copy rules, 2026-10-13: sections stay short). */
+  question: string;
   steps: string[];
 };
 
@@ -84,10 +39,9 @@ export type Product = {
   capabilitiesTitle?: string;
   capabilities: string[];
   flow?: Flow;
-  shots: Shot[];
   /** Slugs of products this one connects to. */
   related: string[];
-  /** Plain-language notes rendered under the capabilities. */
+  /** Plain-language notes. Delivery's first note is the line over its flow diagram; others live in the FAQ. */
   notes?: string[];
   /** A restrained diagram used where no real screen exists yet (never fake UI). */
   visual?: "org";
@@ -121,45 +75,6 @@ export const pillars: Record<
   },
 };
 
-/**
- * Photos for the large panels on the homepage and product pages. Licensed
- * stock is fine; record the source and license of each in ASSETS.md. Any
- * screen inside a photo must be real WunTab UI, never a drawn mockup.
- */
-export const photos = {
-  orderingInHand: {
-    key: "photo-ordering-in-hand",
-    label: "A hand holding a phone with a restaurant's WunTab ordering menu open",
-    kind: "scene",
-    priority: "must",
-  },
-  deliveryHandoff: {
-    key: "photo-delivery-handoff",
-    label: "A bagged delivery order handed over at a restaurant counter",
-    kind: "scene",
-    priority: "must",
-  },
-  cateringSpread: {
-    key: "photo-catering-spread",
-    label: "Catering trays laid out for a group order",
-    kind: "scene",
-    priority: "must",
-  },
-  kitchenScreen: {
-    key: "photo-kitchen-screen",
-    label: "A kitchen team working from a tablet showing the WunTab kitchen display",
-    kind: "scene",
-    priority: "helpful",
-  },
-} as const satisfies Record<string, Shot>;
-
-/** One menu item's availability (available, sold out, hidden) and modifier groups. */
-const menuItemOptions: Shot = {
-  key: "menu-editor-options",
-  label: "An item's availability, sold out, and modifiers",
-  priority: "must",
-};
-
 export const products: Product[] = [
   // ───────────────────────────── SELL ─────────────────────────────
   {
@@ -180,22 +95,10 @@ export const products: Product[] = [
       "Customer accounts with favorites and one-tap reorder",
       "Order tracking and automatic order updates for the customer",
     ],
-    shots: [
-      { key: "site-menu", label: "Ordering menu on a phone", kind: "phone", priority: "must" },
-      { key: "item-sheet", label: "An item with modifiers and add-ons", kind: "phone", priority: "must" },
-      { key: "checkout-pickup", label: "Checkout with tip and promo code", kind: "phone", priority: "must" },
-      { key: "checkout-schedule", label: "Choosing a later pickup time", kind: "phone", priority: "must" },
-      { key: "order-tracking", label: "Order tracking after checkout", kind: "phone", priority: "must" },
-      { key: "promotions", label: "Promo codes, set up in your dashboard", priority: "must" },
-      menuItemOptions,
-      photos.orderingInHand,
-    ],
     related: ["online-menu", "delivery", "upsells", "loyalty", "order-management"],
-    notes: [
-      "Your restaurant is the brand from the first tap to the thank-you screen. WunTab stays in the background.",
-    ],
     flow: {
       title: "How an online order works",
+      question: "How does an online order work?",
       steps: [
         "Customer opens your menu on your website",
         "Picks dishes, add-ons, and a time",
@@ -213,6 +116,10 @@ export const products: Product[] = [
         question: "Where do the orders go?",
         answer:
           "Into your POS. If your POS isn't compatible, orders go to a kitchen printer. Every order also shows in your WunTab dashboard.",
+      },
+      {
+        question: "Whose name do customers see?",
+        answer: "Yours. Your restaurant is the brand from the first tap to the thank-you screen. WunTab stays in the background.",
       },
       {
         question: "What does the customer pay?",
@@ -236,7 +143,6 @@ export const products: Product[] = [
       "Prices and availability, always current",
       "Tap any item to order it",
     ],
-    shots: [{ key: "site-menu", label: "Online menu on a phone", kind: "phone", priority: "must" }],
     related: ["online-ordering", "menu-management", "restaurant-seo"],
   },
   {
@@ -256,6 +162,7 @@ export const products: Product[] = [
     ],
     flow: {
       title: "How a delivery order moves",
+      question: "How does a delivery order move?",
       steps: [
         "Customer orders on your website",
         "WunTab receives the order",
@@ -265,11 +172,6 @@ export const products: Product[] = [
         "Customer receives it",
       ],
     },
-    shots: [
-      { key: "checkout-delivery", label: "Delivery checkout with fee and arrival time", kind: "phone", priority: "must" },
-      { key: "delivery-tracking", label: "Customer delivery tracking", kind: "phone", priority: "must" },
-      photos.deliveryHandoff,
-    ],
     related: ["online-ordering", "catering", "order-management", "integrations"],
     notes: [
       "You keep the customer. The driver just drives.",
@@ -304,14 +206,10 @@ export const products: Product[] = [
       "Minimum order amounts",
       "Catering delivery with a third-party driver where it makes sense",
     ],
-    shots: [
-      { key: "catering-page", label: "Catering page with the enquiry form", priority: "must" },
-      { key: "catering-order", label: "Catering order with lead time and minimum", kind: "phone", priority: "must" },
-      photos.cateringSpread,
-    ],
     related: ["online-ordering", "delivery", "order-management"],
     flow: {
       title: "How a catering order works",
+      question: "How does a catering order work?",
       steps: [
         "Customer opens your catering menu",
         "Picks a date and time past your lead time",
@@ -344,7 +242,6 @@ export const products: Product[] = [
     headline: "Order and pay from the table.",
     sub: "A QR code on the table opens your menu. Guests order and pay from their phone.",
     capabilities: ["QR-code ordering for dine-in", "Pay at the table"],
-    shots: [],
     related: ["online-menu", "kiosk", "guest-feedback"],
   },
   {
@@ -360,7 +257,6 @@ export const products: Product[] = [
       "Your menu and branding on the screen",
       "Orders flow into the same order management as everything else",
     ],
-    shots: [],
     related: ["table-ordering", "menu-management", "order-management"],
   },
   {
@@ -376,7 +272,6 @@ export const products: Product[] = [
       "Ordering, favorites, and reorder",
       "Push notifications for offers and order updates",
     ],
-    shots: [{ key: "mobile-app", label: "Branded mobile app", kind: "phone", priority: "helpful" }],
     related: ["online-ordering", "loyalty", "restaurant-marketing"],
   },
   {
@@ -388,7 +283,6 @@ export const products: Product[] = [
     headline: "Digital gift cards, sold from your website.",
     sub: "Customers buy a gift card online and the recipient spends it on your food.",
     capabilities: ["Digital gift cards", "Bought online, spent on online orders"],
-    shots: [],
     related: ["online-ordering", "loyalty"],
   },
   {
@@ -403,7 +297,6 @@ export const products: Product[] = [
       "Suggested add-ons during ordering",
       "Suggestions based on what is in the cart",
     ],
-    shots: [{ key: "checkout-pickup", label: "Upsell at checkout", kind: "phone", priority: "must" }],
     related: ["online-ordering", "menu-management", "analytics"],
   },
 
@@ -423,13 +316,10 @@ export const products: Product[] = [
       "Direct online ordering on every page",
       "Built so search engines can read every dish and price",
     ],
-    shots: [
-      { key: "site-home", label: "A restaurant website on its own domain", priority: "must" },
-      { key: "site-menu", label: "The menu built into the site", kind: "phone", priority: "must" },
-    ],
     related: ["restaurant-seo", "online-ordering", "online-menu", "listings"],
     flow: {
       title: "How we build your website",
+      question: "How do you build my website?",
       steps: [
         "We collect your menu, photos, and branding",
         "We build the site and load your menu",
@@ -471,13 +361,10 @@ export const products: Product[] = [
       "Your menu, discoverable item by item",
       "Business listings that match your website",
     ],
-    shots: [
-      { key: "tag-page", label: "A cuisine page search engines can read", priority: "must" },
-      { key: "site-menu", label: "Every dish and price in the page", kind: "phone", priority: "must" },
-    ],
     related: ["menu-check", "restaurant-websites", "listings", "online-menu"],
     flow: {
       title: "What we build in",
+      question: "What goes into the page?",
       steps: [
         "Your menu is written into the page itself",
         "Each dish, price, and your hours are labelled for search engines",
@@ -514,7 +401,6 @@ export const products: Product[] = [
       "Consistent name, address, phone, and hours across listings",
       "Listing visibility for each location",
     ],
-    shots: [],
     related: ["restaurant-seo", "reviews", "multi-location"],
   },
   {
@@ -537,6 +423,7 @@ export const products: Product[] = [
     ],
     flow: {
       title: "The feedback loop",
+      question: "How does the feedback loop work?",
       steps: [
         "Guest scans a QR code or taps an NFC tag",
         "Guest leaves feedback",
@@ -545,10 +432,6 @@ export const products: Product[] = [
         "The next visit is better",
       ],
     },
-    shots: [
-      { key: "feedback-guest", label: "Guest feedback on a phone", kind: "phone", priority: "must" },
-      { key: "feedback-dashboard", label: "Manager alert and satisfaction dashboard", priority: "must" },
-    ],
     related: ["reviews", "loyalty", "analytics", "multi-location"],
   },
   {
@@ -563,7 +446,6 @@ export const products: Product[] = [
       "Google review requests sent to customers",
       "Review monitoring across your locations",
     ],
-    shots: [],
     related: ["guest-feedback", "listings", "restaurant-marketing"],
     notes: [
       "We ask every customer, not just the happy ones. Review requests follow Google's rules.",
@@ -582,7 +464,6 @@ export const products: Product[] = [
       "Tied to customer accounts, favorites, and order history",
       "Works with your email and text campaigns",
     ],
-    shots: [],
     related: ["customers", "restaurant-marketing", "online-ordering", "restaurant-app"],
   },
   {
@@ -599,7 +480,6 @@ export const products: Product[] = [
       "New and returning customers at a glance",
       "Segments you can send campaigns to",
     ],
-    shots: [{ key: "customers", label: "Customer list", priority: "helpful" }],
     related: ["restaurant-marketing", "loyalty", "analytics"],
     notes: ["These are your customers, not a marketplace's."],
   },
@@ -620,7 +500,6 @@ export const products: Product[] = [
       "Birthday offers",
       "Follow-ups for abandoned orders",
     ],
-    shots: [{ key: "marketing-campaign", label: "Campaign builder", priority: "helpful" }],
     related: ["sms-marketing", "customers", "loyalty", "restaurant-app"],
   },
   {
@@ -636,7 +515,6 @@ export const products: Product[] = [
       "Automatic texts for reorder and win-back",
       "Opt-in handled properly",
     ],
-    shots: [],
     related: ["restaurant-marketing", "customers"],
   },
 
@@ -657,7 +535,6 @@ export const products: Product[] = [
       "Availability by day and time",
       "Sold-out controls",
     ],
-    shots: [{ key: "menu-editor", label: "Menu editor", priority: "must" }, menuItemOptions],
     related: ["online-menu", "online-ordering", "kiosk", "analytics"],
     notes: [
       "One menu powers your website, online ordering, kiosk, table ordering, and app.",
@@ -679,17 +556,10 @@ export const products: Product[] = [
       "Orders go into your POS. If your POS isn't compatible, they go to a kitchen printer",
       "A kitchen display for the line",
     ],
-    shots: [
-      { key: "orders-board", label: "Incoming, preparing, and ready orders", priority: "must" },
-      { key: "order-drawer", label: "One order in detail", priority: "must" },
-      { key: "ordering-settings", label: "Hours, pause ordering, and prep time", priority: "must" },
-      { key: "kds", label: "Kitchen display on a tablet", kind: "tablet", priority: "must" },
-      { key: "kitchen-ticket", label: "A printed kitchen ticket", kind: "photo", priority: "must" },
-      photos.kitchenScreen,
-    ],
     related: ["kitchen-display", "delivery", "menu-management", "payments"],
     flow: {
       title: "How an order moves through your kitchen",
+      question: "How does an order move through the kitchen?",
       steps: [
         "A new order arrives in your dashboard",
         "It goes to your POS or kitchen printer",
@@ -726,7 +596,6 @@ export const products: Product[] = [
       "Move orders through preparation",
       "Order printing",
     ],
-    shots: [{ key: "kds", label: "Kitchen display on a tablet", kind: "tablet", priority: "must" }],
     related: ["order-management", "online-ordering"],
   },
   {
@@ -742,7 +611,6 @@ export const products: Product[] = [
       "Tips at checkout",
       "Payment integrations",
     ],
-    shots: [{ key: "checkout-pickup", label: "Customer checkout", kind: "phone", priority: "must" }],
     related: ["online-ordering", "integrations", "analytics"],
     notes: [
       "Every restaurant has its own payment account and is the merchant of record. WunTab connects your checkout to it.",
@@ -763,16 +631,6 @@ export const products: Product[] = [
       "New and repeat customer behavior",
       "Feedback trends and guest sentiment",
     ],
-    shots: [
-      {
-        key: "dash-overview",
-        label: "Sales, orders, average order, and tips at a glance",
-        priority: "must",
-        demoFigures: ["$13,421.76", "$12,518.17", "7.2%", "471", "9.5%", "$28.50", "$1,246.75", "7.1%"],
-      },
-      // Figures to be listed from the retake; the caption shows whatever they are.
-      { key: "analytics", label: "Analytics dashboard", priority: "must", demoFigures: [] },
-    ],
     related: ["order-management", "customers", "guest-feedback", "menu-management"],
   },
   {
@@ -788,7 +646,6 @@ export const products: Product[] = [
       "Menu suggestions based on your order data",
       "Recommendations drawn from your menu and orders, where the data supports them",
     ],
-    shots: [],
     related: ["analytics", "menu-management", "upsells"],
     notes: ["A tool inside WunTab, not the point of WunTab."],
   },
@@ -807,7 +664,6 @@ export const products: Product[] = [
       "Menus, hours, and orders per location",
       "Feedback and analytics across locations",
     ],
-    shots: [{ key: "multi-location", label: "Locations overview", priority: "helpful" }],
     related: ["enterprise", "analytics", "guest-feedback", "listings"],
     visual: "org",
   },
@@ -824,7 +680,6 @@ export const products: Product[] = [
       "Location managers see their own restaurant",
       "Group reporting across every location",
     ],
-    shots: [],
     related: ["multi-location", "analytics", "partners"],
     visual: "org",
   },
@@ -841,7 +696,6 @@ export const products: Product[] = [
       "Third-party delivery",
       "Connects to your POS. If your POS isn't compatible, orders go to a kitchen printer",
     ],
-    shots: [],
     related: ["payments", "delivery", "order-management"],
   },
   {
@@ -853,7 +707,6 @@ export const products: Product[] = [
     headline: "Offer WunTab under your own brand.",
     sub: "White-label WunTab for the restaurants you already serve.",
     capabilities: ["White-label platform", "Your brand on the product"],
-    shots: [],
     related: ["enterprise", "multi-location"],
   },
 ];

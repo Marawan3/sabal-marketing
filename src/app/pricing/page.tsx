@@ -4,6 +4,8 @@ import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
 import { PriceCard } from "@/components/price-card";
 import { Section } from "@/components/section";
+import { Ground } from "@/components/visuals/ground";
+import { Receipt } from "@/components/visuals/receipt";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
 
@@ -16,9 +18,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" },
 };
 
-const pricingFaq = copy.faq.items.filter((item) =>
-  /monthly fee|see the 5%|gets the money|What do I own/.test(item.question),
-);
+/** The full terms (word for word as SERVICE_FEE_CLAUSE in /terms) and the longer answers live in the FAQ. */
+const pricingFaq = [
+  { question: copy.pricing.termsQuestion, answer: copy.pricing.body },
+  ...copy.faq.items.filter((item) => /monthly fee|see the 5%|gets the money|What do I own/.test(item.question)),
+  { question: copy.pricing.moreQuestion, answer: copy.pricing.more },
+];
 
 export default function PricingPage() {
   return (
@@ -30,8 +35,15 @@ export default function PricingPage() {
         </Container>
       </section>
       <Section>
-        {/* The full terms, word for word as in SERVICE_FEE_CLAUSE (/terms). */}
-        <PriceCard lines={[copy.pricing.body, copy.pricing.more]} pricingLink={false} />
+        <PriceCard
+          lines={copy.pricing.points}
+          pricingLink={false}
+          visual={
+            <Ground>
+              <Receipt />
+            </Ground>
+          }
+        />
       </Section>
       <Section className="pb-8 sm:pb-10 lg:pb-14">
         <Faq heading="Pricing questions" items={pricingFaq} />

@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import { copy } from "@/lib/copy";
 import { demoOrder as o } from "@/lib/demo-order";
-import { HeroDemoPlayer } from "./hero-demo-player";
+import { LOOP, STEPS } from "@/lib/hero-demo-timeline";
+import { VisualPlayer } from "./visual-player";
 import s from "./hero-order-demo.module.css";
 
 /**
@@ -9,14 +10,17 @@ import s from "./hero-order-demo.module.css";
  * lands on the kitchen display. Drawn in HTML and CSS from the real layouts
  * (the storefront's clean theme and the kitchen display), with the demo
  * menu's real dishes and prices (src/lib/demo-order.ts). The only picture is
- * the dish photo. hero-demo-player.tsx runs the story; the module CSS moves it.
+ * the dish photo. visual-player.tsx runs the story; the module CSS moves it.
  *
  * Desktop: the phone, and the kitchen display beside it. Phones: the phone
  * turns over to the kitchen's side after the confirmation.
  */
 export function HeroOrderDemo() {
   return (
-    <HeroDemoPlayer
+    <VisualPlayer
+      name="hero"
+      steps={STEPS}
+      loop={LOOP}
       className={s.wrap}
       stageClassName={`${s.stage} ${s.sys}`}
       buttonClassName={s.playPause}
@@ -86,7 +90,7 @@ export function HeroOrderDemo() {
           <Ticket ticket={o.ticket} />
         </div>
       </div>
-    </HeroDemoPlayer>
+    </VisualPlayer>
   );
 }
 
@@ -96,7 +100,8 @@ function Tap({ step, x, y }: { step: number; x: number; y: number }) {
   return <span className={s.tap} data-tap={step} style={at} />;
 }
 
-function StatusBar() {
+/** The phone's notch and status bar, with the visitor's time. Shared with the visuals in ./visuals. */
+export function StatusBar() {
   return (
     <>
       <div className={s.island} />
@@ -125,13 +130,13 @@ function StatusBar() {
   );
 }
 
-const Plus = () => (
+export const Plus = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
     <path d="M12 5v14M5 12h14" />
   </svg>
 );
 
-const Chevron = ({ back = false }: { back?: boolean }) => (
+export const Chevron = ({ back = false }: { back?: boolean }) => (
   <svg className={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d={back ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
   </svg>
@@ -493,15 +498,29 @@ function Column({ title, before, after, children }: { title: string; before: num
   );
 }
 
-type TicketData = (typeof o.kitchen.new)[number];
+export type TicketData = (typeof o.kitchen.new)[number];
 
-function Ticket({ ticket }: { ticket: TicketData }) {
+/** A kitchen display ticket. Shared with the kitchen board visual; `from` is when its timer starts, in ms. */
+export function Ticket({
+  ticket,
+  from,
+  action,
+  className = "",
+  part,
+}: {
+  ticket: TicketData;
+  from?: number;
+  action?: string;
+  className?: string;
+  /** A name for tests (data-part). */
+  part?: string;
+}) {
   const base = ticket.seconds;
   return (
-    <div className={s.ticket}>
+    <div className={[s.ticket, className].filter(Boolean).join(" ")} data-part={part}>
       <div className={s.tHead}>
         <span>#{ticket.number}</span>
-        <span data-timer={base} data-from={ticket === o.ticket ? o.arrivesAt : 0}>
+        <span data-timer={base} data-from={from ?? (ticket === o.ticket ? o.arrivesAt : 0)}>
           {`${Math.floor(base / 60)}:${String(base % 60).padStart(2, "0")}`}
         </span>
       </div>
@@ -521,7 +540,7 @@ function Ticket({ ticket }: { ticket: TicketData }) {
           </div>
         ))}
       </div>
-      <div className={s.tGo}>{ticket.action}</div>
+      <div className={s.tGo}>{action ?? ticket.action}</div>
     </div>
   );
 }

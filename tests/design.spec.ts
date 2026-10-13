@@ -1,9 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
-import { builtProducts, phoneCrops, products } from "../src/lib/catalog";
-import { findShot, isShotVisible } from "../src/lib/shot-files";
-import { FITS, homeShots } from "../src/lib/shot-placements";
+import { builtProducts } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
+import { demoDashboard } from "../src/lib/demo-data";
 import { demoHrefWithName } from "../src/lib/demo-href";
 import { customerStories } from "../src/lib/stories";
 
@@ -192,7 +191,7 @@ test("nothing swipes sideways: no horizontal scroller in any page's content on p
   }
 });
 
-test("outcome tabs switch on desktop; on phones each outcome is its label, its lines, then its screenshot", async ({ page }) => {
+test("outcome tabs switch on desktop; on phones each outcome is its label, its lines, then its visual", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const labels = copy.outcomes.items.map((item) => item.label);
@@ -210,13 +209,15 @@ test("outcome tabs switch on desktop; on phones each outcome is its label, its l
     const panel = panels.nth(index);
     await expect(panel).toBeVisible();
     await expect(panel.locator("h3")).toHaveText(label);
-    // label above lines, lines above any screenshot
+    // label above lines, lines above the visual
     const order = await panel.evaluate((el) => {
       const y = (sel: string) => el.querySelector(sel)?.getBoundingClientRect().top ?? null;
-      return [y("h3"), y("ul"), y("figure")];
+      return [y("h3"), y("ul"), y("[data-demo]")];
     });
     expect(order[0]!).toBeLessThan(order[1]!);
-    if (order[2] !== null) expect(order[1]!).toBeLessThan(order[2]);
+    expect(order[1]!).toBeLessThan(order[2]!);
+    // At most two short lines per section (2026-10-13).
+    expect(await panel.locator("li").count()).toBeLessThanOrEqual(2);
   }
 });
 
@@ -242,8 +243,9 @@ test("palette: no beige anywhere, and no shadows on cards or frames", async ({ p
 
 
 test("steps: a row on desktop, a vertical list on phones, with saffron markers", async ({ page }) => {
-  for (const path of ["/", "/online-ordering"]) {
-    const list = path === "/" ? page.locator("#how-it-works ol").first() : page.locator("main section ol").first();
+  // The homepage's three steps. Product pages ask their steps in the FAQ since 2026-10-13 (/delivery draws them).
+  for (const path of ["/"]) {
+    const list = page.locator("#how-it-works ol").first();
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(path);
     const desktop = await list.locator(":scope > li").evaluateAll((els) => els.map((el) => el.getBoundingClientRect().top));
@@ -264,10 +266,8 @@ test("steps: a row on desktop, a vertical list on phones, with saffron markers",
 test("homepage sections come in the owner's order, and nothing else", async ({ page }) => {
   await page.goto("/");
   const ids = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
-  // Customer stories and beliefs render only once their data is real; the kitchen band once its shot exists.
+  // Customer stories and beliefs render only once their data is real.
   const expected = ["top", "outcomes", "kitchen", "products", "how-it-works", "pricing", "faq", "cta"];
-  // The kitchen band is a visual section: it shows only when its screenshot does (sharp enough for production).
-  if (!isShotVisible(homeShots.kitchen.shots[0], FITS.kitchen)) expected.splice(expected.indexOf("kitchen"), 1);
   if (customerStories.length) expected.splice(1, 0, "stories");
   if (publishedBeliefs().length) expected.splice(expected.indexOf("faq"), 0, "beliefs");
   expect(ids).toEqual(expected);
@@ -315,149 +315,76 @@ test("Get Started carries the restaurant name into Book a call", () => {
   );
 });
 
-test("whichever shots exist, no panel is empty and none keeps a gap for a missing image", async ({ page }) => {
+test("no panel is empty, and every section's visual is a built one", async ({ page }) => {
   for (const width of [360, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const path of pages) {
       await page.goto(path);
-      // Hidden frames leave nothing behind: no empty figure, no placeholder.
-      expect(await page.locator("main figure:not(:has(img))").count(), `${path} at ${width}`).toBe(0);
+      // No screenshots or photos anywhere: no figure, and the only picture is the hero phone's dish photo.
+      expect(await page.locator("main figure").count(), `${path} at ${width}`).toBe(0);
+      const images = await page.locator("main img").evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src") ?? ""));
+      for (const src of images) expect(src, `${path} at ${width}`).toContain("/hero-demo/");
       // Every panel carries something to read or look at.
       const empty = await page.locator("main [class*='rounded-[20px]']").evaluateAll((els) =>
-        els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim() && !el.querySelector("img"))
-          .length,
+        els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim() && !el.querySelector("img")).length,
       );
       expect(empty, `${path} at ${width}`).toBe(0);
-    }
-    // On desktop, an outcome panel without its screenshot spreads its lines across the whole width.
-    if (width === 1440) {
-      await page.goto("/");
-      for (const panel of await page.locator('[role="tabpanel"]:not(:has(figure))').all()) {
-        if (!(await panel.isVisible())) continue;
-        const fill = await panel.evaluate((el) => {
-          const list = el.querySelector("ul")!.getBoundingClientRect();
-          const style = getComputedStyle(el);
-          const inner = el.getBoundingClientRect().width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-          return list.width / inner;
-        });
-        expect(fill, `outcome lines fill the panel at ${width}`).toBeGreaterThan(0.95);
-      }
     }
   }
 });
 
-/**
- * How the screenshot frames look: crops, captions, radii, the kitchen band.
- * Run against the preview build (VERCEL_ENV=preview, playwright.config.ts),
- * where 1x files still render. On production they're held until the 3x
- * retakes land (tests/no-placeholders.spec.ts covers that side).
- */
-test.describe("on the preview build, where held screenshots still show", () => {
-  test.use({ baseURL: "http://127.0.0.1:3003" });
+test("shape: panels 20px, buttons and inputs 12px, list rows square; pricing is the only card", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const radius = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  expect(await radius("#top [class*='rounded-[20px]']")).toBe("20px");
+  expect(await radius("#top input")).toBe("12px");
+  expect(await radius("#top button[type=submit]")).toBe("12px");
+  expect(await radius("#products li")).toBe("0px");
+  expect(await radius("#faq details")).toBe("0px");
+  // A card: a box with a border on all four sides and rounded corners, that isn't a visual, button, input or link.
+  const cards = await page.evaluate(() =>
+    [...document.querySelectorAll("main *")]
+      .filter((el) => !el.closest("[data-demo]") && !["A", "BUTTON", "INPUT", "SUMMARY"].includes(el.tagName))
+      .filter((el) => {
+        const cs = getComputedStyle(el);
+        const all = ["Top", "Right", "Bottom", "Left"].every((side) => parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0);
+        return all && parseFloat(cs.borderTopLeftRadius) > 0;
+      })
+      .map((el) => el.closest("section")?.id),
+  );
+  expect(cards).toEqual(["pricing"]);
+});
 
-  test("on phones every screenshot is a focal crop whose body text renders at 9px or more", async ({ page }) => {
-    // Every desktop or tablet shot with a file has a crop defined in the catalog.
-    for (const shot of products.flatMap((p) => p.shots)) {
-      if ((shot.kind ?? "desktop") !== "desktop" && shot.kind !== "tablet") continue;
-      if (!findShot(shot.key)) continue;
-      expect(phoneCrops[shot.key], `phone crop for ${shot.key}`).toBeDefined();
-    }
-    let checked = 0;
-    for (const width of [360, 390]) {
-      await page.setViewportSize({ width, height: 844 });
-      for (const path of pages) {
-        await page.goto(path);
-        const frames = await page.locator("main figure img").evaluateAll((imgs) =>
-          imgs
-            .filter((img) => img.getBoundingClientRect().width > 0)
-            .map((img) => ({
-              key: decodeURIComponent(img.getAttribute("src") ?? "").match(/shots\/([a-z0-9-]+)\./)?.[1] ?? "",
-              source: Number(img.getAttribute("width")),
-              imgW: img.getBoundingClientRect().width,
-              boxW: img.parentElement!.getBoundingClientRect().width,
-            })),
-        );
-        for (const f of frames) {
-          const crop = phoneCrops[f.key];
-          if (!crop) continue;
-          checked++;
-          const text = (crop.textPx * f.imgW) / f.source;
-          const shown = (f.boxW * f.source) / f.imgW;
-          expect(text, `${f.key} body text on ${path} at ${width}`).toBeGreaterThanOrEqual(9);
-          expect(shown, `${f.key} shows a crop, not the whole frame, on ${path} at ${width}`).toBeLessThanOrEqual(560);
-          // The kitchen display shows about two tickets at close to real size.
-          if (f.key === "kds" && f.boxW > 300) expect(f.imgW / f.source, `kds scale on ${path}`).toBeGreaterThan(0.85);
-        }
+test("bands: the kitchen display on navy, the final call to action on saffron", async ({ page }) => {
+  await page.goto("/");
+  const bg = (sel: string) => page.locator(sel).evaluate((el) => getComputedStyle(el).backgroundColor.replace(/\s/g, ""));
+  expect(await bg("#kitchen")).toBe("rgb(19,33,60)");
+  expect(await bg("#cta")).toBe("rgb(244,168,58)");
+  await expect(page.locator("#kitchen h2")).toHaveText(copy.kitchen.heading);
+  await expect(page.locator("#kitchen [data-demo]")).toHaveCount(1);
+  await expect(page.locator("#kitchen [data-demo]")).toContainText("Preparing");
+});
+
+test("the dashboard card says Demo restaurant, and no copy quotes its figures", async ({ page }) => {
+  let cards = 0;
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      for (const card of await page.locator("main [data-demo]").filter({ hasText: demoDashboard.netSales }).all()) {
+        cards++;
+        await expect(card.getByText(copy.visuals.demoCaption, { exact: true })).toBeAttached();
       }
+      // Page copy, title and description, with the visuals left out.
+      const copyText = await page.evaluate(() => {
+        const main = document.querySelector("main")!.cloneNode(true) as HTMLElement;
+        main.querySelectorAll("[data-demo]").forEach((f) => f.remove());
+        return [main.textContent, document.title, document.querySelector('meta[name="description"]')?.getAttribute("content")].join(" ");
+      });
+      for (const figure of demoDashboard.figures) expect(copyText.includes(figure), `${path} quotes ${figure}`).toBe(false);
     }
-    expect(checked).toBeGreaterThan(10);
-  });
-
-  test("shape: frames and panels 20px, buttons and inputs 12px, list rows square; pricing is the only card", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    const radius = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
-    expect(await radius("main figure > div")).toBe("20px");
-    expect(await radius("#top input")).toBe("12px");
-    expect(await radius("#top button[type=submit]")).toBe("12px");
-    expect(await radius("#products li")).toBe("0px");
-    expect(await radius("#faq details")).toBe("0px");
-    // A card: a box with a border on all four sides and rounded corners, that isn't a frame, button, input or link.
-    const cards = await page.evaluate(() =>
-      [...document.querySelectorAll("main *")]
-        .filter((el) => !el.closest("figure, [data-demo]") && !["A", "BUTTON", "INPUT", "SUMMARY"].includes(el.tagName))
-        .filter((el) => {
-          const cs = getComputedStyle(el);
-          const all = ["Top", "Right", "Bottom", "Left"].every((side) => parseFloat(cs.getPropertyValue(`border-${side.toLowerCase()}-width`)) > 0);
-          return all && parseFloat(cs.borderTopLeftRadius) > 0;
-        })
-        .map((el) => el.closest("section")?.id),
-    );
-    expect(cards).toEqual(["pricing"]);
-  });
-
-  test("bands: the kitchen display on navy, the final call to action on saffron", async ({ page }) => {
-    await page.goto("/");
-    const bg = (sel: string) => page.locator(sel).evaluate((el) => getComputedStyle(el).backgroundColor.replace(/\s/g, ""));
-    expect(await bg("#kitchen")).toBe("rgb(19,33,60)");
-    expect(await bg("#cta")).toBe("rgb(244,168,58)");
-    await expect(page.locator("#kitchen h2")).toHaveText(copy.kitchen.heading);
-    await expect(page.locator("#kitchen figure img")).toHaveCount(1);
-  });
-
-  test("frames with demo sales figures say Demo restaurant, and no copy quotes those figures", async ({ page }) => {
-    const demo = new Map(products.flatMap((p) => p.shots).filter((s) => s.demoFigures).map((s) => [s.key, s.demoFigures!]));
-    expect(demo.has("dash-overview")).toBe(true);
-    const figures = [...new Set([...demo.values()].flat())];
-    let framed = 0;
-    for (const width of [390, 1440]) {
-      await page.setViewportSize({ width, height: 900 });
-      for (const path of pages) {
-        await page.goto(path);
-        const frames = await page.locator("main figure:has(img)").evaluateAll((els) =>
-          els.map((el) => ({
-            src: decodeURIComponent(el.querySelector("img")!.getAttribute("src") ?? ""),
-            caption: el.querySelector("figcaption")?.textContent?.trim() ?? null,
-          })),
-        );
-        for (const frame of frames) {
-          const key = frame.src.match(/\/shots\/([a-z0-9-]+)\./)?.[1];
-          if (!key || !demo.has(key)) continue;
-          framed++;
-          expect(frame.caption, `${key} on ${path} at ${width}`).toBe("Demo restaurant");
-        }
-        // Page copy, title and description, with the screenshots themselves left out.
-        const copyText = await page.evaluate(() => {
-          const main = document.querySelector("main")!.cloneNode(true) as HTMLElement;
-          main.querySelectorAll("figure").forEach((f) => f.remove());
-          return [main.textContent, document.title, document.querySelector('meta[name="description"]')?.getAttribute("content")].join(" ");
-        });
-        for (const figure of figures) {
-          expect(copyText.includes(figure), `${path} quotes ${figure}`).toBe(false);
-        }
-      }
-    }
-    // dash-overview is on the site, so at least one frame was checked at each width.
-    expect(framed).toBeGreaterThanOrEqual(2);
-  });
+  }
+  // The card is on the homepage and /how-it-works, at both widths.
+  expect(cards).toBeGreaterThanOrEqual(4);
 });

@@ -33,7 +33,27 @@ export const copy = {
       play: "Play the animation",
     },
   },
-  /** Homepage tabs. Shots are attached in src/lib/shot-placements.ts. At most three short lines each. */
+  /** The built visuals (src/components/visuals): one sentence each for screen readers, and shared captions. */
+  visuals: {
+    delivery:
+      "An animation: a delivery checkout on Palm&Stone Kitchen's website, our demo restaurant, then the tracking page showing the driver on the way.",
+    catering:
+      "An animation: the demo restaurant's catering page, where a customer fills in the catering enquiry form and sends it.",
+    storefront:
+      "An animation: the demo restaurant's own website, its featured dishes and prices, then a tap on Order online that opens the menu.",
+    kitchen:
+      "An animation of the kitchen display on a tablet: tickets in New, Preparing and Ready with running timers, and one order moving from New to Preparing.",
+    dashboard:
+      "The demo restaurant's dashboard: net sales for the last 30 days with the daily sales line, orders and average order.",
+    search:
+      "An illustration of a search result for the demo restaurant's menu page, listing dishes with their prices.",
+    receipt:
+      "An order's charges, line by line: the dish, subtotal, the customer's 5% service fee, tax, tip and total.",
+    flow: "An animated diagram of a delivery order's six steps, from the customer's phone to WunTab, your kitchen, a driver and the customer.",
+    demoCaption: "Demo restaurant",
+    searchCaption: "Illustration. We don't promise rankings.",
+  },
+  /** Homepage tabs, each with one built visual (src/app/page.tsx). At most two short lines each (2026-10-13). */
   outcomes: {
     heading: "What changes when orders come to you.",
     items: [
@@ -43,7 +63,6 @@ export const copy = {
         lines: [
           "Customers order on your own website, under your name.",
           "Pickup, delivery, catering, and orders for later.",
-          "Search engines can read every dish and price.",
         ],
       },
       {
@@ -60,7 +79,6 @@ export const copy = {
         lines: [
           "Every order in one place, from new to done.",
           "Pause ordering or raise prep times in one tap.",
-          "Orders go into your POS, or to a kitchen printer.",
         ],
       },
     ],
@@ -89,13 +107,12 @@ export const copy = {
     heading: "One restaurant or fifty.",
     sub: "Locations, groups, and franchises on one account, with controls at the level you choose.",
   },
+  /** On /how-it-works, as one question under this heading (the list it replaced, word for word in substance). */
   integrations: {
     heading: "Works with what you already use.",
-    items: [
-      "Payment integrations",
-      "Third-party delivery",
-      "Connects to your POS. If your POS isn't compatible, orders go to a kitchen printer",
-    ],
+    question: "What does WunTab work with?",
+    answer:
+      "Payment integrations and third-party delivery. WunTab connects to your POS. If your POS isn't compatible, orders go to a kitchen printer.",
   },
   pricing: {
     heading: "What it costs you",
@@ -109,6 +126,9 @@ export const copy = {
     ],
     body: "There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken.",
     more: "Questions about delivery, catering, or several locations? Talk to us and we will walk through it.",
+    /** /pricing asks these; the answers are `body` and `more`. */
+    termsQuestion: "What exactly are the terms?",
+    moreQuestion: "What about delivery, catering, or several locations?",
   },
   faq: {
     heading: "Questions owners ask",
@@ -141,6 +161,11 @@ export const copy = {
       {
         question: "Do my customers see the 5%?",
         answer: "Yes. The fee is shown to the customer at checkout, before payment is taken.",
+      },
+      {
+        question: "Can search engines read my menu?",
+        answer:
+          "Yes. Every dish and price is in the page itself, so search engines can read them. Nobody can promise rankings, and we don't.",
       },
       {
         question: "Does it work with my POS?",

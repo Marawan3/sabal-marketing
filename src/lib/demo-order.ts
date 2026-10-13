@@ -7,7 +7,7 @@ import { ARRIVES_AT } from "./hero-demo-timeline";
  * organization wuntab-demo): the menu, its modifier groups, the Brickell
  * location (48 Coral Lantern Way, Miami, FL; tax 6.5%; prep 20 minutes) and
  * the site's brand colour (in the module CSS). The other kitchen tickets are
- * the ones in the kds screenshot (public/shots/kds.png). Labels are the
+ * the ones in the batch-1 kitchen display screenshot (removed 2026-10-13). Labels are the
  * storefront's and the kitchen display's own strings.
  *
  * The money is worked out below, not typed in, so every figure agrees:
@@ -21,10 +21,10 @@ import { ARRIVES_AT } from "./hero-demo-timeline";
  * doesn't show it yet (LOG.md, platform finding 1). Total $15.78.
  */
 const SUBTOTAL = 1200;
-const TAX_BP = 650;
+export const TAX_BP = 650;
 export const SERVICE_FEE_PERCENT = 5;
-const TIP_PERCENT = 20;
-const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+export const TIP_PERCENT = 20;
+export const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
 const tax = Math.round((SUBTOTAL * TAX_BP) / 10000);
 const fee = Math.round((SUBTOTAL * SERVICE_FEE_PERCENT) / 100);
 const tip = Math.round((SUBTOTAL * TIP_PERCENT) / 100);
