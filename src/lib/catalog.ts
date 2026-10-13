@@ -194,42 +194,44 @@ export const products: Product[] = [
   {
     slug: "catering",
     name: "Catering",
-    blurb: "Take large orders ahead of time.",
+    /*
+     * Rewritten 2026-10-13 to match the product: catering is a request form on
+     * the restaurant's website (event date, guests, details). The restaurant
+     * replies and confirms. No catering menu, lead times, minimums or online
+     * payment until they are built (LOG.md follow-ups).
+     */
+    blurb: "Take catering requests on your website.",
     pillar: "sell",
     inMenu: true,
-    headline: "Turn big orders into easy orders.",
-    sub: "Group and event orders placed online, ahead of time, with the details you need up front. No more phone tag.",
+    headline: "Take catering requests on your own website.",
+    sub: "Customers send the date, the headcount and what they need. You reply and confirm the order with them.",
     capabilities: [
-      "A separate catering menu",
-      "Advance ordering with scheduling",
-      "Lead times you set, so nobody orders 40 trays for noon at 11",
-      "Minimum order amounts",
-      "Catering delivery with a third-party driver where it makes sense",
+      "A catering page on your website",
+      "A request form for the event date, the number of guests and the details",
+      "A note asking customers about allergies and dietary needs",
+      "Each request goes to the restaurant, which replies and confirms",
     ],
     related: ["online-ordering", "delivery", "order-management"],
     flow: {
-      title: "How a catering order works",
-      question: "How does a catering order work?",
+      title: "How a catering request works",
+      question: "How does a catering request work?",
       steps: [
-        "Customer opens your catering menu",
-        "Picks a date and time past your lead time",
-        "Orders above your minimum and pays",
-        "The order lands in your dashboard ahead of time",
-        "You prepare it, and it is picked up or delivered",
+        "Customer opens the catering page on your website",
+        "Sends the event date, the number of guests and the details",
+        "The request goes to the restaurant",
+        "You reply with a plan and a price",
+        "You confirm the order with the customer",
       ],
     },
     faq: [
       {
-        question: "Can I stop last-minute catering orders?",
-        answer: "Yes. Set a lead time, and customers can only pick times after it.",
+        question: "Can customers order catering online?",
+        answer:
+          "They send a catering request on your website: the event date, the number of guests and what they need. You reply and confirm the order with them.",
       },
       {
-        question: "Can I set a minimum?",
-        answer: "Yes. Set a minimum order amount for catering.",
-      },
-      {
-        question: "Can catering orders be delivered?",
-        answer: "Yes, with third-party delivery where it makes sense for the order.",
+        question: "Do customers pay for catering online?",
+        answer: "No. You agree the order and the price with the customer when you confirm it.",
       },
     ],
   },
@@ -895,7 +897,7 @@ export const lifecycle: { name: string; body: string; products: string[] }[] = [
   },
   {
     name: "Order",
-    body: "They order online, for delivery, for catering, at the table, at a kiosk, or in your app.",
+    body: "They order online, for delivery, at the table, at a kiosk, or in your app, and send catering requests.",
     products: ["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"],
   },
   {
