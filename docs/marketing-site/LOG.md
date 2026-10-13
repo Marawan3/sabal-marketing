@@ -39,6 +39,33 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-13 · PR #27: orders dashboard and settings card; the kitchen board only where it belongs (merged)
+
+**Merged by:** Claude, on the owner's "merge 27". Squash commit `ac73b34` on `main`, from branch `marketing/orders-dashboard`.
+
+**Why:** the kitchen board was standing in for the whole order management dashboard, which is a different screen.
+
+**What changed:**
+- **New visual, the orders dashboard.** Built from batch 1's orders-board and order-drawer captures, in text and shapes:
+  - The sidebar; the Active, Scheduled and Completed tabs with counts; and the order list (time, customer, items, prep time, status, total).
+  - Then the order drawer for #1925 opens, with its items, add-ons, totals and Mark ready.
+  - It uses the kitchen board's own orders, so the two agree.
+  - On phones it shows a cropped view of the order list, with text at 9px or more.
+  - Its totals include the 5% service fee, like the hero and the receipt. The real dashboard has no fee line yet.
+- **New visual, the online ordering settings card.** Accepting orders, prep time, the ASAP quote, closing time, and the pause and prep-time controls. Prep time goes from 20 to 25 minutes as it scrolls in.
+- **Placement:**
+  - **The orders dashboard:** the homepage "Less busywork" tab and its Order management row, the /order-management hero, and /how-it-works Fulfill.
+  - **The kitchen board:** the homepage kitchen band and /order-management's "How an order moves through your kitchen", and nowhere else.
+  - **The settings card:** /order-management's "What's included", beside the list.
+
+**How it was checked:**
+- **Tests:** 79 Playwright tests passed and 1 was skipped (the existing legal skip). The new ones include that the dashboard and the kitchen board show the same orders, and where the kitchen board may appear.
+- **Script:** no new JavaScript.
+- **Evidence:** `docs/marketing-site/evidence/orders-dashboard/`.
+- **Live:** confirmed on wuntab.com after the deploy. /order-management serves the dashboard, the kitchen board and the settings card.
+
+---
+
 ## 2026-10-13 · PR #25: homepage trim on phones (merged)
 
 **Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `afa78d7` on `main`, from branch `marketing/homepage-trim`.
