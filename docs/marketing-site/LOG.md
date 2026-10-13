@@ -24,13 +24,32 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.** Recorded 2026-10-13 (PR #22). The phone matches today's real checkout (platform finding 1): $12.00 + $0.78 tax + $2.40 tip = $15.18. The owner merged it as is. Options raised in the PR: keep it until the fee is in checkout, show a fee line, or end the story before the totals.
-2. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. Swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-3. **Hero: wording.** Recorded 2026-10-13 (PR #22). The phone uses the product's own labels ("Add item", "Pay", "Order received", "Ready by"), not the brief's ("Add to order", "Place order", "Order placed. Ready at"). The owner merged it with the product's labels.
+1. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+2. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+3. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
 4. **Retake `order-drawer` once the 5% service fee is in checkout.** Recorded 2026-10-10 (PR #18). The batch-1 order drawer shows Subtotal, Tax, Tip and Total with no service fee line, because checkout has no fee in code yet (platform finding 1). The owner chose to keep it for now.
 5. **The multi-location diagram on `/how-it-works` is cramped on phones.** Recorded 2026-10-10 (PR #18). At 390 the three location boxes squeeze "Own menu, hours, and orders" down to a word or two per line. It predates the screenshot work. The owner asked for a separate fix.
 6. **3x retakes of all batch-1 screenshots.** Recorded 2026-10-12 (PR #21). They are held off wuntab.com until then, and come back on their own when the sharper files land. The capture instructions were given in chat on 2026-10-11. PR #20 (quality 90, retina test) takes the files.
 7. **`analytics.png` retake pending.** Recorded 2026-10-10 (PR #18). The batch-1 file has its top cards cut off, and no frame crops to the chart and top items, so it was held back. When the retake arrives, list its sales figures in the shot's `demoFigures` in `src/lib/catalog.ts`. Its frame then carries the "Demo restaurant" caption.
+
+---
+
+## 2026-10-13 · PR #23: the hero's checkout shows the diner's 5% service fee (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `adb11a5` on `main`, from branch `marketing/hero-service-fee`.
+
+**Why:** the owner's decision on the first PR #22 follow-up. Without the fee, the phone's checkout contradicted the pricing section on the same page.
+
+**What changed:**
+- **New line:** the phone's checkout shows "Service fee (5%) $0.60" between the subtotal (the "1 item $12.00" row) and the total. The fee is 5% of the subtotal. The wording and percentage are the same as /pricing and /terms.
+- **New total:** $15.78 ($12.00 + $0.60 fee + $0.78 tax + $2.40 tip). It is the same on the checkout, the Pay button and the confirmation.
+- **Calculated figures:** every amount is worked out from the subtotal, tax rate, fee and tip, so the figures can't disagree.
+- **Unchanged:** the "View cart" bar still shows subtotal plus tax ($12.78), as the storefront calculates it.
+
+**How it was checked:**
+- **Tests:** 75 Playwright tests passed and 1 was skipped (the existing legal skip).
+- **New test:** it checks the percentage against the terms clause, /pricing and /terms, checks where the line sits, and checks that the totals add up.
+- **Live:** confirmed on wuntab.com after the deploy.
 
 ---
 
