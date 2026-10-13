@@ -22,7 +22,7 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 Tabs, at most two lines each, each with one built visual (2026-10-13):
 
-- **More direct orders:** Customers order on your own website, under your name. · Pickup, delivery, catering, and orders for later. · *Visual: the storefront phone.*
+- **More direct orders:** Customers order on your own website, under your name. · Pickup, delivery, catering requests, and orders for later. · *Visual: the storefront phone.*
 - **More repeat customers:** Every direct order adds a real customer to your list. · Loyalty, texts, and automatic campaigns bring them back. · *Visual: the dashboard card, captioned "Demo restaurant".*
 - **Less busywork:** Every order in one place, from new to done. · Pause ordering or raise prep times in one tap. · *Visual: the kitchen board.*
 
@@ -130,3 +130,7 @@ Matches the product: a catering request form, not a catering checkout.
 - **Mega-menu line:** Take catering requests on your website.
 
 Removed until built: a separate catering menu, advance ordering with scheduling, lead times, minimum order amounts, catering delivery, and the three questions about them.
+
+The two other lines that described catering as an online order now say "catering requests":
+- **Homepage, More direct orders:** Pickup, delivery, catering requests, and orders for later.
+- **/how-it-works, Order:** They order online, for delivery, at the table, at a kiosk, or in your app, and send catering requests.

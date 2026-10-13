@@ -897,7 +897,7 @@ export const lifecycle: { name: string; body: string; products: string[] }[] = [
   },
   {
     name: "Order",
-    body: "They order online, for delivery, for catering, at the table, at a kiosk, or in your app.",
+    body: "They order online, for delivery, at the table, at a kiosk, or in your app, and send catering requests.",
     products: ["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"],
   },
   {

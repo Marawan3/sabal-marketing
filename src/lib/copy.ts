@@ -66,7 +66,7 @@ export const copy = {
         label: "More direct orders",
         lines: [
           "Customers order on your own website, under your name.",
-          "Pickup, delivery, catering, and orders for later.",
+          "Pickup, delivery, catering requests, and orders for later.",
         ],
       },
       {
