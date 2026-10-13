@@ -179,8 +179,10 @@ export const copy = {
      * /pricing's comparison, under the $0 card (owner, 2026-10-13). Every
      * cell's source is in COPY.md: WunTab's are /terms and the privacy
      * policy; the apps' are the largest delivery app's own public merchant
-     * and help pages (never named here). "Who gets paid" is left out until
-     * settlement goes to the restaurant's own account (REGISTER.md, Conflict 2).
+     * and help pages (never named here). "Who gets paid" describes the
+     * intended model (owner, 2026-10-13): each restaurant is paid through its
+     * own merchant account with our payment partner, a build commitment in
+     * REGISTER.md next to the 5% fee.
      */
     compare: {
       heading: "WunTab next to a delivery app",
@@ -206,6 +208,11 @@ export const copy = {
           label: "Who gets the customer's details",
           us: "You. Your customer list is yours, and you can take it with you.",
           them: "The app. The customer's account, email and phone sit with the app.",
+        },
+        {
+          label: "Who gets paid",
+          us: "You, through your own merchant account.",
+          them: "The app collects the payment and pays you out, after its commission.",
         },
       ],
     },

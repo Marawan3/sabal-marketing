@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { builtProducts, bySlug, productHref, products, secondaryProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
-import { demoHref, demoStorefront } from "../src/lib/site";
+import { allRoutes, demoHref, demoStorefront } from "../src/lib/site";
 
 /**
  * Filling the dead ends (owner, 2026-10-13): six secondary product pages,
@@ -64,8 +64,9 @@ test("the secondary pages say only what the product does", async ({ page }) => {
   const payments = await page.locator("main").innerText();
   expect(payments).toContain("never reach WunTab");
   expect(payments).toContain("card brand and last four digits");
-  // Money settles to one platform account today (REGISTER.md, Conflict 2): no "your account" here.
-  expect(payments.toLowerCase()).not.toMatch(/your (own )?(bank|payment)? ?account|merchant of record/);
+  // The intended model (owner, 2026-10-13; a build commitment in REGISTER.md): paid through your own merchant account.
+  expect(payments).toContain("your own merchant account");
+  await expect(page.locator('main [data-visual="flow-payments"]')).toContainText("Your account");
 
   await page.goto("/menu-management");
   const menu = await page.locator("main").innerText();
@@ -136,4 +137,26 @@ test("/how-it-works: the reward card builds the relationship; the confirmation t
   // The product's own text: it has no "ready" text.
   await expect(rows.nth(5)).toContainText("is confirmed.");
   await expect(rows.nth(5)).not.toContainText(/ready/i);
+});
+
+/**
+ * The payment processor is never named on the site (owner, 2026-10-13): on
+ * every page in the sitemap, the 404 page and /contact. The one exception is
+ * the published privacy policy, which names it as a subprocessor (approved
+ * legal text, src/lib/legal.ts; the same duty that lets it name the delivery
+ * provider). Changing that wording needs the owner's written approval.
+ */
+test("the payment processor is never named on any page", async ({ request }) => {
+  const processor = /\bNMI\b|network merchants|nmipayments/i;
+  const exempt = new Set(["/privacy"]);
+  const pages = [...new Set([...allRoutes, "/contact", "/this-page-does-not-exist"])];
+  for (const path of pages) {
+    if (exempt.has(path)) continue;
+    const html = await (await request.get(path)).text();
+    expect(html, path).not.toMatch(processor);
+  }
+  // Nor in the site's own source, outside the privacy policy.
+  const { execSync } = await import("node:child_process");
+  const hits = execSync("grep -rliE '\\bnmi\\b|network merchants' src || true", { encoding: "utf8" }).trim().split("\n").filter(Boolean);
+  expect(hits).toEqual(["src/lib/legal.ts"]);
 });
