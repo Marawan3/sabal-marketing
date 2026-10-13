@@ -361,6 +361,27 @@
   overflow: hidden;
 }
 
+.captionTop {
+  margin-bottom: 8px;
+  color: rgb(29 29 27 / 0.7);
+  font-size: 13px;
+  text-align: right;
+}
+
+/* Phones: a shorter card, so it fits in 60% of the screen. */
+@media (max-width: 767px) {
+  .dashCard {
+    padding: 16px;
+  }
+  .chart {
+    height: 96px;
+    margin-top: 10px;
+  }
+  .stat {
+    padding: 12px 16px;
+  }
+}
+
 .chart svg {
   display: block;
   width: 100%;

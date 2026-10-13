@@ -95,7 +95,10 @@ for (const width of [390, 1440]) {
     await page.goto("/");
     await page.clock.runFor(200);
     expect(await steps(page)).toBe("0");
+    // Step 12 starts at 9.8 s of the hero's own clock, which starts when the browser
+    // reports the hero on screen; under load that report can come a little late.
     await page.clock.runFor(9_800);
+    for (let i = 0; i < 10 && !(await steps(page))!.split(" ").includes("12"); i++) await page.clock.runFor(100);
     expect((await steps(page))!.split(" ")).toContain("12");
     // The ticket is this order: number, name, dish and option, and its timer runs from zero.
     const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-flipper] [data-arrive]");

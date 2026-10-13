@@ -86,7 +86,8 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
                 ))}
               </ul>
             </div>
-            {tab.visual ? <div className="mt-6 lg:col-span-7 lg:mt-0">{tab.visual}</div> : null}
+            {/* Phones: the visual under the text, at most 60% of the screen's height. */}
+            {tab.visual ? <div className="mt-6 max-h-[60svh] overflow-hidden rounded-[20px] lg:col-span-7 lg:mt-0 lg:max-h-none">{tab.visual}</div> : null}
           </div>
         ))}
       </div>

@@ -24,6 +24,8 @@ export function DashboardCard() {
   return (
     <Visual name="dashboard" steps={STEPS} description={copy.visuals.dashboard}>
       <div className={v.dash}>
+        {/* On top, so a short screen never cuts it off. */}
+        <div className={v.captionTop}>{copy.visuals.demoCaption}</div>
         <div className={v.dashCard}>
           <div className={v.dashTop}>
             <div>
@@ -58,7 +60,6 @@ export function DashboardCard() {
             <div className={v.dashBig}>{d.averageOrder}</div>
           </div>
         </div>
-        <div className={v.caption}>{copy.visuals.demoCaption}</div>
       </div>
     </Visual>
   );
