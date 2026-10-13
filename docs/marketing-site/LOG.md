@@ -24,17 +24,43 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Catering visual vs. the product.** Recorded 2026-10-13 (PR #24). The product has no catering checkout (no lead time, minimum, catering menu or "Order received"); catering is an enquiry form. The catering phone shows the real form. The /catering page's own claims (lead times, minimums, paying online) predate this and should be checked against the product. Owner to decide whether to show the planned flow as a labelled mockup.
-2. **Receipt visual.** Recorded 2026-10-13 (PR #24). The product sends diners no receipt (an SMS only), and the 5% fee isn't in checkout yet; the receipt is an illustration of the charges.
-3. **Delivery phone examples.** Recorded 2026-10-13 (PR #24). The demo has delivery switched off, so the $4.99 delivery fee and the address are examples; the real tip label "Dasher tip" is shown as "Tip" because it names the provider.
-4. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet.
-5. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
-6. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-7. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
-8. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
-9. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
-10. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
-11. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+1. **Homepage height at 390: 8,070 px, target under 7,000.** Recorded 2026-10-13 (PR #25). Hiding the product-row visuals on phones and capping the outcome visuals at 60% of the screen got it from 9,799 px to 8,070 px. The outcome tabs (2,064 px) are the rest, because all three stack on phones. Option raised: tabs on phones too, showing one outcome at a time (about −1,100 px). This would reverse the earlier "no tabs on phones" decision. Waiting on the owner.
+2. **Catering visual vs. the product.** Recorded 2026-10-13 (PR #24). In progress: PR #26 rewrites /catering and the homepage row around the request form (open, waiting on one question). The product has no catering checkout (no lead time, minimum, catering menu or "Order received"); catering is an enquiry form. The catering phone shows the real form. The /catering page's own claims (lead times, minimums, paying online) predate this and should be checked against the product. Owner to decide whether to show the planned flow as a labelled mockup.
+3. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
+4. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
+5. **/how-it-works stage visuals.** Recorded 2026-10-13 (PR #24). "Build the relationship" (delivery tracking) and "Bring them back" (catering) are loose fits; no visual shows loyalty or campaigns yet. The owner said to leave them as they are for now (2026-10-13).
+6. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+7. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+8. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
+9. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
+10. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
+11. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
+12. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-13 · PR #25: homepage trim on phones (merged)
+
+**Merged by:** Claude, self-merge on green on the owner's instruction. Squash commit `afa78d7` on `main`, from branch `marketing/homepage-trim`.
+
+**Why:** the homepage had grown from 4,071 px to 9,799 px at 390 with the visuals. The owner set a target of under 7,000 px.
+
+**What changed:**
+- **Product rows, phones:** each row is now the title, one line and the link. The visuals still show from 768 px, at the small size.
+- **Outcome tabs, phones:** each visual sits under its text and takes at most 60% of the screen's height.
+  - The dashboard card is a little more compact on phones.
+  - Its "Demo restaurant" caption moved to the top of the card.
+- **Unchanged:** the kitchen band, the hero and the pricing receipt.
+
+**Result:**
+- **390:** 9,799 px → 8,070 px. That is still above the 7,000 target; see the follow-up above.
+- **1440:** unchanged at 8,495 px.
+
+**How it was checked:**
+- **Tests:** 77 Playwright tests passed and 1 was skipped (the existing legal skip).
+- **New tests:** the outcome visuals' height, and that the product rows have no visual on phones.
+- **Hero test fix:** the hero's play-through test now allows for the browser reporting the hero on screen a moment late under load. It had failed once in four runs.
+- **Live:** confirmed on wuntab.com after the deploy.
 
 ---
 
