@@ -63,6 +63,16 @@ export const copy = {
       "An animation of the WunTab orders dashboard for the demo restaurant: the order list with status, prep time and totals, then one order's details opening, with its items, totals and the Mark ready button.",
     settings:
       "The online ordering settings: accepting orders, prep time, the ASAP quote and closing time, with controls to pause ordering and adjust prep time. Prep time goes from 20 to 25 minutes.",
+    editor:
+      "The menu editor in the WunTab dashboard: the demo restaurant's Spiced Lamb Meatballs with its photo, name, category, price, availability set to Available, and its two modifier groups.",
+    loyalty:
+      "An animation: the demo restaurant's order confirmation on a phone, where a reward card appears for a returning customer: their next Hummus & Warm Pita is on the restaurant.",
+    menu:
+      "The demo restaurant's online menu on a phone: the Small Plates & Mezze category with each dish's name, price and description, and a photo of the Spiced Lamb Meatballs.",
+    upsell:
+      "The demo restaurant's dish sheet for Spiced Lamb Meatballs on a phone, with two suggestions under Goes well with: Hummus & Warm Pita and Stuffed Grape Leaves.",
+    sms:
+      "A text message on a phone's lock screen from the demo restaurant: Your order #1930 at Palm&Stone Kitchen is confirmed. Pickup in about 20 minutes.",
     demoCaption: "Demo restaurant",
     searchCaption: "Illustration. We don't promise rankings.",
   },
@@ -132,6 +142,15 @@ export const copy = {
     ],
   },
   beliefs: { heading: "What we believe" },
+  /** Homepage, in the proof row's place until there are customers to show (owner, 2026-10-13). */
+  founding: {
+    heading: "We're new. That works in your favor.",
+    points: [
+      "The people who built WunTab set up your restaurant themselves.",
+      "You get a direct line, not a ticket queue.",
+      "Founding restaurants shape what we build next.",
+    ],
+  },
   stories: { heading: "Restaurants on WunTab" },
   scale: {
     heading: "One restaurant or fifty.",
@@ -156,23 +175,46 @@ export const copy = {
     ],
     body: "There is no monthly charge, no setup fee, and no per-order commission charged to the restaurant. When a customer places an online order, the customer pays a service fee of 5% of the order. The fee is shown to the customer at checkout before payment is taken.",
     more: "Questions about delivery, catering, or several locations? Talk to us and we will walk through it.",
+    /**
+     * /pricing's comparison, under the $0 card (owner, 2026-10-13). Every
+     * cell's source is in COPY.md: WunTab's are /terms and the privacy
+     * policy; the apps' are the largest delivery app's own public merchant
+     * and help pages (never named here). "Who gets paid" is left out until
+     * settlement goes to the restaurant's own account (REGISTER.md, Conflict 2).
+     */
+    compare: {
+      heading: "WunTab next to a delivery app",
+      us: "WunTab",
+      them: "Delivery apps",
+      rows: [
+        {
+          label: "What the restaurant pays per order",
+          us: "$0. No monthly charge, no setup fee, no commission.",
+          them: "15–30% commission on each delivery order.",
+        },
+        {
+          label: "What the customer pays",
+          us: "Your menu prices, tax, any tip, and a 5% service fee shown before they pay. Delivery adds the driver's fee.",
+          them: "Menu prices, plus the app's service fee (often 15% of the order) and a delivery fee.",
+        },
+        {
+          label: "Whose name is on the order",
+          us: "Yours. They order on your own website.",
+          them: "The app's. They order in the app.",
+        },
+        {
+          label: "Who gets the customer's details",
+          us: "You. Your customer list is yours, and you can take it with you.",
+          them: "The app. The customer's account, email and phone sit with the app.",
+        },
+      ],
+    },
     /** /pricing asks these; the answers are `body` and `more`. */
     termsQuestion: "What exactly are the terms?",
     moreQuestion: "What about delivery, catering, or several locations?",
   },
   faq: {
     heading: "Questions owners ask",
-    /**
-     * Left off the homepage (2026-10-13), because the page already answers
-     * them: the hero's trust line and $0 card (fee, contract, the 5%) and the
-     * how-it-works steps (POS, setup). The solution pages still ask them.
-     */
-    leftOffHome: [
-      "Is there a monthly fee or a contract?",
-      "Do my customers see the 5%?",
-      "Does it work with my POS?",
-      "Do I have to set anything up myself?",
-    ] as readonly string[],
     items: [
       {
         question: "What do I own?",

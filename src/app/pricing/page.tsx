@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { CompareTable } from "@/components/compare-table";
 import { Container } from "@/components/container";
 import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
 import { PriceCard } from "@/components/price-card";
-import { Section } from "@/components/section";
+import { Section, SectionHead } from "@/components/section";
 import { Ground } from "@/components/visuals/ground";
 import { Receipt } from "@/components/visuals/receipt";
 import { copy } from "@/lib/copy";
@@ -44,6 +45,13 @@ export default function PricingPage() {
             </Ground>
           }
         />
+      </Section>
+      {/* Under the $0 card: WunTab next to a delivery app, every cell sourced in COPY.md. */}
+      <Section id="compare">
+        <SectionHead heading={copy.pricing.compare.heading} />
+        <div className="mt-8 lg:mt-12">
+          <CompareTable />
+        </div>
       </Section>
       <Section className="pb-8 sm:pb-10 lg:pb-14">
         <Faq heading="Pricing questions" items={pricingFaq} />

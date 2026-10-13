@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { builtProducts, products } from "../src/lib/catalog";
+import { builtProducts, products, secondaryProducts } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
 import { allRoutes, demoHref } from "../src/lib/site";
@@ -32,7 +32,21 @@ test("every phase-1 page returns 200 and nothing else is a product route", async
     expect(response.status(), path).toBe(200);
   }
   expect([...builtProducts].sort()).toEqual(
-    ["catering", "delivery", "integrations", "online-ordering", "order-management", "restaurant-seo", "restaurant-websites"],
+    [
+      "catering",
+      "delivery",
+      "integrations",
+      "kitchen-display",
+      "loyalty",
+      "menu-management",
+      "online-menu",
+      "online-ordering",
+      "order-management",
+      "payments",
+      "restaurant-seo",
+      "restaurant-websites",
+      "upsells",
+    ],
   );
   // A product without a page in this release is a 404, not a half-built page.
   for (const product of products) {
@@ -195,10 +209,12 @@ test("product mega-menu opens on hover and lists only pages that exist", async (
   await product.hover();
   await expect(product).toHaveAttribute("aria-expanded", "true");
   const panel = page.locator(`[id="${await product.getAttribute("aria-controls")}"]`);
-  for (const slug of builtProducts) {
+  // The secondary pages are linked from the footer and their parent pages, not here (2026-10-13).
+  const inMenu = builtProducts.filter((slug) => !secondaryProducts.has(slug));
+  for (const slug of inMenu) {
     await expect(panel.locator(`a[href="/${slug}"]`), slug).toBeVisible();
   }
-  await expect(panel.locator("a")).toHaveCount(builtProducts.length);
+  await expect(panel.locator("a")).toHaveCount(inMenu.length);
   // Hovering Pricing closes the menu.
   await page.locator('header a[href="/pricing"]').first().hover();
   await expect(product).toHaveAttribute("aria-expanded", "false");

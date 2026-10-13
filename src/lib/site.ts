@@ -1,4 +1,5 @@
 import { copy } from "./copy";
+import { demoSite } from "./demo-data";
 import { builtProducts, solutionHref, solutions } from "./catalog";
 import { finalLegalRoutes } from "./legal";
 
@@ -13,6 +14,18 @@ export const site = {
 export const demoHref =
   process.env.NEXT_PUBLIC_DEMO_HREF ??
   `mailto:${site.contactEmail}?subject=Book%20a%20call%20with%20WunTab`;
+
+/**
+ * "See a live WunTab restaurant": the demo storefront (owner, 2026-10-13),
+ * on the homepage products section and /restaurant-websites. Off until
+ * NEXT_PUBLIC_SHOW_DEMO_LINK=true; the owner turns it on once the demo menu
+ * has photos.
+ */
+export const demoStorefront = {
+  href: `https://${demoSite.host}`,
+  label: "See a live WunTab restaurant",
+  on: process.env.NEXT_PUBLIC_SHOW_DEMO_LINK === "true",
+} as const;
 
 /** "Log in" target. Hidden until NEXT_PUBLIC_APP_HREF is set. */
 export const appHref = process.env.NEXT_PUBLIC_APP_HREF;

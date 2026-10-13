@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { TextLink } from "@/components/cta-link";
-import { CustomerStories } from "@/components/customer-stories";
-import { Faq } from "@/components/faq";
+import { Founding } from "@/components/founding";
 import { FinalCta } from "@/components/final-cta";
 import { HeroOrderDemo } from "@/components/hero-order-demo";
 import { HeroSignup } from "@/components/hero-signup";
-import { JsonLd } from "@/components/json-ld";
 import { OutcomeTabs } from "@/components/outcome-tabs";
 import { PriceCard } from "@/components/price-card";
 import { SmartLink } from "@/components/smart-link";
@@ -24,8 +22,7 @@ import { StorefrontPhone } from "@/components/visuals/storefront-phone";
 import { Panel, Section, SectionHead } from "@/components/section";
 import { bySlug, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { faqSchema } from "@/lib/schema";
-import { demoHref, site } from "@/lib/site";
+import { demoHref, demoStorefront, site } from "@/lib/site";
 
 export const dynamic = "error";
 
@@ -37,9 +34,10 @@ export const metadata: Metadata = {
 
 /**
  * The homepage, in the owner's order: hero (with the trust line and the $0
- * card), outcome tabs, the kitchen band, product rows, the savings calculator,
- * how it works, pricing, FAQ, final call to action. What we believe moved to
- * /about (2026-10-13). Every section is a headline, at most two short lines and one built
+ * card), founding restaurants, outcome tabs, the kitchen band, product rows,
+ * the savings calculator, how it works, pricing, final call to action. What
+ * we believe moved to /about, and the FAQ left to make room for the founding
+ * section (2026-10-13); its questions are on /pricing and the product pages. Every section is a headline, at most two short lines and one built
  * visual (2026-10-13): no screenshots, no photos. The pricing card is the
  * only card besides the hero's small $0 card. Customer stories render only
  * once their data is real.
@@ -87,13 +85,9 @@ const productVisuals: Record<string, ReactNode> = {
   ),
 };
 
-/** The homepage FAQ leaves out the questions the page itself already answers (copy.faq.leftOffHome). */
-const homeFaq = copy.faq.items.filter((item) => !copy.faq.leftOffHome.includes(item.question));
-
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={faqSchema(homeFaq)} />
 
       {/* a. Hero */}
       <section id="top" className="scroll-mt-20">
@@ -144,7 +138,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <CustomerStories />
+      {/* Founding restaurants, in the proof row's slot. The customer row (CustomerStories) returns here once there are real customers. */}
+      <Founding />
 
       {/* b. Outcomes as tabs: no card. Desktop: lines left, visual right. Phone: label, lines, visual. */}
       <Section id="outcomes">
@@ -200,6 +195,11 @@ export default function HomePage() {
             );
           })}
         </ul>
+        {demoStorefront.on ? (
+          <div className="mt-4 lg:mt-6">
+            <TextLink href={demoStorefront.href}>{demoStorefront.label}</TextLink>
+          </div>
+        ) : null}
       </Section>
 
       {/* The savings calculator, on warm: the owner's own numbers, the apps' published 15–30%. */}
@@ -238,11 +238,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* g. FAQ, then h. the final call to action: a saffron band. */}
-      <Section id="faq">
-        <Faq heading={copy.faq.heading} items={homeFaq} />
-      </Section>
-
+      {/* The final call to action: a saffron band. The FAQ left the homepage for the founding section (2026-10-13). */}
       <FinalCta />
     </>
   );

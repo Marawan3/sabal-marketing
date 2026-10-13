@@ -17,12 +17,16 @@ import { KitchenBoard } from "./visuals/kitchen-board";
 import { OrdersDashboard } from "./visuals/orders-dashboard";
 import { SettingsCard } from "./visuals/settings-card";
 import { SearchResult } from "./visuals/search-result";
-import { StepFlow } from "./visuals/step-flow";
+import { LoyaltyPhone } from "./visuals/loyalty-phone";
+import { MenuEditor } from "./visuals/menu-editor";
+import { MenuPhone, UpsellPhone } from "./visuals/menu-phones";
+import { Receipt } from "./visuals/receipt";
+import { StepFlow, stepFlowSlugs } from "./visuals/step-flow";
 import { StorefrontPhone } from "./visuals/storefront-phone";
 import { bySlug, productHref, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
-import { demoHref } from "@/lib/site";
+import { demoHref, demoStorefront } from "@/lib/site";
 
 /** Each product page's one hero visual (owner, 2026-10-13). */
 const heroVisuals: Record<string, ReactNode> = {
@@ -56,6 +60,37 @@ const heroVisuals: Record<string, ReactNode> = {
       <OrdersDashboard />
     </Ground>
   ),
+  // The secondary pages (owner, 2026-10-13).
+  "online-menu": (
+    <Ground>
+      <MenuPhone />
+    </Ground>
+  ),
+  upsells: (
+    <Ground>
+      <UpsellPhone />
+    </Ground>
+  ),
+  loyalty: (
+    <Ground>
+      <LoyaltyPhone />
+    </Ground>
+  ),
+  "kitchen-display": (
+    <Ground>
+      <KitchenBoard />
+    </Ground>
+  ),
+  "menu-management": (
+    <Ground>
+      <MenuEditor />
+    </Ground>
+  ),
+  payments: (
+    <Ground>
+      <Receipt />
+    </Ground>
+  ),
 };
 
 /**
@@ -63,7 +98,9 @@ const heroVisuals: Record<string, ReactNode> = {
  * flow diagram and /order-management its kitchen board, with the steps
  * listed over it. /integrations has the owner's one visual here (an order
  * flowing from the storefront to the kitchen) and none in its hero, so the
- * same four steps don't show twice.
+ * same four steps don't show twice. /payments has its flow here and the
+ * receipt in the hero. The other secondary pages list their steps under
+ * the hero's visual.
  */
 function howItWorks(product: Product): ReactNode {
   const flow = product.flow!;
@@ -79,31 +116,32 @@ function howItWorks(product: Product): ReactNode {
         </div>
       </>
     );
-  return (
-    <Ground>
-      <StepFlow slug={product.slug} />
-    </Ground>
-  );
+  if (stepFlowSlugs.includes(product.slug))
+    return (
+      <Ground>
+        <StepFlow slug={product.slug} />
+      </Ground>
+    );
+  // The other secondary pages: the steps as a list; their one visual is the hero's.
+  return <Steps steps={flow.steps.map((line) => ({ line }))} />;
 }
 
-/** "Works with": the related products as one row of chips; a chip links once its page exists. */
+/** "Works with": the related products as one row of links. Every item links to a page (owner, 2026-10-13). */
 export function WorksWith({ slugs }: { slugs: string[] }) {
-  const chip = "inline-flex min-h-11 items-center rounded-[12px] border px-4 text-small font-medium";
+  const chip = "inline-flex min-h-11 items-center rounded-[12px] border border-ink-muted px-4 text-small font-medium hover:border-ink";
   return (
     <ul className="mt-6 flex flex-wrap gap-2">
-      {slugs.map((slug) => {
+      {slugs.flatMap((slug) => {
         const href = productHref(slug);
-        return (
-          <li key={slug}>
-            {href ? (
-              <SmartLink href={href} className={`${chip} border-ink-muted hover:border-ink`}>
-                {bySlug[slug].name}
-              </SmartLink>
-            ) : (
-              <span className={`${chip} border-mist text-ink-muted`}>{bySlug[slug].name}</span>
-            )}
-          </li>
-        );
+        return href
+          ? [
+              <li key={slug}>
+                <SmartLink href={href} className={chip}>
+                  {bySlug[slug].name}
+                </SmartLink>
+              </li>,
+            ]
+          : [];
       })}
     </ul>
   );
@@ -141,7 +179,7 @@ export function TwoColumnList({ items }: { items: readonly ReactNode[] }) {
  * section is a headline and its one visual or list.
  */
 export function ProductPage({ product }: { product: Product }) {
-  const related = product.related.filter((slug) => bySlug[slug]);
+  const related = product.related.filter((slug) => productHref(slug));
   const faq = product.faq ?? [];
   return (
     <>
@@ -155,6 +193,10 @@ export function ProductPage({ product }: { product: Product }) {
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
             <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>
             <TextLink href="/pricing">See pricing</TextLink>
+            {/* The demo storefront, behind its flag (site.ts). */}
+            {product.slug === "restaurant-websites" && demoStorefront.on ? (
+              <TextLink href={demoStorefront.href}>{demoStorefront.label}</TextLink>
+            ) : null}
           </div>
           {heroVisuals[product.slug] ? <div className="mt-12 lg:mt-16">{heroVisuals[product.slug]}</div> : null}
         </Container>

@@ -24,6 +24,7 @@ const icon = {
   pages: <path d="M8 7h11v14H8V7ZM5 17V3h11" />,
   tree: <path d="M10 3h4v4h-4V3Zm2 4v4M5 15v-4h14v4M3 15h4v5H3v-5Zm7 0h4v5h-4v-5Zm7 0h4v5h-4v-5Z" />,
   printer: <path d="M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7v-7Z" />,
+  lock: <path d="M6 11h12v9H6v-9Zm2 0V8a4 4 0 0 1 8 0v3" />,
 } satisfies Record<string, ReactNode>;
 
 type Icon = keyof typeof icon;
@@ -59,6 +60,12 @@ const flows: Record<string, [Icon, string][]> = {
     ["tag", "Labelled"],
     ["pages", "Pages"],
     ["tree", "Sitemap"],
+  ],
+  payments: [
+    ["card", "Checkout"],
+    ["lock", "Card check"],
+    ["check", "Paid"],
+    ["kitchen", "Kitchen"],
   ],
   integrations: [
     ["phone", "Website"],

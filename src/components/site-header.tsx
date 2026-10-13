@@ -2,7 +2,7 @@ import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
-import { bySlug, megaMenu, pillars, productHref, solutionHref, solutions } from "@/lib/catalog";
+import { bySlug, megaMenu, pillars, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { appHref, companyLinks, demoHref, primaryLinks } from "@/lib/site";
 
@@ -38,7 +38,8 @@ function buildMenus(): NavMenu[] {
     .map((group) => ({
       title: pillars[group.pillar].name,
       items: group.slugs.flatMap((slug) => {
-        const href = productHref(slug);
+        // Secondary pages are linked from the footer and their parent pages only.
+        const href = secondaryProducts.has(slug) ? null : productHref(slug);
         return href ? [{ href, name: bySlug[slug].name, blurb: bySlug[slug].blurb }] : [];
       }),
     }))

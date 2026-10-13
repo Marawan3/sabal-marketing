@@ -19,6 +19,9 @@ Code proves what the software does, not what is switched on in production. Where
 - Sabal Signal is off limits for now: `sabal-signal-website` and `sabal-reviews` are not to be read, edited or have PRs opened. Rows whose proof would live in Signal code stay Unknown, marked "needs Signal access".
 - **Later the same day the owner changed direction:** this register is now a **build list, not a publishing gate**. Every product in `SPEC.md` section 4 may be marketed as available, with no Coming Soon labels (SPEC sections 0, 2, 3 and 16, as amended). Statuses below still record what the platform code does today, so the platform team knows what to build.
 
+**2026-10-13**
+- /loyalty is a **build commitment**: the page is published before the feature exists, in outcome-level words only (row "Loyalty / rewards" below). The platform team builds to that page.
+
 ## Conflicts with what is published today (owner action needed)
 
 These are statements on the live wuntab.com, or in the published `/privacy` and `/terms`, that the code contradicts. The legal text can only change with written owner approval. They are listed here, not fixed.
@@ -126,7 +129,7 @@ Component paths are under `apps/ros/app/(dashboard)/_components/analytics/`, exc
 | Grow | Satisfaction / feedback dashboard | /guest-feedback | Unknown | **Unknown** (needs Signal access) | Not in sabal-ros | |
 | Grow | Review requests | /reviews | Unknown | **Unknown** (needs Signal access) | Not in sabal-ros | Signal's public site describes review gating (recorded before Signal went off limits). Truth rule 8 applies if it's ever proven. |
 | Grow | Review monitoring | /reviews | Unknown | **Unknown** (needs Signal access) | Not in sabal-ros | |
-| Grow | Loyalty / rewards | /loyalty | Not built | **Not built** (confirmed) | Code says so: `packages/ui/storefront/themes/clean-home.tsx:42` | |
+| Grow | Loyalty / rewards | /loyalty | Not built | **Not built** (confirmed); **build commitment** (owner, 2026-10-13) | Code says so: `packages/ui/storefront/themes/clean-home.tsx:42` | /loyalty is published (PR #30) with outcome-level copy only: customers earn a reward for coming back, and the restaurant sets what and when. No points, no tiers, no app. The page is a commitment to build it; its visual is a reward card on the order confirmation. |
 | Grow | Customer database | /customers | Unknown | **Live** | `apps/ros/app/(dashboard)/customers/page.tsx:25-68` → `apps/ros/server/repositories/customer-repository.ts:113-149`; detail `customers/[customerId]/page.tsx:59-147` | Name, contact, orders, spend, last 50 orders. No export. Customers appear after a paid order. |
 | Grow | Marketing opt-in at checkout | /customers | (new row) | **Partial** | Stored `placement.ts:478`; `packages/db/migrations/0083_orders_marketing_opt_in.sql:1-11` | Live: diners can tick email or text offers, and it's recorded. Not live: anything sent. |
 | Grow | Email campaigns | /email-marketing | Not built | **Not built** (confirmed) | No customer email provider | Not planned per the brief; don't mention. |

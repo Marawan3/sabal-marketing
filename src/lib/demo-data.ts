@@ -172,3 +172,54 @@ export const demoSettings = {
   quote: ["20–30 min", "25–35 min"],
   closes: "11:00 PM",
 };
+
+/**
+ * The menu editor's item drawer for Spiced Lamb Meatballs (batch 1's
+ * menu-editor and menu-editor-options captures): the dashboard's own labels,
+ * the demo item's own values. "Available" is the selected availability.
+ */
+export const demoEditor = {
+  title: demoOrder.dish.name,
+  sub: "Edit item details",
+  category: demoOrder.category,
+  price: "12",
+  prep: "12",
+  availability: ["Available", "Sold Out", "Hidden"],
+  groups: [
+    { name: "Spice level", meta: "Optional · 3 options" },
+    { name: "Extras", meta: "Optional · 4 options" },
+  ],
+  save: "Save changes",
+};
+
+/**
+ * The loyalty reward card (owner, 2026-10-13): what a returning customer sees
+ * on the order confirmation. Loyalty is a build commitment (REGISTER.md); the
+ * reward is an example of one a restaurant could set, on a dish from the
+ * demo menu. No points, no tiers.
+ */
+export const demoReward = {
+  label: "Your reward",
+  title: "Thanks for coming back.",
+  body: "Your next Hummus & Warm Pita is on us.",
+};
+
+/**
+ * "Goes well with" on the dish sheet (the clean theme shows at most two):
+ * the restaurant's own picks for Spiced Lamb Meatballs, from the demo menu.
+ */
+export const demoPairings = ["Hummus & Warm Pita", "Stuffed Grape Leaves"].map(
+  (name) => demoOrder.rows.find((row) => row.name === name)!,
+);
+
+/**
+ * The customer's confirmation text, in the product's words
+ * (packages/domain/ordering/confirmation-sms.ts:67, 77 at the product repo at a5418d4).
+ * There is no "ready" text in the product; this is the one it sends.
+ */
+export const demoSms = {
+  from: demoOrder.restaurant,
+  confirmed: `Your order #${demoOrder.ticket.number} at ${demoOrder.restaurant} is confirmed.`,
+  /** Then "Pickup in about 20 minutes (around {time})", the visitor's own time plus 20, as the hero does. */
+  pickup: "Pickup in about 20 minutes",
+};

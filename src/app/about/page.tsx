@@ -3,6 +3,7 @@ import { Beliefs } from "@/components/beliefs";
 import { Container } from "@/components/container";
 import { TextLink } from "@/components/cta-link";
 import { FinalCta } from "@/components/final-cta";
+import { Founder } from "@/components/founder";
 import { TwoColumnList } from "@/components/product-page";
 import { Section, SectionHead } from "@/components/section";
 import { SmartLink } from "@/components/smart-link";
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * /about (owner, 2026-10-13): what we believe (nothing until the owner has
- * written all three), who WunTab is for (the four solution pages), and the
- * hello@ address. No photos, no team, no numbers.
+ * /about (owner, 2026-10-13): what we believe (the owner's three beliefs),
+ * the founder (nothing until src/lib/founder.ts is filled in), who WunTab
+ * is for (the four solution pages), and the hello@ address. No numbers.
  */
 export default function AboutPage() {
   return (
@@ -34,6 +35,7 @@ export default function AboutPage() {
       </section>
 
       <Beliefs />
+      <Founder />
 
       <Section id="for" tone="warm">
         <SectionHead heading={copy.about.forHeading} sub={copy.about.forLine} />
