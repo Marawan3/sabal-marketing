@@ -365,7 +365,7 @@ export const products: Product[] = [
     ],
     related: ["menu-check", "restaurant-websites", "listings", "online-menu"],
     flow: {
-      title: "What we build in",
+      title: "How your menu goes into the page",
       question: "What goes into the page?",
       steps: [
         "Your menu is written into the page itself",
@@ -693,12 +693,41 @@ export const products: Product[] = [
     inMenu: true,
     headline: "Works with what you already use.",
     sub: "Payments, third-party delivery, and your POS, connected.",
+    /*
+     * The owner's wording (2026-10-13): payment and delivery are live; the
+     * POS line is his. No logos or names of any payment, delivery or POS
+     * company, anywhere.
+     */
     capabilities: [
-      "Payment integrations",
-      "Third-party delivery",
-      "Connects to your POS. If your POS isn't compatible, orders go to a kitchen printer",
+      "Payments: live. Customers pay at checkout, into your own payment account",
+      "Delivery: live. A third-party driver is requested for every delivery order",
+      "POS: connects to your POS where supported; if not, a kitchen printer",
     ],
-    related: ["payments", "delivery", "order-management"],
+    flow: {
+      title: "How an order reaches your kitchen",
+      question: "How does an order reach my kitchen?",
+      steps: [
+        "Customer orders on your website",
+        "The payment goes into your own payment account",
+        "WunTab receives the order",
+        "It goes to your POS where supported, or a kitchen printer",
+      ],
+    },
+    related: ["payments", "delivery", "order-management", "online-ordering"],
+    faq: [
+      {
+        question: "Does it work with my POS?",
+        answer: "WunTab connects to your POS where supported. If not, orders go to a kitchen printer.",
+      },
+      {
+        question: "Who handles delivery?",
+        answer: "WunTab requests third-party delivery for each delivery order. The driver picks up from you and delivers to the customer.",
+      },
+      {
+        question: "Who gets the money?",
+        answer: "You do. Every restaurant has its own payment account and is the merchant of record.",
+      },
+    ],
   },
   {
     slug: "partners",
@@ -725,6 +754,7 @@ export const builtProducts = [
   "restaurant-websites",
   "restaurant-seo",
   "order-management",
+  "integrations",
 ] as const;
 
 const built = new Set<string>(builtProducts);
@@ -776,28 +806,27 @@ export const megaMenu: { pillar: Pillar; slugs: string[] }[] = [
   },
 ];
 
-/** Solutions menu groups (nav spec, 2026-09-05). */
-export const solutionsMenu: { title: string; slugs: string[] }[] = [
-  {
-    title: "By business",
-    slugs: ["independent-restaurants", "multi-location-restaurants", "restaurant-groups-franchises"],
-  },
-  {
-    title: "By restaurant type",
-    slugs: ["quick-service", "full-service", "catering"],
-  },
-];
-
 // ───────────────────────────── SOLUTIONS ─────────────────────────────
 
+/**
+ * The four solution pages (owner, 2026-10-13): each picks the four product
+ * pages that matter most for that kind of restaurant and links to them with
+ * the product's own one-line blurb. Headlines and lines are the earlier
+ * solution copy, trimmed to what those four pages show. No new claims.
+ * The old "Catering businesses" and "Groups & franchises" entries went with
+ * this change: the first described catering features the product does not
+ * have, and neither had a page.
+ */
 export type Solution = {
   slug: string;
   name: string;
   blurb: string;
   headline: string;
   sub: string;
-  points: string[];
-  products: string[];
+  /** Four built product pages, in order. */
+  picks: string[];
+  /** Questions from the homepage FAQ (copy.faq), by question. */
+  faq: string[];
 };
 
 export const solutions: Solution[] = [
@@ -806,87 +835,44 @@ export const solutions: Solution[] = [
     name: "Independent Restaurants",
     blurb: "One restaurant, everything direct.",
     headline: "Everything a single restaurant needs to sell direct.",
-    sub: "Website, ordering, delivery, and marketing in one place, set up for you.",
-    points: [
-      "We build your website and load your menu",
-      "Orders come to you, not to a marketplace",
-      "Delivery without hiring drivers",
-      "Regulars get rewards and reminders",
-    ],
-    products: ["online-ordering", "restaurant-websites", "delivery", "loyalty", "order-management"],
-  },
-  {
-    slug: "multi-location-restaurants",
-    name: "Multi-Location Restaurants",
-    blurb: "Shared menus, per-location control.",
-    headline: "Every location on one platform.",
-    sub: "Shared menus, per-location control, and reporting across all of them.",
-    points: [
-      "Manage menus and hours per location",
-      "See orders, feedback, and sales for each one",
-      "Listings that stay consistent",
-    ],
-    products: ["multi-location", "menu-management", "analytics", "guest-feedback", "listings"],
-  },
-  {
-    slug: "restaurant-groups-franchises",
-    name: "Restaurant Groups & Franchises",
-    blurb: "Organization-level controls.",
-    headline: "Group controls, location freedom.",
-    sub: "Decide what the organization sets and what each franchisee runs.",
-    points: [
-      "Organization-level controls",
-      "Location managers see their own restaurant",
-      "Group-wide reporting",
-    ],
-    products: ["enterprise", "multi-location", "analytics", "restaurant-marketing"],
+    sub: "Website, ordering, and delivery in one place, set up for you.",
+    picks: ["restaurant-websites", "online-ordering", "delivery", "order-management"],
+    faq: ["Do I have to set anything up myself?", "Is there a monthly fee or a contract?", "What do I own?"],
   },
   {
     slug: "quick-service",
     name: "Quick-Service Restaurants",
     blurb: "Fast direct orders, straight to the kitchen.",
     headline: "Fast orders, straight to the kitchen.",
-    sub: "Online ordering on your own website, with tickets printing the moment an order lands.",
-    points: [
-      "Online ordering and delivery from your own website",
-      "Tickets print in the kitchen as orders land",
-      "Orders go into your POS, or to a kitchen printer",
-      "A self-service kiosk and a branded app",
-    ],
-    products: ["online-ordering", "order-management", "delivery", "kiosk", "restaurant-app"],
+    sub: "Online ordering on your own website, with every order going to your kitchen.",
+    picks: ["online-ordering", "order-management", "delivery", "integrations"],
+    faq: ["Does it work with my POS?", "How does delivery work if I don't have drivers?", "Who gets the money?"],
   },
   {
     slug: "full-service",
     name: "Full-Service Restaurants",
-    blurb: "Direct orders, and honest feedback.",
-    headline: "Take orders direct, and hear how the visit went.",
-    sub: "Online ordering on your own website, catering for the big bookings, and a way for guests to tell you how it went.",
-    points: [
-      "Online ordering and delivery from your own website",
-      "Catering enquiries handled online instead of by phone",
-      "Guest feedback before they leave",
-      "Table ordering and pay at the table",
-    ],
-    products: ["online-ordering", "guest-feedback", "catering", "delivery", "table-ordering"],
+    blurb: "Direct orders and catering requests.",
+    headline: "Direct orders and catering, on your own website.",
+    sub: "Online ordering and delivery from your own website, and catering requests for the big bookings.",
+    picks: ["online-ordering", "catering", "delivery", "restaurant-websites"],
+    faq: ["Is WunTab a marketplace?", "Do my customers see the 5%?", "What do I own?"],
   },
   {
-    slug: "catering",
-    name: "Catering Businesses",
-    blurb: "Big orders without the phone tag.",
-    headline: "Big orders without the phone tag.",
-    sub: "A catering menu, lead times, minimums, and delivery, all online.",
-    points: [
-      "Catering menu with advance scheduling",
-      "Lead times and minimums you set",
-      "Delivery with a third-party driver",
-    ],
-    products: ["catering", "delivery", "order-management", "payments"],
+    slug: "multi-location",
+    name: "Multi-Location Restaurants",
+    blurb: "Every location on one account.",
+    headline: "Every location on one platform.",
+    sub: "Run every location from one account, with menus, orders, and feedback per location.",
+    picks: ["online-ordering", "order-management", "restaurant-websites", "restaurant-seo"],
+    faq: ["Is there a monthly fee or a contract?", "Who gets the money?", "Do I have to set anything up myself?"],
   },
 ];
 
 export const solutionBySlug = Object.fromEntries(
   solutions.map((s) => [s.slug, s]),
 ) as Record<string, Solution>;
+
+export const solutionHref = (slug: string) => `/solutions/${slug}`;
 
 /** The complete product story, used on the homepage and /how-it-works. */
 export const lifecycle: { name: string; body: string; products: string[] }[] = [

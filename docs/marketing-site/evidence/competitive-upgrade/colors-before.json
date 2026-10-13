@@ -1,0 +1,869 @@
+[
+ {
+  "color": "rgb(29, 29, 27)",
+  "kinds": {
+   "text": 1252,
+   "stroke": 290,
+   "fill": 24,
+   "border": 58,
+   "background": 42
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(244, 168, 58)",
+  "kinds": {
+   "background": 144,
+   "stroke": 22,
+   "fill": 22
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(255, 255, 255)",
+  "kinds": {
+   "background": 462,
+   "text": 234,
+   "fill": 58,
+   "stroke": 4
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(230, 233, 239)",
+  "kinds": {
+   "border": 614,
+   "background": 44
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(0, 0, 0)",
+  "kinds": {
+   "fill": 308,
+   "background": 28,
+   "text": 24,
+   "stroke": 24
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(19, 33, 60)",
+  "kinds": {
+   "fill": 44,
+   "background": 2,
+   "stroke": 22
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.55)",
+  "kinds": {
+   "text": 66
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.7)",
+  "kinds": {
+   "text": 204
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.85)",
+  "kinds": {
+   "text": 164
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.3)",
+  "kinds": {
+   "border": 160
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(11, 11, 12)",
+  "kinds": {
+   "background": 32
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(15, 118, 110)",
+  "kinds": {
+   "text": 26,
+   "background": 150,
+   "border": 32
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(245, 245, 244)",
+  "kinds": {
+   "background": 100
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/restaurant-websites"
+  ]
+ },
+ {
+  "color": "rgb(63, 63, 70)",
+  "kinds": {
+   "stroke": 12,
+   "text": 130,
+   "border": 224
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/catering",
+   "/restaurant-websites",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(17, 17, 17)",
+  "kinds": {
+   "text": 759,
+   "stroke": 242
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites"
+  ]
+ },
+ {
+  "color": "rgb(229, 231, 235)",
+  "kinds": {
+   "border": 718
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites"
+  ]
+ },
+ {
+  "color": "rgb(100, 107, 120)",
+  "kinds": {
+   "text": 306
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites"
+  ]
+ },
+ {
+  "color": "rgba(17, 17, 17, 0.18)",
+  "kinds": {
+   "background": 46
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites"
+  ]
+ },
+ {
+  "color": "rgba(0, 0, 0, 0.4)",
+  "kinds": {
+   "background": 4
+  },
+  "pages": [
+   "/",
+   "/online-ordering"
+  ]
+ },
+ {
+  "color": "rgb(118, 118, 118)",
+  "kinds": {
+   "border": 144
+  },
+  "pages": [
+   "/",
+   "/online-ordering"
+  ]
+ },
+ {
+  "color": "rgb(9, 9, 11)",
+  "kinds": {
+   "background": 46
+  },
+  "pages": [
+   "/",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(39, 39, 42)",
+  "kinds": {
+   "border": 12,
+   "background": 16
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(250, 250, 250)",
+  "kinds": {
+   "text": 172,
+   "background": 14
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(161, 161, 170)",
+  "kinds": {
+   "text": 188
+  },
+  "pages": [
+   "/",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(16, 185, 129)",
+  "kinds": {
+   "background": 20
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(82, 82, 91)",
+  "kinds": {
+   "text": 152
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(24, 24, 27)",
+  "kinds": {
+   "background": 56,
+   "text": 250
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(0, 62, 128)",
+  "kinds": {
+   "background": 56,
+   "fill": 4,
+   "stroke": 4,
+   "text": 8,
+   "border": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(251, 191, 36)",
+  "kinds": {
+   "fill": 16
+  },
+  "pages": [
+   "/",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.6)",
+  "kinds": {
+   "text": 4
+  },
+  "pages": [
+   "/"
+  ]
+ },
+ {
+  "color": "rgba(29, 29, 27, 0.7)",
+  "kinds": {
+   "text": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(228, 228, 231)",
+  "kinds": {
+   "border": 268,
+   "text": 24,
+   "background": 66
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/delivery",
+   "/catering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(113, 113, 122)",
+  "kinds": {
+   "text": 260
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/delivery",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(4, 120, 87)",
+  "kinds": {
+   "text": 14
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(236, 253, 245)",
+  "kinds": {
+   "background": 18
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/catering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(194, 65, 12)",
+  "kinds": {
+   "background": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(212, 212, 216)",
+  "kinds": {
+   "text": 40,
+   "border": 12
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(167, 199, 227)",
+  "kinds": {
+   "text": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgba(0, 62, 128, 0.25)",
+  "kinds": {
+   "background": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(244, 244, 245)",
+  "kinds": {
+   "background": 56,
+   "border": 32
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(245, 158, 11)",
+  "kinds": {
+   "background": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(180, 83, 9)",
+  "kinds": {
+   "text": 16
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(255, 251, 235)",
+  "kinds": {
+   "background": 16
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgba(9, 9, 11, 0.35)",
+  "kinds": {
+   "background": 4
+  },
+  "pages": [
+   "/",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(225, 29, 72)",
+  "kinds": {
+   "text": 8
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(254, 205, 211)",
+  "kinds": {
+   "border": 32
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+  "kinds": {
+   "text": 90
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.15)",
+  "kinds": {
+   "border": 24
+  },
+  "pages": [
+   "/",
+   "/how-it-works"
+  ]
+ },
+ {
+  "color": "rgb(6, 95, 70)",
+  "kinds": {
+   "text": 12
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/catering"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.2)",
+  "kinds": {
+   "background": 11
+  },
+  "pages": [
+   "/",
+   "/how-it-works"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455678 0.0000200868 / 0.55)",
+  "kinds": {
+   "text": 88
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455678 0.0000200868 / 0.85)",
+  "kinds": {
+   "text": 176
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455678 0.0000200868 / 0.15)",
+  "kinds": {
+   "border": 22
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms"
+  ]
+ },
+ {
+  "color": "rgb(32, 33, 36)",
+  "kinds": {
+   "text": 24
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(223, 225, 229)",
+  "kinds": {
+   "border": 16
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(112, 117, 122)",
+  "kinds": {
+   "stroke": 12
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(77, 81, 86)",
+  "kinds": {
+   "text": 24
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(26, 13, 171)",
+  "kinds": {
+   "text": 4
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(235, 235, 235)",
+  "kinds": {
+   "border": 20
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.1)",
+  "kinds": {
+   "border": 24
+  },
+  "pages": [
+   "/how-it-works"
+  ]
+ },
+ {
+  "color": "rgba(29, 29, 27, 0.15)",
+  "kinds": {
+   "background": 2,
+   "border": 14
+  },
+  "pages": [
+   "/delivery"
+  ]
+ },
+ {
+  "color": "rgb(209, 250, 229)",
+  "kinds": {
+   "background": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(146, 64, 14)",
+  "kinds": {
+   "text": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(254, 252, 232)",
+  "kinds": {
+   "background": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(250, 204, 21)",
+  "kinds": {
+   "border": 8
+  },
+  "pages": [
+   "/order-management"
+  ]
+ }
+]

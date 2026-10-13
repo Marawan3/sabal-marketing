@@ -40,7 +40,7 @@ export function HeroSignup({
         placeholder={label}
         value={name}
         onChange={(event) => setName(event.target.value)}
-        className="min-h-12 min-w-0 flex-1 rounded-[12px] border border-ink/30 bg-paper px-3 text-body text-ink placeholder:text-ink/55 focus-visible:border-ink"
+        className="min-h-12 min-w-0 flex-1 rounded-[12px] border border-ink-muted bg-paper px-3 text-body text-ink placeholder:text-ink-muted focus-visible:border-ink"
       />
       <button
         type="submit"

@@ -37,11 +37,11 @@ function ProductChips({ slugs }: { slugs: readonly string[] }) {
         return (
           <li key={slug}>
             {href ? (
-              <SmartLink href={href} className={`${chip} border-ink/30 hover:border-ink`}>
+              <SmartLink href={href} className={`${chip} border-ink-muted hover:border-ink`}>
                 {bySlug[slug].name}
               </SmartLink>
             ) : (
-              <span className={`${chip} border-mist text-ink/70`}>{bySlug[slug].name}</span>
+              <span className={`${chip} border-mist text-ink-muted`}>{bySlug[slug].name}</span>
             )}
           </li>
         );
@@ -87,22 +87,22 @@ export default function HowItWorksPage() {
       <section>
         <Container className="pt-12 pb-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-14">
           <h1 className="max-w-[15ch] text-display">{copy.howItWorks.headline}</h1>
-          <p className="mt-5 max-w-[44ch] text-body text-ink/85 lg:mt-6">{copy.howItWorks.sub}</p>
+          <p className="mt-5 max-w-[44ch] text-body text-ink-muted lg:mt-6">{copy.howItWorks.sub}</p>
         </Container>
       </section>
 
       {/* The six stages: square rows between thin rules, no cards. */}
       <Section>
-        <ol className="border-t border-ink/15">
+        <ol className="border-t border-mist">
           {lifecycle.map((stage, index) => {
             return (
-              <li key={stage.name} className="border-b border-ink/15 py-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-14">
+              <li key={stage.name} className="border-b border-mist py-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-14">
                 <div className="lg:col-span-5">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-saffron text-body font-semibold tabular-nums">
                     {index + 1}
                   </span>
                   <h2 className="mt-5 text-h2">{stage.name}</h2>
-                  <p className="mt-4 max-w-[44ch] text-body text-ink/85">{stage.body}</p>
+                  <p className="mt-4 max-w-[44ch] text-body text-ink-muted">{stage.body}</p>
                   <ProductChips slugs={stage.products} />
                 </div>
                 <div className="mt-8 lg:col-span-7 lg:mt-0">{stageVisuals[index]}</div>

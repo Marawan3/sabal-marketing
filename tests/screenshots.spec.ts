@@ -12,6 +12,13 @@ const pages = [
   "restaurant-websites",
   "restaurant-seo",
   "order-management",
+  "integrations",
+  "solutions/independent-restaurants",
+  "solutions/quick-service",
+  "solutions/full-service",
+  "solutions/multi-location",
+  "about",
+  "contact",
 ] as const;
 
 test.describe("screenshots", () => {
@@ -25,7 +32,7 @@ test.describe("screenshots", () => {
         await page.goto(`/${path}`);
         await page.evaluate(() => document.fonts.ready);
         await page.screenshot({
-          path: `${outDir}/${path || "home"}-${width}.png`,
+          path: `${outDir}/${(path || "home").replace(/\//g, "-")}-${width}.png`,
           fullPage: true,
         });
       }

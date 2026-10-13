@@ -50,7 +50,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
                 if (event.key === "ArrowLeft") select((index - 1 + tabs.length) % tabs.length, true);
               }}
               className={`-mb-px min-h-12 shrink-0 border-b-2 pb-2 text-left text-small leading-tight font-medium transition-colors duration-150 lg:pb-0 lg:text-body ${
-                selected ? "border-ink text-ink" : "border-transparent text-ink/60 hover:text-ink"
+                selected ? "border-ink text-ink" : "border-transparent text-ink-muted hover:text-ink"
               }`}
             >
               {tab.label}
@@ -75,7 +75,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
                 {tab.lines.map((line) => (
                   <li
                     key={line}
-                    className={`border-t border-mist py-3 text-body text-ink/85 first:border-t-0 first:pt-0 ${
+                    className={`border-t border-mist py-3 text-body text-ink-muted first:border-t-0 first:pt-0 ${
                       tab.visual ? "" : "lg:border-t-0 lg:border-l lg:py-0 lg:pl-6 lg:first:border-l-0 lg:first:pl-0"
                     }`}
                   >

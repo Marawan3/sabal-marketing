@@ -25,6 +25,15 @@ export const copy = {
     sub: "WunTab brings your website, online ordering, delivery, catering, guest experience, marketing, and restaurant operations together in one platform.",
     line: "Your website, online ordering, delivery, and marketing, built and run for you.",
     inputLabel: "Your restaurant's name",
+    /**
+     * The trust line over the headline (owner, 2026-10-13). Sources: $0 is
+     * SERVICE_FEE_CLAUSE (legal.ts); "No contract" is /terms 4.2 (you may end
+     * the agreement at any time) and the "monthly fee or a contract" answer
+     * below; "your customers" is /terms 1.2 (your customer list is yours).
+     */
+    trust: "$0 for the restaurant · No contract · Your customers, your data",
+    /** The small card under the name field: the pricing fact, moved up. Same terms as SERVICE_FEE_CLAUSE. */
+    price: { lead: "$0/month for the restaurant.", rest: "Customers pay 5% at checkout." },
     /** The hero animation: one sentence for screen readers, and its pause button. */
     demo: {
       description:
@@ -87,6 +96,23 @@ export const copy = {
       },
     ],
   },
+  /**
+   * The savings calculator (homepage, between products and how it works).
+   * The range is the commission third-party delivery apps publish for
+   * restaurants' delivery orders (the largest app's own US merchant pricing
+   * page lists 15%, 25% and 30% plans; sources in COPY.md, never named here).
+   * No averages: both numbers are the owner's own.
+   */
+  savings: {
+    heading: "What commission would you keep?",
+    orders: "Delivery-app orders per week",
+    value: "Average order value",
+    result: "Estimated commission kept each year",
+    empty: "Enter both numbers to see the range.",
+    low: 15,
+    high: 30,
+    assumption: "Third-party apps charge 15–30% commission; we charge the restaurant $0.",
+  },
   /** The one dark band on the homepage. The line restates the Kitchen Display entry in catalog.ts. */
   kitchen: {
     heading: "Every order on one screen in your kitchen.",
@@ -136,6 +162,17 @@ export const copy = {
   },
   faq: {
     heading: "Questions owners ask",
+    /**
+     * Left off the homepage (2026-10-13), because the page already answers
+     * them: the hero's trust line and $0 card (fee, contract, the 5%) and the
+     * how-it-works steps (POS, setup). The solution pages still ask them.
+     */
+    leftOffHome: [
+      "Is there a monthly fee or a contract?",
+      "Do my customers see the 5%?",
+      "Does it work with my POS?",
+      "Do I have to set anything up myself?",
+    ] as readonly string[],
     items: [
       {
         question: "What do I own?",
@@ -185,14 +222,32 @@ export const copy = {
   },
   finalCta: {
     heading: "Take control of your restaurant's direct business.",
-    body: "A short call. We will show you WunTab on your own menu.",
+    /** Under the button (owner, 2026-10-13). It replaces the line that sat above it. */
+    after: "20-minute call. We show WunTab on your own menu. No pressure.",
+    message: "Or send a message",
+  },
+  /** /contact: the form posts to /api/contact, which emails hello@wuntab.com. */
+  contact: {
+    headline: "Send us a message.",
+    line: "Tell us about your restaurant. We reply within one business day.",
+    fields: { name: "Your name", restaurant: "Restaurant", phone: "Phone", email: "Email", message: "Message" },
+    send: "Send message",
+    sending: "Sending",
+    sent: "Thanks. Your message is on its way. We reply within one business day.",
+    failed: "We couldn't send your message. Please email us instead:",
+    call: "Rather talk? Book a 20-minute call.",
+  },
+  /** /about. The beliefs render only once the owner has written them (beliefs.ts). */
+  about: {
+    headline: "About WunTab",
+    line: "We build and run restaurant websites, online ordering, delivery, and marketing, so orders come to you.",
+    forHeading: "Who WunTab is for",
+    forLine: "Every restaurant is set up by hand. We build the site, load your menu, and connect your kitchen.",
+    reach: "Reach us",
   },
   howItWorks: {
     headline: "How WunTab works",
     sub: "Six steps, one platform. Each one feeds the next.",
-  },
-  footer: {
-    blurb: "Restaurant websites, online ordering, delivery, and marketing, built and run for you.",
   },
   notFound: {
     heading: "That page isn't here.",

@@ -1,5 +1,5 @@
 import { copy } from "./copy";
-import { builtProducts } from "./catalog";
+import { builtProducts, solutionHref, solutions } from "./catalog";
 import { finalLegalRoutes } from "./legal";
 
 export const site = {
@@ -17,14 +17,16 @@ export const demoHref =
 /** "Log in" target. Hidden until NEXT_PUBLIC_APP_HREF is set. */
 export const appHref = process.env.NEXT_PUBLIC_APP_HREF;
 
-/**
- * Phase 1 has no Solutions, Resources or Company pages yet, so those nav
- * groups do not render (a group with nothing behind it would only hold dead
- * links). They return as their pages are built.
- */
+/** Top-level links between the Solutions and Company menus. */
 export const primaryLinks = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
+] as const;
+
+/** The Company menu and footer column (owner, 2026-10-13). */
+export const companyLinks = [
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export const legalNav = [
@@ -41,6 +43,8 @@ export const allRoutes: string[] = [
   "/how-it-works",
   "/pricing",
   ...builtProducts.map((slug) => `/${slug}`),
+  ...solutions.map((s) => solutionHref(s.slug)),
+  ...companyLinks.map((l) => l.href),
   ...finalLegalRoutes(),
 ];
 

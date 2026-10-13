@@ -1,0 +1,549 @@
+[
+ {
+  "color": "rgb(29, 29, 27)",
+  "kinds": {
+   "text": 3988,
+   "stroke": 1278,
+   "background": 243,
+   "fill": 288,
+   "border": 242
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(244, 168, 58)",
+  "kinds": {
+   "background": 338,
+   "stroke": 36,
+   "fill": 36
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(255, 255, 255)",
+  "kinds": {
+   "background": 736,
+   "text": 488,
+   "fill": 72,
+   "stroke": 4
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(230, 233, 239)",
+  "kinds": {
+   "border": 2673,
+   "background": 370
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(0, 0, 0)",
+  "kinds": {
+   "fill": 148
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(19, 33, 60)",
+  "kinds": {
+   "fill": 72,
+   "background": 2,
+   "stroke": 36
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(110, 110, 109)",
+  "kinds": {
+   "text": 1853,
+   "border": 456,
+   "stroke": 24
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(15, 118, 110)",
+  "kinds": {
+   "text": 32,
+   "background": 164,
+   "border": 32
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/solutions/independent-restaurants",
+   "/solutions/full-service"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.18)",
+  "kinds": {
+   "background": 50
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/solutions/independent-restaurants",
+   "/solutions/full-service"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.4)",
+  "kinds": {
+   "background": 4
+  },
+  "pages": [
+   "/",
+   "/online-ordering"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455678 0.0000200868 / 0.15)",
+  "kinds": {
+   "border": 272,
+   "background": 28
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+  "kinds": {
+   "text": 1082
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/pricing",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/privacy",
+   "/terms",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about",
+   "/contact"
+  ]
+ },
+ {
+  "color": "rgb(16, 185, 129)",
+  "kinds": {
+   "background": 22
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(0, 62, 128)",
+  "kinds": {
+   "background": 58,
+   "fill": 4,
+   "stroke": 4,
+   "text": 10,
+   "border": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/online-ordering",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(251, 191, 36)",
+  "kinds": {
+   "fill": 16
+  },
+  "pages": [
+   "/",
+   "/online-ordering",
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(4, 120, 87)",
+  "kinds": {
+   "text": 16
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(236, 253, 245)",
+  "kinds": {
+   "background": 22
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/catering",
+   "/order-management",
+   "/solutions/quick-service",
+   "/solutions/full-service"
+  ]
+ },
+ {
+  "color": "rgb(194, 65, 12)",
+  "kinds": {
+   "background": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(167, 199, 227)",
+  "kinds": {
+   "text": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgba(0, 62, 128, 0.25)",
+  "kinds": {
+   "background": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(245, 158, 11)",
+  "kinds": {
+   "background": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(180, 83, 9)",
+  "kinds": {
+   "text": 20
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(255, 251, 235)",
+  "kinds": {
+   "background": 20
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "oklab(0.229964 -0.00107493 0.00362408 / 0.35)",
+  "kinds": {
+   "background": 5
+  },
+  "pages": [
+   "/",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(225, 29, 72)",
+  "kinds": {
+   "text": 10
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(254, 205, 211)",
+  "kinds": {
+   "border": 40
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/order-management",
+   "/solutions/quick-service"
+  ]
+ },
+ {
+  "color": "rgb(6, 95, 70)",
+  "kinds": {
+   "text": 16
+  },
+  "pages": [
+   "/",
+   "/how-it-works",
+   "/catering",
+   "/solutions/full-service"
+  ]
+ },
+ {
+  "color": "rgb(250, 247, 242)",
+  "kinds": {
+   "background": 26
+  },
+  "pages": [
+   "/",
+   "/online-ordering",
+   "/delivery",
+   "/catering",
+   "/restaurant-websites",
+   "/restaurant-seo",
+   "/order-management",
+   "/integrations",
+   "/solutions/independent-restaurants",
+   "/solutions/quick-service",
+   "/solutions/full-service",
+   "/solutions/multi-location",
+   "/about"
+  ]
+ },
+ {
+  "color": "rgb(26, 13, 171)",
+  "kinds": {
+   "text": 4
+  },
+  "pages": [
+   "/how-it-works",
+   "/restaurant-seo"
+  ]
+ },
+ {
+  "color": "rgb(209, 250, 229)",
+  "kinds": {
+   "background": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(146, 64, 14)",
+  "kinds": {
+   "text": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(254, 252, 232)",
+  "kinds": {
+   "background": 2
+  },
+  "pages": [
+   "/order-management"
+  ]
+ },
+ {
+  "color": "rgb(250, 204, 21)",
+  "kinds": {
+   "border": 8
+  },
+  "pages": [
+   "/order-management"
+  ]
+ }
+]

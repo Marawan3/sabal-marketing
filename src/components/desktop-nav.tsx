@@ -45,10 +45,13 @@ const triggerClass =
 export function DesktopNav({
   menus,
   links,
+  after = [],
 }: {
   menus: NavMenu[];
   /** Plain links after the menus (How it works, Pricing). */
   links: readonly { href: string; label: string }[];
+  /** Menus after the links (Company). */
+  after?: NavMenu[];
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -107,27 +110,7 @@ export function DesktopNav({
   const isHoverPointer = (event: React.PointerEvent) =>
     event.pointerType === "mouse" || event.pointerType === "pen";
 
-  return (
-    <div
-      ref={rootRef}
-      className="flex items-center gap-1"
-      onPointerEnter={(event) => {
-        if (isHoverPointer(event)) cancelClose();
-      }}
-      onPointerLeave={(event) => {
-        if (isHoverPointer(event)) scheduleClose();
-      }}
-      onPointerDown={(event) => {
-        inputKind.current = event.pointerType === "touch" ? "touch" : "mouse";
-      }}
-      onKeyDown={() => {
-        inputKind.current = "keyboard";
-      }}
-      onBlur={(event) => {
-        if (!rootRef.current?.contains(event.relatedTarget as Node | null)) closeNow();
-      }}
-    >
-      {menus.map((menu) => {
+  const renderMenu = (menu: NavMenu) => {
         const isOpen = open === menu.key;
         const panelId = `${baseId}-${menu.key}`;
         return (
@@ -142,7 +125,7 @@ export function DesktopNav({
               aria-controls={panelId}
               aria-haspopup="true"
               className={`${triggerClass} ${
-                isOpen ? "bg-mist text-ink" : "text-ink hover:text-ink/70"
+                isOpen ? "bg-mist text-ink" : "text-ink hover:text-ink-muted"
               }`}
               onPointerEnter={(event) => {
                 if (isHoverPointer(event)) openNow(menu.key);
@@ -192,7 +175,7 @@ export function DesktopNav({
                   {menu.groups.map((group, groupIndex) => (
                     <div key={group.title ?? groupIndex}>
                       {group.title ? (
-                        <p className="px-3 pb-2 text-small font-medium text-ink/55">{group.title}</p>
+                        <p className="px-3 pb-2 text-small font-medium text-ink-muted">{group.title}</p>
                       ) : null}
                       <ul>
                         {group.items.map((item) => (
@@ -205,7 +188,7 @@ export function DesktopNav({
                                 {item.name}
                               </span>
                               {item.blurb ? (
-                                <span className="mt-0.5 block text-small text-ink/70">
+                                <span className="mt-0.5 block text-small text-ink-muted">
                                   {item.blurb}
                                 </span>
                               ) : null}
@@ -220,12 +203,34 @@ export function DesktopNav({
             </div>
           </div>
         );
-      })}
+  };
+
+  return (
+    <div
+      ref={rootRef}
+      className="flex items-center gap-1"
+      onPointerEnter={(event) => {
+        if (isHoverPointer(event)) cancelClose();
+      }}
+      onPointerLeave={(event) => {
+        if (isHoverPointer(event)) scheduleClose();
+      }}
+      onPointerDown={(event) => {
+        inputKind.current = event.pointerType === "touch" ? "touch" : "mouse";
+      }}
+      onKeyDown={() => {
+        inputKind.current = "keyboard";
+      }}
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget as Node | null)) closeNow();
+      }}
+    >
+      {menus.map(renderMenu)}
       {links.map((link) => (
         <SmartLink
           key={link.href}
           href={link.href}
-          className={`${triggerClass} text-ink hover:text-ink/70`}
+          className={`${triggerClass} text-ink hover:text-ink-muted`}
           onPointerEnter={(event) => {
             if (isHoverPointer(event)) closeNow();
           }}
@@ -234,6 +239,7 @@ export function DesktopNav({
           {link.label}
         </SmartLink>
       ))}
+      {after.map(renderMenu)}
     </div>
   );
 }

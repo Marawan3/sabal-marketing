@@ -81,7 +81,9 @@ export function VisualPlayer({
     let step = 0;
     let last = performance.now();
     let seen = false;
-    const io = new IntersectionObserver(([entry]) => (seen = entry.isIntersecting), { threshold: 0.35 });
+    // The hero starts once a fifth of it shows: with the trust line and the $0
+    // card above it (2026-10-13), a 1440x900 screen shows about a third of it.
+    const io = new IntersectionObserver(([entry]) => (seen = entry.isIntersecting), { threshold: loop ? 0.2 : 0.35 });
     io.observe(el);
 
     const tick = () => {

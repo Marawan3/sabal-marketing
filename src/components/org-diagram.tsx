@@ -8,9 +8,9 @@
  * reads on one or two lines instead of a word per line (2026-10-13).
  */
 export function OrgDiagram({ dark = false }: { dark?: boolean }) {
-  const line = dark ? "bg-paper/25" : "bg-ink/20";
-  const box = dark ? "border-paper/20 bg-paper/5 text-paper" : "border-ink/10 bg-paper text-ink";
-  const muted = dark ? "text-paper/70" : "text-ink/70";
+  const line = dark ? "bg-paper/25" : "bg-mist";
+  const box = dark ? "border-paper/15 bg-paper/5 text-paper" : "border-mist bg-paper text-ink";
+  const muted = dark ? "text-paper/80" : "text-ink-muted";
   const locations = ["Location 1", "Location 2", "Location 3"];
   return (
     <div className="mx-auto w-full max-w-[560px]" aria-label="One organization running several locations">

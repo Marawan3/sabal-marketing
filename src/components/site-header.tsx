@@ -2,9 +2,9 @@ import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
-import { bySlug, megaMenu, pillars, productHref } from "@/lib/catalog";
+import { bySlug, megaMenu, pillars, productHref, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { appHref, demoHref, primaryLinks } from "@/lib/site";
+import { appHref, companyLinks, demoHref, primaryLinks } from "@/lib/site";
 
 /**
  * Three zones: logo left, primary nav centered on the viewport, Log in and
@@ -16,9 +16,23 @@ import { appHref, demoHref, primaryLinks } from "@/lib/site";
 /**
  * The Product mega-menu, in the spec's four pillar groups. An item appears
  * once its page exists, and a group with no pages does not render.
- * Solutions, Resources and Company have no pages in phase 1, so they are not
- * in the nav yet.
+ * Then Solutions (the four solution pages), the plain links (How it works,
+ * Pricing), and Company (About, Contact) last (owner, 2026-10-13).
  */
+const solutionsMenu: NavMenu = {
+  key: "solutions",
+  label: "Solutions",
+  width: "narrow",
+  groups: [{ items: solutions.map((s) => ({ href: solutionHref(s.slug), name: s.name, blurb: s.blurb })) }],
+};
+
+const companyMenu: NavMenu = {
+  key: "company",
+  label: "Company",
+  width: "narrow",
+  groups: [{ items: companyLinks.map((l) => ({ href: l.href, name: l.label })) }],
+};
+
 function buildMenus(): NavMenu[] {
   const groups = megaMenu
     .map((group) => ({
@@ -29,7 +43,7 @@ function buildMenus(): NavMenu[] {
       }),
     }))
     .filter((group) => group.items.length > 0);
-  return [{ key: "product", label: "Product", width: "wide", groups }];
+  return [{ key: "product", label: "Product", width: "wide", groups }, solutionsMenu];
 }
 
 function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -67,7 +81,7 @@ function MobileAccordion({ label, children }: { label: string; children: React.R
 
 export function SiteHeader() {
   const menus = buildMenus();
-  const pillarGroups = menus.flatMap((menu) => menu.groups);
+  const pillarGroups = menus[0].groups;
   return (
     <header className="sticky top-0 z-40 border-b border-mist bg-paper">
       <div className="relative mx-auto flex h-[68px] max-w-[1120px] items-center justify-between gap-3 px-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6 lg:px-12">
@@ -76,14 +90,14 @@ export function SiteHeader() {
         </SmartLink>
 
         <nav className="hidden lg:block" aria-label="Primary">
-          <DesktopNav menus={menus} links={primaryLinks} />
+          <DesktopNav menus={menus} links={primaryLinks} after={[companyMenu]} />
         </nav>
 
         <div className="flex items-center gap-2 justify-self-end sm:gap-3">
           {appHref ? (
             <SmartLink
               href={appHref}
-              className="hidden min-h-11 items-center rounded-[8px] px-2 text-small font-medium hover:text-ink/70 sm:inline-flex"
+              className="hidden min-h-11 items-center rounded-[8px] px-2 text-small font-medium hover:text-ink-muted sm:inline-flex"
             >
               {copy.cta.login}
             </SmartLink>
@@ -138,6 +152,24 @@ export function SiteHeader() {
                   </ul>
                 </MobileAccordion>
               ))}
+              <MobileAccordion label={solutionsMenu.label}>
+                <ul>
+                  {solutionsMenu.groups[0].items.map((item) => (
+                    <li key={item.href}>
+                      <MobileLink href={item.href}>{item.name}</MobileLink>
+                    </li>
+                  ))}
+                </ul>
+              </MobileAccordion>
+              <MobileAccordion label={companyMenu.label}>
+                <ul>
+                  {companyLinks.map((link) => (
+                    <li key={link.href}>
+                      <MobileLink href={link.href}>{link.label}</MobileLink>
+                    </li>
+                  ))}
+                </ul>
+              </MobileAccordion>
               <ul className="-mx-3 mt-4">
                 {primaryLinks.map((link) => (
                   <li key={link.href}>

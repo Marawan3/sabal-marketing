@@ -5,12 +5,15 @@ const tones = {
   paper: "bg-paper",
   navy: "on-dark bg-navy text-paper",
   saffron: "bg-saffron text-ink",
+  /** At most two sections a page (2026-10-13). */
+  warm: "bg-warm",
 } as const;
 
 /**
  * Vertical rhythm: 64px between sections on phones, 80px from 640px, 112px
  * from 1024px. White sections carry half of it on each side, so two in a row
- * add up to one gap; a toned band carries the whole gap inside itself.
+ * add up to one gap; a toned band carries a gap inside itself (48px on
+ * phones since 2026-10-13, to keep the homepage under 7,000px).
  */
 export function Section({
   id,
@@ -25,7 +28,7 @@ export function Section({
 }) {
   return (
     <section id={id} className={`scroll-mt-20 ${tones[tone]} ${className}`}>
-      <Container className={tone === "paper" ? "py-8 sm:py-10 lg:py-14" : "py-16 sm:py-20 lg:py-28"}>
+      <Container className={tone === "paper" ? "py-8 sm:py-10 lg:py-14" : tone === "warm" ? "py-10 sm:py-16 lg:py-24" : "py-12 sm:py-20 lg:py-28"}>
         {children}
       </Container>
     </section>
@@ -48,7 +51,7 @@ export function SectionHead({
     <div className={className}>
       <h2 className="max-w-[18ch] text-h2">{heading}</h2>
       {sub ? (
-        <p className={`mt-4 max-w-[44ch] text-body ${dark ? "text-paper/80" : "text-ink/85"}`}>{sub}</p>
+        <p className={`mt-4 max-w-[44ch] text-body ${dark ? "text-paper/80" : "text-ink-muted"}`}>{sub}</p>
       ) : null}
     </div>
   );

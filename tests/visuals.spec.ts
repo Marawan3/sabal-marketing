@@ -23,7 +23,24 @@ const home: Record<string, string> = {
   settings: "/order-management",
 };
 const names = Object.keys(home) as (keyof typeof copy.visuals)[];
-const pages = ["/", "/how-it-works", "/pricing", "/online-ordering", "/delivery", "/catering", "/restaurant-websites", "/restaurant-seo", "/order-management"];
+const pages = [
+  "/",
+  "/how-it-works",
+  "/pricing",
+  "/online-ordering",
+  "/delivery",
+  "/catering",
+  "/restaurant-websites",
+  "/restaurant-seo",
+  "/order-management",
+  "/integrations",
+  "/solutions/independent-restaurants",
+  "/solutions/quick-service",
+  "/solutions/full-service",
+  "/solutions/multi-location",
+  "/about",
+  "/contact",
+];
 const NOON = new Date("2026-10-13T16:40:00-04:00");
 
 test.use({ timezoneId: "America/New_York" });
@@ -178,7 +195,8 @@ test("on phones every visual is full width with 16px gutters, and its text rende
         return { name: el.getAttribute("data-visual"), width: ground.getBoundingClientRect().width, smallest };
       }),
     );
-    expect(found.length, path).toBeGreaterThan(0);
+    // /about, /contact and the multi-location page (its diagram is plain HTML) have no built visual.
+    if (!["/about", "/contact", "/solutions/multi-location"].includes(path)) expect(found.length, path).toBeGreaterThan(0);
     for (const v of found) {
       expect(v.width, `${v.name} on ${path}`).toBeGreaterThanOrEqual(354);
       expect(v.smallest, `${v.name} on ${path}`).toBeGreaterThanOrEqual(9);
@@ -290,7 +308,7 @@ test("the orders dashboard and the kitchen board show the same orders; the setti
 });
 
 test("the kitchen board shows only in the homepage kitchen band and /order-management's steps", async ({ page }) => {
-  const where: Record<string, string[]> = { "/": ["kitchen"], "/order-management": [""] };
+  const where: Record<string, string[]> = { "/": ["kitchen"], "/order-management": ["how"] };
   for (const path of pages) {
     await page.goto(path);
     const sections = await page.locator('main [data-visual="kitchen"]').evaluateAll((els) => els.map((el) => el.closest("section")?.id ?? ""));

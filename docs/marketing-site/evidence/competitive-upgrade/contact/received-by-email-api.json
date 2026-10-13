@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "url": "/emails",
+  "authorization": "Bearer (redacted test key)",
+  "body": {
+    "from": "WunTab website <hello@wuntab.com>",
+    "to": [
+      "hello@wuntab.com"
+    ],
+    "reply_to": "owner@example.com",
+    "subject": "Website message: Test Owner, Test Kitchen",
+    "text": "Name: Test Owner\nRestaurant: Test Kitchen\nPhone: (305) 555-0100\nEmail: owner@example.com\n\nTest submission from the evidence script at 1440px. Please ignore.\n\nSent from the contact form on wuntab.com/contact."
+  }
+}

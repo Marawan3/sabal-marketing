@@ -7,13 +7,13 @@
 export function Steps({ steps }: { steps: readonly { title?: string; line: string }[] }) {
   const last = steps.length - 1;
   return (
-    <ol className="grid gap-8 lg:auto-cols-fr lg:grid-flow-col lg:gap-6">
+    <ol className="grid gap-6 lg:auto-cols-fr lg:grid-flow-col lg:gap-6">
       {steps.map((step, index) => (
         <li key={step.title ?? step.line} className="relative flex gap-4 lg:block">
           {index < last ? (
             <span
               aria-hidden
-              className="absolute top-11 bottom-[-1.75rem] left-5 w-px bg-ink/20 lg:top-5 lg:right-[-1.5rem] lg:bottom-auto lg:left-12 lg:h-px lg:w-auto"
+              className="absolute top-11 bottom-[-1.25rem] left-5 w-px bg-mist lg:top-5 lg:right-[-1.5rem] lg:bottom-auto lg:left-12 lg:h-px lg:w-auto"
             />
           ) : null}
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-saffron text-body font-semibold tabular-nums">
@@ -21,7 +21,7 @@ export function Steps({ steps }: { steps: readonly { title?: string; line: strin
           </span>
           <div className="pt-2 lg:pt-0 lg:mt-5 lg:pr-6">
             {step.title ? <h3 className="text-h3">{step.title}</h3> : null}
-            <p className={`max-w-[34ch] text-body ${step.title ? "mt-2 text-ink/85" : "font-medium"}`}>{step.line}</p>
+            <p className={`max-w-[34ch] text-body ${step.title ? "mt-2 text-ink-muted" : "font-medium"}`}>{step.line}</p>
           </div>
         </li>
       ))}

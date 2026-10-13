@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
     // redirect to the one-page site; they are real pages now (phase 1).
     return [
       { source: "/demo", destination: "/", permanent: true },
-      { source: "/about", destination: "/", permanent: true },
       { source: "/dpa", destination: "/privacy", permanent: true },
       // Legal aliases. 301 exactly (not Next's default 308) for older clients
       // and for app-store reviewers that follow only classic permanent redirects.
