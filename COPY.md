@@ -12,7 +12,11 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Input:** Your restaurant's name · **Button:** Get Started (opens Book a call with the name filled in)
 
-**Visual:** the storefront on a phone next to the orders board (`site-menu`, `orders-board`). Hidden on wuntab.com until the files exist.
+**Visual:** a live phone drawn in HTML and CSS (2026-10-13). On the demo restaurant's storefront, a diner opens Spiced Lamb Meatballs ($12.00), picks spice level Hot, adds it, checks out and pays $15.18, and sees the confirmation with a ready time 20 minutes after the visitor's own clock. On desktop the order then lands as ticket #1930 in the New column of the kitchen display beside the phone; on phones the phone turns over to show that ticket. Every string on the screens is the storefront's or the kitchen display's own; every dish and price is the demo menu's (`src/lib/demo-order.ts`). About 14 seconds, then it loops.
+
+**Screen readers hear:** An animation: on a phone, a diner orders Spiced Lamb Meatballs, spice level Hot, from Palm&Stone Kitchen, our demo restaurant, and the order arrives as a new ticket on the kitchen display.
+
+**Button:** Pause the animation / Play the animation
 
 ## b. What changes when orders come to you.
 

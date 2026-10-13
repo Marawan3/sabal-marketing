@@ -65,5 +65,7 @@ test("held (1x) screenshots still show on previews, kitchen band included", asyn
   }
   await page.goto("/");
   await expect(page.locator("#kitchen figure img")).toHaveCount(1);
-  await expect(page.locator("#top figure img")).toHaveCount(1);
+  // The hero is the drawn phone now, not a screenshot.
+  await expect(page.locator("#top figure")).toHaveCount(0);
+  await expect(page.locator("#top [data-demo]")).toBeVisible();
 });

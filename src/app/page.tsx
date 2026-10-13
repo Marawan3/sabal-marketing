@@ -5,6 +5,7 @@ import { TextLink } from "@/components/cta-link";
 import { CustomerStories } from "@/components/customer-stories";
 import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
+import { HeroOrderDemo } from "@/components/hero-order-demo";
 import { HeroSignup } from "@/components/hero-signup";
 import { JsonLd } from "@/components/json-ld";
 import { OutcomeTabs } from "@/components/outcome-tabs";
@@ -36,10 +37,6 @@ export const metadata: Metadata = {
  * the product pages, not here.
  */
 export default function HomePage() {
-  const [phoneShot, boardShot] = homeShots.hero.shots;
-  // On production a screenshot shows only if it's sharp enough for its frame (shot-files.ts).
-  const phone = isShotVisible(phoneShot, FITS.heroPhone) ? phoneShot : null;
-  const board = isShotVisible(boardShot, FITS.heroBoard) ? boardShot : null;
   const [kitchenShot] = homeShots.kitchen.shots;
   return (
     <>
@@ -68,35 +65,15 @@ export default function HomePage() {
           </div>
         </Container>
         {/*
-          The hero art runs wider than the text column: the orders board about
-          1100px wide on desktop, its focal crop on phones (catalog phoneCrops).
-          The storefront phone joins it from 768px up once its file exists.
+          The hero art: a live phone drawn in HTML and CSS, on the saffron panel.
+          A diner orders from the demo restaurant, and on desktop the order lands
+          on the kitchen display beside it (hero-order-demo.tsx).
         */}
-        {phone || board ? (
-          <div className="mx-auto w-full max-w-[1244px] px-4 pb-8 sm:px-8 sm:pb-10 lg:px-12 lg:pb-14">
-            <Panel className="overflow-hidden p-2 sm:p-6 lg:px-6 lg:py-12">
-              <div className="mx-auto flex max-w-[1100px] items-end justify-center gap-6 lg:gap-10">
-                {phone ? (
-                  <div className="hidden w-[24%] shrink-0 md:block">
-                    <ScreenFrame shot={phone} fit={FITS.heroPhone} caption={false} priority fill sizes="(min-width: 1024px) 260px, 24vw" />
-                  </div>
-                ) : null}
-                {board ? (
-                  <div className="min-w-0 flex-1">
-                    <ScreenFrame
-                      shot={board}
-                      fit={FITS.heroBoard}
-                      caption={false}
-                      priority
-                      phoneVw={87}
-                      sizes={phone ? "(min-width: 1024px) 800px, 70vw" : "(min-width: 1024px) 1100px, 92vw"}
-                    />
-                  </div>
-                ) : null}
-              </div>
-            </Panel>
-          </div>
-        ) : null}
+        <div className="mx-auto w-full max-w-[1244px] px-4 pb-8 sm:px-8 sm:pb-10 lg:px-12 lg:pb-14">
+          <Panel className="relative overflow-hidden px-4 pt-8 pb-16 sm:px-6 lg:py-12">
+            <HeroOrderDemo />
+          </Panel>
+        </div>
       </section>
 
       <CustomerStories />

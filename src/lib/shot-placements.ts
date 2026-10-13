@@ -10,8 +10,6 @@ import { customerStories } from "./stories";
  * sharp enough to show. phone: 0 means not shown on phones.
  */
 export const FITS = {
-  heroBoard: { phone: 342, desktop: 1100 },
-  heroPhone: { phone: 0, desktop: 260 },
   outcome: { phone: 358, desktop: 580 },
   kitchen: { phone: 358, desktop: 1024 },
   productRow: { phone: 192, desktop: 224 },
@@ -37,8 +35,6 @@ const shotOf = (slug: string, key: string): Shot => {
 
 /** Homepage sections and their shots, in page order. */
 export const homeShots = {
-  /** The storefront on a phone, next to the orders board. */
-  hero: { section: "Hero", shots: [shotOf("online-ordering", "site-menu"), shotOf("order-management", "orders-board")] },
   outcomes: {
     section: copy.outcomes.heading,
     shots: [

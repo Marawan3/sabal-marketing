@@ -8,8 +8,6 @@ Drop each file into `public/shots/` with the name shown, at the size shown (WebP
 
 | File | Size | What it should show | Where it appears | Status |
 |---|---|---|---|---|
-| `site-menu.webp` | Phone 390×844 | Ordering menu on a phone; The menu built into the site; Every dish and price in the page | `/` Hero<br>`/how-it-works` Order<br>`/online-ordering` Hero<br>`/restaurant-websites` In the product<br>`/restaurant-seo` In the product | Missing |
-| `orders-board.webp` | Desktop 1440×900 | Incoming, preparing, and ready orders | `/` Hero<br>`/order-management` Hero | Held: 1x, awaiting 3x retake (`orders-board.png`) |
 | `site-home.webp` | Desktop 1440×900 | A restaurant website on its own domain | `/` What changes when orders come to you.<br>`/how-it-works` Discover<br>`/restaurant-websites` Hero | Missing |
 | `marketing-campaign.webp` | Desktop 1440×900 | Campaign builder | `/` What changes when orders come to you. | Missing |
 | `ordering-settings.webp` | Desktop 1440×900 | Hours, pause ordering, and prep time | `/` What changes when orders come to you.<br>`/order-management` In the product | Held: 1x, awaiting 3x retake (`ordering-settings.png`) |
@@ -17,6 +15,7 @@ Drop each file into `public/shots/` with the name shown, at the size shown (WebP
 | `menu-editor.webp` | Desktop 1440×900 | Menu editor | `/` Everything you need to sell direct.<br>`/how-it-works` Fulfill | Held: 1x, awaiting 3x retake (`menu-editor.png`) |
 | `photo-delivery-handoff.webp` | Photo (landscape) 1600×1000 | A bagged delivery order handed over at a restaurant counter | `/` Everything you need to sell direct.<br>`/delivery` In the product | Missing |
 | `photo-catering-spread.webp` | Photo (landscape) 1600×1000 | Catering trays laid out for a group order | `/` Everything you need to sell direct.<br>`/catering` In the product | Missing |
+| `site-menu.webp` | Phone 390×844 | Ordering menu on a phone; The menu built into the site; Every dish and price in the page | `/how-it-works` Order<br>`/online-ordering` Hero<br>`/restaurant-websites` In the product<br>`/restaurant-seo` In the product | Missing |
 | `dash-overview.webp` | Desktop 1440×900 | Sales, orders, average order, and tips at a glance | `/how-it-works` Understand | Held: 1x, awaiting 3x retake (`dash-overview.png`) |
 | `feedback-guest.webp` | Phone 390×844 | Guest feedback on a phone | `/how-it-works` Build the relationship | Missing |
 | `item-sheet.webp` | Phone 390×844 | An item with modifiers and add-ons | `/online-ordering` In the product | Missing |
@@ -31,6 +30,7 @@ Drop each file into `public/shots/` with the name shown, at the size shown (WebP
 | `catering-page.webp` | Desktop 1440×900 | Catering page with the enquiry form | `/catering` Hero | Missing |
 | `catering-order.webp` | Phone 390×844 | Catering order with lead time and minimum | `/catering` In the product | Missing |
 | `tag-page.webp` | Desktop 1440×900 | A cuisine page search engines can read | `/restaurant-seo` Hero | Missing |
+| `orders-board.webp` | Desktop 1440×900 | Incoming, preparing, and ready orders | `/order-management` Hero | Held: 1x, awaiting 3x retake (`orders-board.png`) |
 | `order-drawer.webp` | Desktop 1440×900 | One order in detail | `/order-management` In the product | Held: 1x, awaiting 3x retake (`order-drawer.png`) |
 | `kitchen-ticket.webp` | Photo (portrait) 1200×1600 | A printed kitchen ticket | `/order-management` In the product | Missing |
 | `photo-kitchen-screen.webp` | Photo (landscape) 1600×1000 | A kitchen team working from a tablet showing the WunTab kitchen display | `/order-management` In the product | Missing |
