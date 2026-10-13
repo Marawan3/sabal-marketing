@@ -8,7 +8,7 @@
  * inside moves the page: each box reserves its space with aspect-ratio.
  *
  * The story steps are words in data-s on .wrap ("0 1 2 ..."), added by
- * hero-demo-player.tsx. A rule for step N matches from N onwards. Only
+ * visual-player.tsx. A rule for step N matches from N onwards. Only
  * transform and opacity change.
  *
  * Colours are the products' own: the demo restaurant's brand colour and the

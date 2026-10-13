@@ -4,14 +4,10 @@ const port = 3002;
 const baseURL = `http://127.0.0.1:${port}`;
 
 /**
- * A second build, as a Vercel preview deployment would make it
- * (VERCEL_ENV=preview), in its own folder so it can't overwrite the
- * production build in .next. tests/preview-*.spec.ts run against it.
+ * One production build, served on 3002. (A second, preview build used to
+ * check the screenshot placeholders; the screenshots and their placeholders
+ * went on 2026-10-13, so there is nothing preview-only left to test.)
  */
-const previewPort = 3003;
-const previewURL = `http://127.0.0.1:${previewPort}`;
-const previewDist = ".next-preview";
-
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
@@ -25,30 +21,14 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120_000,
     },
-    {
-      command: `NEXT_DIST_DIR=${previewDist} VERCEL_ENV=preview npx next build && NEXT_DIST_DIR=${previewDist} npx next start --port ${previewPort}`,
-      url: previewURL,
-      reuseExistingServer: false,
-      timeout: 300_000,
-    },
   ],
   projects: [
     {
       name: "chromium",
-      testIgnore: /preview-.*\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         // Set PLAYWRIGHT_CHANNEL=chrome to drive installed Chrome when the
         // bundled browser download is unavailable.
-        channel: process.env.PLAYWRIGHT_CHANNEL,
-      },
-    },
-    {
-      name: "preview",
-      testMatch: /preview-.*\.spec\.ts/,
-      use: {
-        ...devices["Desktop Chrome"],
-        baseURL: previewURL,
         channel: process.env.PLAYWRIGHT_CHANNEL,
       },
     },

@@ -81,6 +81,43 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Product pages:** the same crops; steps as a vertical numbered list on phones;
   "What's included" as a plain two-column list with small saffron markers.
 
+## 0c. Built visuals, 2026-10-13 (overrides 0, 0b and 10 where they conflict)
+
+- **No screenshots, no photos, no video.** Every visual is built in HTML and CSS from real
+  text and shapes, in the hero phone's language: the same phone frame, the storefront's
+  and the kitchen display's own colours, type and labels, and the demo restaurant's real
+  dishes and prices. The set lives in `src/components/visuals`:
+  - the delivery, catering and storefront phones
+  - the kitchen board on a tablet
+  - the dashboard card, captioned "Demo restaurant"
+  - the search result, with no search engine's logo or name
+  - the receipt, with the hero's arithmetic
+  - the delivery flow diagram
+
+  Data lives in `src/lib/demo-data.ts` and `demo-order.ts`. The screenshot pipeline
+  (catalog shots, `SHOTS.md`, `public/shots`, frames, crops, placeholders) is gone.
+- **Never draw a screen the product doesn't have.** Check the product repo first.
+  - The catering phone is the real enquiry form, because the product has no catering
+    checkout.
+  - The delivery phone says "Tip", not the provider's word for its drivers.
+- **One visual per section, and every section is a headline, at most two short lines and
+  that visual.** Anything longer goes into the FAQ. Product pages:
+  - the hero with its visual (and /delivery's flow diagram)
+  - Works with, as one row of links
+  - the FAQ, which carries "What's included?" and the steps
+- **Motion** (`src/components/visual-player.tsx`, one script for all):
+  - Plays only on screen and plays once, then holds the final state. Only the hero loops.
+  - One thing moves at a time: a visual waits for the one already moving.
+  - Reduced motion shows the final state as a still.
+  - A pause button on anything over five seconds.
+  - Transform and opacity only, no layout shift.
+  - The CSS is written from the end backwards: with no rule, everything shows its last
+    step.
+- **Phones at 390:** every visual is full width with 16px gutters, and its text renders at
+  9px or more. Inside a device `--k` never drops below 0.6429px, so the device lays out
+  narrower instead of shrinking its text.
+- All of the above is tested in `tests/visuals.spec.ts`.
+
 ## 1. What we are designing for
 
 **Wuntab** builds and runs an independent restaurant's own website with online ordering.

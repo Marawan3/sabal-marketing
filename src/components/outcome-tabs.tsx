@@ -6,15 +6,15 @@ export type OutcomeTab = {
   key: string;
   label: string;
   lines: readonly string[];
-  /** The tab's screenshot, rendered on the server. Null when it doesn't render. */
+  /** The tab's built visual, rendered on the server. */
   visual: ReactNode;
 };
 
 /**
  * From lg up: text tabs, the active one underlined, switching one panel with
- * the lines on the left and the screenshot on the right. No card behind it.
+ * the lines on the left and the visual on the right. No card behind it.
  * Below lg there are no tabs and no swipe row: each outcome is stacked as
- * its label, its lines, then its screenshot (the phone crop).
+ * its label, its lines, then its visual.
  */
 export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
   const [active, setActive] = useState(0);
@@ -72,7 +72,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
             <div className={tab.visual ? "lg:col-span-5" : ""}>
               {/* Phones have no tab strip, so each outcome is titled. */}
               <h3 className="text-h3 lg:hidden">{tab.label}</h3>
-              {/* No screenshot yet: on desktop the lines spread across the width instead of leaving half of it empty. */}
+              {/* No visual: on desktop the lines spread across the width instead of leaving half of it empty. */}
               <ul className={`mt-3 lg:mt-0 ${tab.visual ? "" : "lg:grid lg:grid-cols-3 lg:gap-10"}`}>
                 {tab.lines.map((line) => (
                   <li

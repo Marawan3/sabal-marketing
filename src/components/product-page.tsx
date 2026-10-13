@@ -1,141 +1,132 @@
+import type { ReactNode } from "react";
 import { Container } from "./container";
 import { CtaLink, TextLink } from "./cta-link";
 import { Faq } from "./faq";
 import { FinalCta } from "./final-cta";
+import { HeroOrderDemo } from "./hero-order-demo";
 import { JsonLd } from "./json-ld";
 import { OrgDiagram } from "./org-diagram";
-import { isShotVisible, ScreenFrame } from "./screen-frame";
-import { Section, SectionHead } from "./section";
-import { Steps } from "./steps";
+import { Panel, Section, SectionHead } from "./section";
 import { SmartLink } from "./smart-link";
-import { bySlug, productHref, type Product, type Shot } from "@/lib/catalog";
+import { CateringPhone } from "./visuals/catering-phone";
+import { DeliveryFlow } from "./visuals/delivery-flow";
+import { DeliveryPhone } from "./visuals/delivery-phone";
+import { Ground } from "./visuals/ground";
+import { KitchenBoard } from "./visuals/kitchen-board";
+import { SearchResult } from "./visuals/search-result";
+import { StorefrontPhone } from "./visuals/storefront-phone";
+import { bySlug, productHref, type Faq as FaqItem, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
-import { FITS, productPageShots } from "@/lib/shot-placements";
 import { demoHref } from "@/lib/site";
 
+/** Each product page's one hero visual (owner, 2026-10-13). */
+const heroVisuals: Record<string, ReactNode> = {
+  "online-ordering": (
+    <Panel className="relative overflow-hidden px-4 pt-8 pb-16 sm:px-6 lg:py-12">
+      <HeroOrderDemo />
+    </Panel>
+  ),
+  delivery: (
+    <Ground>
+      <DeliveryPhone />
+    </Ground>
+  ),
+  catering: (
+    <Ground>
+      <CateringPhone />
+    </Ground>
+  ),
+  "restaurant-websites": (
+    <Ground>
+      <StorefrontPhone />
+    </Ground>
+  ),
+  "restaurant-seo": (
+    <Ground>
+      <SearchResult />
+    </Ground>
+  ),
+  "order-management": (
+    <Ground>
+      <KitchenBoard />
+    </Ground>
+  ),
+};
+
 /**
- * One template for every product page, on the homepage's rules (layout pass,
- * 2026-10-11): hero with its screen, the steps, the product's screens (one
- * line each, focal crops on phones), what's included, what it works with,
- * FAQ, final call to action. No beige, no cards, no swipe rows. A section with nothing to show does not
- * render. The lifecycle walkthrough lives on /how-it-works.
+ * Everything longer than a section's two lines, as questions: what's
+ * included, and the steps (except on /delivery, where the steps are the
+ * flow diagram). Same words as the catalog, so no fact changes.
+ */
+function pageFaq(product: Product): FaqItem[] {
+  const items: FaqItem[] = [...(product.faq ?? [])];
+  items.push({
+    question: product.capabilitiesTitle === "What we build in" ? "What do you build in?" : "What's included?",
+    answer: `${product.capabilities.join(". ")}.`,
+  });
+  if (product.flow && product.slug !== "delivery") {
+    items.push({
+      question: product.flow.question,
+      answer: product.flow.steps.map((step, i) => `${i + 1}. ${step}.`).join(" "),
+    });
+  }
+  return items;
+}
+
+/**
+ * One template for every product page (2026-10-13): a
+ * headline, at most two short lines and one visual per section. The hero
+ * carries the product's visual; /delivery adds its flow diagram; the rest is
+ * in the FAQ. Works with, then the final call to action.
  */
 export function ProductPage({ product }: { product: Product }) {
-  // Only shots that render take space: on production a real file sharp enough
-  // for its frame (shot-files.ts), on previews anything (or its placeholder).
-  const placed = productPageShots(product);
-  const narrow = (shot: Shot) => shot.kind === "phone" || shot.kind === "photo";
-  const heroFit = (shot: Shot) => (narrow(shot) ? FITS.productHeroNarrow : FITS.productHero);
-  const screenFit = (shot: Shot) => (narrow(shot) ? FITS.productScreenNarrow : FITS.productScreen);
-  const hero = placed.hero && isShotVisible(placed.hero, heroFit(placed.hero)) ? placed.hero : undefined;
-  const rest = placed.rest.filter((shot) => isShotVisible(shot, screenFit(shot)));
   const related = product.related.filter((slug) => bySlug[slug]);
+  const faq = pageFaq(product);
+  const visual = heroVisuals[product.slug] ?? (product.visual === "org" ? <OrgDiagram /> : null);
   return (
     <>
-      {product.faq?.length ? <JsonLd data={faqSchema(product.faq)} /> : null}
+      <JsonLd data={faqSchema(faq)} />
 
       {/* Hero */}
       <section className="scroll-mt-20">
         <Container className="pt-12 pb-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-14">
           <h1 className="max-w-[18ch] text-display">{product.headline}</h1>
-          <p className="mt-5 max-w-[44ch] text-body text-ink/85 lg:mt-6">{product.sub}</p>
+          <p className="mt-5 max-w-[52ch] text-body text-ink/85 lg:mt-6">{product.sub}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
             <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>
             <TextLink href="/pricing">See pricing</TextLink>
           </div>
-          {hero ? (
-            <div className="mt-12 lg:mt-16">
-              <div className={hero.kind === "phone" || hero.kind === "photo" ? "mx-auto w-[62%] max-w-[300px]" : "w-full"}>
-                <ScreenFrame
-                  shot={hero}
-                  fit={heroFit(hero)}
-                  caption={false}
-                  priority
-                  fill
-                  sizes={hero.kind === "phone" || hero.kind === "photo" ? "(min-width: 1024px) 300px, 62vw" : "(min-width: 1024px) 1024px, 92vw"}
-                />
-              </div>
-            </div>
-          ) : product.visual === "org" ? (
-            <div className="mt-12 lg:mt-16">
-              <OrgDiagram />
-            </div>
-          ) : null}
+          {visual ? <div className="mt-12 lg:mt-16">{visual}</div> : null}
         </Container>
       </section>
 
-      {/* The steps: a row joined by a line on desktop, a vertical numbered list on phones. */}
-      {product.flow ? (
+      {/* Delivery: the six steps as the flow diagram, under one line. */}
+      {product.slug === "delivery" && product.flow ? (
         <Section>
-          <SectionHead heading={product.flow.title} />
+          <SectionHead heading={product.flow.title} sub={product.notes?.[0]} />
           <div className="mt-8 lg:mt-12">
-            <Steps steps={product.flow.steps.map((line) => ({ line }))} />
+            <DeliveryFlow />
           </div>
         </Section>
       ) : null}
 
-      {/* The product's screens, each with one line. Stacked on phones (each its focal crop), two up on desktop. */}
-      {rest.length ? (
-        <Section>
-          <SectionHead heading="In the product" />
-          <div className="mt-8 grid gap-10 lg:mt-12 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-12">
-            {rest.map((shot) => {
-              const narrow = shot.kind === "phone" || shot.kind === "photo";
-              return (
-                <div key={shot.key}>
-                  <div className={narrow ? "mx-auto w-[62%] max-w-[260px]" : "w-full"}>
-                    <ScreenFrame
-                      shot={shot}
-                      fit={screenFit(shot)}
-                      caption={false}
-                      fill
-                      sizes={narrow ? "(min-width: 1024px) 260px, 50vw" : "(min-width: 1024px) 500px, 92vw"}
-                    />
-                  </div>
-                  <p className="mt-4 text-body font-medium">{shot.label}</p>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      ) : null}
-
-      {/* What's included: a plain two-column list with small saffron markers. */}
-      <Section>
-        <SectionHead heading={product.capabilitiesTitle ?? "What's included"} sub={product.notes?.[0]} />
-        <ul className="mt-8 grid gap-x-12 gap-y-3 sm:grid-cols-2 lg:mt-12">
-          {product.capabilities.map((item) => (
-            <li key={item} className="flex gap-3 text-body">
-              <span aria-hidden className="mt-[0.6em] h-2 w-2 shrink-0 bg-saffron" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {/* Works with: square list rows between thin rules. */}
+      {/* Works with: the related products as one row of links. */}
       {related.length ? (
         <Section>
           <SectionHead heading="Works with" />
-          <ul className="mt-8 grid border-t border-ink/15 sm:grid-cols-2 sm:gap-x-12 lg:mt-12">
+          <ul className="mt-6 flex flex-wrap gap-2">
             {related.map((slug) => {
-              const p = bySlug[slug];
               const href = productHref(slug);
-              const body = (
-                <>
-                  <span className="block text-h3">{p.name}</span>
-                  <span className="mt-1 block text-body text-ink/85">{p.blurb}</span>
-                </>
-              );
+              const chip = "inline-flex min-h-11 items-center rounded-[12px] border px-4 text-small font-medium";
               return (
-                <li key={slug} className="border-b border-ink/15">
+                <li key={slug}>
                   {href ? (
-                    <SmartLink href={href} className="block py-5 hover:bg-mist">
-                      {body}
+                    <SmartLink href={href} className={`${chip} border-ink/30 hover:border-ink`}>
+                      {bySlug[slug].name}
                     </SmartLink>
                   ) : (
-                    <div className="py-5">{body}</div>
+                    <span className={`${chip} border-mist text-ink/70`}>{bySlug[slug].name}</span>
                   )}
                 </li>
               );
@@ -144,11 +135,9 @@ export function ProductPage({ product }: { product: Product }) {
         </Section>
       ) : null}
 
-      {product.faq?.length ? (
-        <Section>
-          <Faq heading={copy.faq.heading} items={product.faq} />
-        </Section>
-      ) : null}
+      <Section>
+        <Faq heading={copy.faq.heading} items={faq} />
+      </Section>
 
       <FinalCta />
     </>

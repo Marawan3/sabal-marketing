@@ -2,6 +2,10 @@
  * A restrained platform visualization for Scale: one organization, several
  * locations, each running its own menu, hours, and orders. Used where a real
  * multi-location screen does not exist yet. It is a diagram, not fake UI.
+ *
+ * From 640px the locations sit side by side under the organization. On
+ * phones they stack, joined by one line, so "Own menu, hours, and orders"
+ * reads on one or two lines instead of a word per line (2026-10-13).
  */
 export function OrgDiagram({ dark = false }: { dark?: boolean }) {
   const line = dark ? "bg-paper/25" : "bg-ink/20";
@@ -21,15 +25,15 @@ export function OrgDiagram({ dark = false }: { dark?: boolean }) {
         <span className={`absolute inset-0 ${line}`} aria-hidden />
       </div>
       <div className="relative">
-        <span
-          className={`absolute left-[16.67%] right-[16.67%] top-0 h-px ${line}`}
-          aria-hidden
-        />
-        <ol className="grid grid-cols-3 gap-4 pt-8">
+        {/* Phones: one line down the middle, behind the stacked boxes. */}
+        <span className={`absolute top-0 bottom-0 left-1/2 w-px sm:hidden ${line}`} aria-hidden />
+        {/* From 640px: the bar across the three columns. */}
+        <span className={`absolute left-[16.67%] right-[16.67%] top-0 hidden h-px sm:block ${line}`} aria-hidden />
+        <ol className="relative grid gap-4 sm:grid-cols-3 sm:pt-8">
           {locations.map((name) => (
             <li key={name} className="relative">
-              <span className={`absolute left-1/2 -top-8 h-8 w-px ${line}`} aria-hidden />
-              <div className={`rounded-[12px] border p-4 ${box}`}>
+              <span className={`absolute left-1/2 -top-8 hidden h-8 w-px sm:block ${line}`} aria-hidden />
+              <div className={`rounded-[12px] border p-4 text-center sm:text-left ${box}`}>
                 <p className="text-small font-medium">{name}</p>
                 <p className={`mt-1 text-small ${muted}`}>Own menu, hours, and orders</p>
               </div>

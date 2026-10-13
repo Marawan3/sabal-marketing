@@ -54,7 +54,7 @@ export function SectionHead({
   );
 }
 
-/** A media panel: 20px corners, only where a screenshot needs a ground (the hero art). */
+/** A media panel: 20px corners, the ground under the hero phone. */
 export function Panel({
   children,
   className = "",

@@ -20,20 +20,26 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 ## b. What changes when orders come to you.
 
-Tabs:
+Tabs, at most two lines each, each with one built visual (2026-10-13):
 
-- **More direct orders:** Customers order on your own website, under your name. · Pickup, delivery, catering, and orders for later. · Search engines can read every dish and price.
-- **More repeat customers:** Every direct order adds a real customer to your list. · Loyalty, texts, and automatic campaigns bring them back.
-- **Less busywork:** Every order in one place, from new to done. · Pause ordering or raise prep times in one tap. · Orders go into your POS, or to a kitchen printer.
+- **More direct orders:** Customers order on your own website, under your name. · Pickup, delivery, catering, and orders for later. · *Visual: the storefront phone.*
+- **More repeat customers:** Every direct order adds a real customer to your list. · Loyalty, texts, and automatic campaigns bring them back. · *Visual: the dashboard card, captioned "Demo restaurant".*
+- **Less busywork:** Every order in one place, from new to done. · Pause ordering or raise prep times in one tap. · *Visual: the kitchen board.*
+
+The two lines that left the tabs are in the FAQ: "Search engines can read every dish and price" as **Can search engines read my menu?**, and "Orders go into your POS, or to a kitchen printer" was already **Does it work with my POS?**
+
+## Kitchen band (navy)
+
+**Every order on one screen in your kitchen.** Orders show up in the order they came in, and your team moves each one from new to ready. · *Visual: the kitchen board.*
 
 ## c. Everything you need to sell direct.
 
-Four panels, each the product page's headline and a link:
+Four rows, each the product page's headline, a link and the product's visual:
 
-- Take orders on your own website, under your own name. · More about online ordering
-- Delivery without building a delivery fleet. · More about delivery
-- Turn big orders into easy orders. · More about catering
-- Every order, from new to done. · More about order management
+- Take orders on your own website, under your own name. · More about online ordering · *storefront phone*
+- Delivery without building a delivery fleet. · More about delivery · *delivery phone*
+- Turn big orders into easy orders. · More about catering · *catering phone*
+- Every order, from new to done. · More about order management · *kitchen board*
 
 ## d. How it works
 
@@ -50,7 +56,9 @@ Link: See how it works
 - No monthly charge, no setup fee, no commission.
 - Customers pay a 5% service fee, shown at checkout before they pay.
 
-Get Started · See pricing. `/pricing` shows the full clause word for word.
+Get Started · See pricing. *Visual beside the $0: the receipt for the hero's order (subtotal $12.00, Service fee (5%) $0.60, tax $0.78, tip $2.40, total $15.78).*
+
+`/pricing`: the same card and receipt. The full clause, word for word, is the first question in its FAQ (**What exactly are the terms?**), and the old closing line is **What about delivery, catering, or several locations?** → "Questions about delivery, catering, or several locations? Talk to us and we will walk through it."
 
 ## f. What we believe
 
@@ -58,17 +66,51 @@ Get Started · See pricing. `/pricing` shows the full clause word for word.
 
 ## Customer stories
 
-Built but empty: `src/lib/stories.ts`. Each entry is a real restaurant, a real result, the owner's name and a photo they agreed to. The row renders nothing while the list is empty.
+Built but empty: `src/lib/stories.ts`. Each entry is a real restaurant, a real result and the owner's name; no photos since 2026-10-13. The row renders nothing while the list is empty.
 
 ## g. Questions owners ask, then the final call to action
 
-FAQ: unchanged (`copy.faq` in `src/lib/copy.ts`).
+FAQ (`copy.faq` in `src/lib/copy.ts`), with one question added on 2026-10-13: **Can search engines read my menu?** Yes. Every dish and price is in the page itself, so search engines can read them. Nobody can promise rankings, and we don't.
 
 **Take control of your restaurant's direct business.** A short call. We will show you WunTab on your own menu. · Get Started · or email hello@wuntab.com
 
 ## Moved off the homepage
 
-The six-step lifecycle, integrations and multi-location are on `/how-it-works`. Capability lists are on each product page as "What's included".
+The six-step lifecycle, integrations and multi-location are on `/how-it-works`.
+
+## /how-it-works (2026-10-13)
+
+One built visual per stage: Discover, the search result · Order, the storefront phone · Fulfill, the kitchen board · Understand, the dashboard card · Build the relationship, the delivery phone · Bring them back, the catering phone.
+
+The integrations list is now one question under the same heading, **Works with what you already use.**: **What does WunTab work with?** Payment integrations and third-party delivery. WunTab connects to your POS. If your POS isn't compatible, orders go to a kitchen printer.
+
+The multi-location diagram stacks its three locations on phones.
+
+## Product pages (2026-10-13)
+
+Each page: the headline, its one line, Get Started and See pricing, and one visual:
+
+- /online-ordering: the hero phone
+- /delivery: the delivery phone
+- /catering: the catering phone
+- /restaurant-websites: the storefront phone
+- /restaurant-seo: the search result, captioned "Illustration. We don't promise rankings."
+- /order-management: the kitchen board
+
+/delivery adds **How a delivery order moves** with the line "You keep the customer. The driver just drives." and the six steps as the flow diagram.
+
+Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
+
+- **What's included?** (or **What do you build in?** on /restaurant-seo), answered with the old "What's included" list.
+- The steps as a question, answered with the old numbered steps:
+  - **How does an online order work?**
+  - **How does a catering order work?**
+  - **How do you build my website?**
+  - **What goes into the page?**
+  - **How does an order move through the kitchen?**
+- /online-ordering: **Whose name do customers see?** Yours. Your restaurant is the brand from the first tap to the thank-you screen. WunTab stays in the background. This was the page's note.
+
+/restaurant-seo's two notes were already its two FAQ answers, so they are no longer shown twice.
 
 ## Footer
 
