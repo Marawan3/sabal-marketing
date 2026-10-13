@@ -165,7 +165,8 @@ export default function HomePage() {
                     </TextLink>
                   ) : null}
                 </div>
-                <div className="w-full shrink-0 md:w-[340px] lg:w-[400px]">{productVisuals[slug]}</div>
+                {/* Phones: title, one line, link. The visual shows from 768px, at the small size. */}
+                <div className="hidden w-full shrink-0 md:block md:w-[340px] lg:w-[400px]">{productVisuals[slug]}</div>
               </li>
             );
           })}

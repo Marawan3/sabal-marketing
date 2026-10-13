@@ -158,7 +158,8 @@ test("on phones every visual is full width with 16px gutters, and its text rende
   for (const path of pages) {
     await page.goto(path);
     const found = await page.locator("main [data-demo]").evaluateAll((els) =>
-      els.map((el) => {
+      // Visuals hidden on phones (the homepage product rows) aren't checked.
+      els.filter((el) => el.getBoundingClientRect().width > 0).map((el) => {
         const ground = (el.closest('[class*="ground"], [class*="rounded-[20px]"]') ?? el) as HTMLElement;
         let smallest = 99;
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);

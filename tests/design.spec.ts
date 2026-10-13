@@ -218,6 +218,9 @@ test("outcome tabs switch on desktop; on phones each outcome is its label, its l
     expect(order[1]!).toBeLessThan(order[2]!);
     // At most two short lines per section (2026-10-13).
     expect(await panel.locator("li").count()).toBeLessThanOrEqual(2);
+    // The visual takes at most 60% of the screen's height (2026-10-13).
+    const visualHeight = await panel.locator("[data-demo]").evaluate((el) => el.parentElement!.parentElement!.getBoundingClientRect().height);
+    expect(visualHeight, label).toBeLessThanOrEqual(0.6 * 844 + 1);
   }
 });
 
@@ -282,6 +285,16 @@ test("homepage is under 10,000px tall at 390", async ({ page }) => {
   await page.goto("/");
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
   expect(height).toBeLessThan(10_000);
+});
+
+test("homepage product rows: on phones a title, one line and a link; the visual from 768px", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  for (const row of await page.locator("#products li").all()) {
+    expect(await row.locator("[data-demo]").evaluate((el) => el.getBoundingClientRect().height)).toBe(0);
+  }
+  await page.setViewportSize({ width: 1024, height: 900 });
+  for (const row of await page.locator("#products li").all()) await expect(row.locator("[data-demo]")).toBeVisible();
 });
 
 test("What we believe stays hidden until the owner writes it", async ({ request }) => {
