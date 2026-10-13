@@ -6,9 +6,9 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 ## a. Hero
 
-**Trust line (2026-10-13), over the headline, after a saffron dot:** $0 for the restaurant · No contract · Your customers, your data
+**Trust line (2026-10-13), over the headline, after a saffron dot:** $0 for the restaurant · No lock-in · Your customers, your data
 - *$0 for the restaurant:* the service fee clause in /terms ("Wuntab is free to the restaurant").
-- *No contract:* /terms 4.2 ("You may end this agreement at any time, for any reason or none"), and the FAQ answer "Is there a monthly fee or a contract? No." Strictly, /terms is itself an agreement; "No lock-in" or "Leave any time" would be the exact words if you prefer.
+- *No lock-in:* /terms 4.2 ("You may end this agreement at any time, for any reason or none"). The owner chose "No lock-in" over "No contract" (PR #29), since /terms is itself an agreement.
 - *Your customers, your data:* /terms 1.2 ("What is yours: ... your customer list. Those stay yours throughout and you can take them with you").
 
 **Headline:** More direct orders. More repeat customers. One platform.

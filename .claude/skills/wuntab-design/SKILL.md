@@ -133,7 +133,7 @@ their reasoning. Where they disagree with this section, this section wins.
   most two sections a page. The homepage uses it once, for the calculator; product and
   solution pages for "What's included".
 - **Homepage hero:** the trust line over the headline (saffron dot, then "$0 for the
-  restaurant · No contract · Your customers, your data") and the small $0 card under the
+  restaurant · No lock-in · Your customers, your data") and the small $0 card under the
   name field. Nothing else in the hero changes.
 - **Savings calculator** (homepage, between products and how it works): orders a week and
   average order, both empty until the owner types; the result is "Between $X and $Y" a

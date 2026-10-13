@@ -48,7 +48,10 @@ test("hero: the trust line above the headline, and the $0 card under the name fi
   const hero = page.locator("#top");
   const trust = hero.getByText(copy.hero.trust);
   await expect(trust).toBeVisible();
-  expect(copy.hero.trust).toBe("$0 for the restaurant · No contract · Your customers, your data");
+  expect(copy.hero.trust).toBe("$0 for the restaurant · No lock-in · Your customers, your data");
+  // Each fact stays on one line: "No lock-in" never breaks at its hyphen.
+  const whole = await trust.locator(".whitespace-nowrap").allTextContents();
+  expect(whole).toEqual(["$0 for the restaurant ·", "No lock-in ·", "Your customers, your data"]);
   // A saffron dot, then the text.
   const dot = await trust.locator("span[aria-hidden]").evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(dot).toBe("rgb(244, 168, 58)");

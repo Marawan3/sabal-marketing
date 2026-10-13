@@ -101,7 +101,13 @@ export default function HomePage() {
           {/* The trust line: a saffron dot, then the three facts (owner, 2026-10-13). */}
           <p className="mx-auto mb-5 max-w-[34ch] text-small font-medium text-balance lg:mb-6 lg:max-w-none">
             <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-saffron align-middle" />
-            {copy.hero.trust}
+            {/* Each fact stays whole ("No lock-in" must not break at its hyphen), and a line never starts with a dot. */}
+            {copy.hero.trust.split(" · ").map((fact, i, all) => (
+              <span key={fact}>
+                <span className="whitespace-nowrap">{i < all.length - 1 ? `${fact} ·` : fact}</span>
+                {i < all.length - 1 ? " " : null}
+              </span>
+            ))}
           </p>
           {/* One sentence per line from lg up; they flow together on phones. */}
           <h1 className="mx-auto max-w-[15ch] text-display lg:max-w-none">
