@@ -27,7 +27,7 @@ jobs:
       - run: |
           npx next start -p 3005 &
           for i in $(seq 60); do curl -sf -o /dev/null http://127.0.0.1:3005 && break; sleep 1; done
-          node scripts/probe-webkit.mjs http://127.0.0.1:3005
+          mkdir -p out && node scripts/probe-webkit.mjs http://127.0.0.1:3005 out
           node scripts/webkit-evidence.mjs http://127.0.0.1:3005 out https://wuntab.com
       - if: always()
         run: |
