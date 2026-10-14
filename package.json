@@ -10,6 +10,7 @@
     "honesty": "node scripts/honesty-check.mjs",
     "copy-lint": "node scripts/copy-lint.mjs",
     "boundary-check": "node scripts/boundary-check.mjs",
+    "motion": "node scripts/motion.mjs",
     "test": "playwright test",
     "evidence": "node scripts/evidence.mjs"
   },

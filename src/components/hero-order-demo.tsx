@@ -10,7 +10,7 @@ import s from "./hero-order-demo.module.css";
  * lands on the kitchen display. Drawn in HTML and CSS from the real layouts
  * (the storefront's clean theme and the kitchen display), with the demo
  * menu's real dishes and prices (src/lib/demo-order.ts). The only picture is
- * the dish photo. visual-player.tsx runs the story; the module CSS moves it.
+ * the dish photo. The module CSS runs the story; visual-player.tsx pauses it off screen.
  *
  * Desktop: the phone, and the kitchen display beside it. Phones: the phone
  * turns over to the kitchen's side after the confirmation.

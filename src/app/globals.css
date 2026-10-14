@@ -69,6 +69,39 @@ html {
   }
 }
 
+/*
+ * The built visuals (src/components/visual-player.tsx). Their keyframes are in
+ * the page from the first paint, held paused until the player lets them run
+ * (data-run, on mount, and again whenever the visual comes back on screen)
+ * or while the pause button holds them (data-hold).
+ */
+[data-demo]:not([data-run]),
+[data-demo]:not([data-run]) *,
+[data-demo]:not([data-run]) *::before,
+[data-demo]:not([data-run]) *::after,
+[data-demo][data-hold],
+[data-demo][data-hold] *,
+[data-demo][data-hold] *::before,
+[data-demo][data-hold] *::after {
+  animation-play-state: paused !important;
+}
+
+/* Each visual's own clock: the length of its story (--vis-dur), for the ticket timers, the end and ?debug=motion. */
+@keyframes vis-clock {
+  to {
+    --vis-clock: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-demo] {
+    animation: vis-clock var(--vis-dur) linear both;
+  }
+  [data-demo][data-loop] {
+    animation-iteration-count: infinite;
+  }
+}
+
 body {
   background: var(--paper);
   color: var(--ink);

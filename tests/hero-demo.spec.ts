@@ -1,10 +1,11 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
-import { LOOP } from "../src/lib/hero-demo-timeline";
+import { LOOP, STEPS } from "../src/lib/hero-demo-timeline";
+import { clock, seek, stepAt } from "./motion";
 
 /**
  * The homepage hero: a phone drawn in HTML and CSS that orders from the demo
@@ -14,7 +15,13 @@ import { LOOP } from "../src/lib/hero-demo-timeline";
 test.use({ timezoneId: "America/New_York" });
 
 const demo = (page: Page) => page.locator("#top [data-demo]");
-const steps = (page: Page) => demo(page).getAttribute("data-s");
+/** Whether an element shows: opacity all the way up to the hero. */
+const opacity = (el: Locator) =>
+  el.evaluate((node) => {
+    let o = 1;
+    for (let n: Element | null = node; n && !n.hasAttribute("data-demo"); n = n.parentElement) o *= Number(getComputedStyle(n).opacity);
+    return o;
+  });
 const NOON = new Date("2026-10-13T16:40:00-04:00");
 
 test("a drawn phone: real text, decorative for screen readers with one sentence, and only the dish photo as a picture", async ({ page }) => {
@@ -91,23 +98,29 @@ test("the phone shows the visitor's time, and the confirmation a ready time 20 m
 for (const width of [390, 1440]) {
   test(`at ${width} it plays the order through to the kitchen ticket, then loops`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await page.clock.install({ time: NOON });
     await page.goto("/");
-    await page.clock.runFor(200);
-    expect(await steps(page)).toBe("0");
-    // Step 12 starts at 9.8 s of the hero's own clock, which starts when the browser
-    // reports the hero on screen; under load that report can come a little late.
-    await page.clock.runFor(9_800);
-    for (let i = 0; i < 10 && !(await steps(page))!.split(" ").includes("12"); i++) await page.clock.runFor(100);
-    expect((await steps(page))!.split(" ")).toContain("12");
+    // It runs from mount, on the browser's own clock.
+    await expect(demo(page)).toHaveAttribute("data-run", "");
+    await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(200);
+    expect((await clock(demo(page))).state).toBe("running");
+    const confirm = demo(page).locator('[data-screen="confirm"]');
+    const slid = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform !== "none");
+    await seek(demo(page), 600);
+    expect(await slid(confirm)).toBe(true);
+    // Step 12: the order lands in the kitchen.
+    // (On phones the ticket lands after the turn.)
+    await seek(demo(page), STEPS[12] + 2_000);
+    expect(stepAt(STEPS, (await clock(demo(page))).t)).toBe(12);
+    expect(await slid(confirm)).toBe(false);
     // The ticket is this order: number, name, dish and option, and its timer runs from zero.
     const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-flipper] [data-arrive]");
     await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
     await expect(ticket).toContainText(`Pickup · ${demoOrder.ticket.who}`);
     await expect(ticket).toContainText(demoOrder.dish.name);
     await expect(ticket).toContainText(`+ ${demoOrder.pick}`);
-    await page.clock.runFor(3_000);
-    await expect(ticket.locator("[data-timer]")).toHaveText(/^0:0[23]$/);
+    expect(await opacity(ticket)).toBe(1);
+    await seek(demo(page), STEPS[12] + 3_000);
+    await expect(ticket.locator("[data-timer]")).toHaveText("0:03");
     // Phones turn over to the kitchen's side; desktop keeps the phone and shows the board beside it.
     const flip = await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform);
     if (width >= 1024) {
@@ -117,40 +130,38 @@ for (const width of [390, 1440]) {
       expect(flip).not.toBe("none");
       await expect(demo(page).locator("[data-board]")).toBeHidden();
     }
-    await page.clock.runFor(LOOP - 13_000 + 300);
-    expect(await steps(page)).toBe("0");
+    // Round again: the second time through starts on the menu.
+    await seek(demo(page), LOOP + 600);
+    expect(stepAt(STEPS, (await clock(demo(page))).t % LOOP)).toBe(0);
+    expect(await slid(confirm)).toBe(true);
+    expect(await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform)).toBe("none");
   });
 }
 
-test("it stops when paused, when scrolled away and when the tab is hidden", async ({ page }) => {
+test("it holds when paused and while fully off screen, and runs again after", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.clock.install({ time: NOON });
   await page.goto("/");
-  await page.clock.runFor(2_000);
-  const before = await steps(page);
+  await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(300);
 
   await demo(page).getByRole("button", { name: copy.hero.demo.pause }).click();
-  await page.clock.runFor(4_000);
-  expect(await steps(page)).toBe(before);
+  const held = (await clock(demo(page))).t;
+  await page.waitForTimeout(1_000);
+  expect(await clock(demo(page))).toEqual({ t: held, state: "paused" });
   await demo(page).getByRole("button", { name: copy.hero.demo.play }).click();
-  await page.clock.runFor(1_500);
-  expect(await steps(page)).not.toBe(before);
+  await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(held + 300);
 
-  const atScroll = await steps(page);
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(200);
-  await page.clock.runFor(4_000);
-  expect(await steps(page)).toBe(atScroll);
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.waitForTimeout(200);
-
-  const atHide = await steps(page);
+  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  await expect(demo(page)).not.toHaveAttribute("data-run");
+  const away = (await clock(demo(page))).t;
+  await page.waitForTimeout(1_000);
+  expect(await clock(demo(page))).toEqual({ t: away, state: "paused" });
+  // Partly on screen counts as on screen.
   await page.evaluate(() => {
-    Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
-    document.dispatchEvent(new Event("visibilitychange"));
+    const box = document.querySelector("#top [data-demo]")!.getBoundingClientRect();
+    window.scrollTo({ top: window.scrollY + box.bottom - 40, behavior: "instant" });
   });
-  await page.clock.runFor(4_000);
-  expect(await steps(page)).toBe(atHide);
+  await expect(demo(page)).toHaveAttribute("data-run", "");
+  await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(away + 300);
 });
 
 for (const width of [390, 1440]) {
@@ -159,8 +170,8 @@ for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.clock.install({ time: NOON });
     await page.goto("/");
-    await page.clock.runFor(6_000);
-    expect(await steps(page)).toBe("0");
+    // Nothing to run: no animation anywhere in it.
+    expect(await demo(page).evaluate((el) => el.getAnimations({ subtree: true }).length)).toBe(0);
     await expect(demo(page).getByRole("button")).toBeHidden();
     const confirm = demo(page).locator('[data-screen="confirm"]');
     expect(await confirm.evaluate((el) => getComputedStyle(el).transform)).toBe("none");
@@ -202,10 +213,10 @@ test("only transform and opacity animate", () => {
     }
   }
   expect([...moved].sort()).toEqual(["none", "opacity", "transform"]);
-  // The tap keyframes too.
+  // The story's keyframes (scripts/motion.mjs) too.
   const keyframes = css.match(/@keyframes[^{]+\{([\s\S]*?\})\s*\}/g) ?? [];
   for (const block of keyframes) {
     const props = [...block.matchAll(/([a-z-]+)\s*:/g)].map((m) => m[1]);
-    for (const prop of props) expect(["opacity", "transform"]).toContain(prop);
+    for (const prop of props) expect(["opacity", "transform", "animation-timing-function"]).toContain(prop);
   }
 });

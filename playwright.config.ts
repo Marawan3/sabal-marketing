@@ -1,7 +1,16 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, webkit } from "@playwright/test";
+import { existsSync } from "node:fs";
 
 const port = 3002;
 const baseURL = `http://127.0.0.1:${port}`;
+
+/**
+ * WebKit on an iPhone profile runs the visuals' tests wherever its browser is
+ * installed (npx playwright install webkit). It downloads from
+ * cdn.playwright.dev and playwright.download.prss.microsoft.com; where those
+ * are blocked it is left out rather than failing.
+ */
+const withWebKit = existsSync(webkit.executablePath());
 
 /**
  * One production build, served on 3002. (A second, preview build used to
@@ -38,5 +47,14 @@ export default defineConfig({
         channel: process.env.PLAYWRIGHT_CHANNEL,
       },
     },
+    ...(withWebKit
+      ? [
+          {
+            name: "webkit-iphone",
+            testMatch: /(hero-demo|visuals|motion)\.spec\.ts/,
+            use: { ...devices["iPhone 15"], viewport: { width: 393, height: 852 } },
+          },
+        ]
+      : []),
   ],
 });

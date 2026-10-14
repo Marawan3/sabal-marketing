@@ -8,12 +8,13 @@
  * 14px text inside a device renders at 9px or more; on a narrow screen the
  * device lays out narrower instead of shrinking its text.
  *
- * Motion: visual-player.tsx adds step words to data-s ("0 1 2 ..."). The
- * rules here are written backwards from the end: with no rule, everything
- * shows its last step, and the rules that hold a part at an earlier step
- * apply only with motion allowed. So reduced motion, or a visual that has
- * finished, shows the final state as a still. Only transform and opacity
- * change, and every box keeps its size from the first paint.
+ * Motion: the rules here are written backwards from the end: with no rule,
+ * everything shows its last step. Each visual's story is CSS @keyframes in
+ * the generated block at the bottom (scripts/motion.mjs, from
+ * scripts/motion-spec.mjs), which applies only with motion allowed; the
+ * browser runs it and visual-player.tsx only pauses it off screen. So
+ * reduced motion shows the final state as a still. Only transform and
+ * opacity change, and every box keeps its size from the first paint.
  */
 
 .vis {
@@ -280,29 +281,6 @@
   opacity: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="2"]) .out {
-    opacity: 1;
-    transform: none;
-  }
-  .vis[data-s~="1"]:not([data-s~="2"]) .out > :last-child {
-    transform: scale(0.97);
-  }
-  .vis:not([data-s~="2"]) .in {
-    opacity: 0;
-    transform: translateX(-40%);
-  }
-  .vis:not([data-s~="3"]) .up {
-    transform: none;
-  }
-  .vis:not([data-s~="2"]) .count > :first-child {
-    opacity: 1;
-  }
-  .vis:not([data-s~="2"]) .count > :last-child {
-    opacity: 0;
-  }
-}
-
 /* ---------- The dashboard card ---------- */
 
 .dash {
@@ -444,16 +422,6 @@
   text-align: right;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="1"]) .reveal {
-    transform: none;
-  }
-  .vis:not([data-s~="2"]) .stat {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
 /* ---------- The receipt ---------- */
 
 .receipt {
@@ -501,19 +469,6 @@
 .rTotal {
   font-size: 18px;
   font-weight: 700;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="1"]) [data-line="1"],
-  .vis:not([data-s~="2"]) [data-line="2"],
-  .vis:not([data-s~="3"]) [data-line="3"],
-  .vis:not([data-s~="4"]) [data-line="4"],
-  .vis:not([data-s~="5"]) [data-line="5"],
-  .vis:not([data-s~="6"]) [data-line="6"],
-  .vis:not([data-s~="7"]) [data-line="7"] {
-    opacity: 0;
-    transform: translateY(6px);
-  }
 }
 
 /* ---------- The delivery flow ---------- */
@@ -625,36 +580,6 @@
   font-weight: 600;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="1"]) [data-step="1"],
-  .vis:not([data-s~="2"]) [data-step="2"],
-  .vis:not([data-s~="3"]) [data-step="3"],
-  .vis:not([data-s~="4"]) [data-step="4"],
-  .vis:not([data-s~="5"]) [data-step="5"],
-  .vis:not([data-s~="6"]) [data-step="6"] {
-    opacity: 0.25;
-  }
-  .vis:not([data-s~="1"]) [data-node="1"] .nodeOn,
-  .vis:not([data-s~="2"]) [data-node="2"] .nodeOn,
-  .vis:not([data-s~="3"]) [data-node="3"] .nodeOn,
-  .vis:not([data-s~="4"]) [data-node="4"] .nodeOn,
-  .vis:not([data-s~="6"]) [data-node="5"] .nodeOn {
-    opacity: 0;
-  }
-  .vis:not([data-s~="2"]) .trackFill {
-    transform: scaleX(0);
-  }
-  .vis[data-s~="2"]:not([data-s~="3"]) .trackFill {
-    transform: scaleX(0.25);
-  }
-  .vis[data-s~="3"]:not([data-s~="4"]) .trackFill {
-    transform: scaleX(0.5);
-  }
-  .vis[data-s~="4"]:not([data-s~="6"]) .trackFill {
-    transform: scaleX(0.75);
-  }
-}
-
 /* ---------- Any product's steps (step-flow.tsx): --n nodes, node k lights at step k ---------- */
 
 .gflow .track {
@@ -670,35 +595,6 @@
 @media (min-width: 768px) {
   .gflow[data-n="4"] .steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="1"]) [data-gstep="1"],
-  .vis:not([data-s~="2"]) [data-gstep="2"],
-  .vis:not([data-s~="3"]) [data-gstep="3"],
-  .vis:not([data-s~="4"]) [data-gstep="4"],
-  .vis:not([data-s~="5"]) [data-gstep="5"] {
-    opacity: 0.25;
-  }
-  .vis:not([data-s~="1"]) [data-gnode="1"] .nodeOn,
-  .vis:not([data-s~="2"]) [data-gnode="2"] .nodeOn,
-  .vis:not([data-s~="3"]) [data-gnode="3"] .nodeOn,
-  .vis:not([data-s~="4"]) [data-gnode="4"] .nodeOn,
-  .vis:not([data-s~="5"]) [data-gnode="5"] .nodeOn {
-    opacity: 0;
-  }
-  .vis:not([data-s~="2"]) .gfill {
-    transform: scaleX(0);
-  }
-  .vis[data-s~="2"]:not([data-s~="3"]) .gfill {
-    transform: scaleX(calc(1 / (var(--n) - 1)));
-  }
-  .vis[data-s~="3"]:not([data-s~="4"]) .gfill {
-    transform: scaleX(calc(2 / (var(--n) - 1)));
-  }
-  .vis[data-s~="4"]:not([data-s~="5"]) .gfill {
-    transform: scaleX(calc(3 / (var(--n) - 1)));
   }
 }
 
@@ -1013,49 +909,6 @@
 
 .slideC {
   z-index: 3;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .vis[data-s~="2"]:not([data-s~="3"]) [data-tap="2"],
-  .vis[data-s~="4"]:not([data-s~="5"]) [data-tap="4"] {
-    animation: tap 600ms ease-out both;
-  }
-  .vis:not([data-s~="1"]) .scrollA {
-    transform: none;
-  }
-  .storefront:not([data-s~="3"]) .slideB,
-  .delivery:not([data-s~="3"]) .slideB,
-  .delivery:not([data-s~="5"]) .slideC {
-    transform: translateX(101%);
-  }
-  .vis:not([data-s~="2"]) .swap2 > :first-child {
-    opacity: 1;
-  }
-  .vis:not([data-s~="2"]) .swap2 > :last-child {
-    opacity: 0;
-  }
-  .delivery:not([data-s~="6"]) .scrollB {
-    transform: none;
-  }
-  .vis:not([data-s~="6"]) [data-reach="6"],
-  .vis:not([data-s~="7"]) [data-reach="7"],
-  .vis:not([data-s~="7"]) .current[data-cur="7"] {
-    opacity: 0;
-  }
-  .vis[data-s~="5"]:not([data-s~="6"]) .current[data-cur="5-6"],
-  .vis[data-s~="6"]:not([data-s~="7"]) .current[data-cur="6-7"],
-  .vis[data-s~="5"]:not([data-s~="7"]) .current[data-cur="5-7"] {
-    opacity: 1;
-  }
-  .catering[data-s~="1"]:not([data-s~="3"]) .scrollA {
-    transform: translateY(calc(var(--k) * -330));
-  }
-  .catering:not([data-s~="3"]) .formFields {
-    opacity: 1;
-  }
-  .catering:not([data-s~="3"]) .thanks {
-    opacity: 0;
-  }
 }
 
 /* ---------- The search result ---------- */
@@ -1593,16 +1446,6 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="1"]) .odRow[data-row="1925"]::before,
-  .vis:not([data-s~="2"]) .odShade {
-    opacity: 0;
-  }
-  .vis:not([data-s~="2"]) .odDrawer {
-    transform: translateX(101%);
-  }
-}
-
 /* ---------- The online ordering settings card ---------- */
 
 .set {
@@ -1702,20 +1545,6 @@
 .setAdjust {
   border: 1px solid var(--mist);
   background: #fff;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .vis:not([data-s~="2"]) .flip > :first-child {
-    opacity: 1;
-    transform: none;
-  }
-  .vis:not([data-s~="2"]) .flip > :last-child {
-    opacity: 0;
-    transform: translateY(40%);
-  }
-  .vis[data-s~="1"]:not([data-s~="2"]) .setAdjust {
-    transform: scale(0.98);
-  }
 }
 
 /* ---------- The menu editor's item drawer (menu-editor.tsx) ---------- */
@@ -1873,13 +1702,6 @@
   font-weight: 700;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .loyalty:not([data-s~="1"]) .reward {
-    opacity: 0;
-    transform: translateY(calc(var(--k) * 16));
-  }
-}
-
 /* ---------- The dish sheet with "Goes well with" (menu-phones.tsx) ---------- */
 
 .upsell {
@@ -1915,13 +1737,6 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .upsell:not([data-s~="1"]) .upPairs {
-    opacity: 0;
-    transform: translateY(calc(var(--k) * 16));
-  }
 }
 
 /* ---------- The confirmation text on a lock screen (menu-phones.tsx) ---------- */
@@ -1968,3 +1783,560 @@
   margin-top: calc(var(--k) * 4);
   font-weight: 600;
 }
+
+/* motion:start (generated by scripts/motion.mjs from scripts/motion-spec.mjs; edit those, then npm run motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .out {
+    animation: m-kitchen-0 320ms linear 1800ms both,
+      m-kitchen-1 560ms linear 1800ms both;
+  }
+  .out > :last-child {
+    animation: m-kitchen-2 560ms linear 1400ms both;
+  }
+  .in {
+    animation: m-kitchen-3 320ms linear 1800ms both,
+      m-kitchen-4 560ms linear 1800ms both;
+  }
+  .up {
+    animation: m-kitchen-5 560ms linear 2500ms both;
+  }
+  .count > :first-child {
+    animation: m-kitchen-6 320ms linear 1800ms both;
+  }
+  .count > :last-child {
+    animation: m-kitchen-7 320ms linear 1800ms both;
+  }
+  .reveal {
+    animation: m-dashboard-0 1400ms linear 300ms both;
+  }
+  .stat {
+    animation: m-dashboard-1 320ms linear 1500ms both,
+      m-dashboard-2 560ms linear 1500ms both;
+  }
+  .search [data-line="1"] {
+    animation: m-search-0 320ms linear 300ms both,
+      m-search-1 560ms linear 300ms both;
+  }
+  .search [data-line="2"] {
+    animation: m-search-2 320ms linear 800ms both,
+      m-search-3 560ms linear 800ms both;
+  }
+  .search [data-line="3"] {
+    animation: m-search-4 320ms linear 1100ms both,
+      m-search-5 560ms linear 1100ms both;
+  }
+  .search [data-line="4"] {
+    animation: m-search-6 320ms linear 1400ms both,
+      m-search-7 560ms linear 1400ms both;
+  }
+  .search [data-line="5"] {
+    animation: m-search-8 320ms linear 1700ms both,
+      m-search-9 560ms linear 1700ms both;
+  }
+  .search [data-line="6"] {
+    animation: m-search-10 320ms linear 2200ms both,
+      m-search-11 560ms linear 2200ms both;
+  }
+  .rLine[data-line="1"] {
+    animation: m-receipt-0 320ms linear 300ms both,
+      m-receipt-1 560ms linear 300ms both;
+  }
+  .rLine[data-line="2"] {
+    animation: m-receipt-2 320ms linear 650ms both,
+      m-receipt-3 560ms linear 650ms both;
+  }
+  .rLine[data-line="3"] {
+    animation: m-receipt-4 320ms linear 1000ms both,
+      m-receipt-5 560ms linear 1000ms both;
+  }
+  .rLine[data-line="4"] {
+    animation: m-receipt-6 320ms linear 1350ms both,
+      m-receipt-7 560ms linear 1350ms both;
+  }
+  .rLine[data-line="5"] {
+    animation: m-receipt-8 320ms linear 1700ms both,
+      m-receipt-9 560ms linear 1700ms both;
+  }
+  .rLine[data-line="6"] {
+    animation: m-receipt-10 320ms linear 2050ms both,
+      m-receipt-11 560ms linear 2050ms both;
+  }
+  .rLine[data-line="7"] {
+    animation: m-receipt-12 320ms linear 2400ms both,
+      m-receipt-13 560ms linear 2400ms both;
+  }
+  .flow [data-step="1"] {
+    animation: m-flow-0 320ms linear 400ms both;
+  }
+  .flow [data-step="2"] {
+    animation: m-flow-1 320ms linear 1400ms both;
+  }
+  .flow [data-step="3"] {
+    animation: m-flow-2 320ms linear 2400ms both;
+  }
+  .flow [data-step="4"] {
+    animation: m-flow-3 320ms linear 3400ms both;
+  }
+  .flow [data-step="5"] {
+    animation: m-flow-4 320ms linear 4400ms both;
+  }
+  .flow [data-step="6"] {
+    animation: m-flow-5 320ms linear 5400ms both;
+  }
+  .flow [data-node="1"] .nodeOn {
+    animation: m-flow-6 320ms linear 400ms both;
+  }
+  .flow [data-node="2"] .nodeOn {
+    animation: m-flow-7 320ms linear 1400ms both;
+  }
+  .flow [data-node="3"] .nodeOn {
+    animation: m-flow-8 320ms linear 2400ms both;
+  }
+  .flow [data-node="4"] .nodeOn {
+    animation: m-flow-9 320ms linear 3400ms both;
+  }
+  .flow [data-node="5"] .nodeOn {
+    animation: m-flow-10 320ms linear 5400ms both;
+  }
+  .trackFill {
+    animation: m-flow-11 4560ms linear 1400ms both;
+  }
+  .gflow [data-gstep="1"] {
+    animation: m-gflow-0 320ms linear 400ms both;
+  }
+  .gflow [data-gstep="2"] {
+    animation: m-gflow-1 320ms linear 1400ms both;
+  }
+  .gflow [data-gstep="3"] {
+    animation: m-gflow-2 320ms linear 2400ms both;
+  }
+  .gflow [data-gstep="4"] {
+    animation: m-gflow-3 320ms linear 3400ms both;
+  }
+  .gflow [data-gstep="5"] {
+    animation: m-gflow-4 320ms linear 4400ms both;
+  }
+  .gflow [data-gnode="1"] .nodeOn {
+    animation: m-gflow-5 320ms linear 400ms both;
+  }
+  .gflow [data-gnode="2"] .nodeOn {
+    animation: m-gflow-6 320ms linear 1400ms both;
+  }
+  .gflow [data-gnode="3"] .nodeOn {
+    animation: m-gflow-7 320ms linear 2400ms both;
+  }
+  .gflow [data-gnode="4"] .nodeOn {
+    animation: m-gflow-8 320ms linear 3400ms both;
+  }
+  .gflow [data-gnode="5"] .nodeOn {
+    animation: m-gflow-9 320ms linear 4400ms both;
+  }
+  .gflow[data-n="4"] .gfill {
+    animation: m-gflow-10 2560ms linear 1400ms both;
+  }
+  .gflow[data-n="5"] .gfill {
+    animation: m-gflow-11 3560ms linear 1400ms both;
+  }
+  .storefront .scrollA {
+    animation: m-storefront-0 900ms linear 1100ms both;
+  }
+  .storefront [data-tap="2"] {
+    animation: tap 600ms ease-out 2600ms both;
+  }
+  .storefront .slideB {
+    animation: m-storefront-2 560ms linear 2900ms both;
+  }
+  .delivery .scrollA {
+    animation: m-delivery-0 900ms linear 1500ms both;
+  }
+  .delivery [data-tap="2"] {
+    animation: tap 600ms ease-out 3000ms both;
+  }
+  .delivery [data-tap="4"] {
+    animation: tap 600ms ease-out 4800ms both;
+  }
+  .delivery .slideB {
+    animation: m-delivery-3 560ms linear 3600ms both;
+  }
+  .delivery .slideC {
+    animation: m-delivery-4 560ms linear 5100ms both;
+  }
+  .delivery .swap2 > :first-child {
+    animation: m-delivery-5 320ms linear 3000ms both;
+  }
+  .delivery .swap2 > :last-child {
+    animation: m-delivery-6 320ms linear 3000ms both;
+  }
+  .delivery .scrollB {
+    animation: m-delivery-7 900ms linear 6400ms both;
+  }
+  .delivery [data-reach="6"] {
+    animation: m-delivery-8 320ms linear 6400ms both;
+  }
+  .delivery [data-reach="7"] {
+    animation: m-delivery-9 320ms linear 7700ms both;
+  }
+  .delivery .current[data-cur="7"] {
+    animation: m-delivery-10 320ms linear 7700ms both;
+  }
+  .delivery .current[data-cur="5-6"] {
+    animation: m-delivery-11 1620ms linear 5100ms both;
+  }
+  .delivery .current[data-cur="6-7"] {
+    animation: m-delivery-12 1620ms linear 6400ms both;
+  }
+  .delivery .current[data-cur="5-7"] {
+    animation: m-delivery-13 2920ms linear 5100ms both;
+  }
+  .catering .scrollA {
+    animation: m-catering-0 3100ms linear 1200ms both;
+  }
+  .catering [data-tap="2"] {
+    animation: tap 600ms ease-out 2900ms both;
+  }
+  .catering .swap2 > :first-child {
+    animation: m-catering-2 320ms linear 2900ms both;
+  }
+  .catering .swap2 > :last-child {
+    animation: m-catering-3 320ms linear 2900ms both;
+  }
+  .catering .formFields {
+    animation: m-catering-4 320ms linear 3400ms both;
+  }
+  .catering .thanks {
+    animation: m-catering-5 320ms linear 3400ms both;
+  }
+  .odRow[data-row="1925"]::before {
+    animation: m-orders-0 320ms linear 1000ms both;
+  }
+  .odShade {
+    animation: m-orders-1 320ms linear 1400ms both;
+  }
+  .odDrawer {
+    animation: m-orders-2 560ms linear 1400ms both;
+  }
+  .flip > :first-child {
+    animation: m-settings-0 320ms linear 1200ms both,
+      m-settings-1 560ms linear 1200ms both;
+  }
+  .flip > :last-child {
+    animation: m-settings-2 320ms linear 1200ms both,
+      m-settings-3 560ms linear 1200ms both;
+  }
+  .setAdjust {
+    animation: m-settings-4 560ms linear 800ms both;
+  }
+  .loyalty .reward {
+    animation: m-loyalty-0 320ms linear 700ms both,
+      m-loyalty-1 560ms linear 700ms both;
+  }
+  .upsell .upPairs {
+    animation: m-upsell-0 320ms linear 700ms both,
+      m-upsell-1 560ms linear 700ms both;
+  }
+}
+@keyframes m-kitchen-0 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-kitchen-1 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-kitchen-2 {
+  0% { transform: none; animation-timing-function: ease; }
+  28.571% { transform: scale(0.97); }
+  71.429% { transform: scale(0.97); animation-timing-function: ease; }
+}
+@keyframes m-kitchen-3 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-kitchen-4 {
+  0% { transform: translateX(-40%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-kitchen-5 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-kitchen-6 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-kitchen-7 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-dashboard-0 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+}
+@keyframes m-dashboard-1 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-dashboard-2 {
+  0% { transform: translateY(8px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-0 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-1 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-2 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-3 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-4 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-5 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-6 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-7 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-8 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-9 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-search-10 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-search-11 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-0 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-1 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-2 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-3 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-4 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-5 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-6 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-7 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-8 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-9 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-10 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-11 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-receipt-12 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-receipt-13 {
+  0% { transform: translateY(6px); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-flow-0 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-1 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-2 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-3 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-4 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-5 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-flow-6 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-flow-7 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-flow-8 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-flow-9 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-flow-10 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-flow-11 {
+  0% { transform: scaleX(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  12.281% { transform: scaleX(0.25); }
+  21.93% { transform: scaleX(0.25); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  34.211% { transform: scaleX(0.5); }
+  43.86% { transform: scaleX(0.5); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  56.14% { transform: scaleX(0.75); }
+  87.719% { transform: scaleX(0.75); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-gflow-0 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-gflow-1 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-gflow-2 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-gflow-3 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-gflow-4 {
+  0% { opacity: 0.25; animation-timing-function: ease; }
+}
+@keyframes m-gflow-5 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-gflow-6 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-gflow-7 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-gflow-8 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-gflow-9 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-gflow-10 {
+  0% { transform: scaleX(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  21.875% { transform: scaleX(0.3333); }
+  39.063% { transform: scaleX(0.3333); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  60.938% { transform: scaleX(0.6667); }
+  78.125% { transform: scaleX(0.6667); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-gflow-11 {
+  0% { transform: scaleX(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  15.73% { transform: scaleX(0.25); }
+  28.09% { transform: scaleX(0.25); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  43.82% { transform: scaleX(0.5); }
+  56.18% { transform: scaleX(0.5); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  71.91% { transform: scaleX(0.75); }
+  84.27% { transform: scaleX(0.75); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-storefront-0 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+}
+@keyframes m-storefront-2 {
+  0% { transform: translateX(101%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-delivery-0 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+}
+@keyframes m-delivery-3 {
+  0% { transform: translateX(101%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-delivery-4 {
+  0% { transform: translateX(101%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-delivery-5 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-delivery-6 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-delivery-7 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+}
+@keyframes m-delivery-8 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-delivery-9 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-delivery-10 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-delivery-11 {
+  0% { opacity: 0; animation-timing-function: ease; }
+  19.753% { opacity: 1; }
+  80.247% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-delivery-12 {
+  0% { opacity: 0; animation-timing-function: ease; }
+  19.753% { opacity: 1; }
+  80.247% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-delivery-13 {
+  0% { opacity: 0; animation-timing-function: ease; }
+  10.959% { opacity: 1; }
+  89.041% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-catering-0 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+  29.032% { transform: translateY(calc(var(--k) * -330)); }
+  70.968% { transform: translateY(calc(var(--k) * -330)); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+}
+@keyframes m-catering-2 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-catering-3 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-catering-4 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-catering-5 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-orders-0 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-orders-1 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-orders-2 {
+  0% { transform: translateX(101%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-settings-0 {
+  0% { opacity: 1; animation-timing-function: ease; }
+}
+@keyframes m-settings-1 {
+  0% { transform: none; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-settings-2 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-settings-3 {
+  0% { transform: translateY(40%); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-settings-4 {
+  0% { transform: none; animation-timing-function: ease; }
+  28.571% { transform: scale(0.98); }
+  71.429% { transform: scale(0.98); animation-timing-function: ease; }
+}
+@keyframes m-loyalty-0 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-loyalty-1 {
+  0% { transform: translateY(calc(var(--k) * 16)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+@keyframes m-upsell-0 {
+  0% { opacity: 0; animation-timing-function: ease; }
+}
+@keyframes m-upsell-1 {
+  0% { transform: translateY(calc(var(--k) * 16)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+}
+/* motion:end */
