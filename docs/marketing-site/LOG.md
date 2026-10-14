@@ -46,15 +46,15 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ## 2026-10-14 · Commit identity: the repo owner, not "ci"
 
-**Why:** the temporary WebKit evidence workflow on PR #34's branch committed as `ci <ci@users.noreply.github.com>`. GitHub credits that address to an unrelated real account ("ci"), who is not on the Vercel team. Those evidence branches also hold only screenshots, so each of their Vercel previews failed to build (no `app` directory). Production deploys of `main` were never affected.
+**Why:** the temporary WebKit evidence workflow on PR #34's branch committed as "ci", using GitHub's noreply address for the login `ci`. GitHub credits that address to an unrelated real account ("ci"), who is not on the Vercel team. Those evidence branches also hold only screenshots, so each of their Vercel previews failed to build (no `app` directory). Production deploys of `main` were never affected.
 
 **What changed:**
-- **Workflow:** on `claude/funny-euler-utwhob` (PR #34), `.github/workflows/webkit-evidence.yml` now commits as `Marawan3 <90366029+Marawan3@users.noreply.github.com>`. Commit `d1e3bef`, pushed with `[skip ci]` so it didn't start another run. No other file or branch in the repo has the `ci@` address.
+- **Workflow:** on `claude/funny-euler-utwhob` (PR #34), `.github/workflows/webkit-evidence.yml` now commits as `Marawan3 <90366029+Marawan3@users.noreply.github.com>`. Commit `d1e3bef`, pushed with `[skip ci]` so it didn't start another run. No other file or branch in the repo has that address.
 - **Build session git identity:** the session's local git config uses the same owner identity.
 - **The cloud environment sets the author itself.** It sets `GIT_AUTHOR_NAME=Fable 5.1` and `GIT_AUTHOR_EMAIL=agent@wuntab.com`, which override git config. Build sessions clear them on each commit until they're removed from the environment's settings.
 - **This entry** is the first commit authored as the owner, and its deploy is the check.
 
-**Not done:** the four existing `webkit-evidence/*` branches still carry the old "ci" commits. They belong to PR #34's evidence runs; delete them when that PR is done.
+**Not done:** the five existing `webkit-evidence/*` branches still carry the old "ci" commits. They belong to PR #34's evidence runs; delete them when that PR is done.
 
 ---
 
