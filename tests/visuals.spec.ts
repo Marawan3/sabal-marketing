@@ -1,15 +1,16 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page, type TestInfo } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
 import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoReward, demoSettings, demoSite, demoSms } from "../src/lib/demo-data";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
-import { clock, speed } from "./motion";
+import { clock, seek, speed } from "./motion";
 
 /**
  * The built visuals (src/components/visuals): real text and shapes, played
- * once on the browser's own clock (paused while off screen), still with
- * reduced motion. Where each one lives (owner, 2026-10-13):
+ * once on the browser's own clock (paused while off screen); with reduced
+ * motion the same stories as opacity crossfades. The chromium-reduced-motion
+ * project runs this whole file with reduced motion emulated. Where each one lives (owner, 2026-10-13):
  */
 const home: Record<string, string> = {
   delivery: "/delivery",
@@ -142,9 +143,43 @@ test("a pause button only on what moves for more than five seconds, and it pause
   await expect.poll(async () => (await clock(phone)).t).toBeGreaterThan(at + 300);
 });
 
+/** Whether this run emulates reduced motion (the *-reduced-motion projects in playwright.config.ts). */
+const reducedRun = (info: TestInfo) => info.project.use.reducedMotion === "reduce";
+
+test("every visual with a story runs from mount and advances; with reduced motion no running animation touches transform", async ({ page }, info) => {
+  const reduced = reducedRun(info);
+  expect(await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).toBe(reduced);
+  const all: [string, string][] = [["hero", "/"], ...names.map((n) => [n, home[n]] as [string, string])];
+  let checked = 0;
+  for (const [name, path] of all) {
+    await page.goto(path);
+    const el = name === "hero" ? page.locator("#top [data-demo]") : visual(page, name);
+    if ((await el.getAttribute("data-steps"))!.split(" ").length === 1) continue; // a still: no story to run
+    await intoView(el);
+    await expect(el, name).toHaveAttribute("data-run", "");
+    const states = await el.evaluate((n) =>
+      n.getAnimations({ subtree: true }).map((a) => ({
+        name: (a as CSSAnimation).animationName,
+        state: a.playState,
+        props: [...new Set((a.effect as KeyframeEffect).getKeyframes().flatMap((k) => Object.keys(k)))],
+      })),
+    );
+    // Every animation in it is running (the earliest track ends 500 ms in; this is the first few frames).
+    expect(states.length, name).toBeGreaterThan(1);
+    for (const st of states) expect(st.state, `${name}: ${st.name}`).toBe("running");
+    if (reduced) {
+      for (const st of states) expect(st.props, `${name}: ${st.name} must not touch transform`).not.toContain("transform");
+    }
+    // And it advances.
+    const at = (await clock(el)).t;
+    await expect.poll(async () => (await clock(el)).t, { message: name }).toBeGreaterThan(at + 200);
+    checked++;
+  }
+  expect(checked).toBe(all.length - 3); // menu, editor and sms are stills
+});
+
 for (const width of [390, 1440]) {
-  test(`with reduced motion at ${width} every visual is its final state, still, with no button`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
+  test(`at ${width} every visual ends on its final state, with a pause button only past five seconds`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     // The thing that shows each story's end.
     const end: Record<string, (el: Locator) => Locator> = {
@@ -169,14 +204,18 @@ for (const width of [390, 1440]) {
       await page.goto(home[name]);
       const el = visual(page, name);
       await intoView(el);
-      // Nothing to run: no animation anywhere in it.
-      expect(await el.evaluate((n) => n.getAnimations({ subtree: true }).length), name).toBe(0);
-      await expect(el.getByRole("button"), name).toBeHidden();
+      const steps = (await el.getAttribute("data-steps"))!.split(" ").map(Number);
+      await seek(el, steps[steps.length - 1] + 2_000);
+      // (Once a story ends its button is hidden, so count it in the markup.)
+      await expect(el.locator("button"), name).toHaveCount(steps[steps.length - 1] > 5_000 ? 1 : 0);
       expect(await shown(end[name](el)), name).toBe(true);
     }
     // The kitchen board's started ticket has left New.
     await page.goto(home.kitchen);
-    expect(await shown(visual(page, "kitchen").locator('[data-part="out"]'))).toBe(false);
+    const kitchen = visual(page, "kitchen");
+    await intoView(kitchen);
+    await seek(kitchen, 6_000);
+    expect(await shown(kitchen.locator('[data-part="out"]'))).toBe(false);
   });
 }
 

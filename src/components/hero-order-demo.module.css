@@ -9,8 +9,10 @@
  *
  * The story is CSS @keyframes, one loop of 14.4 s, in the generated block at
  * the bottom (scripts/motion.mjs, from scripts/motion-spec.mjs); the rules
- * above it are the still. visual-player.tsx only pauses it off screen. Only
- * transform and opacity change.
+ * above it are where it starts. With reduced motion the same loop runs as
+ * opacity crossfades, and the phone's turn is a crossfade to the kitchen's
+ * side. visual-player.tsx only pauses it off screen. Only transform and
+ * opacity change.
  *
  * Colours are the products' own: the demo restaurant's brand colour and the
  * storefront's neutrals (packages/ui/storefront tokens), and the kitchen
@@ -963,57 +965,12 @@
   padding-top: calc(var(--k) * 12);
 }
 
-/* The reduced-motion still, on phones: the ticket under the phone. */
-.stillBox {
-  container-type: inline-size;
-  display: none;
-  width: min(280px, 72vw);
-}
-
-.stillBox > div {
-  --k: calc(100cqw / 358);
-}
-
 /* ---------- The story: where it starts (its keyframes are in the generated block at the bottom) ---------- */
 
 .checkout,
 .confirm {
   z-index: 5;
   transform: translateX(101%);
-}
-
-/* No motion: the end of the story, held still. */
-@media (prefers-reduced-motion: reduce) {
-  .wrap *,
-  .wrap {
-    transition: none !important;
-    animation: none !important;
-  }
-  .wrap .confirm,
-  .wrap .arrive {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  .wrap .flipper {
-    transform: none !important;
-  }
-  .wrap .kCount > :first-child,
-  .wrap .kActive > :first-child {
-    opacity: 0 !important;
-  }
-  .wrap .kCount > :last-child,
-  .wrap .kActive > :last-child {
-    opacity: 1 !important;
-  }
-  .wrap .playPause {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) and (max-width: 1023.98px) {
-  .stillBox {
-    display: block;
-  }
 }
 
 .playPause {
@@ -1133,8 +1090,8 @@
     }
   }
   .wrap .cover {
-    animation: m-hero-30 14400ms linear 0ms infinite both,
-      m-hero-30-first 500ms linear 0ms 1 none;
+    animation: m-hero-33 14400ms linear 0ms infinite both,
+      m-hero-33-first 500ms linear 0ms 1 none;
   }
 }
 @keyframes m-hero-0 {
@@ -1338,7 +1295,7 @@
   100% { transform: none; }
   100% { transform: none; }
 }
-@keyframes m-hero-30 {
+@keyframes m-hero-33 {
   0% { opacity: 1; }
   0% { opacity: 1; animation-timing-function: ease; }
   3.472% { opacity: 0; }
@@ -1346,7 +1303,291 @@
   99.306% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-hero-30-first {
+@keyframes m-hero-33-first {
+  0%, 100% { opacity: 0; }
+}
+/* With reduced motion: the same stories, as opacity crossfades; nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .wrap .scroll {
+    transform: translateY(calc(var(--k) * -96));
+  }
+  .wrap [data-tap="2"] {
+    animation: m-hero-r1 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-tap="4"] {
+    animation: m-hero-r2 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-tap="5"] {
+    animation: m-hero-r3 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-tap="7"] {
+    animation: m-hero-r4 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-tap="10"] {
+    animation: m-hero-r5 14400ms linear 0ms infinite both;
+  }
+  .wrap .backdrop {
+    animation: m-hero-r6 14400ms linear 0ms infinite both;
+  }
+  .wrap .sheet {
+    transform: none;
+    animation: m-hero-r7 14400ms linear 0ms infinite both;
+  }
+  .wrap .radio i {
+    animation: m-hero-r8 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-pick] > :last-child {
+    animation: m-hero-r9 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-pick] > :first-child {
+    animation: m-hero-r10 14400ms linear 0ms infinite both;
+  }
+  .wrap .inCart {
+    animation: m-hero-r11 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-paying] > :last-child {
+    animation: m-hero-r12 14400ms linear 0ms infinite both;
+  }
+  .wrap [data-paying] > :first-child {
+    animation: m-hero-r13 14400ms linear 0ms infinite both;
+  }
+  .wrap .kCount > :last-child {
+    animation: m-hero-r14 14400ms linear 0ms infinite both;
+  }
+  .wrap .kCount > :first-child {
+    animation: m-hero-r15 14400ms linear 0ms infinite both;
+  }
+  .wrap .kActive > :last-child {
+    animation: m-hero-r16 14400ms linear 0ms infinite both;
+  }
+  .wrap .kActive > :first-child {
+    animation: m-hero-r17 14400ms linear 0ms infinite both;
+  }
+  .wrap .sheet .action {
+    transform: none;
+  }
+  .wrap .cartBar .action {
+    transform: none;
+  }
+  .wrap .payBar .action {
+    transform: none;
+  }
+  .wrap .cartBar {
+    transform: none;
+    animation: m-hero-r21 14400ms linear 0ms infinite both;
+  }
+  .wrap .checkout {
+    transform: none;
+    animation: m-hero-r22 14400ms linear 0ms infinite both;
+  }
+  .wrap .checkout .page {
+    transform: translateY(calc(var(--k) * -500));
+  }
+  .wrap .confirm {
+    transform: none;
+    animation: m-hero-r24 14400ms linear 0ms infinite both;
+  }
+  .wrap .arrive {
+    transform: none;
+    animation: m-hero-r25 14400ms linear 0ms infinite both;
+  }
+  @media (max-width: 1023.98px) {
+    .wrap .back .arrive {
+      transform: none;
+      animation: m-hero-r27 14400ms linear 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap .back {
+      transform: none;
+      animation: m-hero-r32 14400ms linear 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap .face:not(.back) {
+      animation: m-hero-r31 14400ms linear 0ms infinite both;
+    }
+  }
+  .wrap .cover {
+    animation: m-hero-r33 14400ms linear 0ms infinite both,
+      m-hero-r33-first 200ms linear 0ms 1 none;
+  }
+}
+@keyframes m-hero-r1 {
+  0% { opacity: 0; }
+  13.194% { opacity: 0; animation-timing-function: ease; }
+  14.583% { opacity: 1; animation-timing-function: ease; }
+  15.972% { opacity: 1; animation-timing-function: ease; }
+  17.361% { opacity: 0; animation-timing-function: ease; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r2 {
+  0% { opacity: 0; }
+  23.611% { opacity: 0; animation-timing-function: ease; }
+  25% { opacity: 1; animation-timing-function: ease; }
+  26.389% { opacity: 1; animation-timing-function: ease; }
+  27.778% { opacity: 0; animation-timing-function: ease; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r3 {
+  0% { opacity: 0; }
+  29.861% { opacity: 0; animation-timing-function: ease; }
+  31.25% { opacity: 1; animation-timing-function: ease; }
+  32.639% { opacity: 1; animation-timing-function: ease; }
+  34.028% { opacity: 0; animation-timing-function: ease; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r4 {
+  0% { opacity: 0; }
+  38.889% { opacity: 0; animation-timing-function: ease; }
+  40.278% { opacity: 1; animation-timing-function: ease; }
+  41.667% { opacity: 1; animation-timing-function: ease; }
+  43.056% { opacity: 0; animation-timing-function: ease; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r5 {
+  0% { opacity: 0; }
+  54.861% { opacity: 0; animation-timing-function: ease; }
+  56.25% { opacity: 1; animation-timing-function: ease; }
+  57.639% { opacity: 1; animation-timing-function: ease; }
+  59.028% { opacity: 0; animation-timing-function: ease; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r6 {
+  0% { opacity: 0; }
+  15.278% { opacity: 0; animation-timing-function: ease; }
+  16.667% { opacity: 1; }
+  31.944% { opacity: 1; animation-timing-function: ease; }
+  33.333% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r7 {
+  0% { opacity: 0; }
+  15.278% { opacity: 0; animation-timing-function: ease; }
+  16.667% { opacity: 1; }
+  31.944% { opacity: 1; animation-timing-function: ease; }
+  33.333% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r8 {
+  0% { opacity: 0; }
+  23.611% { opacity: 0; animation-timing-function: ease; }
+  25% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r9 {
+  0% { opacity: 0; }
+  23.611% { opacity: 0; animation-timing-function: ease; }
+  25% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r10 {
+  0% { opacity: 1; }
+  23.611% { opacity: 1; animation-timing-function: ease; }
+  25% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r11 {
+  0% { opacity: 0; }
+  31.944% { opacity: 0; animation-timing-function: ease; }
+  33.333% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r12 {
+  0% { opacity: 0; }
+  54.861% { opacity: 0; animation-timing-function: ease; }
+  56.25% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r13 {
+  0% { opacity: 1; }
+  54.861% { opacity: 1; animation-timing-function: ease; }
+  56.25% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r14 {
+  0% { opacity: 0; }
+  68.056% { opacity: 0; animation-timing-function: ease; }
+  69.444% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r15 {
+  0% { opacity: 1; }
+  68.056% { opacity: 1; animation-timing-function: ease; }
+  69.444% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r16 {
+  0% { opacity: 0; }
+  68.056% { opacity: 0; animation-timing-function: ease; }
+  69.444% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r17 {
+  0% { opacity: 1; }
+  68.056% { opacity: 1; animation-timing-function: ease; }
+  69.444% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r21 {
+  0% { opacity: 0; }
+  31.944% { opacity: 0; animation-timing-function: ease; }
+  33.333% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r22 {
+  0% { opacity: 0; }
+  40.972% { opacity: 0; animation-timing-function: ease; }
+  42.361% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r24 {
+  0% { opacity: 0; }
+  59.722% { opacity: 0; animation-timing-function: ease; }
+  61.111% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r25 {
+  0% { opacity: 0; }
+  68.056% { opacity: 0; animation-timing-function: ease; }
+  69.444% { opacity: 1; }
+  95.833% { opacity: 1; animation-timing-function: ease; }
+  97.222% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r27 {
+  0% { opacity: 0; }
+  72.569% { opacity: 0; animation-timing-function: ease; }
+  73.958% { opacity: 1; }
+  95.833% { opacity: 1; animation-timing-function: ease; }
+  97.222% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r31 {
+  0% { opacity: 1; }
+  68.056% { opacity: 1; animation-timing-function: ease; }
+  69.444% { opacity: 0; }
+  95.833% { opacity: 0; animation-timing-function: ease; }
+  97.222% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r32 {
+  0% { opacity: 0; }
+  68.056% { opacity: 0; animation-timing-function: ease; }
+  69.444% { opacity: 1; }
+  95.833% { opacity: 1; animation-timing-function: ease; }
+  97.222% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r33 {
+  0% { opacity: 1; }
+  0% { opacity: 1; animation-timing-function: ease; }
+  1.389% { opacity: 0; }
+  95.833% { opacity: 0; animation-timing-function: ease; }
+  97.222% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r33-first {
   0%, 100% { opacity: 0; }
 }
 /* motion:end */

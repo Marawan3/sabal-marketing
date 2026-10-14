@@ -6,9 +6,14 @@
  *   node scripts/motion.mjs          write the blocks
  *   node scripts/motion.mjs --check  exit 1 if a block is out of date
  *
+ * Two sets, from the same tracks: with motion allowed, opacity and transform
+ * move; with reduced motion, the same stories on the same timings run as
+ * 200 ms opacity crossfades and no transform is animated (motion-spec.mjs
+ * says what each transform track becomes).
+ *
  * Every animation starts when the page renders, paused; the player
  * (src/components/visual-player.tsx) lets it run on mount and pauses it while
- * the visual is fully off screen. Only opacity and transform move.
+ * the visual is fully off screen.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -69,9 +74,18 @@ function loopTrack(name, track, steps, loop) {
   return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
 }
 
-/** A tap ring: the module's own tap pulse (600 ms) at the step's time. */
-function tapTrack(name, track, steps, loop) {
+/** Reduced motion: every change is a crossfade this long. */
+const crossfade = { ms: 200, ease: "ease" };
+
+/** A tap ring: the module's own tap pulse (600 ms) at the step's time; with reduced motion, opacity only. */
+function tapTrack(name, track, steps, loop, reduced) {
   const t = steps[track.tap];
+  if (reduced) {
+    const f = (dt, opacity) => `  ${pct(t + dt, loop ?? 600)} { opacity: ${opacity}; animation-timing-function: ease; }`;
+    if (!loop) return { use: `m-tapfade 600ms linear ${t}ms both` };
+    const frames = [`  0% { opacity: 0; }`, f(0, 0), f(200, 1), f(400, 1), f(600, 0), `  100% { opacity: 0; }`];
+    return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
+  }
   if (!loop) return { use: `tap 600ms ease-out ${t}ms both` };
   const f = (dt, opacity, scale) => `  ${pct(t + dt, loop)} { opacity: ${opacity}; transform: scale(${scale}); animation-timing-function: ease-out; }`;
   const frames = [
@@ -84,44 +98,84 @@ function tapTrack(name, track, steps, loop) {
   return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
 }
 
+/**
+ * A track as it runs with reduced motion: opacity tracks as they are, with
+ * crossfade ramps; a transform track as the still transform it holds and the
+ * opacity track it shows instead (motion-spec.mjs, "reduced").
+ */
+function reducedOf(track, label) {
+  if (track.mode === "reduced") return track.hold !== undefined ? { hold: track.hold } : { fade: { ...track, ramp: crossfade } };
+  if (track.tap !== undefined || track.prop === "opacity") return { fade: track.tap !== undefined ? track : { ...track, ramp: crossfade } };
+  if (!track.reduced) throw new Error(`${label}: ${track.sel} moves; say what it does with reduced motion (reduced: { hold, show })`);
+  const { hold, show } = track.reduced;
+  return {
+    hold,
+    fade: show && { sel: track.sel, media: track.media, delay: track.delay, prop: "opacity", ...show, ramp: crossfade },
+  };
+}
+
 function block(file) {
-  const keyframes = [];
-  /** selector + media → animations, in spec order */
-  const uses = new Map();
+  const out = { motion: { keyframes: [], rules: new Map() }, reduced: { keyframes: [], rules: new Map() } };
+  /** selector + media → its animations and still declarations, in spec order */
+  const rule = (set, track) => {
+    const key = `${track.media ?? ""}|${track.sel}`;
+    if (!set.rules.has(key)) set.rules.set(key, { uses: [], decls: [], props: new Set() });
+    return set.rules.get(key);
+  };
+  const add = (set, name, track, v) => {
+    const reduced = set === out.reduced;
+    const made =
+      track.tap !== undefined
+        ? tapTrack(name, track, v.steps, v.loop, reduced)
+        : v.loop
+          ? loopTrack(name, track, v.steps, v.loop)
+          : onceTrack(name, track, v.steps);
+    if (made.keyframes) set.keyframes.push(made.keyframes);
+    const r = rule(set, track);
+    const prop = track.tap !== undefined ? "tap" : track.prop;
+    if (r.props.has(prop)) throw new Error(`${name}: ${track.sel} has two ${prop} tracks`);
+    r.props.add(prop);
+    r.uses.push(made.use);
+    // The hero's first run starts on the menu: hold this value through the first ramp.
+    if (track.firstRun !== undefined) {
+      const first = `${name}-first`;
+      set.keyframes.push(`@keyframes ${first} {\n  0%, 100% { ${decl(track.prop, track.firstRun)} }\n}`);
+      r.uses.push(`${first} ${track.ramp.ms}ms linear 0ms 1 none`);
+    }
+  };
+  let tapFade = false;
   for (const [vname, v] of Object.entries(visuals)) {
     if (v.file !== file) continue;
     v.tracks.forEach((track, i) => {
-      const name = `m-${vname}-${i}`;
-      const made =
-        track.tap !== undefined
-          ? tapTrack(name, track, v.steps, v.loop)
-          : v.loop
-            ? loopTrack(name, track, v.steps, v.loop)
-            : onceTrack(name, track, v.steps);
-      if (made.keyframes) keyframes.push(made.keyframes);
-      const key = `${track.media ?? ""}|${track.sel}`;
-      if (!uses.has(key)) uses.set(key, []);
-      uses.get(key).push(made.use);
-      // The hero's first run starts on the menu: hold this value through the first ramp.
-      if (track.firstRun !== undefined) {
-        const first = `${name}-first`;
-        keyframes.push(`@keyframes ${first} {\n  0%, 100% { ${decl(track.prop, track.firstRun)} }\n}`);
-        uses.get(key).push(`${first} ${track.ramp.ms}ms linear 0ms 1 none`);
-      }
+      if (track.mode !== "reduced") add(out.motion, `m-${vname}-${i}`, track, v);
+      const red = reducedOf(track, `m-${vname}-${i}`);
+      if (red.hold !== undefined && red.hold !== null) rule(out.reduced, track).decls.push(decl("transform", red.hold));
+      if (red.fade) add(out.reduced, `m-${vname}-r${i}`, red.fade, v);
+      if (track.tap !== undefined && !v.loop) tapFade = true;
     });
   }
-  const rules = [];
-  for (const [key, list] of uses) {
-    const [media, sel] = key.split("|");
-    const rule = `${sel} {\n  animation: ${list.join(",\n    ")};\n}`;
-    rules.push(media ? `@media ${media} {\n${rule.replace(/^/gm, "  ")}\n}` : rule);
+  if (tapFade) {
+    out.reduced.keyframes.unshift(
+      "@keyframes m-tapfade {\n  0% { opacity: 0; animation-timing-function: ease; }\n  33.333% { opacity: 1; }\n  66.667% { opacity: 1; animation-timing-function: ease; }\n  100% { opacity: 0; }\n}",
+    );
   }
+  const media = (query, set) => {
+    const rules = [];
+    for (const [key, r] of set.rules) {
+      const [m, sel] = key.split("|");
+      const body = [...r.decls, ...(r.uses.length ? [`animation: ${r.uses.join(",\n    ")};`] : [])];
+      const text = `${sel} {\n${body.map((d) => `  ${d}`).join("\n")}\n}`;
+      rules.push(m ? `@media ${m} {\n${text.replace(/^/gm, "  ")}\n}` : text);
+    }
+    return [`@media ${query} {`, ...rules.map((r) => r.replace(/^/gm, "  ")), "}"];
+  };
   return [
     "/* motion:start (generated by scripts/motion.mjs from scripts/motion-spec.mjs; edit those, then npm run motion) */",
-    "@media (prefers-reduced-motion: no-preference) {",
-    ...rules.map((r) => r.replace(/^/gm, "  ")),
-    "}",
-    ...keyframes,
+    ...media("(prefers-reduced-motion: no-preference)", out.motion),
+    ...out.motion.keyframes,
+    "/* With reduced motion: the same stories, as opacity crossfades; nothing moves. */",
+    ...media("(prefers-reduced-motion: reduce)", out.reduced),
+    ...out.reduced.keyframes,
     "/* motion:end */",
   ].join("\n");
 }

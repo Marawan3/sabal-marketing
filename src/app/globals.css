@@ -93,13 +93,12 @@ html {
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  [data-demo] {
-    animation: vis-clock var(--vis-dur) linear both;
-  }
-  [data-demo][data-loop] {
-    animation-iteration-count: infinite;
-  }
+[data-demo] {
+  animation: vis-clock var(--vis-dur) linear both;
+}
+
+[data-demo][data-loop] {
+  animation-iteration-count: infinite;
 }
 
 body {
