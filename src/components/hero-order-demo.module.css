@@ -1335,7 +1335,8 @@
 /* With reduced motion: the same stories, as opacity crossfades; nothing moves. */
 @media (prefers-reduced-motion: reduce) {
   .wrap .scroll {
-    transform: translateY(calc(var(--k) * -96));
+    animation: m-hero-r0 14400ms ease 0ms infinite both,
+      m-hero-r0j 14400ms linear 0ms infinite both;
   }
   .wrap [data-tap="2"] {
     animation: m-hero-r1 14400ms ease 0ms infinite both;
@@ -1407,7 +1408,8 @@
     animation: m-hero-r22 14400ms ease 0ms infinite both;
   }
   .wrap .checkout .page {
-    transform: translateY(calc(var(--k) * -500));
+    animation: m-hero-r23 14400ms ease 0ms infinite both,
+      m-hero-r23j 14400ms linear 0ms infinite both;
   }
   .wrap .confirm {
     transform: none;
@@ -1438,6 +1440,20 @@
     animation: m-hero-r35 14400ms ease 0ms infinite both,
       m-hero-r35-first 150ms linear 0ms 1 none;
   }
+}
+@keyframes m-hero-r0 {
+  0% { opacity: 1; }
+  6.25% { opacity: 1; }
+  6.771% { opacity: 0; }
+  6.778% { opacity: 0; }
+  7.292% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r0j {
+  0% { transform: none; }
+  6.771% { transform: none; }
+  6.778% { transform: translateY(calc(var(--k) * -96)); }
+  100% { transform: translateY(calc(var(--k) * -96)); }
 }
 @keyframes m-hero-r1 {
   0% { opacity: 0; }
@@ -1566,6 +1582,20 @@
   40.972% { opacity: 0; }
   42.014% { opacity: 1; }
   100% { opacity: 1; }
+}
+@keyframes m-hero-r23 {
+  0% { opacity: 1; }
+  48.611% { opacity: 1; }
+  49.132% { opacity: 0; }
+  49.139% { opacity: 0; }
+  49.653% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r23j {
+  0% { transform: none; }
+  49.132% { transform: none; }
+  49.139% { transform: translateY(calc(var(--k) * -500)); }
+  100% { transform: translateY(calc(var(--k) * -500)); }
 }
 @keyframes m-hero-r24 {
   0% { opacity: 0; }

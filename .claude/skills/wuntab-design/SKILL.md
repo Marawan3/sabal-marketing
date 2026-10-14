@@ -116,8 +116,9 @@ their reasoning. Where they disagree with this section, this section wins.
     plays once, then holds the final state. Only the hero loops.
   - Reduced motion (2026-10-14: many iPhones have it on, and stills read as a broken
     demo): the same stories run on the same timings, as 150 ms opacity crossfades.
-    No transform is animated; a screen that slid in fades in where it lands, and the
-    hero phone's turn is a crossfade. The spec says what each transform track becomes
+    A screen that slid in fades in where it lands, and the hero phone's turn is a
+    crossfade. A scroll is a 150 ms dip: out, a jump while invisible, back in. A
+    transform changes only while its element is at opacity 0 (tested). The spec says what each transform track becomes
     (`reduced: { hold, show }`); the generator refuses a transform track without it.
     The `chromium-reduced-motion` Playwright project runs the visuals spec this way.
   - A pause button on anything over five seconds.

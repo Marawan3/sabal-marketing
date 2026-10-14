@@ -29,6 +29,9 @@
  *     hold   the transform it keeps, still (null: its own CSS value)
  *     show   { start, changes }: an opacity track in its place, so a screen
  *            that slid in now fades in where it lands
+ *   reduced: { dip: true }
+ *            a scroll: at each change the content fades out (75 ms), jumps
+ *            to the new position while unseen (1 ms) and fades back (74 ms)
  * Taps pulse in opacity only. A track with mode "reduced" exists only there:
  * { sel, hold } for a still transform, or an opacity track.
  *
@@ -143,8 +146,8 @@ export const visuals = {
     file: "visuals",
     steps: [0, 1100, 2600, 2900, 3900],
     tracks: [
-      // Reduced motion: the page sits where it scrolls to, so the tap lands on what it taps.
-      { sel: ".storefront .scrollA", prop: "transform", start: "none", changes: [[1, null]], ramp: scroll, reduced: { hold: null } },
+      // Reduced motion: each scroll is a dip (out, jump while unseen, back in).
+      { sel: ".storefront .scrollA", prop: "transform", start: "none", changes: [[1, null]], ramp: scroll, reduced: { dip: true } },
       { sel: '.storefront [data-tap="2"]', tap: 2 },
       { sel: ".storefront .slideB", prop: "transform", start: "translateX(101%)", changes: [[3, null]], ramp: move, reduced: fadeIn(3) },
     ],
@@ -153,14 +156,14 @@ export const visuals = {
     file: "visuals",
     steps: [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 8600],
     tracks: [
-      { sel: ".delivery .scrollA", prop: "transform", start: "none", changes: [[1, null]], ramp: scroll, reduced: { hold: null } },
+      { sel: ".delivery .scrollA", prop: "transform", start: "none", changes: [[1, null]], ramp: scroll, reduced: { dip: true } },
       { sel: '.delivery [data-tap="2"]', tap: 2 },
       { sel: '.delivery [data-tap="4"]', tap: 4 },
       { sel: ".delivery .slideB", prop: "transform", start: "translateX(101%)", changes: [[3, null]], ramp: move, reduced: fadeIn(3) },
       { sel: ".delivery .slideC", prop: "transform", start: "translateX(101%)", changes: [[5, null]], ramp: move, reduced: fadeIn(5) },
       { sel: ".delivery .swap2 > :first-child", prop: "opacity", start: "1", changes: [[2, null]], ramp: fade },
       { sel: ".delivery .swap2 > :last-child", prop: "opacity", start: "0", changes: [[2, null]], ramp: fade },
-      { sel: ".delivery .scrollB", prop: "transform", start: "none", changes: [[6, null]], ramp: scroll, reduced: { hold: null } },
+      { sel: ".delivery .scrollB", prop: "transform", start: "none", changes: [[6, null]], ramp: scroll, reduced: { dip: true } },
       { sel: '.delivery [data-reach="6"]', prop: "opacity", start: "0", changes: [[6, null]], ramp: fade },
       { sel: '.delivery [data-reach="7"]', prop: "opacity", start: "0", changes: [[7, null]], ramp: fade },
       { sel: '.delivery .current[data-cur="7"]', prop: "opacity", start: "0", changes: [[7, null]], ramp: fade },
@@ -179,8 +182,8 @@ export const visuals = {
         start: "none",
         changes: [[1, "translateY(calc(var(--k) * -330))"], [3, null]],
         ramp: scroll,
-        // Reduced motion: held on the form, so Send, "Sending…" and the thanks all show.
-        reduced: { hold: "translateY(calc(var(--k) * -330))" },
+        // Reduced motion: a dip down to the form and a dip back up to the thanks.
+        reduced: { dip: true },
       },
       { sel: '.catering [data-tap="2"]', tap: 2 },
       { sel: ".catering .swap2 > :first-child", prop: "opacity", start: "1", changes: [[2, null]], ramp: fade },
@@ -239,14 +242,14 @@ export const visuals = {
         { sel, prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[{ at: 9800 + extra }, "none"]], ramp: m, reduced: { hold: "none" } },
       ];
       return [
-        // Reduced motion: the menu sits scrolled to the dish the diner taps.
+        // Reduced motion: a dip to the dish the diner taps.
         {
           sel: ".wrap .scroll",
           prop: "transform",
           start: "none",
           changes: [[1, "translateY(calc(var(--k) * -96))"]],
           ramp: scroll,
-          reduced: { hold: "translateY(calc(var(--k) * -96))" },
+          reduced: { dip: true },
         },
         ...[2, 4, 5, 7, 10].map((k) => ({ sel: `.wrap [data-tap="${k}"]`, tap: k })),
         { sel: ".wrap .backdrop", prop: "opacity", start: "0", changes: [[3, "1"], [6, "0"]], ramp: f },
@@ -266,14 +269,14 @@ export const visuals = {
         pressAt(".wrap .payBar .action", 10),
         { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[6, "none"]], ramp: m, reduced: fadeAt([[6, "1"]]) },
         { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[8, "none"]], ramp: m, reduced: fadeAt([[8, "1"]]) },
-        // Reduced motion: checkout sits scrolled to Pay, which the diner taps.
+        // Reduced motion: a dip down to Pay, which the diner taps.
         {
           sel: ".wrap .checkout .page",
           prop: "transform",
           start: "none",
           changes: [[9, "translateY(calc(var(--k) * -500))"]],
           ramp: scroll,
-          reduced: { hold: "translateY(calc(var(--k) * -500))" },
+          reduced: { dip: true },
         },
         { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[11, "none"]], ramp: m, reduced: fadeAt([[11, "1"]]) },
         ...arrive(".wrap .arrive", 0),

@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { copy } from "../src/lib/copy";
 import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoReward, demoSettings, demoSite, demoSms } from "../src/lib/demo-data";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
-import { clock, seek, speed } from "./motion";
+import { clock, seek, speed, transformsWhileShown } from "./motion";
 
 /**
  * The built visuals (src/components/visuals): real text and shapes, played
@@ -148,7 +148,7 @@ test("a pause button only on what moves for more than five seconds, and it pause
 /** Whether this run emulates reduced motion (the *-reduced-motion projects in playwright.config.ts). */
 const reducedRun = (info: TestInfo) => info.project.use.reducedMotion === "reduce";
 
-test("every visual with a story runs from mount and advances; with reduced motion no running animation touches transform", async ({ page }, info) => {
+test("every visual with a story runs from mount and advances; with reduced motion a transform changes only while its element is invisible", async ({ page }, info) => {
   const reduced = reducedRun(info);
   expect(await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).toBe(reduced);
   const all: [string, string][] = [["hero", "/"], ...names.map((n) => [n, home[n]] as [string, string])];
@@ -160,21 +160,20 @@ test("every visual with a story runs from mount and advances; with reduced motio
     await intoView(el);
     await expect(el, name).toHaveAttribute("data-run", "");
     const states = await el.evaluate((n) =>
-      n.getAnimations({ subtree: true }).map((a) => ({
-        name: (a as CSSAnimation).animationName,
-        state: a.playState,
-        props: [...new Set((a.effect as KeyframeEffect).getKeyframes().flatMap((k) => Object.keys(k)))],
-      })),
+      n.getAnimations({ subtree: true }).map((a) => ({ name: (a as CSSAnimation).animationName, state: a.playState })),
     );
     // Every animation in it is running (the earliest track ends 500 ms in; this is the first few frames).
     expect(states.length, name).toBeGreaterThan(1);
     for (const st of states) expect(st.state, `${name}: ${st.name}`).toBe("running");
-    if (reduced) {
-      for (const st of states) expect(st.props, `${name}: ${st.name} must not touch transform`).not.toContain("transform");
-    }
     // And it advances.
     const at = (await clock(el)).t;
     await expect.poll(async () => (await clock(el)).t, { message: name }).toBeGreaterThan(at + 200);
+    // With reduced motion nothing moves where it can be seen: a transform changes only
+    // inside a scroll's dip, while its element is at opacity 0. (This pauses the visual.)
+    if (reduced) {
+      const { shown } = await transformsWhileShown(el);
+      expect(shown, `${name}: a transform changed while shown`).toEqual([]);
+    }
     checked++;
   }
   expect(checked).toBe(all.length - 3); // menu, editor and sms are stills
