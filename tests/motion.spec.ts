@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { LOOP, STEPS } from "../src/lib/hero-demo-timeline";
 import { visuals } from "../scripts/motion-spec.mjs";
+import { timing, type Timing } from "./motion";
 
 /**
  * The visuals' stories are CSS @keyframes generated from
@@ -59,4 +60,72 @@ test("?debug=motion lists each visual's play state, its last isIntersecting and 
   // Without the flag there is no panel.
   await page.goto("/");
   await expect(page.locator("[data-motion-debug]")).toHaveCount(0);
+});
+
+/**
+ * Reduced motion keeps the pace (owner, 2026-10-14): the same sequence on the
+ * same clock, each change starting when the motion version's does, and every
+ * crossfade at most 150 ms, so no step takes longer than with motion.
+ */
+test("with reduced motion every visual keeps the same pace: same loop and play-through, same change times, crossfades of 150 ms or less", async ({ page }) => {
+  test.setTimeout(120_000);
+  const where: Record<string, string> = {
+    hero: "/",
+    kitchen: "/order-management",
+    orders: "/order-management",
+    settings: "/order-management",
+    dashboard: "/how-it-works",
+    search: "/restaurant-seo",
+    receipt: "/pricing",
+    flow: "/delivery",
+    delivery: "/delivery",
+    catering: "/catering",
+    storefront: "/restaurant-websites",
+    loyalty: "/loyalty",
+    upsell: "/upsells",
+    "flow-payments": "/payments",
+  };
+  const read = async (name: string, path: string, reducedMotion: "reduce" | "no-preference") => {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto(path);
+    const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]`).first();
+    await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
+    return timing(el);
+  };
+  const report: string[] = [];
+  for (const width of [393, 1440]) {
+    await page.setViewportSize({ width, height: 852 });
+    for (const [name, path] of Object.entries(where)) {
+      const motion: Timing = await read(name, path, "no-preference");
+      const reduced: Timing = await read(name, path, "reduce");
+      const label = `${name} at ${width}`;
+      // The loop (the hero) or the play-through (the rest): the same clock.
+      expect(Math.abs(reduced.clock - motion.clock), `${label}: clock`).toBeLessThanOrEqual(100);
+      expect(reduced.repeats, `${label}: repeats`).toBe(motion.repeats);
+      // (At phone width the orders dashboard is a still crop in both modes: nothing to compare.)
+      expect(reduced.changes.length > 0, `${label}: changes in both modes or neither`).toBe(motion.changes.length > 0);
+      if (!motion.changes.length) {
+        report.push(`${label}: a still at this width in both modes`);
+        continue;
+      }
+      // Each crossfade starts when a motion change starts, and lasts 150 ms or less.
+      const starts = motion.changes.map((c) => c.at);
+      for (const c of reduced.changes) {
+        expect(Math.min(...starts.map((s) => Math.abs(s - c.at))), `${label}: a crossfade at ${c.at} ms with no motion change then`).toBeLessThanOrEqual(5);
+        expect(c.ms, `${label}: the crossfade at ${c.at} ms`).toBeLessThanOrEqual(150);
+      }
+      // The last step change starts at the same time, and it settles no later. (Instant swaps
+      // inside a motion, like the phone's faces going out mid-turn for WebKit, aren't steps.)
+      const last = (t: Timing) => Math.max(...t.changes.filter((c) => c.ms > 10).map((c) => c.at));
+      expect(Math.abs(last(reduced) - last(motion)), `${label}: the last change`).toBeLessThanOrEqual(100);
+      if (motion.repeats === 1) expect(reduced.settles, `${label}: settles`).toBeLessThanOrEqual(motion.settles + 100);
+      // Moments that move with motion and have nothing to fade (a held scroll, a button press).
+      const unmatched = [...new Set(motion.changes.filter((c) => c.ms > 10 && !reduced.changes.some((r) => Math.abs(r.at - c.at) <= 5)).map((c) => c.at))];
+      report.push(
+        `${label}: clock ${motion.clock}/${reduced.clock} ms x${motion.repeats}, last change ${last(motion)}/${last(reduced)} ms, settles ${motion.settles}/${reduced.settles} ms, longest crossfade ${Math.max(...reduced.changes.map((c) => c.ms))} ms, moves with nothing to fade at ${unmatched.join(", ") || "none"} ms`,
+      );
+    }
+  }
+  test.info().annotations.push({ type: "timing (motion/reduced)", description: report.join("\n") });
+  console.log(report.join("\n"));
 });

@@ -2342,143 +2342,143 @@
 @media (prefers-reduced-motion: reduce) {
   .out {
     transform: none;
-    animation: m-kitchen-r0 200ms linear 1800ms both;
+    animation: m-kitchen-r0 150ms linear 1800ms both;
   }
   .in {
-    animation: m-kitchen-r3 200ms linear 1800ms both;
+    animation: m-kitchen-r3 150ms linear 1800ms both;
   }
   .up {
-    animation: m-kitchen-r5 200ms linear 2500ms both;
+    animation: m-kitchen-r5 150ms linear 2500ms both;
   }
   .count > :first-child {
-    animation: m-kitchen-r6 200ms linear 1800ms both;
+    animation: m-kitchen-r6 150ms linear 1800ms both;
   }
   .count > :last-child {
-    animation: m-kitchen-r7 200ms linear 1800ms both;
+    animation: m-kitchen-r7 150ms linear 1800ms both;
   }
   .reveal {
     transform: none;
-    animation: m-dashboard-r0 200ms linear 300ms both;
+    animation: m-dashboard-r0 150ms linear 300ms both;
   }
   .stat {
-    animation: m-dashboard-r1 200ms linear 1500ms both;
+    animation: m-dashboard-r1 150ms linear 1500ms both;
   }
   .search [data-line="1"] {
-    animation: m-search-r0 200ms linear 300ms both;
+    animation: m-search-r0 150ms linear 300ms both;
   }
   .search [data-line="2"] {
-    animation: m-search-r2 200ms linear 800ms both;
+    animation: m-search-r2 150ms linear 800ms both;
   }
   .search [data-line="3"] {
-    animation: m-search-r4 200ms linear 1100ms both;
+    animation: m-search-r4 150ms linear 1100ms both;
   }
   .search [data-line="4"] {
-    animation: m-search-r6 200ms linear 1400ms both;
+    animation: m-search-r6 150ms linear 1400ms both;
   }
   .search [data-line="5"] {
-    animation: m-search-r8 200ms linear 1700ms both;
+    animation: m-search-r8 150ms linear 1700ms both;
   }
   .search [data-line="6"] {
-    animation: m-search-r10 200ms linear 2200ms both;
+    animation: m-search-r10 150ms linear 2200ms both;
   }
   .rLine[data-line="1"] {
-    animation: m-receipt-r0 200ms linear 300ms both;
+    animation: m-receipt-r0 150ms linear 300ms both;
   }
   .rLine[data-line="2"] {
-    animation: m-receipt-r2 200ms linear 650ms both;
+    animation: m-receipt-r2 150ms linear 650ms both;
   }
   .rLine[data-line="3"] {
-    animation: m-receipt-r4 200ms linear 1000ms both;
+    animation: m-receipt-r4 150ms linear 1000ms both;
   }
   .rLine[data-line="4"] {
-    animation: m-receipt-r6 200ms linear 1350ms both;
+    animation: m-receipt-r6 150ms linear 1350ms both;
   }
   .rLine[data-line="5"] {
-    animation: m-receipt-r8 200ms linear 1700ms both;
+    animation: m-receipt-r8 150ms linear 1700ms both;
   }
   .rLine[data-line="6"] {
-    animation: m-receipt-r10 200ms linear 2050ms both;
+    animation: m-receipt-r10 150ms linear 2050ms both;
   }
   .rLine[data-line="7"] {
-    animation: m-receipt-r12 200ms linear 2400ms both;
+    animation: m-receipt-r12 150ms linear 2400ms both;
   }
   .flow [data-step="1"] {
-    animation: m-flow-r0 200ms linear 400ms both;
+    animation: m-flow-r0 150ms linear 400ms both;
   }
   .flow [data-step="2"] {
-    animation: m-flow-r1 200ms linear 1400ms both;
+    animation: m-flow-r1 150ms linear 1400ms both;
   }
   .flow [data-step="3"] {
-    animation: m-flow-r2 200ms linear 2400ms both;
+    animation: m-flow-r2 150ms linear 2400ms both;
   }
   .flow [data-step="4"] {
-    animation: m-flow-r3 200ms linear 3400ms both;
+    animation: m-flow-r3 150ms linear 3400ms both;
   }
   .flow [data-step="5"] {
-    animation: m-flow-r4 200ms linear 4400ms both;
+    animation: m-flow-r4 150ms linear 4400ms both;
   }
   .flow [data-step="6"] {
-    animation: m-flow-r5 200ms linear 5400ms both;
+    animation: m-flow-r5 150ms linear 5400ms both;
   }
   .flow [data-node="1"] .nodeOn {
-    animation: m-flow-r6 200ms linear 400ms both;
+    animation: m-flow-r6 150ms linear 400ms both;
   }
   .flow [data-node="2"] .nodeOn {
-    animation: m-flow-r7 200ms linear 1400ms both;
+    animation: m-flow-r7 150ms linear 1400ms both;
   }
   .flow [data-node="3"] .nodeOn {
-    animation: m-flow-r8 200ms linear 2400ms both;
+    animation: m-flow-r8 150ms linear 2400ms both;
   }
   .flow [data-node="4"] .nodeOn {
-    animation: m-flow-r9 200ms linear 3400ms both;
+    animation: m-flow-r9 150ms linear 3400ms both;
   }
   .flow [data-node="5"] .nodeOn {
-    animation: m-flow-r10 200ms linear 5400ms both;
+    animation: m-flow-r10 150ms linear 5400ms both;
   }
   .trackFill {
-    animation: m-flow-r11 200ms linear 5400ms both;
+    animation: m-flow-r11 150ms linear 5400ms both;
   }
   .gflow [data-gstep="1"] {
-    animation: m-gflow-r0 200ms linear 400ms both;
+    animation: m-gflow-r0 150ms linear 400ms both;
   }
   .gflow [data-gstep="2"] {
-    animation: m-gflow-r1 200ms linear 1400ms both;
+    animation: m-gflow-r1 150ms linear 1400ms both;
   }
   .gflow [data-gstep="3"] {
-    animation: m-gflow-r2 200ms linear 2400ms both;
+    animation: m-gflow-r2 150ms linear 2400ms both;
   }
   .gflow [data-gstep="4"] {
-    animation: m-gflow-r3 200ms linear 3400ms both;
+    animation: m-gflow-r3 150ms linear 3400ms both;
   }
   .gflow [data-gstep="5"] {
-    animation: m-gflow-r4 200ms linear 4400ms both;
+    animation: m-gflow-r4 150ms linear 4400ms both;
   }
   .gflow [data-gnode="1"] .nodeOn {
-    animation: m-gflow-r5 200ms linear 400ms both;
+    animation: m-gflow-r5 150ms linear 400ms both;
   }
   .gflow [data-gnode="2"] .nodeOn {
-    animation: m-gflow-r6 200ms linear 1400ms both;
+    animation: m-gflow-r6 150ms linear 1400ms both;
   }
   .gflow [data-gnode="3"] .nodeOn {
-    animation: m-gflow-r7 200ms linear 2400ms both;
+    animation: m-gflow-r7 150ms linear 2400ms both;
   }
   .gflow [data-gnode="4"] .nodeOn {
-    animation: m-gflow-r8 200ms linear 3400ms both;
+    animation: m-gflow-r8 150ms linear 3400ms both;
   }
   .gflow [data-gnode="5"] .nodeOn {
-    animation: m-gflow-r9 200ms linear 4400ms both;
+    animation: m-gflow-r9 150ms linear 4400ms both;
   }
   .gflow[data-n="4"] .gfill {
-    animation: m-gflow-r10 200ms linear 3400ms both;
+    animation: m-gflow-r10 150ms linear 3400ms both;
   }
   .gflow[data-n="5"] .gfill {
-    animation: m-gflow-r11 200ms linear 4400ms both;
+    animation: m-gflow-r11 150ms linear 4400ms both;
   }
   .storefront [data-tap="2"] {
     animation: m-tapfade 600ms linear 2600ms both;
   }
   .storefront .slideB {
-    animation: m-storefront-r2 200ms linear 2900ms both;
+    animation: m-storefront-r2 150ms linear 2900ms both;
   }
   .delivery [data-tap="2"] {
     animation: m-tapfade 600ms linear 3000ms both;
@@ -2487,34 +2487,34 @@
     animation: m-tapfade 600ms linear 4800ms both;
   }
   .delivery .slideB {
-    animation: m-delivery-r3 200ms linear 3600ms both;
+    animation: m-delivery-r3 150ms linear 3600ms both;
   }
   .delivery .slideC {
-    animation: m-delivery-r4 200ms linear 5100ms both;
+    animation: m-delivery-r4 150ms linear 5100ms both;
   }
   .delivery .swap2 > :first-child {
-    animation: m-delivery-r5 200ms linear 3000ms both;
+    animation: m-delivery-r5 150ms linear 3000ms both;
   }
   .delivery .swap2 > :last-child {
-    animation: m-delivery-r6 200ms linear 3000ms both;
+    animation: m-delivery-r6 150ms linear 3000ms both;
   }
   .delivery [data-reach="6"] {
-    animation: m-delivery-r8 200ms linear 6400ms both;
+    animation: m-delivery-r8 150ms linear 6400ms both;
   }
   .delivery [data-reach="7"] {
-    animation: m-delivery-r9 200ms linear 7700ms both;
+    animation: m-delivery-r9 150ms linear 7700ms both;
   }
   .delivery .current[data-cur="7"] {
-    animation: m-delivery-r10 200ms linear 7700ms both;
+    animation: m-delivery-r10 150ms linear 7700ms both;
   }
   .delivery .current[data-cur="5-6"] {
-    animation: m-delivery-r11 1500ms linear 5100ms both;
+    animation: m-delivery-r11 1450ms linear 5100ms both;
   }
   .delivery .current[data-cur="6-7"] {
-    animation: m-delivery-r12 1500ms linear 6400ms both;
+    animation: m-delivery-r12 1450ms linear 6400ms both;
   }
   .delivery .current[data-cur="5-7"] {
-    animation: m-delivery-r13 2800ms linear 5100ms both;
+    animation: m-delivery-r13 2750ms linear 5100ms both;
   }
   .catering .scrollA {
     transform: translateY(calc(var(--k) * -330));
@@ -2523,44 +2523,45 @@
     animation: m-tapfade 600ms linear 2900ms both;
   }
   .catering .swap2 > :first-child {
-    animation: m-catering-r2 200ms linear 2900ms both;
+    animation: m-catering-r2 150ms linear 2900ms both;
   }
   .catering .swap2 > :last-child {
-    animation: m-catering-r3 200ms linear 2900ms both;
+    animation: m-catering-r3 150ms linear 2900ms both;
   }
   .catering .formFields {
-    animation: m-catering-r4 200ms linear 3400ms both;
+    animation: m-catering-r4 150ms linear 3400ms both;
   }
   .catering .thanks {
-    animation: m-catering-r5 200ms linear 3400ms both;
+    animation: m-catering-r5 150ms linear 3400ms both;
   }
   .odRow[data-row="1925"]::before {
-    animation: m-orders-r0 200ms linear 1000ms both;
+    animation: m-orders-r0 150ms linear 1000ms both;
   }
   .odShade {
-    animation: m-orders-r1 200ms linear 1400ms both;
+    animation: m-orders-r1 150ms linear 1400ms both;
   }
   .odDrawer {
-    animation: m-orders-r2 200ms linear 1400ms both;
+    animation: m-orders-r2 150ms linear 1400ms both;
   }
   .flip > :first-child {
     transform: none;
-    animation: m-settings-r0 200ms linear 1200ms both;
+    animation: m-settings-r0 150ms linear 1200ms both;
   }
   .flip > :last-child {
-    animation: m-settings-r2 200ms linear 1200ms both;
+    animation: m-settings-r2 150ms linear 1200ms both;
   }
   .loyalty .reward {
-    animation: m-loyalty-r0 200ms linear 700ms both;
+    animation: m-loyalty-r0 150ms linear 700ms both;
   }
   .upsell .upPairs {
-    animation: m-upsell-r0 200ms linear 700ms both;
+    animation: m-upsell-r0 150ms linear 700ms both;
   }
 }
 @keyframes m-tapfade {
   0% { opacity: 0; animation-timing-function: ease; }
-  33.333% { opacity: 1; }
-  66.667% { opacity: 1; animation-timing-function: ease; }
+  25% { opacity: 1; }
+  35% { opacity: 1; animation-timing-function: ease; }
+  60% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-kitchen-r0 {
@@ -2722,18 +2723,18 @@
 }
 @keyframes m-delivery-r11 {
   0% { opacity: 0; animation-timing-function: ease; }
-  13.333% { opacity: 1; }
-  86.667% { opacity: 1; animation-timing-function: ease; }
+  10.345% { opacity: 1; }
+  89.655% { opacity: 1; animation-timing-function: ease; }
 }
 @keyframes m-delivery-r12 {
   0% { opacity: 0; animation-timing-function: ease; }
-  13.333% { opacity: 1; }
-  86.667% { opacity: 1; animation-timing-function: ease; }
+  10.345% { opacity: 1; }
+  89.655% { opacity: 1; animation-timing-function: ease; }
 }
 @keyframes m-delivery-r13 {
   0% { opacity: 0; animation-timing-function: ease; }
-  7.143% { opacity: 1; }
-  92.857% { opacity: 1; animation-timing-function: ease; }
+  5.455% { opacity: 1; }
+  94.545% { opacity: 1; animation-timing-function: ease; }
 }
 @keyframes m-catering-r2 {
   0% { opacity: 1; animation-timing-function: ease; }

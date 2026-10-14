@@ -22,7 +22,8 @@
  *
  * With reduced motion (owner, 2026-10-14: iPhones with the setting on saw
  * only stills) every story still runs, on the same timings, but nothing moves:
- * no transform is animated, and every change is a 200 ms opacity crossfade.
+ * no transform is animated, and every change is a 150 ms opacity crossfade
+ * that starts when the motion version's change starts.
  * Opacity tracks keep their changes. A transform track says what it becomes:
  *   reduced: { hold, show }
  *     hold   the transform it keeps, still (null: its own CSS value)

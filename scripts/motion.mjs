@@ -8,7 +8,7 @@
  *
  * Two sets, from the same tracks: with motion allowed, opacity and transform
  * move; with reduced motion, the same stories on the same timings run as
- * 200 ms opacity crossfades and no transform is animated (motion-spec.mjs
+ * 150 ms opacity crossfades and no transform is animated (motion-spec.mjs
  * says what each transform track becomes).
  *
  * Every animation starts when the page renders, paused; the player
@@ -74,8 +74,15 @@ function loopTrack(name, track, steps, loop) {
   return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
 }
 
-/** Reduced motion: every change is a crossfade this long. */
-const crossfade = { ms: 200, ease: "ease" };
+/**
+ * Reduced motion: every change is a crossfade this long, starting on the same
+ * step as with motion (owner, 2026-10-14: at most 150 ms, so no step takes
+ * longer than with motion; every motion ramp is 160 ms or more).
+ */
+const crossfade = { ms: 150, ease: "ease" };
+
+/** When the motion tap pulse (600 ms) peaks and starts to fade: its 35% keyframe. */
+const tapPeak = 210;
 
 /** A tap ring: the module's own tap pulse (600 ms) at the step's time; with reduced motion, opacity only. */
 function tapTrack(name, track, steps, loop, reduced) {
@@ -83,7 +90,8 @@ function tapTrack(name, track, steps, loop, reduced) {
   if (reduced) {
     const f = (dt, opacity) => `  ${pct(t + dt, loop ?? 600)} { opacity: ${opacity}; animation-timing-function: ease; }`;
     if (!loop) return { use: `m-tapfade 600ms linear ${t}ms both` };
-    const frames = [`  0% { opacity: 0; }`, f(0, 0), f(200, 1), f(400, 1), f(600, 0), `  100% { opacity: 0; }`];
+    // In and out in a crossfade each, the way out starting when the motion tap's does (210 ms, its 35%).
+    const frames = [`  0% { opacity: 0; }`, f(0, 0), f(crossfade.ms, 1), f(tapPeak, 1), f(tapPeak + crossfade.ms, 0), `  100% { opacity: 0; }`];
     return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
   }
   if (!loop) return { use: `tap 600ms ease-out ${t}ms both` };
@@ -156,7 +164,7 @@ function block(file) {
   }
   if (tapFade) {
     out.reduced.keyframes.unshift(
-      "@keyframes m-tapfade {\n  0% { opacity: 0; animation-timing-function: ease; }\n  33.333% { opacity: 1; }\n  66.667% { opacity: 1; animation-timing-function: ease; }\n  100% { opacity: 0; }\n}",
+      `@keyframes m-tapfade {\n  0% { opacity: 0; animation-timing-function: ease; }\n  ${pct(crossfade.ms, 600)} { opacity: 1; }\n  ${pct(tapPeak, 600)} { opacity: 1; animation-timing-function: ease; }\n  ${pct(tapPeak + crossfade.ms, 600)} { opacity: 0; }\n  100% { opacity: 0; }\n}`,
     );
   }
   const media = (query, set) => {
