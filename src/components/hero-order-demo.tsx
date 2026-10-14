@@ -161,7 +161,7 @@ function MenuScreen() {
         ))}
       </div>
       <div className={s.menuBody}>
-        <div className={s.scroll}>
+        <div className={s.scroll} data-scroll>
           <div className={s.h2}>{o.category}</div>
           <div className={s.rows}>
             {o.rows.map((row) =>

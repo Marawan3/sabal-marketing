@@ -5,7 +5,7 @@ import { copy } from "../src/lib/copy";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
 import { LOOP, STEPS } from "../src/lib/hero-demo-timeline";
-import { clock, seek, stepAt } from "./motion";
+import { clock, seek, stepAt, transformsWhileShown } from "./motion";
 
 /**
  * The homepage hero: a phone drawn in HTML and CSS that orders from the demo
@@ -204,11 +204,26 @@ for (const width of [390, 1440]) {
     await page.clock.install({ time: NOON });
     await page.goto("/");
     await expect.poll(async () => (await clock(demo(page))).state).toBe("running");
-    // Every animation is opacity only, and the pause button is there.
-    const props = await demo(page).evaluate((el) => [...new Set(el.getAnimations({ subtree: true }).flatMap((a) => (a.effect as KeyframeEffect).getKeyframes().flatMap((k) => Object.keys(k))))]);
-    expect(props).not.toContain("transform");
-    expect(props).toContain("opacity");
+    // Nothing moves where it can be seen: the only transforms are the two scrolls (menu,
+    // checkout), each a jump inside a dip to opacity 0. And the pause button is there.
+    const { changes, shown } = await transformsWhileShown(demo(page));
+    expect(changes).toBe(2);
+    expect(shown).toEqual([]);
     await expect(demo(page).getByRole("button", { name: copy.hero.demo.pause })).toBeVisible();
+    // The menu's dip starts with the motion scroll (step 1) and is done 150 ms later.
+    const menu = demo(page).locator("[data-scroll]");
+    const look = () => menu.evaluate((el) => ({ opacity: Number(getComputedStyle(el).opacity), transform: getComputedStyle(el).transform }));
+    await seek(demo(page), STEPS[1] - 10);
+    expect(await look()).toEqual({ opacity: 1, transform: "none" });
+    await seek(demo(page), STEPS[1] + 40);
+    const mid = await look();
+    expect(mid.opacity).toBeGreaterThan(0);
+    expect(mid.opacity).toBeLessThan(1);
+    expect(mid.transform).toBe("none");
+    await seek(demo(page), STEPS[1] + 150);
+    const after = await look();
+    expect(after.opacity).toBe(1);
+    expect(after.transform).not.toBe("none");
     // The confirmation fades in where it lands.
     const confirm = demo(page).locator('[data-screen="confirm"]');
     await seek(demo(page), 600);

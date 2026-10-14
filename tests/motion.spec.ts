@@ -65,7 +65,8 @@ test("?debug=motion lists each visual's play state, its last isIntersecting and 
 /**
  * Reduced motion keeps the pace (owner, 2026-10-14): the same sequence on the
  * same clock, each change starting when the motion version's does, and every
- * crossfade at most 150 ms, so no step takes longer than with motion.
+ * crossfade at most 150 ms, so no step takes longer than with motion. A scroll
+ * is a dip (out, jump, back in) inside the same 150 ms.
  */
 test("with reduced motion every visual keeps the same pace: same loop and play-through, same change times, crossfades of 150 ms or less", async ({ page }) => {
   test.setTimeout(120_000);
@@ -90,13 +91,13 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
     await page.goto(path);
     const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]`).first();
     await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
-    return timing(el);
+    return { ...(await timing(el)), steps: (await el.getAttribute("data-steps"))!.split(" ").map(Number) };
   };
   const report: string[] = [];
   for (const width of [393, 1440]) {
     await page.setViewportSize({ width, height: 852 });
     for (const [name, path] of Object.entries(where)) {
-      const motion: Timing = await read(name, path, "no-preference");
+      const motion: Timing & { steps: number[] } = await read(name, path, "no-preference");
       const reduced: Timing = await read(name, path, "reduce");
       const label = `${name} at ${width}`;
       // The loop (the hero) or the play-through (the rest): the same clock.
@@ -108,10 +109,14 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
         report.push(`${label}: a still at this width in both modes`);
         continue;
       }
-      // Each crossfade starts when a motion change starts, and lasts 150 ms or less.
-      const starts = motion.changes.map((c) => c.at);
+      // Every reduced change (a crossfade, or a part of a scroll's dip: out, jump, back in) happens
+      // inside the 150 ms after a motion change starts, so it begins with that change and is done
+      // within 150 ms of it. A motion change starts on a step or on a change read from its keyframes
+      // (WebKit doesn't report a change between keyframes written with calc(var(--k) ...), the scrolls).
+      const starts = [...motion.steps, ...motion.changes.map((c) => c.at)];
       for (const c of reduced.changes) {
-        expect(Math.min(...starts.map((s) => Math.abs(s - c.at))), `${label}: a crossfade at ${c.at} ms with no motion change then (${c.what})`).toBeLessThanOrEqual(5);
+        const owner = starts.filter((s) => s <= c.at + 5 && c.at + c.ms <= s + 155);
+        expect(owner.length, `${label}: a change at ${c.at}-${c.at + c.ms} ms outside the 150 ms after any motion change (${c.what})`).toBeGreaterThan(0);
         expect(c.ms, `${label}: the crossfade at ${c.at} ms`).toBeLessThanOrEqual(150);
       }
       // The last step change starts at the same time, and it settles no later. (Instant swaps
@@ -119,7 +124,7 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
       const last = (t: Timing) => Math.max(...t.changes.filter((c) => c.ms > 10).map((c) => c.at));
       expect(Math.abs(last(reduced) - last(motion)), `${label}: the last change`).toBeLessThanOrEqual(100);
       if (motion.repeats === 1) expect(reduced.settles, `${label}: settles`).toBeLessThanOrEqual(motion.settles + 100);
-      // Moments that move with motion and have nothing to fade (a held scroll, a button press).
+      // Moments that move with motion and have nothing in reduced motion (a button press).
       const unmatched = [...new Set(motion.changes.filter((c) => c.ms > 10 && !reduced.changes.some((r) => Math.abs(r.at - c.at) <= 5)).map((c) => c.at))];
       report.push(
         `${label}: clock ${motion.clock}/${reduced.clock} ms x${motion.repeats}, last change ${last(motion)}/${last(reduced)} ms, settles ${motion.settles}/${reduced.settles} ms, longest crossfade ${Math.max(...reduced.changes.map((c) => c.ms))} ms, moves with nothing to fade at ${unmatched.join(", ") || "none"} ms`,

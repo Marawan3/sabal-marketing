@@ -31,12 +31,14 @@ function points(track, steps, extraDelay) {
   const at = (when) => (typeof when === "number" ? steps[when] : when.at) + extraDelay;
   let prev = track.start;
   const out = [];
-  for (const [when, value] of track.changes) {
+  track.changes.forEach(([when, value], i) => {
     const t = at(when);
+    // A dip's way back in (the second of each pair) can be shorter than its way out.
+    const ms = track.rampBack !== undefined && i % 2 === 1 ? track.rampBack : track.ramp.ms;
     out.push({ t, value: prev });
-    out.push({ t: t + track.ramp.ms, value });
+    out.push({ t: t + ms, value });
     prev = value;
-  }
+  });
   return out;
 }
 
@@ -84,6 +86,13 @@ function loopTrack(name, track, steps, loop) {
  */
 const crossfade = { ms: 150, ease: "ease" };
 
+/**
+ * Reduced motion: a scroll becomes a dip (owner, 2026-10-14). From the moment
+ * the motion scroll starts, the content fades out, jumps to where the scroll
+ * ends while it can't be seen, and fades back in: 75 + 1 + 74 = 150 ms.
+ */
+const dip = { out: 75, jump: 1, back: 74 };
+
 /** When the motion tap pulse (600 ms) peaks and starts to fade: its 35% keyframe. */
 const tapPeak = 210;
 
@@ -114,14 +123,36 @@ function tapTrack(name, track, steps, loop, reduced) {
  * crossfade ramps; a transform track as the still transform it holds and the
  * opacity track it shows instead (motion-spec.mjs, "reduced").
  */
-function reducedOf(track, label) {
-  if (track.mode === "reduced") return track.hold !== undefined ? { hold: track.hold } : { fade: { ...track, ramp: crossfade } };
-  if (track.tap !== undefined || track.prop === "opacity") return { fade: track.tap !== undefined ? track : { ...track, ramp: crossfade } };
-  if (!track.reduced) throw new Error(`${label}: ${track.sel} moves; say what it does with reduced motion (reduced: { hold, show })`);
+function reducedOf(track, label, steps) {
+  if (track.mode === "reduced") return track.hold !== undefined ? { hold: track.hold, fades: [] } : { fades: [{ ...track, ramp: crossfade }] };
+  if (track.tap !== undefined || track.prop === "opacity") return { fades: [track.tap !== undefined ? track : { ...track, ramp: crossfade }] };
+  if (!track.reduced) throw new Error(`${label}: ${track.sel} moves; say what it does with reduced motion (reduced: { hold, show } or { dip: true })`);
+  if (track.reduced.dip) {
+    // Each change: out to 0, the jump while at 0, back to 1. Times are the motion change's own.
+    const at = (when) => (typeof when === "number" ? steps[when] : when.at) + (track.delay ?? 0);
+    const base = { sel: track.sel, media: track.media };
+    return {
+      fades: [
+        {
+          ...base,
+          prop: "opacity",
+          start: "1",
+          changes: track.changes.flatMap(([when]) => [
+            [{ at: at(when) }, "0"],
+            [{ at: at(when) + dip.out + dip.jump }, "1"],
+          ]),
+          ramp: { ms: dip.out, ease: "ease" },
+          // The way back in is 74 ms, not 75: the ramp after the jump ends 1 ms short.
+          rampBack: dip.back,
+        },
+        { ...base, prop: "transform", start: track.start, changes: track.changes.map(([when, value]) => [{ at: at(when) + dip.out }, value]), ramp: { ms: dip.jump, ease: "linear" } },
+      ],
+    };
+  }
   const { hold, show } = track.reduced;
   return {
     hold,
-    fade: show && { sel: track.sel, media: track.media, delay: track.delay, prop: "opacity", ...show, ramp: crossfade },
+    fades: show ? [{ sel: track.sel, media: track.media, delay: track.delay, prop: "opacity", ...show, ramp: crossfade }] : [],
   };
 }
 
@@ -159,9 +190,9 @@ function block(file) {
     if (v.file !== file) continue;
     v.tracks.forEach((track, i) => {
       if (track.mode !== "reduced") add(out.motion, `m-${vname}-${i}`, track, v);
-      const red = track.mode === "motion" ? {} : reducedOf(track, `m-${vname}-${i}`);
+      const red = track.mode === "motion" ? { fades: [] } : reducedOf(track, `m-${vname}-${i}`, v.steps);
       if (red.hold !== undefined && red.hold !== null) rule(out.reduced, track).decls.push(decl("transform", red.hold));
-      if (red.fade) add(out.reduced, `m-${vname}-r${i}`, red.fade, v);
+      red.fades.forEach((fade, j) => add(out.reduced, `m-${vname}-r${i}${j ? "j" : ""}`, fade, v));
       if (track.tap !== undefined && !v.loop) tapFade = true;
     });
   }

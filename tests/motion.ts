@@ -92,3 +92,47 @@ export function timing(el: Locator): Promise<Timing> {
     return out;
   });
 }
+
+/**
+ * With reduced motion a transform may change only while its element can't be
+ * seen (a scroll's dip, 2026-10-14). For every transform change in a visual's
+ * animations, this seeks to its start, middle and end and reads the element's
+ * opacity there. Returns the moments it showed, and how many changes it read.
+ * It leaves the visual's animations paused.
+ */
+export function transformsWhileShown(el: Locator) {
+  return el.evaluate((root) => {
+    const anims = document.getAnimations().filter((a) => {
+      const target = (a.effect as KeyframeEffect | null)?.target;
+      return !!target && root.contains(target);
+    });
+    const changes: { target: Element; from: number; to: number; name: string }[] = [];
+    for (const a of anims) {
+      const effect = a.effect as KeyframeEffect;
+      const keyframes = effect.getKeyframes();
+      if (!keyframes.some((k) => k.transform !== undefined)) continue;
+      const duration = Number(effect.getComputedTiming().duration);
+      const delay = Number(effect.getTiming().delay ?? 0);
+      const frames = keyframes.map((k) => ({ at: delay + Number(k.computedOffset) * duration, value: String(k.transform ?? "own") }));
+      if (Number(keyframes[0].computedOffset) > 0) frames.unshift({ at: delay, value: "own" });
+      if (Number(keyframes[keyframes.length - 1].computedOffset) < 1) frames.push({ at: delay + duration, value: "own" });
+      for (let i = 0; i + 1 < frames.length; i++) {
+        if (frames[i].value !== frames[i + 1].value && frames[i + 1].at > frames[i].at) {
+          changes.push({ target: effect.target!, from: frames[i].at, to: frames[i + 1].at, name: (a as CSSAnimation).animationName });
+        }
+      }
+    }
+    const shown: string[] = [];
+    for (const c of changes) {
+      for (const t of [c.from, (c.from + c.to) / 2, c.to]) {
+        for (const a of anims) {
+          a.pause();
+          a.currentTime = t;
+        }
+        const opacity = Number(getComputedStyle(c.target).opacity);
+        if (opacity > 0.01) shown.push(`${c.name} at ${t.toFixed(1)} ms: opacity ${opacity}`);
+      }
+    }
+    return { changes: changes.length, shown };
+  });
+}
