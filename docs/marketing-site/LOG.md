@@ -44,6 +44,25 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-14 · PR #40: reduced motion keeps the motion pace (merged)
+
+**Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `9e99f34` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. Chromium and WebKit iPhone CI were both green.
+
+**Why:** on the owner's iPhone, reduced-motion mode felt slower than normal mode.
+
+**What changed:**
+- **Crossfades:** every reduced-motion crossfade is now 150 ms (was 200 ms), and starts when the normal-mode change starts. The tap ring fades out at the same moment as the normal-mode tap.
+- **A real Safari bug, found by the new test in WebKit:**
+  - WebKit read keyframes that carried an easing as the element's own value. The hero backdrop's and sheet's holds came out wrong, so in Safari they drifted across the whole hold, in both modes.
+  - The generator now puts the easing on the animation instead. Chromium renders identically: 21,840 sampled frames match before and after.
+- **New pace test:** per visual, at 393 and 1440, both modes must share the clock and the last step change (within 100 ms). Every crossfade must start on a normal-mode change and last at most 150 ms, and reduced motion must settle no later.
+- **Test fix:** the player marks the observer's last report in `data-seen`. A test now waits for it instead of racing hydration in WebKit.
+- **Recordings:** side-by-side recordings at 393×852 of the hero and kitchen board are in `evidence/reduced-motion-pace/`.
+
+**Still for the owner:** the held scrolls have no fade, so the hero's first visible change in reduced mode is at 1.9 s instead of 0.9 s. The storefront, delivery and catering phones are the same. A fade can't show a scroll without moving something.
+
+---
+
 ## 2026-10-14 · PR #34: the visuals in real WebKit on an iPhone profile; WebKit runs on every PR (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `3fbb7cb` on `main`, from branch `claude/funny-euler-utwhob`. The WebKit iPhone job passed 41 of 41, across `webkit-iphone` and `webkit-iphone-reduced-motion`. The Vercel preview of the head `9bee54f` built READY, with no team-membership warning.
