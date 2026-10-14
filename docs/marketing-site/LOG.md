@@ -44,7 +44,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-14 · PR #34: the visuals in real WebKit on an iPhone profile; WebKit runs on every PR
+## 2026-10-14 · PR #34: the visuals in real WebKit on an iPhone profile; WebKit runs on every PR (merged)
+
+**Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `3fbb7cb` on `main`, from branch `claude/funny-euler-utwhob`. The WebKit iPhone job passed 41 of 41, across `webkit-iphone` and `webkit-iphone-reduced-motion`. The Vercel preview of the head `9bee54f` built READY, with no team-membership warning.
 
 **Why:** the owner reported that after PR #32 the visuals still don't start in Safari on an iPhone 17 Pro. They had never been run in WebKit.
 
@@ -72,7 +74,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 **Still open, owner to do:** WebKit doesn't reproduce "never starts" with motion on. PR #35, merged while this was in progress, covers the other case: with Reduce Motion on, the visuals now run as crossfades instead of showing stills. If anything is still frozen on the iPhone, open wuntab.com/?debug=motion and send a screenshot of the panel.
 
-**Commit identity:** every commit on this branch was re-authored as `Marawan3 <90366029+Marawan3@users.noreply.github.com>`. The temporary evidence workflow, the only place `ci@users.noreply.github.com` was used, is deleted, and so are its `webkit-evidence/*` branches.
+**Commit identity:** every commit on this branch was re-authored as `Marawan3 <90366029+Marawan3@users.noreply.github.com>`. The temporary evidence workflow, the only place `ci@users.noreply.github.com` was used, is deleted. Its five `webkit-evidence/*` branches still exist and still hold "ci" commits: the build session may push only to its own branch, so deleting them was refused. Owner to delete them on GitHub.
 
 ---
 
