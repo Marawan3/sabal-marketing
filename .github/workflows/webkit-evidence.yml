@@ -33,5 +33,5 @@ jobs:
           cd out
           git init -q -b evidence
           git add -A
-          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "WebKit evidence for ${GITHUB_SHA}"
+          git -c user.name=Marawan3 -c user.email=90366029+Marawan3@users.noreply.github.com commit -qm "WebKit evidence for ${GITHUB_SHA}"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" "evidence:webkit-evidence/${GITHUB_SHA::7}"
