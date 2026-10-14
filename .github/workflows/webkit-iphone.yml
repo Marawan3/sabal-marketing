@@ -1,6 +1,6 @@
-# The visuals' tests in WebKit on an iPhone profile (playwright.config.ts,
-# project webkit-iphone), on every pull request and on main. Chromium runs
-# locally; this is the only place WebKit runs.
+# The visuals' tests in WebKit on an iPhone profile, with motion and with
+# reduced motion (playwright.config.ts), on every pull request and on main.
+# Chromium runs locally; this is the only place WebKit runs.
 name: WebKit iPhone
 
 on:
@@ -25,7 +25,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps webkit
       - run: npm run build
-      - run: npx playwright test --project=webkit-iphone --reporter=list
+      - run: npx playwright test --project=webkit-iphone --project=webkit-iphone-reduced-motion --reporter=list
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
