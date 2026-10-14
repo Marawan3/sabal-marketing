@@ -47,12 +47,23 @@ export default defineConfig({
         channel: process.env.PLAYWRIGHT_CHANNEL,
       },
     },
+    // The visuals again with reduced motion on, as many iPhones have it (2026-10-14).
+    {
+      name: "chromium-reduced-motion",
+      testMatch: /visuals\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], channel: process.env.PLAYWRIGHT_CHANNEL, reducedMotion: "reduce" },
+    },
     ...(withWebKit
       ? [
           {
             name: "webkit-iphone",
             testMatch: /(hero-demo|visuals|motion)\.spec\.ts/,
             use: { ...devices["iPhone 15"], viewport: { width: 393, height: 852 } },
+          },
+          {
+            name: "webkit-iphone-reduced-motion",
+            testMatch: /visuals\.spec\.ts/,
+            use: { ...devices["iPhone 15"], viewport: { width: 393, height: 852 }, reducedMotion: "reduce" as const },
           },
         ]
       : []),

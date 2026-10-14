@@ -114,7 +114,12 @@ their reasoning. Where they disagree with this section, this section wins.
   - `src/components/visual-player.tsx` starts it on mount and pauses it only while the
     visual is fully off screen (IntersectionObserver, last entry of each callback). It
     plays once, then holds the final state. Only the hero loops.
-  - Reduced motion shows the final state as a still.
+  - Reduced motion (2026-10-14: many iPhones have it on, and stills read as a broken
+    demo): the same stories run on the same timings, as 200 ms opacity crossfades.
+    No transform is animated; a screen that slid in fades in where it lands, and the
+    hero phone's turn is a crossfade. The spec says what each transform track becomes
+    (`reduced: { hold, show }`); the generator refuses a transform track without it.
+    The `chromium-reduced-motion` Playwright project runs the visuals spec this way.
   - A pause button on anything over five seconds.
   - Transform and opacity only, no layout shift.
   - The CSS is written from the end backwards: with no rule, everything shows its last

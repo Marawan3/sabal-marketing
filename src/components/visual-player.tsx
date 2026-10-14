@@ -17,8 +17,9 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
  * - The pause button holds it (data-hold); a second press lets it run.
  * - `loop` (the hero) plays round; anything else plays once and holds its
  *   last frame.
- * - With reduced motion there are no animations: the CSS shows the final
- *   state as a still.
+ * - With reduced motion the same stories run on the same timings as opacity
+ *   crossfades, with nothing moving (the generated keyframes' second set).
+ *   Everything here works the same in both.
  * - It fills in the visitor's times ([data-clock]) once, on mount, and the
  *   ticket timers ([data-timer]) from the visual's clock (a vis-clock
  *   animation on the wrapper, globals.css).
@@ -61,11 +62,14 @@ let panel: HTMLElement | null = null;
 
 function state(e: Entry) {
   const el = e.el;
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return "still (reduced motion)";
-  if (el.hasAttribute("data-hold")) return "paused: button";
-  if (el.hasAttribute("data-done")) return "done";
-  if (!el.hasAttribute("data-run")) return "paused: off screen";
-  return "running";
+  const now = el.hasAttribute("data-hold")
+    ? "paused: button"
+    : el.hasAttribute("data-done")
+      ? "done"
+      : !el.hasAttribute("data-run")
+        ? "paused: off screen"
+        : "running";
+  return matchMedia("(prefers-reduced-motion: reduce)").matches ? `${now} (reduced motion)` : now;
 }
 
 function draw() {

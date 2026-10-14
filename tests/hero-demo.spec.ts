@@ -165,22 +165,35 @@ test("it holds when paused and while fully off screen, and runs again after", as
 });
 
 for (const width of [390, 1440]) {
-  test(`with reduced motion at ${width}: nothing moves; the confirmation and the ticket show as a still`, async ({ page }) => {
+  test(`with reduced motion at ${width}: the same loop runs as crossfades, and nothing moves`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width, height: 900 });
     await page.clock.install({ time: NOON });
     await page.goto("/");
-    // Nothing to run: no animation anywhere in it.
-    expect(await demo(page).evaluate((el) => el.getAnimations({ subtree: true }).length)).toBe(0);
-    await expect(demo(page).getByRole("button")).toBeHidden();
+    await expect.poll(async () => (await clock(demo(page))).state).toBe("running");
+    // Every animation is opacity only, and the pause button is there.
+    const props = await demo(page).evaluate((el) => [...new Set(el.getAnimations({ subtree: true }).flatMap((a) => (a.effect as KeyframeEffect).getKeyframes().flatMap((k) => Object.keys(k))))]);
+    expect(props).not.toContain("transform");
+    expect(props).toContain("opacity");
+    await expect(demo(page).getByRole("button", { name: copy.hero.demo.pause })).toBeVisible();
+    // The confirmation fades in where it lands.
     const confirm = demo(page).locator('[data-screen="confirm"]');
+    await seek(demo(page), 600);
+    expect(await opacity(confirm)).toBe(0);
+    await seek(demo(page), STEPS[11] + 600);
+    expect(await opacity(confirm)).toBe(1);
     expect(await confirm.evaluate((el) => getComputedStyle(el).transform)).toBe("none");
-    await expect(confirm).toContainText(`#${demoOrder.ticket.number}`);
     await expect(confirm.locator('[data-clock="ready"]')).toHaveText("5:00 PM");
-    const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-still]");
-    await expect(ticket).toBeVisible();
-    expect(await ticket.evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+    // The kitchen ticket: beside the phone on desktop; on phones the kitchen's side crossfades in, with no turn.
+    await seek(demo(page), STEPS[12] + 2_000);
+    expect(await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform)).toBe("none");
+    const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-flipper] [data-arrive]");
+    expect(await opacity(ticket)).toBe(1);
     await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
+    // Round again: back on the menu.
+    await seek(demo(page), LOOP + 600);
+    expect(await opacity(confirm)).toBe(0);
+    if (width < 1024) expect(await opacity(ticket)).toBe(0);
   });
 }
 
@@ -212,7 +225,7 @@ test("only transform and opacity animate", () => {
       for (const part of value.split(/,(?![^(]*\))/)) moved.add(part.trim().split(/\s+/)[0]);
     }
   }
-  expect([...moved].sort()).toEqual(["none", "opacity", "transform"]);
+  expect([...moved].sort()).toEqual(["opacity", "transform"]);
   // The story's keyframes (scripts/motion.mjs) too.
   const keyframes = css.match(/@keyframes[^{]+\{([\s\S]*?\})\s*\}/g) ?? [];
   for (const block of keyframes) {

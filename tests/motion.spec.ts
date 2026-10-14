@@ -52,6 +52,10 @@ test("?debug=motion lists each visual's play state, its last isIntersecting and 
   await expect(hero).toContainText(/\d+\/13/);
   // Off screen: paused.
   await expect(panel.locator("tr", { hasText: /^kitchen/ })).toContainText("paused: off screen");
+  // With reduced motion it says so.
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/?debug=motion");
+  await expect(panel.locator("tr", { hasText: /^hero/ })).toContainText("running (reduced motion)");
   // Without the flag there is no panel.
   await page.goto("/");
   await expect(page.locator("[data-motion-debug]")).toHaveCount(0);

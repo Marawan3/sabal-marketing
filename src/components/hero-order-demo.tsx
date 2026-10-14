@@ -83,13 +83,6 @@ export function HeroOrderDemo() {
           </div>
         </div>
       </div>
-
-      {/* With reduced motion on a phone there is no turn, so the ticket sits under the phone. */}
-      <div className={s.stillBox} data-still>
-        <div>
-          <Ticket ticket={o.ticket} />
-        </div>
-      </div>
     </VisualPlayer>
   );
 }
