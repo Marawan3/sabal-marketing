@@ -6,10 +6,17 @@ import type { Locator } from "@playwright/test";
  * Animations API instead of faking timers.
  */
 
-/** Where a visual's story is, in ms (its vis-clock animation), and whether that clock is running. */
+/**
+ * Where a visual's story is, in ms (its vis-clock animation), and whether that clock is running.
+ * It applies the page's styles, then waits for a pending play or pause to
+ * land: WebKit keeps counting currentTime for a few frames after a CSS pause,
+ * then settles back to where the pause was asked for.
+ */
 export function clock(el: Locator) {
-  return el.evaluate((root) => {
+  return el.evaluate(async (root) => {
+    void getComputedStyle(root).animationPlayState;
     const a = root.getAnimations().find((x) => (x as CSSAnimation).animationName === "vis-clock");
+    await a?.ready;
     return { t: Number(a?.currentTime ?? -1), state: a?.playState ?? "none" };
   });
 }

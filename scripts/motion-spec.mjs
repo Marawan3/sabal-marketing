@@ -18,7 +18,7 @@
  *   media    a media query the track applies under
  *   clip     (loops) a last ramp that would run past the loop's end ends with it
  *   reduced  (transform tracks) what it becomes with reduced motion, below
- *   mode     "reduced": a track for reduced motion only
+ *   mode     "reduced": a track for reduced motion only; "motion": for motion only
  *
  * With reduced motion (owner, 2026-10-14: iPhones with the setting on saw
  * only stills) every story still runs, on the same timings, but nothing moves:
@@ -293,6 +293,22 @@ export const visuals = {
         { mode: "reduced", sel: ".wrap .back", hold: "none", media: "(max-width: 1023.98px)" },
         { mode: "reduced", sel: ".wrap .face:not(.back)", prop: "opacity", start: "1", changes: [[12, "0"], [13, "1"]], media: "(max-width: 1023.98px)" },
         { mode: "reduced", sel: ".wrap .back", prop: "opacity", start: "0", changes: [[12, "1"], [13, "0"]], media: "(max-width: 1023.98px)" },
+        // WebKit (Safari) paints a face that has turned away despite backface-visibility, so the
+        // phone showed the confirmation mirrored instead of the kitchen. Each face also goes out
+        // the moment it passes edge-on: 295ms into the turn's 800ms ease, and 221ms into the turn
+        // back (clipped to 600ms by the loop's end).
+        ...[
+          [".wrap .face:not(.back)", "1", "0"],
+          [".wrap .back", "0", "1"],
+        ].map(([sel, before, after]) => ({
+          sel,
+          prop: "opacity",
+          mode: "motion",
+          start: before,
+          changes: [[{ at: 9800 + 295 }, after], [{ at: 13800 + 221 }, before]],
+          ramp: { ms: 1, ease: "linear" },
+          media: "(max-width: 1023.98px)",
+        })),
         // The white cover: up before the loop starts again, and lifting at the top of each loop
         // (not the first: the page opens on the menu, not on white).
         { sel: ".wrap .cover", prop: "opacity", start: "1", changes: [[{ at: 0 }, "0"], [13, "1"]], ramp: { ms: 500, ease: "ease" }, firstRun: "0" },

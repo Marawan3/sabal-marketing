@@ -148,7 +148,7 @@ function block(file) {
     if (v.file !== file) continue;
     v.tracks.forEach((track, i) => {
       if (track.mode !== "reduced") add(out.motion, `m-${vname}-${i}`, track, v);
-      const red = reducedOf(track, `m-${vname}-${i}`);
+      const red = track.mode === "motion" ? {} : reducedOf(track, `m-${vname}-${i}`);
       if (red.hold !== undefined && red.hold !== null) rule(out.reduced, track).decls.push(decl("transform", red.hold));
       if (red.fade) add(out.reduced, `m-${vname}-r${i}`, red.fade, v);
       if (track.tap !== undefined && !v.loop) tapFade = true;
