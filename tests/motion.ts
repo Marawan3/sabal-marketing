@@ -47,10 +47,10 @@ export const stepAt = (steps: readonly number[], t: number) => steps.reduce((n, 
  * neighbouring keyframes whose values differ), and when the last animation
  * settles. Times are ms from the top of the story.
  */
-export type Timing = { clock: number; repeats: number; changes: { at: number; ms: number }[]; settles: number };
+export type Timing = { clock: number; repeats: number; changes: { at: number; ms: number; what: string }[]; settles: number };
 export function timing(el: Locator): Promise<Timing> {
   return el.evaluate((root) => {
-    const out = { clock: -1, repeats: 0, changes: [] as { at: number; ms: number }[], settles: 0 };
+    const out = { clock: -1, repeats: 0, changes: [] as { at: number; ms: number; what: string }[], settles: 0 };
     // document.getAnimations() also has the ones on ::before and ::after, which a subtree read can miss.
     const mine = document.getAnimations().filter((a) => {
       const target = (a.effect as KeyframeEffect | null)?.target;
@@ -80,7 +80,12 @@ export function timing(el: Locator): Promise<Timing> {
       if (frames[frames.length - 1]?.at < 1) frames.push({ at: 1, values: "own" });
       for (let i = 0; i + 1 < frames.length; i++) {
         if (frames[i].values === frames[i + 1].values || frames[i + 1].at === frames[i].at) continue;
-        out.changes.push({ at: Math.round(delay + frames[i].at * duration), ms: Math.round((frames[i + 1].at - frames[i].at) * duration) });
+        out.changes.push({
+          at: Math.round(delay + frames[i].at * duration),
+          ms: Math.round((frames[i + 1].at - frames[i].at) * duration),
+          // Which animation, and its raw keyframes, for a failure message.
+          what: `${(a as CSSAnimation).animationName}${effect.pseudoElement ?? ""} ${frames[i].values} -> ${frames[i + 1].values} raw ${JSON.stringify(effect.getKeyframes())}`,
+        });
       }
       if (Number.isFinite(Number(t.endTime))) out.settles = Math.max(out.settles, Math.round(Number(t.endTime)));
     }

@@ -156,6 +156,8 @@ export function VisualPlayer({
         const last = entries[entries.length - 1];
         entry.seen = last.isIntersecting;
         entry.entries += entries.length;
+        // The observer's last report, for tests and ?debug=motion readers.
+        el.dataset.seen = String(last.isIntersecting);
         if (last.isIntersecting) el.dataset.run = "";
         else delete el.dataset.run;
       },

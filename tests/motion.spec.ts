@@ -111,7 +111,7 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
       // Each crossfade starts when a motion change starts, and lasts 150 ms or less.
       const starts = motion.changes.map((c) => c.at);
       for (const c of reduced.changes) {
-        expect(Math.min(...starts.map((s) => Math.abs(s - c.at))), `${label}: a crossfade at ${c.at} ms with no motion change then`).toBeLessThanOrEqual(5);
+        expect(Math.min(...starts.map((s) => Math.abs(s - c.at))), `${label}: a crossfade at ${c.at} ms with no motion change then (${c.what})`).toBeLessThanOrEqual(5);
         expect(c.ms, `${label}: the crossfade at ${c.at} ms`).toBeLessThanOrEqual(150);
       }
       // The last step change starts at the same time, and it settles no later. (Instant swaps
