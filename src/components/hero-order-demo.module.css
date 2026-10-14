@@ -1089,9 +1089,19 @@
       animation: m-hero-29 14400ms linear 0ms infinite both;
     }
   }
+  @media (max-width: 1023.98px) {
+    .wrap .face:not(.back) {
+      animation: m-hero-33 14400ms linear 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap .back {
+      animation: m-hero-34 14400ms linear 0ms infinite both;
+    }
+  }
   .wrap .cover {
-    animation: m-hero-33 14400ms linear 0ms infinite both,
-      m-hero-33-first 500ms linear 0ms 1 none;
+    animation: m-hero-35 14400ms linear 0ms infinite both,
+      m-hero-35-first 500ms linear 0ms 1 none;
   }
 }
 @keyframes m-hero-0 {
@@ -1297,13 +1307,29 @@
 }
 @keyframes m-hero-33 {
   0% { opacity: 1; }
+  70.104% { opacity: 1; animation-timing-function: linear; }
+  70.111% { opacity: 0; }
+  97.368% { opacity: 0; animation-timing-function: linear; }
+  97.375% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-34 {
+  0% { opacity: 0; }
+  70.104% { opacity: 0; animation-timing-function: linear; }
+  70.111% { opacity: 1; }
+  97.368% { opacity: 1; animation-timing-function: linear; }
+  97.375% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-35 {
+  0% { opacity: 1; }
   0% { opacity: 1; animation-timing-function: ease; }
   3.472% { opacity: 0; }
   95.833% { opacity: 0; animation-timing-function: ease; }
   99.306% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-hero-33-first {
+@keyframes m-hero-35-first {
   0%, 100% { opacity: 0; }
 }
 /* With reduced motion: the same stories, as opacity crossfades; nothing moves. */
@@ -1409,8 +1435,8 @@
     }
   }
   .wrap .cover {
-    animation: m-hero-r33 14400ms linear 0ms infinite both,
-      m-hero-r33-first 200ms linear 0ms 1 none;
+    animation: m-hero-r35 14400ms linear 0ms infinite both,
+      m-hero-r35-first 200ms linear 0ms 1 none;
   }
 }
 @keyframes m-hero-r1 {
@@ -1579,7 +1605,7 @@
   97.222% { opacity: 0; }
   100% { opacity: 0; }
 }
-@keyframes m-hero-r33 {
+@keyframes m-hero-r35 {
   0% { opacity: 1; }
   0% { opacity: 1; animation-timing-function: ease; }
   1.389% { opacity: 0; }
@@ -1587,7 +1613,7 @@
   97.222% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-hero-r33-first {
+@keyframes m-hero-r35-first {
   0%, 100% { opacity: 0; }
 }
 /* motion:end */

@@ -6,9 +6,10 @@ const baseURL = `http://127.0.0.1:${port}`;
 
 /**
  * WebKit on an iPhone profile runs the visuals' tests wherever its browser is
- * installed (npx playwright install webkit). It downloads from
- * cdn.playwright.dev and playwright.download.prss.microsoft.com; where those
- * are blocked it is left out rather than failing.
+ * installed (npx playwright install webkit), and on every pull request in
+ * .github/workflows/webkit-iphone.yml. It downloads from cdn.playwright.dev
+ * and playwright.download.prss.microsoft.com; where those are blocked it is
+ * left out locally rather than failing.
  */
 const withWebKit = existsSync(webkit.executablePath());
 

@@ -138,6 +138,39 @@ for (const width of [390, 1440]) {
   });
 }
 
+/** The mean brightness (0 to 255) of what is painted inside an element's box, read from a real screenshot. */
+async function brightness(page: Page, el: Locator) {
+  const png = (await el.screenshot()).toString("base64");
+  return page.evaluate(async (b64) => {
+    const img = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
+    const { data } = ctx.getImageData(0, 0, img.width, img.height);
+    let sum = 0;
+    for (let i = 0; i < data.length; i += 4) sum += (data[i] + data[i + 1] + data[i + 2]) / 3;
+    return sum / (data.length / 4);
+  }, png);
+}
+
+// Computed styles can't see this one: in WebKit the phone's front face stayed
+// painted after the turn, so it showed the confirmation mirrored instead of
+// the kitchen. Only the pixels tell.
+test("on phones the turn shows the kitchen's side, not the back of the confirmation", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto("/");
+  await expect(demo(page)).toHaveAttribute("data-run", "");
+  const phone = demo(page).locator("[data-flipper]");
+  // Before the turn: the white confirmation.
+  await seek(demo(page), STEPS[11] + 500);
+  expect(await brightness(page, phone)).toBeGreaterThan(150);
+  // After it: the kitchen display, dark.
+  await seek(demo(page), STEPS[12] + 2_000);
+  expect(await brightness(page, phone)).toBeLessThan(90);
+});
+
 test("it holds when paused and while fully off screen, and runs again after", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
