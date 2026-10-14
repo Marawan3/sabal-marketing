@@ -97,6 +97,8 @@ test("a visual runs from mount, pauses only while fully off screen, plays once, 
   await page.goto("/delivery");
   const flow = visual(page, "flow");
   // Below the fold: held at the start (it runs from mount until the observer's first report, a frame or two).
+  // data-seen is that report: the server's markup has no data-run either, so wait for the observer itself.
+  await expect(flow).toHaveAttribute("data-seen", "false");
   await expect(flow).not.toHaveAttribute("data-run");
   const held = await clock(flow);
   expect(held.state).toBe("paused");

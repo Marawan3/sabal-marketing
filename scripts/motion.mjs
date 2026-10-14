@@ -8,7 +8,7 @@
  *
  * Two sets, from the same tracks: with motion allowed, opacity and transform
  * move; with reduced motion, the same stories on the same timings run as
- * 200 ms opacity crossfades and no transform is animated (motion-spec.mjs
+ * 150 ms opacity crossfades and no transform is animated (motion-spec.mjs
  * says what each transform track becomes).
  *
  * Every animation starts when the page renders, paused; the player
@@ -26,14 +26,14 @@ const files = {
 
 const pct = (t, total) => `${+((t / total) * 100).toFixed(3)}%`;
 
-/** The points of one track: [time, value, easing of the ramp that starts here], times relative to `t0`. */
+/** The points of one track: [time, value], each change a hold point then the ramp's end. */
 function points(track, steps, extraDelay) {
   const at = (when) => (typeof when === "number" ? steps[when] : when.at) + extraDelay;
   let prev = track.start;
   const out = [];
   for (const [when, value] of track.changes) {
     const t = at(when);
-    out.push({ t, value: prev, ease: track.ramp.ease, hold: true });
+    out.push({ t, value: prev });
     out.push({ t: t + track.ramp.ms, value });
     prev = value;
   }
@@ -41,6 +41,15 @@ function points(track, steps, extraDelay) {
 }
 
 const decl = (prop, value) => `${prop}: ${value};`;
+
+/*
+ * A track's easing goes on the animation, which CSS applies to every keyframe
+ * segment, never on a keyframe: between ramps a track holds one value, so its
+ * holds look the same under any easing. (WebKit reads a keyframe that carries
+ * animation-timing-function as the element's own value: a hold at 1 came out
+ * as 0, so in Safari the hero's backdrop and sheet faded across the whole
+ * hold. Found by the reduced-motion pace test, 2026-10-14.)
+ */
 
 /** One play-once track: delayed to its first change, ending on its last; null values only at the ends. */
 function onceTrack(name, track, steps) {
@@ -52,12 +61,9 @@ function onceTrack(name, track, steps) {
     const edge = i === 0 || i === pts.length - 1;
     if (p.value === null && !edge) throw new Error(`${name}: ${track.sel} returns to its own value mid-story; give it an explicit value`);
     if (p.value === null) return; // the element's own value: an implicit 0% or 100% keyframe
-    const ease = p.hold ? ` animation-timing-function: ${p.ease};` : "";
-    frames.push(`  ${pct(p.t - t0, total)} { ${decl(track.prop, p.value)}${ease} }`);
+    frames.push(`  ${pct(p.t - t0, total)} { ${decl(track.prop, p.value)} }`);
   });
-  // A null start still needs its easing for the first ramp.
-  if (pts[0].value === null) frames.unshift(`  0% { animation-timing-function: ${pts[0].ease}; }`);
-  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${total}ms linear ${t0}ms both` };
+  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${total}ms ${track.ramp.ease} ${t0}ms both` };
 }
 
 /** One looping track: the whole loop, every value spelled out, from 0% to 100%. */
@@ -66,28 +72,33 @@ function loopTrack(name, track, steps, loop) {
   if (track.start === null || pts.some((p) => p.value === null)) throw new Error(`${name}: loop tracks need explicit values`);
   if (pts.some((p) => p.t > loop)) throw new Error(`${name}: ${track.sel} runs past the end of the loop`);
   const frames = [`  0% { ${decl(track.prop, track.start)} }`];
-  for (const p of pts) {
-    const ease = p.hold ? ` animation-timing-function: ${p.ease};` : "";
-    frames.push(`  ${pct(p.t, loop)} { ${decl(track.prop, p.value)}${ease} }`);
-  }
+  for (const p of pts) frames.push(`  ${pct(p.t, loop)} { ${decl(track.prop, p.value)} }`);
   frames.push(`  100% { ${decl(track.prop, pts[pts.length - 1].value)} }`);
-  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
+  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms ${track.ramp.ease} 0ms infinite both` };
 }
 
-/** Reduced motion: every change is a crossfade this long. */
-const crossfade = { ms: 200, ease: "ease" };
+/**
+ * Reduced motion: every change is a crossfade this long, starting on the same
+ * step as with motion (owner, 2026-10-14: at most 150 ms, so no step takes
+ * longer than with motion; every motion ramp is 160 ms or more).
+ */
+const crossfade = { ms: 150, ease: "ease" };
+
+/** When the motion tap pulse (600 ms) peaks and starts to fade: its 35% keyframe. */
+const tapPeak = 210;
 
 /** A tap ring: the module's own tap pulse (600 ms) at the step's time; with reduced motion, opacity only. */
 function tapTrack(name, track, steps, loop, reduced) {
   const t = steps[track.tap];
   if (reduced) {
-    const f = (dt, opacity) => `  ${pct(t + dt, loop ?? 600)} { opacity: ${opacity}; animation-timing-function: ease; }`;
-    if (!loop) return { use: `m-tapfade 600ms linear ${t}ms both` };
-    const frames = [`  0% { opacity: 0; }`, f(0, 0), f(200, 1), f(400, 1), f(600, 0), `  100% { opacity: 0; }`];
-    return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
+    const f = (dt, opacity) => `  ${pct(t + dt, loop ?? 600)} { opacity: ${opacity}; }`;
+    if (!loop) return { use: `m-tapfade 600ms ${crossfade.ease} ${t}ms both` };
+    // In and out in a crossfade each, the way out starting when the motion tap's does (210 ms, its 35%).
+    const frames = [`  0% { opacity: 0; }`, f(0, 0), f(crossfade.ms, 1), f(tapPeak, 1), f(tapPeak + crossfade.ms, 0), `  100% { opacity: 0; }`];
+    return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms ${crossfade.ease} 0ms infinite both` };
   }
   if (!loop) return { use: `tap 600ms ease-out ${t}ms both` };
-  const f = (dt, opacity, scale) => `  ${pct(t + dt, loop)} { opacity: ${opacity}; transform: scale(${scale}); animation-timing-function: ease-out; }`;
+  const f = (dt, opacity, scale) => `  ${pct(t + dt, loop)} { opacity: ${opacity}; transform: scale(${scale}); }`;
   const frames = [
     `  0% { opacity: 0; transform: scale(0.4); }`,
     f(0, 0, 0.4),
@@ -95,7 +106,7 @@ function tapTrack(name, track, steps, loop, reduced) {
     f(600, 0, 1.15),
     `  100% { opacity: 0; transform: scale(1.15); }`,
   ];
-  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms linear 0ms infinite both` };
+  return { keyframes: `@keyframes ${name} {\n${frames.join("\n")}\n}`, use: `${name} ${loop}ms ease-out 0ms infinite both` };
 }
 
 /**
@@ -156,7 +167,7 @@ function block(file) {
   }
   if (tapFade) {
     out.reduced.keyframes.unshift(
-      "@keyframes m-tapfade {\n  0% { opacity: 0; animation-timing-function: ease; }\n  33.333% { opacity: 1; }\n  66.667% { opacity: 1; animation-timing-function: ease; }\n  100% { opacity: 0; }\n}",
+      `@keyframes m-tapfade {\n  0% { opacity: 0; }\n  ${pct(crossfade.ms, 600)} { opacity: 1; }\n  ${pct(tapPeak, 600)} { opacity: 1; }\n  ${pct(tapPeak + crossfade.ms, 600)} { opacity: 0; }\n  100% { opacity: 0; }\n}`,
     );
   }
   const media = (query, set) => {
