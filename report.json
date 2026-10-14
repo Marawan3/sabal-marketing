@@ -1,0 +1,339 @@
+{
+  "browser": "WebKit 26.6",
+  "base": "http://127.0.0.1:3005",
+  "live": "https://wuntab.com",
+  "visuals": [
+    {
+      "name": "hero",
+      "atLoadPlus3s": {
+        "dataRun": true,
+        "displayed": true,
+        "onScreen": true,
+        "animations": 32,
+        "running": 32,
+        "clock": {
+          "currentTime": 3033,
+          "playState": "running"
+        },
+        "playStateCss": "running"
+      },
+      "scrolledIntoViewPlus3s": {
+        "dataRun": true,
+        "displayed": true,
+        "onScreen": true,
+        "animations": 32,
+        "running": 32,
+        "clock": {
+          "currentTime": 6074,
+          "playState": "running"
+        },
+        "playStateCss": "running"
+      },
+      "observer": {
+        "reports": 1,
+        "everIntersecting": true,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": true,
+            "ratio": 0.430438369512558
+          }
+        ]
+      }
+    },
+    {
+      "name": "storefront",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": true,
+        "onScreen": false,
+        "animations": 4,
+        "running": 0,
+        "clock": {
+          "currentTime": 66,
+          "playState": "paused"
+        },
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": {
+        "dataRun": true,
+        "displayed": true,
+        "onScreen": true,
+        "animations": 4,
+        "running": 3,
+        "clock": {
+          "currentTime": 3051,
+          "playState": "running"
+        },
+        "playStateCss": "running"
+      },
+      "observer": {
+        "reports": 2,
+        "everIntersecting": true,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          },
+          {
+            "at": 6508,
+            "isIntersecting": true,
+            "ratio": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "dashboard",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "orders",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "kitchen",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": true,
+        "onScreen": false,
+        "animations": 11,
+        "running": 0,
+        "clock": {
+          "currentTime": 66,
+          "playState": "paused"
+        },
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": {
+        "dataRun": true,
+        "displayed": true,
+        "onScreen": true,
+        "animations": 11,
+        "running": 0,
+        "clock": {
+          "currentTime": 3200,
+          "playState": "finished"
+        },
+        "playStateCss": "running"
+      },
+      "observer": {
+        "reports": 2,
+        "everIntersecting": true,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          },
+          {
+            "at": 6508,
+            "isIntersecting": true,
+            "ratio": 0.030474090948700905
+          }
+        ]
+      }
+    },
+    {
+      "name": "storefront",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "delivery",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "catering",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "orders",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": false,
+        "onScreen": false,
+        "animations": 0,
+        "running": 0,
+        "clock": null,
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": "not displayed at this width",
+      "observer": {
+        "reports": 1,
+        "everIntersecting": false,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "receipt",
+      "atLoadPlus3s": {
+        "dataRun": false,
+        "displayed": true,
+        "onScreen": false,
+        "animations": 15,
+        "running": 0,
+        "clock": {
+          "currentTime": 66,
+          "playState": "paused"
+        },
+        "playStateCss": "paused"
+      },
+      "scrolledIntoViewPlus3s": {
+        "dataRun": true,
+        "displayed": true,
+        "onScreen": true,
+        "animations": 15,
+        "running": 0,
+        "clock": {
+          "currentTime": 2900,
+          "playState": "finished"
+        },
+        "playStateCss": "running"
+      },
+      "observer": {
+        "reports": 2,
+        "everIntersecting": true,
+        "log": [
+          {
+            "at": 477,
+            "isIntersecting": false,
+            "ratio": 0
+          },
+          {
+            "at": 12531,
+            "isIntersecting": true,
+            "ratio": 1
+          }
+        ]
+      }
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "hydration": {
+    "pauseButton": {
+      "before": "Pause the animation",
+      "after": "Play the animation",
+      "dataHold": true,
+      "works": true
+    },
+    "calculator": {
+      "result": "Between $23,400 and $46,800",
+      "works": true
+    },
+    "mobileMenu": {
+      "opens": true,
+      "note": "native <details>; opens with or without React"
+    }
+  },
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+  "debug-panel-393x852.png": "visual\tplay state\tisIntersecting (last entry; entries seen)\tstep\tclock ms\trunning animations\nhero\trunning\ttrue (1)\t3/13\t3011\t32/32\nstorefront\tpaused: off screen\tfalse (1)\t0/4\t68\t0/4\ndashboard\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\norders\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\nkitchen\tpaused: off screen\tfalse (1)\t0/4\t68\t0/11\nstorefront\tpaused: off screen\tfalse (1)\t0/4\t0\t0/0\ndelivery\tpaused: off screen\tfalse (1)\t0/8\t0\t0/0\ncatering\tpaused: off screen\tfalse (1)\t0/4\t0\t0/0\norders\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\nreceipt\tpaused: off screen\tfalse (1)\t0/8\t68\t0/15\nMozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+  "debug-panel-live-393x852.png": "visual\tplay state\tisIntersecting (last entry; entries seen)\tstep\tclock ms\trunning animations\nhero\trunning\ttrue (1)\t3/13\t3021\t32/32\nstorefront\tpaused: off screen\tfalse (1)\t0/4\t58\t0/4\ndashboard\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\norders\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\nkitchen\tpaused: off screen\tfalse (1)\t0/4\t58\t0/11\nstorefront\tpaused: off screen\tfalse (1)\t0/4\t0\t0/0\ndelivery\tpaused: off screen\tfalse (1)\t0/8\t0\t0/0\ncatering\tpaused: off screen\tfalse (1)\t0/4\t0\t0/0\norders\tpaused: off screen\tfalse (1)\t0/3\t0\t0/0\nreceipt\tpaused: off screen\tfalse (1)\t0/8\t58\t0/15\nMozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"
+}
