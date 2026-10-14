@@ -159,12 +159,18 @@ test("every visual with a story runs from mount and advances; with reduced motio
     if ((await el.getAttribute("data-steps"))!.split(" ").length === 1) continue; // a still: no story to run
     await intoView(el);
     await expect(el, name).toHaveAttribute("data-run", "");
-    const states = await el.evaluate((n) =>
-      n.getAnimations({ subtree: true }).map((a) => ({ name: (a as CSSAnimation).animationName, state: a.playState })),
-    );
-    // Every animation in it is running (the earliest track ends 500 ms in; this is the first few frames).
+    const states = await el.evaluate((n) => {
+      const now = Number(n.getAnimations().find((a) => (a as CSSAnimation).animationName === "vis-clock")?.currentTime ?? 0);
+      return n.getAnimations({ subtree: true }).map((a) => ({
+        name: (a as CSSAnimation).animationName,
+        state: a.playState,
+        // Done already, by design: its whole life lies before now (the hero's first-run cover hold, 150 ms with reduced motion).
+        over: Number(a.effect!.getComputedTiming().endTime) <= now,
+      }));
+    });
+    // Every animation in it is running, unless its whole life is already over.
     expect(states.length, name).toBeGreaterThan(1);
-    for (const st of states) expect(st.state, `${name}: ${st.name}`).toBe("running");
+    for (const st of states) expect(st.over ? "running" : st.state, `${name}: ${st.name}`).toBe("running");
     // And it advances.
     const at = (await clock(el)).t;
     await expect.poll(async () => (await clock(el)).t, { message: name }).toBeGreaterThan(at + 200);

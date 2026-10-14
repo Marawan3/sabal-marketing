@@ -91,13 +91,13 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
     await page.goto(path);
     const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]`).first();
     await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
-    return timing(el);
+    return { ...(await timing(el)), steps: (await el.getAttribute("data-steps"))!.split(" ").map(Number) };
   };
   const report: string[] = [];
   for (const width of [393, 1440]) {
     await page.setViewportSize({ width, height: 852 });
     for (const [name, path] of Object.entries(where)) {
-      const motion: Timing = await read(name, path, "no-preference");
+      const motion: Timing & { steps: number[] } = await read(name, path, "no-preference");
       const reduced: Timing = await read(name, path, "reduce");
       const label = `${name} at ${width}`;
       // The loop (the hero) or the play-through (the rest): the same clock.
@@ -111,8 +111,9 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
       }
       // Every reduced change (a crossfade, or a part of a scroll's dip: out, jump, back in) happens
       // inside the 150 ms after a motion change starts, so it begins with that change and is done
-      // within 150 ms of it.
-      const starts = motion.changes.map((c) => c.at);
+      // within 150 ms of it. A motion change starts on a step or on a change read from its keyframes
+      // (WebKit doesn't report a change between keyframes written with calc(var(--k) ...), the scrolls).
+      const starts = [...motion.steps, ...motion.changes.map((c) => c.at)];
       for (const c of reduced.changes) {
         const owner = starts.filter((s) => s <= c.at + 5 && c.at + c.ms <= s + 155);
         expect(owner.length, `${label}: a change at ${c.at}-${c.at + c.ms} ms outside the 150 ms after any motion change (${c.what})`).toBeGreaterThan(0);
