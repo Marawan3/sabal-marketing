@@ -44,6 +44,33 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-14 · PR #35: with reduced motion, the visuals run as crossfades (merged)
+
+**Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `5a419bf` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
+
+**Why:** the owner's iPhone `?debug=motion` panel showed every visual as "still (reduced motion)" with no animations running. Safari reports reduce-motion as on, many iPhones have it set, and a still reads as a broken demo.
+
+**What changed:**
+- **The same stories run, as crossfades:**
+  - With reduced motion, every story runs on the same timings, including the hero loop.
+  - Every change is a 200 ms opacity crossfade, and nothing is animated with a transform.
+  - Screens that slid in fade in where they land, and the hero phone's turn is a crossfade to the kitchen's side.
+  - The spec says, for each moving part, what it becomes. The generator refuses one that doesn't say.
+- **The old stills are gone.** The pause button, observer pause, clocks and debug panel work the same in both modes. The panel says "running (reduced motion)".
+- **Motion-allowed keyframes are unchanged.**
+- **Tests:** a reduced-motion Playwright project runs the visuals tests (WebKit too, once installed). Every visual must run and advance, and nothing may animate a transform.
+- **Recordings:** 393×852 recordings with reduced motion on are in `evidence/reduced-motion/`.
+
+**How it was checked:**
+- **Tests:** 117 Playwright tests passed and 1 was skipped. The related specs passed 183 of 183 across three repeats.
+- **Animations:** every visual, at 393 and 1440 with reduced motion emulated, had all its animations running and none on transform.
+- **Frames:** every step was reviewed on contact sheets. That caught the catering thank-you sitting off screen, now fixed.
+- **Height:** the homepage is 6,732px at 390 in both modes.
+
+**Owner to do:** check on the iPhone with Reduce Motion on. `?debug=motion` should read "running (reduced motion)".
+
+---
+
 ## 2026-10-14 · PR #32: the visuals play on the browser's own clock, for Safari on iPhone (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `5da524f` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`.
