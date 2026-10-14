@@ -44,6 +44,38 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-14 · PR #34: the visuals in real WebKit on an iPhone profile; WebKit runs on every PR
+
+**Why:** the owner reported that after PR #32 the visuals still don't start in Safari on an iPhone 17 Pro. They had never been run in WebKit.
+
+**Where it ran:** the WebKit download hosts were still refused in the build session. So WebKit 26.6 (Playwright's build) ran on a GitHub Actions runner, with an iPhone profile: 393×852, 3x, touch, and an iOS 26 Safari user agent.
+
+**What WebKit showed before any change** (`evidence/webkit-iphone/before/report.json`):
+- **Hydration:** React hydrated. There were no console errors and no page errors on load. The pause button toggled and the calculator computed. The mobile menu opened, but it is a native `<details>` and opens without React.
+- **The hero** was running: 32 of 32 animations, its clock at 3,020 ms 3 seconds after load. The observer reported it intersecting.
+- **The other visuals:** storefront, kitchen and receipt were paused while off screen. Each was paused at 806 ms, the time the observer took to send its first report. Scrolled into view, each one ran: storefront at 3,779 ms after 3 seconds, while kitchen and receipt had played through and held their last frame. The observer reported each one intersecting. Six other visuals on the page are hidden at phone width.
+- **`?debug=motion`:** the panel on wuntab.com in WebKit agrees (`before/debug-panel-live-393x852.png`).
+- **So "never starts" did not reproduce in WebKit.**
+
+**What WebKit got wrong:**
+1. **The hero's turn on phones.** After the confirmation the phone turns over to the kitchen. WebKit kept painting the front face after it had turned away, despite `backface-visibility: hidden`, so the phone showed the confirmation mirrored and never the kitchen ticket (`turn-before-webkit.png`). Five CSS variants were tried in WebKit. Giving the front face its own layer made the back face show through mirrored before the turn instead.
+2. **Three timing tests.** WebKit keeps counting a paused visual's clock for 60 to 270 ms after a CSS pause, then settles back to where the pause was asked for. The tests read it in that window. The visuals do hold.
+
+**What changed:**
+- **The fix** (`scripts/motion-spec.mjs`, regenerated into `hero-order-demo.module.css`): on phones, each face goes out at the moment it passes edge-on. That is 295 ms into the turn's 800 ms ease, and 221 ms into the turn back. Opacity only. Chromium looks the same as before.
+- **New test:** at 390, the phone is bright (the confirmation) before the turn and dark (the kitchen) after it, read from the pixels of a screenshot. It failed in WebKit before the fix (221.7 after the turn, limit 90) and passes after.
+- **Tests:** `clock()` in `tests/motion.ts` applies styles and waits for a pending play or pause to land before reading.
+- **CI:** `.github/workflows/webkit-iphone.yml` runs the `webkit-iphone` project (hero, visuals and motion tests) on every pull request and on `main`.
+- **Script:** `scripts/webkit-evidence.mjs` writes the report, debug panel screenshots and GIFs.
+
+**Evidence:** `evidence/webkit-iphone/`, with `before/` and `after/`. Each holds recordings of the hero, storefront and kitchen board at 393×852, the debug panel locally and on wuntab.com, and `report.json`. `turn-before-webkit.png` and `turn-after-webkit.png` show the turn frame by frame.
+
+**Still open, owner to do:** WebKit doesn't reproduce "never starts" with motion on. PR #35, merged while this was in progress, covers the other case: with Reduce Motion on, the visuals now run as crossfades instead of showing stills. If anything is still frozen on the iPhone, open wuntab.com/?debug=motion and send a screenshot of the panel.
+
+**Commit identity:** every commit on this branch was re-authored as `Marawan3 <90366029+Marawan3@users.noreply.github.com>`. The temporary evidence workflow, the only place `ci@users.noreply.github.com` was used, is deleted, and so are its `webkit-evidence/*` branches.
+
+---
+
 ## 2026-10-14 · Commit identity: the repo owner, not "ci"
 
 **Why:** the temporary WebKit evidence workflow on PR #34's branch committed as `ci <ci@users.noreply.github.com>`. GitHub credits that address to an unrelated real account ("ci"), who is not on the Vercel team. Those evidence branches also hold only screenshots, so each of their Vercel previews failed to build (no `app` directory). Production deploys of `main` were never affected.

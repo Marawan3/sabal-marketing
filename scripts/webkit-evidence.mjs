@@ -13,8 +13,8 @@
 //   debug-panel-live-393x852.png   ?debug=motion on [live URL], if given
 //   hero-393x852.gif, storefront-393x852.gif, kitchen-board-393x852.gif
 //
-// The CI workflow (.github/workflows/webkit-iphone.yml) runs it and prints
-// report.json to the job log.
+// docs/marketing-site/evidence/webkit-iphone/ came from it, run on a GitHub
+// Actions runner before and after the fix of 2026-10-14.
 
 import { webkit } from "@playwright/test";
 import { execFileSync } from "node:child_process";
