@@ -66,9 +66,14 @@ export function timing(el: Locator): Promise<Timing> {
         continue;
       }
       const delay = Number(effect.getTiming().delay ?? 0);
-      // Values only; a keyframe left out at 0% or 100% is the element's own value.
+      // The values that move (opacity, transform) and nothing else: WebKit also lists each
+      // keyframe's timing function as a property. A keyframe left out at 0% or 100% is the
+      // element's own value.
       const frames = effect.getKeyframes().map((k) => {
-        const values = Object.entries(k).filter(([key]) => !["offset", "computedOffset", "easing", "composite"].includes(key));
+        const values = (["opacity", "transform"] as const).map((key) => {
+          const v = k[key];
+          return v === undefined ? null : Number.isFinite(Number(v)) ? Number(Number(v).toFixed(3)) : String(v).replace(/\s+/g, " ").trim();
+        });
         return { at: Number(k.computedOffset), values: JSON.stringify(values) };
       });
       if (frames[0]?.at > 0) frames.unshift({ at: 0, values: "own" });
