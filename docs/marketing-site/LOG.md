@@ -44,6 +44,25 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-14 · PR #42: reduced motion, each scroll is a dip (merged)
+
+**Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `184def8` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. Chromium and WebKit iPhone CI were both green.
+
+**Why:** with reduced motion the scrolls had nothing to fade, so the hero's first visible change came a second late. The owner chose a dip, with no duplicate screens.
+
+**What changed:**
+- **Scrolls are dips.** This covers the hero (menu at 0.9 s, checkout at 7.0 s), the storefront, delivery (both scrolls) and catering (down to the form and back up). At each one the content fades to 0 (75 ms), jumps while invisible (1 ms) and fades back (74 ms), starting when the normal-mode scroll starts.
+- **Catering** now scrolls back up for its thanks, like the normal-mode version.
+- **Tests:**
+  - With reduced motion a transform may change only while its element is at opacity 0, sampled at each change's start, middle and end.
+  - The pace test requires every reduced change to fall inside the 150 ms after a step or normal-mode change.
+  - Two WebKit-only test assumptions were fixed: WebKit doesn't report a change between `var()` keyframes, and its slower hydration let the hero's 150 ms first-run hold finish before the check.
+- **Recordings:** side-by-side recordings of the hero and storefront at 393×852 are in `evidence/reduced-motion-dip/`.
+
+**Left as is:** the kitchen board's and settings card's button presses (a 2% shrink) have no reduced-motion equivalent.
+
+---
+
 ## 2026-10-14 · PR #40: reduced motion keeps the motion pace (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `9e99f34` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. Chromium and WebKit iPhone CI were both green.
