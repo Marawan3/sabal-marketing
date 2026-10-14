@@ -218,8 +218,10 @@ test("outcome tabs switch at every width: one panel at a time, the active tab un
       const tab = page.getByRole("tab", { name: label });
       await tab.click();
       await expect(tab).toHaveAttribute("aria-selected", "true");
-      const underline = await tab.evaluate((el) => getComputedStyle(el).borderBottomColor.replace(/\s/g, ""));
-      expect(underline, `${label} at ${width}`).not.toBe("rgba(0,0,0,0)");
+      // The underline fades in over 150ms (transition-colors): wait for it rather than read its first frame.
+      await expect
+        .poll(() => tab.evaluate((el) => getComputedStyle(el).borderBottomColor.replace(/\s/g, "")), { message: `${label} at ${width}` })
+        .not.toBe("rgba(0,0,0,0)");
       const panels = page.locator('[role="tabpanel"]:visible');
       await expect(panels).toHaveCount(1);
       await expect(page.locator('[role="tabpanel"]').nth(index)).toBeVisible();

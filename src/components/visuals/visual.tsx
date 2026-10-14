@@ -4,9 +4,9 @@ import { VisualPlayer } from "../visual-player";
 import v from "./visuals.module.css";
 
 /**
- * The shell every built visual sits in: the shared player (play once when
- * scrolled into view, one visual moving at a time, a pause button past five
- * seconds), one sentence for screen readers, and the shared look.
+ * The shell every built visual sits in: the shared player (plays once from
+ * mount, paused while off screen, a pause button past five seconds), one
+ * sentence for screen readers, and the shared look.
  */
 export function Visual({
   name,

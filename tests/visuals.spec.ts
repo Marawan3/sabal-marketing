@@ -4,11 +4,12 @@ import { join } from "node:path";
 import { copy } from "../src/lib/copy";
 import { demoDashboard, demoDelivery, demoKitchen, demoOrders, demoReward, demoSettings, demoSite, demoSms } from "../src/lib/demo-data";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
+import { clock, speed } from "./motion";
 
 /**
  * The built visuals (src/components/visuals): real text and shapes, played
- * once when scrolled into view, one moving at a time, still with reduced
- * motion. Where each one lives (owner, 2026-10-13):
+ * once on the browser's own clock (paused while off screen), still with
+ * reduced motion. Where each one lives (owner, 2026-10-13):
  */
 const home: Record<string, string> = {
   delivery: "/delivery",
@@ -55,8 +56,6 @@ const pages = [
   "/about",
   "/contact",
 ];
-const NOON = new Date("2026-10-13T16:40:00-04:00");
-
 test.use({ timezoneId: "America/New_York" });
 
 const visual = (page: Page, name: string) => page.locator(`main [data-visual="${name}"]`).first();
@@ -92,50 +91,34 @@ test("each visual is built: real text, decorative for screen readers with one se
   }
 });
 
-test("a visual waits until it's on screen, plays once, then holds its last step", async ({ page }) => {
+test("a visual runs from mount, pauses only while fully off screen, plays once, then holds its last frame", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.clock.install({ time: NOON });
   await page.goto("/delivery");
   const flow = visual(page, "flow");
-  // Below the fold: nothing happens.
-  await page.clock.runFor(12_000);
-  expect(await flow.getAttribute("data-s")).toBe("0");
+  // Below the fold: held at the start (it runs from mount until the observer's first report, a frame or two).
+  await expect(flow).not.toHaveAttribute("data-run");
+  const held = await clock(flow);
+  expect(held.state).toBe("paused");
+  expect(held.t).toBeLessThan(100);
+  await page.waitForTimeout(800);
+  expect(await clock(flow)).toEqual(held);
   await intoView(flow);
-  await page.waitForTimeout(200);
-  await page.clock.runFor(12_000);
-  await expect(flow).toHaveAttribute("data-done", "");
-  const last = await flow.getAttribute("data-s");
-  expect(last!.split(" ").length).toBeGreaterThan(5);
-  await page.clock.runFor(20_000);
-  expect(await flow.getAttribute("data-s")).toBe(last);
-  // Held on the end: all six steps lit. (The last fade runs on the real clock.)
+  await expect(flow).toHaveAttribute("data-run", "");
+  await expect.poll(async () => (await clock(flow)).state).toBe("running");
+  // Played through (ten times faster), it ends and holds: all six steps lit.
+  await speed(flow, 10);
+  await expect(flow).toHaveAttribute("data-done", "", { timeout: 5_000 });
   await page.waitForTimeout(600);
+  expect(await clock(flow)).toEqual({ t: 6200, state: "finished" });
   for (const step of await flow.locator("li").all()) expect(await shown(step)).toBe(true);
 });
 
-test("one thing moves at a time", async ({ page }) => {
-  // A tall window shows several visuals at once; they take turns.
+test("no site-wide lock: two visuals on screen run at the same time", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 2600 });
-  await page.clock.install({ time: NOON });
-  await page.goto("/how-it-works");
-  await page.evaluate(() => window.scrollTo(0, 900));
-  await page.waitForTimeout(200);
-  let maxMoving = 0;
-  let finished = 0;
-  let before: { s: string | null; done: boolean }[] = [];
-  for (let i = 0; i < 300; i++) {
-    await page.clock.runFor(100);
-    const states = await page.locator("main [data-demo]").evaluateAll((els) =>
-      els.map((el) => ({ s: el.getAttribute("data-s"), done: el.hasAttribute("data-done") })),
-    );
-    // Moving: stepped forward since the last look. One that just finished hands over, so it doesn't count.
-    const moving = states.filter((st, k) => before[k] && st.s !== before[k].s && !st.done).length;
-    maxMoving = Math.max(maxMoving, moving);
-    finished = states.filter((st) => st.done).length;
-    before = states;
-  }
-  expect(maxMoving).toBe(1);
-  expect(finished).toBeGreaterThanOrEqual(2);
+  await page.goto("/order-management");
+  const both = [visual(page, "orders"), visual(page, "settings")];
+  for (const el of both) await expect(el).toBeInViewport();
+  for (const el of both) await expect.poll(async () => (await clock(el)).state).toBe("running");
 });
 
 test("a pause button only on what moves for more than five seconds, and it pauses", async ({ page }) => {
@@ -145,24 +128,24 @@ test("a pause button only on what moves for more than five seconds, and it pause
     await expect(visual(page, name).getByRole("button"), name).toHaveCount(pausable.includes(name) ? 1 : 0);
   }
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.clock.install({ time: NOON });
   await page.goto("/delivery");
   const phone = visual(page, "delivery");
-  await page.clock.runFor(1_600);
+  await expect.poll(async () => (await clock(phone)).t).toBeGreaterThan(300);
   await phone.getByRole("button", { name: copy.hero.demo.pause }).click();
-  const at = await phone.getAttribute("data-s");
-  await page.clock.runFor(6_000);
-  expect(await phone.getAttribute("data-s")).toBe(at);
+  await expect(phone).toHaveAttribute("data-hold", "");
+  const at = (await clock(phone)).t;
+  await page.waitForTimeout(1_000);
+  expect(await clock(phone)).toEqual({ t: at, state: "paused" });
+  // Every part of it holds, not just its clock.
+  expect(await phone.evaluate((el) => el.getAnimations({ subtree: true }).every((a) => a.playState !== "running"))).toBe(true);
   await phone.getByRole("button", { name: copy.hero.demo.play }).click();
-  await page.clock.runFor(2_000);
-  expect(await phone.getAttribute("data-s")).not.toBe(at);
+  await expect.poll(async () => (await clock(phone)).t).toBeGreaterThan(at + 300);
 });
 
 for (const width of [390, 1440]) {
   test(`with reduced motion at ${width} every visual is its final state, still, with no button`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width, height: 900 });
-    await page.clock.install({ time: NOON });
     // The thing that shows each story's end.
     const end: Record<string, (el: Locator) => Locator> = {
       delivery: (el) => el.locator('[data-cur="7"]').last(),
@@ -186,8 +169,8 @@ for (const width of [390, 1440]) {
       await page.goto(home[name]);
       const el = visual(page, name);
       await intoView(el);
-      await page.clock.runFor(10_000);
-      expect(await el.getAttribute("data-s"), name).toBe("0");
+      // Nothing to run: no animation anywhere in it.
+      expect(await el.evaluate((n) => n.getAnimations({ subtree: true }).length), name).toBe(0);
       await expect(el.getByRole("button"), name).toBeHidden();
       expect(await shown(end[name](el)), name).toBe(true);
     }
@@ -236,6 +219,12 @@ test("only transform and opacity animate in the visuals", () => {
     }
   }
   expect([...moved].sort()).toEqual(["opacity", "transform"]);
+  // The stories' keyframes (scripts/motion.mjs) too.
+  const keyframes = css.match(/@keyframes[^{]+\{([\s\S]*?\})\s*\}/g) ?? [];
+  expect(keyframes.length).toBeGreaterThan(50);
+  for (const block of keyframes) {
+    for (const [, prop] of block.matchAll(/([a-z-]+)\s*:/g)) expect(["opacity", "transform", "animation-timing-function"]).toContain(prop);
+  }
 });
 
 test("no layout shift while the visuals play", async ({ page }) => {
