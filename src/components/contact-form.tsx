@@ -3,7 +3,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { buttonBase } from "./cta-link";
 import { copy } from "@/lib/copy";
-import { contactFields, contactLimits, contactTrap, type ContactField } from "@/lib/contact";
+import { contactFields, contactLimits, contactTrap, type ContactField, type ContactIntent } from "@/lib/contact";
 
 const t = copy.contact;
 
@@ -19,8 +19,12 @@ const kinds: Record<ContactField, { type: string; autoComplete: string }> = {
  * The /contact form: name, restaurant, phone, email and message, posted to
  * /api/contact, which emails hello@. On success it says when we reply; if
  * sending fails it gives the address, so nothing is lost.
+ *
+ * As a call request (intent "call", from Get Started) the message starts
+ * filled in and stays editable, and the phone says what it is for. The
+ * intent goes along in a hidden field; `restaurant` prefills its field.
  */
-export function ContactForm({ email }: { email: string }) {
+export function ContactForm({ email, intent = "message", restaurant = "" }: { email: string; intent?: ContactIntent; restaurant?: string }) {
   const id = useId();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "failed">("idle");
 
@@ -49,23 +53,29 @@ export function ContactForm({ email }: { email: string }) {
     <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2 sm:gap-x-6">
       {contactFields.map((name) => {
         const { required, max } = contactLimits[name];
-        const label = (
+        const forCall = intent === "call" && name === "phone";
+        // For a call the phone's label says what it is for; it stays optional.
+        const label = forCall ? (
+          t.callIntent.phone
+        ) : (
           <>
             {t.fields[name]}
             {required ? null : <span className="font-normal text-ink-muted"> (optional)</span>}
           </>
         );
+        const prefill = name === "restaurant" ? restaurant : name === "message" && intent === "call" ? t.callIntent.message : undefined;
         return (
           <label key={name} htmlFor={`${id}-${name}`} className={`text-small font-medium ${name === "message" ? "sm:col-span-2" : ""}`}>
             {label}
             {name === "message" ? (
-              <textarea id={`${id}-${name}`} name={name} required={required} maxLength={max} rows={5} className={`${field} py-3`} />
+              <textarea id={`${id}-${name}`} name={name} required={required} maxLength={max} rows={5} defaultValue={prefill} className={`${field} py-3`} />
             ) : (
               <input
                 id={`${id}-${name}`}
                 name={name}
                 required={required}
                 maxLength={max}
+                defaultValue={prefill || undefined}
                 {...kinds[name]}
                 className={`${field} min-h-12`}
               />
@@ -73,6 +83,7 @@ export function ContactForm({ email }: { email: string }) {
           </label>
         );
       })}
+      <input type="hidden" name="intent" value={intent} />
       {/* The trap: hidden from people and from screen readers. */}
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label>

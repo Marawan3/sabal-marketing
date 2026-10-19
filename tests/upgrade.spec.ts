@@ -4,8 +4,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { builtProducts, bySlug, productHref, secondaryProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
-import { contactEmailText, readContact } from "../src/lib/contact";
-import { companyLinks, legalNav } from "../src/lib/site";
+import { contactEmailText, contactSubject, readContact, readIntent } from "../src/lib/contact";
+import { allRoutes, companyLinks, demoHref, demoIsContactForm, legalNav } from "../src/lib/site";
 import { OWNER, publishedFounder } from "../src/lib/founder";
 import { customerStories, storiesFor } from "../src/lib/stories";
 import { yearlyRange } from "../src/components/savings-calculator";
@@ -222,6 +222,7 @@ test.describe("contact", () => {
         reply_to: "owner@example.com",
         subject: "Website message: Test Owner, Test Kitchen",
       });
+      expect(received[0].text).toContain("Intent: message");
       expect(received[0].text).toContain("Restaurant: Test Kitchen");
       expect(received[0].text).toContain("Phone: (305) 555-0100");
     }
@@ -241,13 +242,102 @@ test.describe("contact", () => {
 
   test("the message is checked and written as plain text", () => {
     const r = readContact({ name: " A ", restaurant: "B", email: "a@b.co", message: "Hi", phone: "" });
-    expect(r).toEqual({ ok: true, message: { name: "A", restaurant: "B", phone: "", email: "a@b.co", message: "Hi" } });
+    expect(r).toEqual({ ok: true, message: { name: "A", restaurant: "B", phone: "", email: "a@b.co", message: "Hi" }, intent: "message" });
     expect(readContact({ name: "A" })).toEqual({ ok: false, field: "restaurant" });
     if (r.ok) expect(contactEmailText(r.message)).toContain("Phone: (not given)");
+    // Only "call" and "message"; anything else is a message.
+    expect(readIntent("call")).toBe("call");
+    for (const other of ["message", "CALL", "bogus", "", undefined, null, 1, ["call"]]) expect(readIntent(other)).toBe("message");
+    if (r.ok) {
+      expect(contactSubject(r.message, "call")).toBe("Call request: A, B");
+      expect(contactSubject(r.message, "message")).toBe("Website message: A, B");
+      expect(contactEmailText(r.message, "call").split("\n")[0]).toBe("Intent: call");
+    }
+  });
+
+  /** Get Started from the hero, with a name to carry: it lands on the form as a call request and sends one. */
+  for (const width of [390, 1280]) {
+    test(`at ${width} the hero's Get Started lands on the form as a call request, name and all, and sends a "Call request"`, async ({ page }) => {
+      received.length = 0;
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      await page.getByLabel(copy.hero.inputLabel).fill("Palm & Stone");
+      await page.locator("#top form").getByRole("button", { name: copy.cta.primary }).click();
+      await page.waitForURL(/\/contact\?/);
+      const url = new URL(page.url());
+      expect(url.pathname).toBe("/contact");
+      expect(url.searchParams.get("intent")).toBe("call");
+      expect(url.searchParams.get("restaurant")).toBe("Palm & Stone");
+      const c = copy.contact;
+      await expect(page.locator("h1")).toHaveText(c.callIntent.headline);
+      await expect(page.locator("main")).toContainText(c.callIntent.line);
+      await expect(page.getByLabel(c.fields.restaurant)).toHaveValue("Palm & Stone");
+      await expect(page.getByLabel(c.fields.message)).toHaveValue(c.callIntent.message);
+      await expect(page.getByLabel(c.callIntent.phone, { exact: true })).not.toHaveAttribute("required");
+      // The message stays editable.
+      await page.getByLabel(c.fields.message).fill(`${c.callIntent.message}weekday mornings`);
+      await page.getByLabel(c.fields.name).fill("Test Owner");
+      await page.getByLabel(c.fields.email).fill("owner@example.com");
+      const posted = page.waitForRequest("**/api/contact");
+      await page.getByRole("button", { name: c.send }).click();
+      expect((await posted).postDataJSON()).toMatchObject({ intent: "call", restaurant: "Palm & Stone" });
+      await expect(page.locator("[data-sent]")).toHaveText(c.sent);
+      expect(received).toHaveLength(1);
+      expect(received[0]).toMatchObject({ to: ["hello@wuntab.com"], reply_to: "owner@example.com", subject: "Call request: Test Owner, Palm & Stone" });
+      expect(received[0].text).toContain("Intent: call");
+      expect(received[0].text).toContain("Restaurant: Palm & Stone");
+      expect(received[0].text).toContain(`${c.callIntent.message}weekday mornings`);
+    });
+  }
+
+  test("an intent other than call or message is a message", async ({ request }) => {
+    received.length = 0;
+    const ok = { name: "A", restaurant: "B", phone: "", email: "a@b.co", message: "Hi" };
+    expect((await request.post("/api/contact", { data: { ...ok, intent: "bogus" } })).status()).toBe(200);
+    expect((await request.post("/api/contact", { data: { ...ok, intent: "call" } })).status()).toBe(200);
+    expect((await request.post("/api/contact", { data: ok })).status()).toBe(200);
+    expect(received.map((r) => r.subject)).toEqual(["Website message: A, B", "Call request: A, B", "Website message: A, B"]);
+    expect(received.map((r) => String(r.text).split("\n")[0])).toEqual(["Intent: message", "Intent: call", "Intent: message"]);
   });
 });
 
-test("final band: the line under the button and Or send a message; the footer links too", async ({ page }) => {
+test("every Get Started goes to /contact?intent=call; the only mailto links are the visible email address", async ({ page }) => {
+  expect(demoHref).toBe("/contact?intent=call");
+  expect(demoIsContactForm).toBe(true);
+  for (const path of [...new Set([...allRoutes, "/contact", "/this-page-does-not-exist"])]) {
+    await page.goto(path);
+    // Hidden ones too (the mobile menu's, inside a closed <details>).
+    const starts = await page.locator("a").evaluateAll((as) => as.filter((a) => a.textContent?.trim() === "Get Started").map((a) => a.getAttribute("href")));
+    expect(starts.length, path).toBeGreaterThan(0);
+    for (const href of starts) expect(href, path).toBe("/contact?intent=call");
+    const mails = await page.locator('a[href^="mailto:"]').evaluateAll((as) => as.map((a) => [a.getAttribute("href")!, a.textContent!.trim()]));
+    for (const [href, text] of mails) expect(href, `${path}: ${text}`).toBe(`mailto:${text}`);
+  }
+});
+
+test("/contact with no query is the message form; nothing on it links back to /contact", async ({ page }) => {
+  for (const query of ["", "?intent=bogus"]) {
+    await page.goto(`/contact${query}`);
+    const c = copy.contact;
+    await expect(page.locator("h1")).toHaveText(c.headline);
+    await expect(page.locator("main")).toContainText(c.line);
+    await expect(page.getByLabel(c.fields.restaurant)).toHaveValue("");
+    await expect(page.getByLabel(c.fields.message)).toHaveValue("");
+    await expect(page.locator("main label", { hasText: c.fields.phone })).toContainText("(optional)");
+    await expect(page.locator('main input[name="intent"]')).toHaveValue("message");
+    // Get Started already comes here, so "Rather talk?" is gone.
+    await expect(page.getByText(c.call)).toHaveCount(0);
+  }
+  for (const query of ["", "?intent=call", "?intent=call&restaurant=Palm+%26+Stone"]) {
+    await page.goto(`/contact${query}`);
+    await expect(page.locator('main a[href^="/contact"]'), query).toHaveCount(0);
+  }
+  // The static page itself (before any script runs) is the plain form.
+  const html = await (await page.request.get("/contact?intent=call")).text();
+  expect(html).toContain(copy.contact.headline);
+});
+
+test("final band: Get Started and the line under it, no second link to the same form; the footer keeps Or send a message", async ({ page }) => {
   for (const path of ["/", "/delivery", "/integrations", solutionPaths[0]]) {
     await page.goto(path);
     const cta = page.locator("#cta");
@@ -257,10 +347,11 @@ test("final band: the line under the button and Or send a message; the footer li
     const button = (await cta.getByRole("link", { name: copy.cta.primary }).boundingBox())!;
     const line = (await cta.getByText(copy.finalCta.after).boundingBox())!;
     expect(line.y).toBeGreaterThan(button.y + button.height - 1);
-    await expect(cta.getByRole("link", { name: copy.finalCta.message })).toHaveAttribute("href", "/contact");
+    // Get Started goes to the form as a call request, so "Or send a message" (the same form) is left out of the band.
+    await expect(cta.getByRole("link", { name: copy.cta.primary })).toHaveAttribute("href", "/contact?intent=call");
+    await expect(cta.getByRole("link", { name: copy.finalCta.message })).toHaveCount(0);
     await expect(page.locator("footer").getByRole("link", { name: copy.finalCta.message })).toHaveAttribute("href", "/contact");
-    // Get Started still books a call.
-    expect(await cta.getByRole("link", { name: copy.cta.primary }).getAttribute("href")).not.toBe("/contact");
+    await expect(page.locator("footer").getByRole("link", { name: "hello@wuntab.com" })).toHaveAttribute("href", "mailto:hello@wuntab.com");
   }
 });
 

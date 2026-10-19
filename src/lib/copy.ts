@@ -275,7 +275,10 @@ export const copy = {
     after: "20-minute call. We show WunTab on your own menu. No pressure.",
     message: "Or send a message",
   },
-  /** /contact: the form posts to /api/contact, which emails hello@wuntab.com. */
+  /**
+   * /contact: the form posts to /api/contact, which emails hello@wuntab.com.
+   * Get Started lands here too, as /contact?intent=call (owner, 2026-10-19).
+   */
   contact: {
     headline: "Send us a message.",
     line: "Tell us about your restaurant. We reply within one business day.",
@@ -284,7 +287,15 @@ export const copy = {
     sending: "Sending",
     sent: "Thanks. Your message is on its way. We reply within one business day.",
     failed: "We couldn't send your message. Please email us instead:",
+    /** Only while Get Started goes somewhere else (a scheduling link). */
     call: "Rather talk? Book a 20-minute call.",
+    /** /contact?intent=call: the page as a call request. The message stays editable; the phone stays optional. */
+    callIntent: {
+      headline: "Book a 20-minute call.",
+      line: "Tell us how to reach you. We'll set up a time and show WunTab on your own menu.",
+      message: "I'd like a 20-minute call. Best time to reach me: ",
+      phone: "Phone (for the call)",
+    },
   },
   /** /about. The beliefs render only once the owner has written them (beliefs.ts). */
   about: {

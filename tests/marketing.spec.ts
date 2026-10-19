@@ -231,13 +231,13 @@ test("mega-menu works from the keyboard and Escape returns focus", async ({ page
   await expect(product).toBeFocused();
 });
 
-test("the header Get Started stays visible on a phone and books a call", async ({ page }) => {
+test("the header Get Started stays visible on a phone and books a call (the /contact form, as a call request)", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   const cta = page.locator(`header a[href="${demoHref}"]`).first();
   await expect(cta).toBeVisible();
   await expect(cta).toHaveText(copy.cta.primary);
-  expect(demoHref).toContain("Book%20a%20call");
+  expect(demoHref).toBe("/contact?intent=call");
 });
 
 test("no page has horizontal scroll at 360, 390 or 430", async ({ page }) => {

@@ -341,6 +341,11 @@ test("customer stories render nothing while there are none; founding restaurants
 });
 
 test("Get Started carries the restaurant name into Book a call", () => {
+  // This site's own form (the default since 2026-10-19): the name joins the query.
+  expect(demoHrefWithName("/contact?intent=call", "Palm & Stone")).toBe("/contact?intent=call&restaurant=Palm+%26+Stone");
+  expect(new URL(demoHrefWithName("/contact?intent=call", " Palm & Stone "), "https://x.test").searchParams.get("restaurant")).toBe("Palm & Stone");
+  expect(demoHrefWithName("/contact?intent=call", "  ")).toBe("/contact?intent=call");
+  expect(demoHrefWithName("/contact", "Saffron", "name")).toBe("/contact?name=Saffron");
   const mail = "mailto:hello@wuntab.com?subject=Book%20a%20call%20with%20WunTab";
   expect(demoHrefWithName(mail, "  Saffron & Co ")).toBe(
     "mailto:hello@wuntab.com?subject=Book%20a%20call%20with%20WunTab%3A%20Saffron%20%26%20Co&body=Restaurant%3A%20Saffron%20%26%20Co%0A%0A",

@@ -44,6 +44,36 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-19 · Get Started goes to the contact form (PR open)
+
+**Status:** open, for the owner to merge. This entry moves to "merged" when it is.
+
+**Why:** every Get Started opened a mailto link to hello@wuntab.com. On phones without a mail app set up, the button looked like it did nothing. The /contact form sends for real now (`CONTACT_EMAIL_API_KEY` is set, and the owner has tested it).
+
+**What changed:**
+- **Destination:** `demoHref` defaults to `/contact?intent=call`; `NEXT_PUBLIC_DEMO_HREF` can still point it at a scheduling link. This covers every Get Started: header, mobile menu, hero, founding section, price card, product and solution pages, final band.
+- **The hero's name:** what the visitor typed rides along as `&restaurant=`. "Palm & Stone" becomes `restaurant=Palm+%26+Stone` and arrives intact.
+- **/contact as a call request:** with `?intent=call` it reads "Book a 20-minute call." and "Tell us how to reach you. We'll set up a time and show WunTab on your own menu."
+  - The Restaurant field holds the typed name.
+  - The Message starts as "I'd like a 20-minute call. Best time to reach me: " and stays editable.
+  - The phone field reads "Phone (for the call)" and stays optional.
+- **Plain /contact:** with no query (or an unknown intent) it is the same message form as before. It is read in the browser, so the page stays static.
+- **The email:** a hidden "intent" field goes with the form. The handler accepts only "call" or "message", and anything else counts as "message". Call requests are headed "Call request: <name>, <restaurant>" and messages "Website message: <name>, <restaurant>". The body starts with an "Intent:" line.
+- **Links removed:** /contact's "Rather talk? Book a 20-minute call." and the final band's "Or send a message", while Get Started itself goes to the form. The footer keeps hello@wuntab.com and "Or send a message".
+- **Docs:** the doc comments, COPY.md and the design skill now describe the form instead of email.
+
+**How it was checked:**
+- **Tests:** 127 Playwright tests passed and 1 was skipped. The new ones check that:
+  - every Get Started on every page (hidden ones included) links to `/contact?intent=call`;
+  - the only mailto links left are visible email addresses;
+  - at 390 and 1280, the hero → form path carries "Palm & Stone", posts `intent=call` and sends "Call request: …" to the stand-in email server (no real email);
+  - an unknown intent is a message, and the plain /contact is unchanged;
+  - nothing in /contact's page content links back to /contact.
+- **WebKit:** a new `tests/get-started.spec.ts` (hero, header and final-band paths) also runs in the WebKit iPhone workflow.
+- **Screenshots:** in `evidence/get-started-form/`, at 390 and 1280.
+
+---
+
 ## 2026-10-19 · PR #44: the hero phone no longer turns over to the kitchen display (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 44"). Squash commit `6c73383` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone with and without reduced motion.

@@ -1,9 +1,11 @@
-import { contactEmailText, contactTrap, readContact } from "@/lib/contact";
+import { contactEmailText, contactSubject, contactTrap, readContact } from "@/lib/contact";
 import { site } from "@/lib/site";
 
 /**
  * The /contact form's handler: it checks the message and emails it to
- * hello@wuntab.com, with the sender as reply-to.
+ * hello@wuntab.com, with the sender as reply-to. A call request (Get Started,
+ * intent "call") gets the subject "Call request: ..."; anything else is a
+ * "Website message: ...".
  *
  * Sending goes through an email API (Resend's, called with fetch, no
  * library) with a key of its own: CONTACT_EMAIL_API_KEY, set in Vercel for
@@ -43,7 +45,7 @@ export async function POST(request: Request) {
   const key = process.env.CONTACT_EMAIL_API_KEY;
   if (!key) return json(503, { error: "not-configured" });
 
-  const m = read.message;
+  const { message: m, intent } = read;
   const sent = await fetch(ENDPOINT, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
@@ -51,8 +53,8 @@ export async function POST(request: Request) {
       from: FROM,
       to: [site.contactEmail],
       reply_to: m.email,
-      subject: oneLine(`Website message: ${m.name}, ${m.restaurant}`),
-      text: contactEmailText(m),
+      subject: oneLine(contactSubject(m, intent)),
+      text: contactEmailText(m, intent),
     }),
   }).catch(() => null);
   if (!sent?.ok) return json(502, { error: "send" });
