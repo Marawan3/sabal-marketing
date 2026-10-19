@@ -71,7 +71,8 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Homepage, top to bottom:** hero (since 2026-10-13: a live phone drawn in HTML and
   CSS on the saffron panel, wider than the text column. It orders from the demo
   restaurant and the order lands on the kitchen display beside it; on phones the phone
-  turns over to the ticket. See section 9); outcome tabs with no card
+  never turns over: it holds on the confirmation and loops, and the kitchen band below
+  shows the display. See section 9); outcome tabs with no card
   (desktop: lines left, screenshot right; phone: label, lines, crop); the kitchen band,
   the page's one bold moment (logo navy, the kitchen display large, one headline, one
   line); product rows between thin rules (title, one line, link, a small real crop where

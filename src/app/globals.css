@@ -101,6 +101,13 @@ html {
   animation-iteration-count: infinite;
 }
 
+/* Below 1024px a visual with a narrow story (the hero on phones) runs its own length. */
+@media (max-width: 1023.98px) {
+  [data-demo][data-steps-narrow] {
+    animation-duration: var(--vis-dur-narrow);
+  }
+}
+
 body {
   background: var(--paper);
   color: var(--ink);

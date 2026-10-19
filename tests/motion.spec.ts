@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { execFileSync } from "node:child_process";
-import { LOOP, STEPS } from "../src/lib/hero-demo-timeline";
+import { LOOP, NARROW_LOOP, NARROW_STEPS, STEPS } from "../src/lib/hero-demo-timeline";
 import { visuals } from "../scripts/motion-spec.mjs";
 import { timing, type Timing } from "./motion";
 
@@ -21,11 +21,20 @@ test("the generated keyframes are up to date with the spec", () => {
 test("the spec's step times are each component's own", async ({ page }) => {
   expect(spec.hero.steps).toEqual(STEPS);
   expect(spec.hero.loop).toBe(LOOP);
+  expect(spec.heroNarrow.steps).toEqual(NARROW_STEPS);
+  expect(spec.heroNarrow.loop).toBe(NARROW_LOOP);
   const pages = ["/", "/how-it-works", "/pricing", "/delivery", "/catering", "/restaurant-websites", "/restaurant-seo", "/order-management", "/upsells", "/loyalty", "/payments"];
   const seen = new Set<string>();
   for (const path of pages) {
     await page.goto(path);
-    for (const [name, steps] of await page.locator("[data-demo]").evaluateAll((els) => els.map((el) => [el.getAttribute("data-visual")!, el.getAttribute("data-steps")!]))) {
+    for (const [name, steps, narrow] of await page
+      .locator("[data-demo]")
+      .evaluateAll((els) => els.map((el) => [el.getAttribute("data-visual")!, el.getAttribute("data-steps")!, el.getAttribute("data-steps-narrow")] as [string, string, string | null]))) {
+      // A visual with its own story below 1024px (the hero): the spec's "<name>Narrow".
+      if (narrow) {
+        expect(narrow.split(" ").map(Number), `${name} below 1024px`).toEqual(spec[`${name}Narrow`].steps);
+        seen.add(`${name}Narrow`);
+      }
       const own = steps.split(" ").map(Number);
       if (own.length === 1) continue; // a still: nothing to run
       if (name.startsWith("flow-")) {
@@ -50,7 +59,8 @@ test("?debug=motion lists each visual's play state, its last isIntersecting and 
   const hero = panel.locator("tr", { hasText: /^hero/ });
   await expect(hero).toContainText("running");
   await expect(hero).toContainText("true");
-  await expect(hero).toContainText(/\d+\/13/);
+  // At phone width the hero runs its narrow story: steps 0 to 12.
+  await expect(hero).toContainText(/\d+\/12/);
   // Off screen: paused.
   await expect(panel.locator("tr", { hasText: /^kitchen/ })).toContainText("paused: off screen");
   // With reduced motion it says so.
@@ -91,7 +101,9 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
     await page.goto(path);
     const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]`).first();
     await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
-    return { ...(await timing(el)), steps: (await el.getAttribute("data-steps"))!.split(" ").map(Number) };
+    // Below 1024px a visual with a narrow story (the hero) runs that one.
+    const steps = (page.viewportSize()!.width < 1024 && (await el.getAttribute("data-steps-narrow"))) || (await el.getAttribute("data-steps"))!;
+    return { ...(await timing(el)), steps: steps.split(" ").map(Number) };
   };
   const report: string[] = [];
   for (const width of [393, 1440]) {

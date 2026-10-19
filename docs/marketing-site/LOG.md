@@ -44,6 +44,25 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-19 · PR #44: the hero phone no longer turns over to the kitchen display (open, for the owner to merge)
+
+**Status:** open, CI green (Vercel, WebKit iPhone with and without reduced motion). Not merged: the owner merges this one.
+
+**Why:** below 1024px the hero phone turned over after the confirmation and showed the kitchen display on its back. That read as if the display ran on a phone, and the kitchen band just below already shows it.
+
+**What changed:**
+- **Phones (below 1024px):** the hero never turns over. Menu → add item → checkout → confirmation, at the desktop's exact step times. The confirmation holds about 2.5 s (9.12 s to 11.6 s), then the cover fades in and the loop starts again at 12.2 s.
+- **Deleted:** the flipper, the phone's back face (kitchen markup and CSS), the flip keyframes, the reduced-motion face crossfade and PR #34's edge-on fade. `KitchenHead`, `Column` and `Ticket` stay, because the desktop board uses them.
+- **Desktop (1024px and up):** unchanged. 0 of 289 sampled frames differ (339 elements, every 50 ms, both modes, at 1280).
+- **Reduced motion:** the same sequence and pace, with 150 ms crossfades and the scroll dips.
+- **Tests:**
+  - At 390: no `[data-flipper]`, and no ticket or kitchen text in the phone at any point of a full loop. The hold is 2.4–2.6 s and the clock is 12.2 s.
+  - At 1440: the ticket lands on `[data-board]`.
+  - Both widths are also tested with reduced motion.
+- **Evidence:** one full loop at 390 and 1280, with motion and with reduced motion, is in `evidence/hero-no-flip/` (step sheets and GIFs). The phone screen never goes darker than 163/255; the kitchen screen was under 90.
+
+---
+
 ## 2026-10-14 · PR #42: reduced motion, each scroll is a dip (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge on green"). Squash commit `184def8` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. Chromium and WebKit iPhone CI were both green.

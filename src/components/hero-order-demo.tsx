@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { copy } from "@/lib/copy";
 import { demoOrder as o } from "@/lib/demo-order";
-import { LOOP, STEPS } from "@/lib/hero-demo-timeline";
+import { LOOP, NARROW_LOOP, NARROW_STEPS, STEPS } from "@/lib/hero-demo-timeline";
 import { VisualPlayer } from "./visual-player";
 import s from "./hero-order-demo.module.css";
 
@@ -12,15 +12,20 @@ import s from "./hero-order-demo.module.css";
  * menu's real dishes and prices (src/lib/demo-order.ts). The only picture is
  * the dish photo. The module CSS runs the story; visual-player.tsx pauses it off screen.
  *
- * Desktop: the phone, and the kitchen display beside it. Phones: the phone
- * turns over to the kitchen's side after the confirmation.
+ * Desktop: the phone, and the kitchen display beside it, where the order's
+ * ticket lands. Phones: the phone alone; it holds on the confirmation and
+ * starts again (2026-10-19: a phone that turned over to the kitchen display
+ * read as if the display ran on a phone, and the kitchen band below shows it).
  */
+const NARROW = { steps: NARROW_STEPS, loop: NARROW_LOOP };
+
 export function HeroOrderDemo() {
   return (
     <VisualPlayer
       name="hero"
       steps={STEPS}
       loop={LOOP}
+      narrow={NARROW}
       className={s.wrap}
       stageClassName={`${s.stage} ${s.sys}`}
       buttonClassName={s.playPause}
@@ -28,32 +33,14 @@ export function HeroOrderDemo() {
       pauseLabel={copy.hero.demo.pause}
       playLabel={copy.hero.demo.play}
     >
-      <div className={s.phoneBox}>
-        <div className={s.flipper} data-flipper>
-          <div className={s.face}>
-            <div className={s.screen}>
-              <StatusBar />
-              <MenuScreen />
-              <CheckoutScreen />
-              <ConfirmScreen />
-              <div className={s.cover} />
-            </div>
-          </div>
-          <div className={`${s.face} ${s.back}`}>
-            <div className={s.screen}>
-              <StatusBar />
-              <div className={s.kPhone}>
-                <KitchenHead />
-                <Column title="New" before={o.kitchen.new.length} after={o.kitchen.new.length + 1}>
-                  {o.kitchen.new.map((t) => (
-                    <Ticket key={t.number} ticket={t} />
-                  ))}
-                  <div className={s.arrive} data-arrive>
-                    <Ticket ticket={o.ticket} />
-                  </div>
-                </Column>
-              </div>
-            </div>
+      <div className={s.phoneBox} data-phone>
+        <div className={s.face}>
+          <div className={s.screen}>
+            <StatusBar />
+            <MenuScreen />
+            <CheckoutScreen />
+            <ConfirmScreen />
+            <div className={s.cover} data-cover />
           </div>
         </div>
       </div>

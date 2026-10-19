@@ -188,7 +188,9 @@ function block(file) {
   let tapFade = false;
   for (const [vname, v] of Object.entries(visuals)) {
     if (v.file !== file) continue;
-    v.tracks.forEach((track, i) => {
+    // A visual's own media query applies to each of its tracks, with the track's own.
+    const tracks = v.media ? v.tracks.map((t) => ({ ...t, media: [v.media, t.media].filter(Boolean).join(" and ") })) : v.tracks;
+    tracks.forEach((track, i) => {
       if (track.mode !== "reduced") add(out.motion, `m-${vname}-${i}`, track, v);
       const red = track.mode === "motion" ? { fades: [] } : reducedOf(track, `m-${vname}-${i}`, v.steps);
       if (red.hold !== undefined && red.hold !== null) rule(out.reduced, track).decls.push(decl("transform", red.hold));
