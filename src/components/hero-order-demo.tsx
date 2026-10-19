@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { copy } from "@/lib/copy";
 import { demoOrder as o } from "@/lib/demo-order";
 import { LOOP, NARROW_LOOP, NARROW_STEPS, STEPS } from "@/lib/hero-demo-timeline";
+import { DishImg, RestaurantMark } from "./demo-img";
 import { VisualPlayer } from "./visual-player";
 import s from "./hero-order-demo.module.css";
 
@@ -9,8 +10,9 @@ import s from "./hero-order-demo.module.css";
  * The hero: a diner orders on the demo restaurant's storefront, and the order
  * lands on the kitchen display. Drawn in HTML and CSS from the real layouts
  * (the storefront's clean theme and the kitchen display), with the demo
- * menu's real dishes and prices (src/lib/demo-order.ts). The only picture is
- * the dish photo. The module CSS runs the story; visual-player.tsx pauses it off screen.
+ * restaurant's menu and prices (src/lib/demo-order.ts). The pictures are the
+ * dish photos and the restaurant's mark, loaded at once. The module CSS runs
+ * the story; visual-player.tsx pauses it off screen.
  *
  * Desktop: the phone, and the kitchen display beside it, where the order's
  * ticket lands. Phones: the phone alone; it holds on the confirmation and
@@ -116,80 +118,129 @@ export const Plus = () => (
   </svg>
 );
 
+const Tick = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </svg>
+);
+
 export const Chevron = ({ back = false }: { back?: boolean }) => (
   <svg className={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d={back ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
   </svg>
 );
 
-function DishPhoto() {
-  // A plain img: there is one small file and nothing to resize, so the image loader would only add script.
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={o.dish.photo} alt="" width={o.dish.photoSize} height={o.dish.photoSize} decoding="async" draggable={false} />;
+/** The restaurant's name in a bar, after its mark. Shared with the visuals in ./visuals. */
+export function Brand({ eager = false }: { eager?: boolean }) {
+  return (
+    <span className={s.brand}>
+      <RestaurantMark eager={eager} />
+      <span>{o.restaurant}</span>
+    </span>
+  );
+}
+
+/**
+ * The menu page's head, under the bar (the clean theme's): the location, open
+ * now, pickup, the address and time. Shared with the storefront visual.
+ */
+export function MenuHead() {
+  return (
+    <div className={s.menuHead}>
+      <div className={s.stack}>
+        <div className={s.title}>{o.restaurant} · Miami</div>
+        <span className={`${s.meta} ${s.open}`}>
+          <i />
+          Open now
+        </span>
+      </div>
+      <div className={s.pills}>
+        <span className={`${s.pill} ${s.pillOn}`}>Pickup</span>
+      </div>
+      <div className={s.stack} style={{ gap: "calc(var(--k) * 8)" }}>
+        <span className={s.selector}>48 Coral Lantern Way, Miami</span>
+        <span className={s.selector}>{o.pickupTime}</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A menu row: name, price and description, its photo on the right with the
+ * add button on the photo's corner. `children` go inside the add button (the
+ * cart count); `eager` for the hero.
+ */
+export function MenuRow({ row, eager = false, children }: { row: (typeof o.rows)[number]; eager?: boolean; children?: ReactNode }) {
+  return (
+    <>
+      <div className={s.rowText}>
+        <span className={s.name}>{row.name}</span>
+        <span className={s.price}>{row.price}</span>
+        <span className={`${s.meta} ${s.clamp}`}>{row.description}</span>
+      </div>
+      <div className={s.thumb}>
+        <DishImg src={row.photo!} eager={eager} />
+        <span className={s.add}>
+          <Plus />
+          {children}
+        </span>
+      </div>
+    </>
+  );
+}
+
+/** Steam off a hot dish: three soft wisps on their own loop, none with reduced motion. Shared with the upsell visual. */
+export function Steam() {
+  return (
+    <span className={s.steam} data-steam>
+      <i />
+      <i />
+      <i />
+    </span>
+  );
 }
 
 function MenuScreen() {
   return (
     <div className={s.layer} data-screen="menu">
       <div className={s.bar}>
-        <span className={s.brand}>{o.restaurant}</span>
+        <Brand eager />
       </div>
-      <div className={s.tabs}>
-        <span className={s.round}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="M16 16l4 4" />
-          </svg>
-        </span>
-        {o.tabs.map((tab) => (
-          <span key={tab} className={`${s.pill} ${tab === o.category ? s.pillOn : ""}`}>
-            {tab}
-          </span>
-        ))}
-      </div>
-      <div className={s.menuBody}>
+      <div className={s.menuPage}>
         <div className={s.scroll} data-scroll>
+          <MenuHead />
+          <div className={s.tabs}>
+            <span className={s.round}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="M16 16l4 4" />
+              </svg>
+            </span>
+            {o.tabs.map((tab) => (
+              <span key={tab} className={`${s.pill} ${tab === o.category ? s.pillOn : ""}`}>
+                {tab}
+              </span>
+            ))}
+          </div>
           <div className={s.h2}>{o.category}</div>
           <div className={s.rows}>
-            {o.rows.map((row) =>
-              row.name === o.dish.name ? (
-                <div key={row.name} className={s.row}>
-                  <div className={s.rowText}>
-                    <span className={s.name}>{row.name}</span>
-                    <span className={s.price}>{row.price}</span>
-                    <span className={`${s.meta} ${s.clamp}`}>{row.description}</span>
-                  </div>
-                  <div className={s.thumb}>
-                    <DishPhoto />
-                    <span className={s.add}>
-                      <Plus />
-                      <span className={s.inCart}>1</span>
-                    </span>
-                  </div>
-                  <Tap step={2} x={150} y={60} />
-                </div>
-              ) : (
-                <div key={row.name} className={s.row}>
-                  <div className={s.rowText}>
-                    <span className={s.name}>{row.name}</span>
-                    <span className={s.price}>{row.price}</span>
-                    {row.description ? <span className={`${s.meta} ${s.clamp}`}>{row.description}</span> : null}
-                  </div>
-                  <span className={s.add}>
-                    <Plus />
-                  </span>
-                </div>
-              ),
-            )}
+            {o.rows.map((row) => (
+              <div key={row.name} className={s.row}>
+                <MenuRow row={row} eager>
+                  {row.name === o.dish.name ? <span className={s.inCart}>1</span> : null}
+                </MenuRow>
+                {row.name === o.dish.name ? <Tap step={2} x={150} y={60} /> : null}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className={s.cartBar}>
+      <div className={s.cartBar} data-cart>
         <div className={s.action}>
           <span>{o.cartLabel}</span>
           <span>{o.cartAmount}</span>
-          <Tap step={7} x={160} y={28} />
+          <Tap step={8} x={160} y={28} />
         </div>
       </div>
 
@@ -201,7 +252,7 @@ function MenuScreen() {
 
 function ItemSheet() {
   return (
-    <div className={s.sheet}>
+    <div className={s.sheet} data-sheet>
       <div className={s.grabber}>
         <span />
       </div>
@@ -211,7 +262,8 @@ function ItemSheet() {
         </svg>
       </span>
       <div className={s.photo}>
-        <DishPhoto />
+        <DishImg src={o.dish.photo} eager />
+        <Steam />
       </div>
       <div className={s.sheetBody}>
         <div className={s.stack}>
@@ -226,20 +278,22 @@ function ItemSheet() {
               <span className={s.meta}>{group.instruction}</span>
             </div>
             {group.options.map((option) => {
-              const picked = option.name === o.pick && group.name === o.pickGroup;
+              // The diner's taps: story step 4 (the size), then 5 (the extra).
+              const pick = o.picks.findIndex((p) => p.option === option.name && p.group === group.name);
+              const step = pick + 4;
               return (
                 <div key={option.name} className={s.option}>
-                  <span className={group.single ? s.radio : s.check}>{picked ? <i /> : null}</span>
-                  {picked ? (
-                    <span className={s.swap} data-pick>
+                  <span className={group.single ? s.radio : s.check}>{pick < 0 ? null : <i>{group.single ? null : <Tick />}</i>}</span>
+                  {pick < 0 ? (
+                    <span>{option.name}</span>
+                  ) : (
+                    <span className={s.swap} data-pick={step}>
                       <span>{option.name}</span>
                       <span className={s.name}>{option.name}</span>
                     </span>
-                  ) : (
-                    <span>{option.name}</span>
                   )}
                   {option.delta ? <span className={`${s.meta} ${s.delta}`}>{option.delta}</span> : null}
-                  {picked ? <Tap step={4} x={30} y={22} /> : null}
+                  {pick < 0 ? null : <Tap step={step} x={30} y={22} />}
                 </div>
               );
             })}
@@ -254,8 +308,14 @@ function ItemSheet() {
         </span>
         <div className={s.action}>
           <span>{o.addLabel}</span>
-          <span>{o.dish.price}</span>
-          <Tap step={5} x={100} y={28} />
+          {/* The price follows the choices: the 12-inch, then 16-inch, then with the drizzle. */}
+          <span className={s.swap} data-add-price>
+            <span>{o.dish.price}</span>
+            {o.picks.map((p) => (
+              <span key={p.option}>{p.price}</span>
+            ))}
+          </span>
+          <Tap step={6} x={100} y={28} />
         </div>
       </div>
     </div>
@@ -303,7 +363,7 @@ function CheckoutScreen() {
           <div className={`${s.line} ${s.rule}`}>
             <span>{c.items}</span>
             <span className={s.withIcon} style={{ gap: "calc(var(--k) * 4)" }}>
-              {o.dish.price}
+              {c.subtotal}
               <Chevron />
             </span>
           </div>
@@ -367,7 +427,7 @@ function CheckoutScreen() {
               <span>{o.total}</span>
               <span />
             </span>
-            <Tap step={10} x={160} y={28} />
+            <Tap step={11} x={160} y={28} />
           </div>
         </div>
         <span className={s.meta}>{c.smallPrint}</span>
@@ -409,10 +469,10 @@ function ConfirmScreen() {
             <span>
               1× {o.dish.name}
               <span className={s.meta} style={{ display: "block" }}>
-                {o.pick}
+                {o.mods.join(", ")}
               </span>
             </span>
-            <span>{o.dish.price}</span>
+            <span>{o.linePrice}</span>
           </div>
           <div className={`${s.line} ${s.rule}`}>
             <span>Total</span>

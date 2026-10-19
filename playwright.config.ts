@@ -58,7 +58,7 @@ export default defineConfig({
       ? [
           {
             name: "webkit-iphone",
-            testMatch: /(hero-demo|visuals|motion|get-started)\.spec\.ts/,
+            testMatch: /(hero-demo|visuals|motion|get-started|demo-restaurant)\.spec\.ts/,
             use: { ...devices["iPhone 15"], viewport: { width: 393, height: 852 } },
           },
           {

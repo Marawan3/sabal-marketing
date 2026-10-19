@@ -1,7 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import { demoOrder as o } from "@/lib/demo-order";
 import h from "../hero-order-demo.module.css";
-import { StatusBar } from "../hero-order-demo";
+import { Brand, StatusBar } from "../hero-order-demo";
 import v from "./visuals.module.css";
 
 /**
@@ -22,11 +21,11 @@ export function Phone({ cut = false, width, children }: { cut?: boolean; width?:
   );
 }
 
-/** The restaurant website's header (the clean theme's shell): name, Order online, the menu button. */
+/** The restaurant website's header (the clean theme's shell): mark and name, Order online, the menu button. */
 export function SiteHeader({ tap }: { tap?: ReactNode }) {
   return (
     <div className={`${h.bar} ${v.siteBar}`}>
-      <span className={h.brand}>{o.restaurant}</span>
+      <Brand />
       <span className={v.siteBarEnd}>
         <span className={`${v.sitePill} ${v.pillAction}`}>
           Order online

@@ -2,21 +2,15 @@ import { copy } from "@/lib/copy";
 import { demoPairings, demoSms } from "@/lib/demo-data";
 import { demoOrder as o } from "@/lib/demo-order";
 import h from "../hero-order-demo.module.css";
-import { Plus } from "../hero-order-demo";
+import { DishImg } from "../demo-img";
+import { Brand, MenuRow, Steam } from "../hero-order-demo";
 import { Phone } from "./phone";
 import { Visual } from "./visual";
 import v from "./visuals.module.css";
 
-function DishPhoto() {
-  // The hero's one dish photo, at its own size.
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={o.dish.photo} alt="" width={o.dish.photoSize} height={o.dish.photoSize} decoding="async" draggable={false} />;
-}
-
 /**
- * The demo restaurant's online menu (the hero's first screen, still):
- * category pills, then the category's dishes with price and description,
- * and the photo on Spiced Lamb Meatballs, the one dish photo the demo has.
+ * The demo restaurant's online menu (the hero's menu, still): category
+ * pills, then the category's dishes with price, description and photo.
  */
 export function MenuPhone() {
   return (
@@ -24,7 +18,7 @@ export function MenuPhone() {
       <Phone>
         <div className={v.layer}>
           <div className={h.bar}>
-            <span className={h.brand}>{o.restaurant}</span>
+            <Brand />
           </div>
           <div className={h.tabs}>
             {o.tabs.map((tab) => (
@@ -38,23 +32,7 @@ export function MenuPhone() {
             <div className={h.rows}>
               {o.rows.map((row) => (
                 <div key={row.name} className={h.row}>
-                  <div className={h.rowText}>
-                    <span className={h.name}>{row.name}</span>
-                    <span className={h.price}>{row.price}</span>
-                    <span className={`${h.meta} ${h.clamp}`}>{row.description}</span>
-                  </div>
-                  {row.name === o.dish.name ? (
-                    <div className={h.thumb}>
-                      <DishPhoto />
-                      <span className={h.add}>
-                        <Plus />
-                      </span>
-                    </div>
-                  ) : (
-                    <span className={h.add}>
-                      <Plus />
-                    </span>
-                  )}
+                  <MenuRow row={row} />
                 </div>
               ))}
             </div>
@@ -69,9 +47,10 @@ export function MenuPhone() {
 const UPSELL_STEPS = [0, 700, 1500];
 
 /**
- * The dish sheet for Spiced Lamb Meatballs with the restaurant's two picks
- * under "Goes well with" (the clean theme's own heading and row shape: name,
- * price, one line of description, an add button). One thing moves: the list.
+ * The dish sheet for Pepperoni Pizza, steam rising off its photo, with the
+ * restaurant's two picks under "Goes well with" (the clean theme's own heading
+ * and row shape: name, price, one line of description, the photo with its add
+ * button). One thing moves in the story: the list. The steam is its own loop.
  */
 export function UpsellPhone() {
   return (
@@ -79,7 +58,8 @@ export function UpsellPhone() {
       <Phone>
         <div className={v.layer}>
           <div className={v.upPhoto}>
-            <DishPhoto />
+            <DishImg src={o.dish.photo} />
+            <Steam />
           </div>
           <div className={v.upBody}>
             <div className={h.stack}>
@@ -90,15 +70,8 @@ export function UpsellPhone() {
             <div className={v.upPairs}>
               <div className={h.name}>Goes well with</div>
               {demoPairings.map((row) => (
-                <div key={row.name} className={h.row}>
-                  <div className={h.rowText}>
-                    <span className={h.name}>{row.name}</span>
-                    <span className={h.price}>{row.price}</span>
-                    <span className={`${h.meta} ${v.oneLine}`}>{row.description}</span>
-                  </div>
-                  <span className={h.add}>
-                    <Plus />
-                  </span>
+                <div key={row.name} className={`${h.row} ${v.upRow}`}>
+                  <MenuRow row={row} />
                 </div>
               ))}
             </div>

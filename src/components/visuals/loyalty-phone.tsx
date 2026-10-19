@@ -2,6 +2,8 @@ import { copy } from "@/lib/copy";
 import { demoReward as r } from "@/lib/demo-data";
 import { demoOrder as o } from "@/lib/demo-order";
 import h from "../hero-order-demo.module.css";
+import { DishImg } from "../demo-img";
+import { Brand } from "../hero-order-demo";
 import { Phone } from "./phone";
 import { Visual } from "./visual";
 import v from "./visuals.module.css";
@@ -20,7 +22,7 @@ export function LoyaltyPhone({ cut = false }: { cut?: boolean }) {
       <Phone cut={cut}>
         <div className={v.layer}>
           <div className={h.bar}>
-            <span className={h.brand}>{o.restaurant}</span>
+            <Brand />
           </div>
           <div className={h.done}>
             <div className={h.doneHead}>
@@ -29,9 +31,12 @@ export function LoyaltyPhone({ cut = false }: { cut?: boolean }) {
               <div>We&apos;re making it.</div>
             </div>
             <div className={v.reward}>
-              <div className={v.rewardLabel}>{r.label}</div>
-              <div className={v.rewardTitle}>{r.title}</div>
-              <div>{r.body}</div>
+              <div>
+                <div className={v.rewardLabel}>{r.label}</div>
+                <div className={v.rewardTitle}>{r.title}</div>
+                <div>{r.body}</div>
+              </div>
+              <DishImg src={r.photo} className={v.rewardImg} />
             </div>
             <div className={h.card}>
               <div className={h.line}>
@@ -48,10 +53,10 @@ export function LoyaltyPhone({ cut = false }: { cut?: boolean }) {
                 <span>
                   1× {o.dish.name}
                   <span className={h.meta} style={{ display: "block" }}>
-                    {o.pick}
+                    {o.mods.join(", ")}
                   </span>
                 </span>
-                <span>{o.dish.price}</span>
+                <span>{o.linePrice}</span>
               </div>
               <div className={`${h.line} ${h.rule}`}>
                 <span>Total</span>

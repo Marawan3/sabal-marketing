@@ -19,9 +19,9 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Small card under the name field (2026-10-13):** **$0/month for the restaurant.** Customers pay 5% at checkout. *(The same terms as the service fee clause; the full pricing section stays lower down.)*
 
-**Visual:** a live phone drawn in HTML and CSS (2026-10-13). On the demo restaurant's storefront, a diner opens Spiced Lamb Meatballs ($12.00), picks spice level Hot, adds it, checks out (subtotal $12.00, Service fee (5%) $0.60, tax $0.78, tip $2.40) and pays $15.78, and sees the confirmation with a ready time 20 minutes after the visitor's own clock. On desktop the order then lands as ticket #1930 in the New column of the kitchen display beside the phone. On phones there is no kitchen display in the hero (2026-10-19): the phone holds on the confirmation for about 2.5 seconds and starts again; the kitchen band just below shows the display. Every string on the screens is the storefront's or the kitchen display's own, except the "Service fee (5%)" line: the owner added it on 2026-10-13 to match /pricing and /terms, and the live checkout doesn't show it yet; every dish and price is the demo menu's (`src/lib/demo-order.ts`). About 14 seconds on desktop and 12 on phones, then it loops.
+**Visual:** a live phone drawn in HTML and CSS (2026-10-13; the demo restaurant became Palm&Stone Pizza on 2026-10-19, see "The demo restaurant" below). On the demo restaurant's storefront, the menu's head scrolls away to the Pizzas, each with its photo; a diner opens Pepperoni Pizza ($16.00), taps 16-inch (+$5.00), then Hot-honey drizzle (+$1.50), and the Add item price follows ($16.00, $21.00, $22.50). The cart bar shows "View cart · 1 item" at $23.96 (subtotal plus tax). Checkout: subtotal $22.50, Service fee (5%) $1.13, tax $1.46, tip $4.50, total $29.59; then the confirmation with a ready time 20 minutes after the visitor's own clock. Steam rises off the dish sheet's photo (none with reduced motion). On desktop the order then lands as ticket #1930 (1× Pepperoni Pizza, + 16-inch, + Hot-honey drizzle) in the New column of the kitchen display beside the phone. On phones there is no kitchen display in the hero (2026-10-19): the phone holds on the confirmation for about 2.5 seconds and starts again; the kitchen band just below shows the display. Every string on the screens is the storefront's or the kitchen display's own, except the "Service fee (5%)" line: the owner added it on 2026-10-13 to match /pricing and /terms, and the live checkout doesn't show it yet; every dish and price is the owner's Palm&Stone Pizza menu (`src/lib/demo-order.ts`). About 14 seconds on desktop and 12.5 on phones, then it loops; the second tap came out of the kitchen ticket's hold, so the desktop loop is as long as before.
 
-**Screen readers hear:** An animation: on a phone, a diner orders Spiced Lamb Meatballs, spice level Hot, from Palm&Stone Kitchen, our demo restaurant, and the order arrives as a new ticket on the kitchen display.
+**Screen readers hear:** An animation: on a phone, a diner orders a 16-inch Pepperoni Pizza with a hot-honey drizzle from Palm&Stone Pizza, our demo restaurant, and the order arrives as a new ticket on the kitchen display.
 
 **Button:** Pause the animation / Play the animation
 
@@ -287,7 +287,7 @@ All six follow the product template. They're linked from the footer and from the
 ### /loyalty (build commitment)
 - **Headline:** Give regulars a reason to come back.
 - **Line:** Customers earn a reward for coming back. You decide what it is and when they get it.
-- **Visual:** a reward card on the order confirmation. The confirmation's own strings are from `packages/ui/storefront/clean/confirmation.tsx:42-92`; the reward ("Thanks for coming back. Your next Hummus & Warm Pita is on us.") is an example.
+- **Visual:** a reward card on the order confirmation. The confirmation's own strings are from `packages/ui/storefront/clean/confirmation.tsx:42-92`; the reward ("Thanks for coming back. Your next cannoli is on us.", with the cannoli's photo) is an example.
 - **Status:** not built (`packages/ui/storefront/themes/clean-home.tsx:41-42`). REGISTER.md records it as a build commitment. No points, tiers or app on the page.
 
 ### /kitchen-display
@@ -347,10 +347,65 @@ All six follow the product template. They're linked from the footer and from the
 ## Demo link
 - "See a live WunTab restaurant" points at https://demo.wuntab.com.
 - It sits in the homepage products section and in /restaurant-websites' hero links.
-- It's behind `NEXT_PUBLIC_SHOW_DEMO_LINK`, which is off. Set it to `true` in Vercel once the demo menu has photos. It adds about 60px to the homepage at 390, which still stays under 7,000.
+- It's behind `NEXT_PUBLIC_SHOW_DEMO_LINK`, which is off. It stays off until the live demo restaurant matches the visuals' Palm&Stone Pizza menu (2026-10-19); then set it to `true` in Vercel. It adds about 60px to the homepage at 390, which still stays under 7,000.
 
 ## /how-it-works
 - **Build the relationship:** the reward card on the order confirmation (the /loyalty visual).
-- **Bring them back:** the customer's text on a lock screen, in the product's own words: "Your order #1930 at Palm&Stone Kitchen is confirmed." / "Pickup in about 20 minutes (around {time})." (`packages/domain/ordering/confirmation-sms.ts:67, 77`).
+- **Bring them back:** the customer's text on a lock screen, in the product's own words: "Your order #1930 at Palm&Stone Pizza is confirmed." / "Pickup in about 20 minutes (around {time})." (`packages/domain/ordering/confirmation-sms.ts:67, 77`).
   - You asked for a "Your order's ready" style text. The product sends no ready text, only the confirmation and a cancellation (`packages/services/messaging/customer-sms.ts`), so the visual uses the real one.
 - The stage chips list only products that have a page.
+
+---
+
+# The demo restaurant: Palm&Stone Pizza (2026-10-19)
+
+The owner replaced the demo restaurant's menu with a pizzeria and approved the menu, prices and logo. Every visual now shows it, with a photo on every dish it shows. The photos are AI-generated for this fictional restaurant (ASSETS.md). Data: `src/lib/demo-order.ts` and `src/lib/demo-data.ts`.
+
+## The restaurant
+- **Name:** Palm&Stone Pizza. **Location:** Brickell, 48 Coral Lantern Way, Miami, FL. Tax 6.5%, prep 20 minutes.
+- **Logo:** Logo A, a palmetto in a stone (`public/demo/logo/palmstone-pizza-mark.svg`), beside the name in the website, menu and catering headers and the other storefront bars, and in place of the "P" on the delivery tracking page and in the search result.
+- **Colours on its own screens:** teal #0f766e stays the action colour; sand #f3ead9 for the website's bands and cards (was grey); terracotta #c8693a for the restaurant's pin on the map and the rule over the website's intro band.
+
+## The menu
+Tabs: Pizzas, Starters & Sides, Sandwiches & Salads, Drinks & Dessert. A pizza's menu price is the 12-inch; its Size group is 12-inch, or 16-inch +$5.00.
+
+| Category | Dish | Price | Description |
+|---|---|---|---|
+| Pizzas | Pepperoni Pizza | $16.00 | Cup-and-char pepperoni, whole-milk mozzarella and tomato sauce, with oregano. |
+| Pizzas | Margherita | $14.00 | San Marzano tomato, fresh mozzarella, basil and olive oil. |
+| Pizzas | Hot Honey Soppressata | $19.00 | Spicy soppressata and mozzarella, finished with chili honey. *Not shown yet: its photo is to come (LOG.md).* |
+| Pizzas | Buffalo Chicken | $18.00 | Buffalo chicken, mozzarella, a ranch drizzle and scallions. |
+| Pizzas | White Pie | $17.00 | Ricotta, mozzarella, roasted garlic, lemon zest and basil. |
+| Starters & Sides | Garlic Knots | $7.00 | Six knots brushed with garlic butter, parmesan and parsley, with marinara. |
+| Starters & Sides | Loaded Fries | $10.00 | Crisp fries under melted mozzarella, pepperoni, ranch and scallions. |
+| Starters & Sides | Buffalo Wings | $16.00 | Ten wings in buffalo sauce, with celery and blue cheese. |
+| Sandwiches & Salads | Chicken Parm Sandwich | $15.00 | Crispy chicken cutlet, marinara and melted mozzarella on a toasted hero roll. |
+| Sandwiches & Salads | Chopped Italian Salad | $13.00 | Romaine, salami, provolone, chickpeas, tomato and pepperoncini, with red wine vinaigrette. |
+| Drinks & Dessert | Fresh Lemonade | $4.50 | Fresh-squeezed lemonade over ice. |
+| Drinks & Dessert | Cannoli | $8.00 | Two crisp shells filled with sweet ricotta, with chocolate chips and pistachio. |
+
+**Pepperoni Pizza's choices:** Size (Required): 12-inch, 16-inch +$5.00. Extras (Select up to 4): Hot-honey drizzle +$1.50, Extra cheese +$2.00, Add jalapeños +$1.00, Side of ranch +$0.75.
+
+## The orders
+- **The hero's order, #1930 Priya:** 1× Pepperoni Pizza, 16-inch, Hot-honey drizzle. Subtotal $22.50, Service fee (5%) $1.13, tax $1.46, tip 20% $4.50, total $29.59. Cart bar $23.96. The receipt on /pricing and the loyalty confirmation show the same order.
+- **Kitchen board and orders dashboard:** #1929 Leila, 1× Margherita (12-inch); #1925 Mateo, 1× Buffalo Wings and 1× Garlic Knots (the drawer: subtotal $23.00, total $25.65); #1924 Grace, 2× Chicken Parm Sandwich; #1930 Priya, the hero's order. The dashboard's avatar shows the account's initials, PP.
+- **Delivery, #1931:** 1× Margherita (16-inch) $19.00 and 1× Garlic Knots $7.00, subtotal $26.00; the delivery fee stays the $4.99 example.
+
+## The restaurant's words
+- **Website:** eyebrow "Pizza in Miami, FL"; heading "Stone-oven pizza in Brickell"; sub "Pies from a stone oven, wings, sandwiches and salads. Order ahead for pickup or delivery, or take a seat on the terrace."; intro band "Fired in stone, a block from the bay". The oven photo sits above the heading. Featured: White Pie, Buffalo Wings, Chicken Parm Sandwich and Buffalo Chicken (Hot Honey Soppressata takes the first card once its photo is in), each a card with its photo, name and price.
+- **Menu page (search result):** title "Menu | Palm&Stone Pizza, Brickell"; description "The full Palm&Stone Pizza menu: pizzas, starters and sides, sandwiches and salads, drinks and dessert, priced for pickup and delivery."; dish lines Pepperoni Pizza $16.00, Margherita $14.00, Garlic Knots $7.00, Buffalo Wings $16.00.
+- **Catering:** the spread photo at the top; "Party pies, trays of wings and garlic knots, and a big salad for an office lunch or a party at home. Tell us the date and the headcount and we will send back a plan." Form example: 40 guests, "Office lunch. Pizzas, wings and a big salad, two vegetarian guests."
+- **Text message:** "Your order #1930 at Palm&Stone Pizza is confirmed."
+- **"Goes well with" for Pepperoni Pizza:** Garlic Knots and Loaded Fries, each with its photo.
+- **Menu editor:** Pepperoni Pizza with its photo; Category Pizzas, Price 16, Prep 20 (the restaurant's prep time; the owner's menu gives no per-dish prep); "Size · Required · 2 options" and "Extras · Optional · 4 options".
+- **The tracking page's map:** a small drawn map, no map provider and no real streets: streets in light grey, the route in teal, the restaurant's pin and the delivery address's. On the way, the driver's dot goes along the route; with reduced motion it fades between three points and never slides.
+
+## What screen readers hear (copy.ts)
+- **Delivery:** An animation: a delivery checkout on Palm&Stone Pizza's website, our demo restaurant, then the tracking page, where a small map shows the driver on the way.
+- **Catering:** An animation: the demo restaurant's catering page, with a photo of a catering spread, where a customer fills in the catering enquiry form and sends it.
+- **Website:** An animation: the demo restaurant's own website, with a photo of its pizza oven and its featured dishes with photos and prices, then a tap on Order online that opens the menu.
+- **Menu editor:** The menu editor in the WunTab dashboard: the demo restaurant's Pepperoni Pizza with its photo, name, category, price, availability set to Available, and its two modifier groups, Size and Extras.
+- **Loyalty:** An animation: the demo restaurant's order confirmation on a phone, where a reward card appears for a returning customer: their next cannoli is on the restaurant.
+- **Online menu:** The demo restaurant's online menu on a phone: the Pizzas category, each pizza with its name, price, description and photo.
+- **Upsells:** The demo restaurant's dish sheet for Pepperoni Pizza on a phone, with its photo and two suggestions under Goes well with: Garlic Knots and Loaded Fries.
+- **Text message:** A text message on a phone's lock screen from the demo restaurant: Your order #1930 at Palm&Stone Pizza is confirmed. Pickup in about 20 minutes.
