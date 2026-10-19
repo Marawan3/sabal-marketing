@@ -18,6 +18,8 @@ import s from "./hero-order-demo.module.css";
  * ticket lands. Phones: the phone alone; it holds on the confirmation and
  * starts again (2026-10-19: a phone that turned over to the kitchen display
  * read as if the display ran on a phone, and the kitchen band below shows it).
+ * Either way the confirmation crossfades straight to the menu to start again;
+ * the status bar and the island stay (2026-10-19: no blank white phone).
  */
 const NARROW = { steps: NARROW_STEPS, loop: NARROW_LOOP };
 
@@ -37,12 +39,11 @@ export function HeroOrderDemo() {
     >
       <div className={s.phoneBox} data-phone>
         <div className={s.face}>
-          <div className={s.screen}>
+          <div className={s.screen} data-phone-screen>
             <StatusBar />
             <MenuScreen />
             <CheckoutScreen />
             <ConfirmScreen />
-            <div className={s.cover} data-cover />
           </div>
         </div>
       </div>
