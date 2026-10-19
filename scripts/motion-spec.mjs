@@ -50,6 +50,10 @@ const leg = { ms: 600, ease: "linear" };
 
 /** The hero menu page's head (.menuHead), in the phone's own pixels: the step-1 scroll's length. */
 const MENU_HEAD = 234;
+/** When the screens under the hero's confirmation go back to the loop's start (it covers the phone from 9420 ms). */
+const RESET = 10000;
+/** The hero's restart: the confirmation fades out over the menu. */
+const restart = { ms: 300, ease: "ease" };
 
 const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
 
@@ -69,14 +73,25 @@ const fadeIn = (k, hold = null) => ({ hold, show: { start: "0", changes: [[k, nu
  * drizzle (the Add item price follows each), 6 tap Add item, 7 the sheet
  * closes and the cart bar shows, 8 tap the bar, 9 checkout, 10 scroll to Pay,
  * 11 tap Pay, 12 the confirmation. Desktop then has 13 the kitchen ticket and
- * 14 the fade out; phones go straight to the fade out (their step 13), 2.5 s
+ * 14 the restart; phones go straight to the restart (their step 13), 2.5 s
  * after the confirmation lands.
+ *
+ * The restart (owner, 2026-10-19: it used to fade to a blank white phone for
+ * about a second) is a direct crossfade from the confirmation to the menu, as
+ * the loop starts it. While the confirmation covers the screen (from RESET),
+ * everything under it goes back to where the loop starts: the checkout slides
+ * away, the cart bar and its count go, the menu scrolls back up. At the
+ * restart the confirmation fades out over the menu (300 ms; 150 ms with
+ * reduced motion), and the status bar and the island never leave. At the top
+ * of the next loop the confirmation is back off screen, unseen.
  * src/lib/hero-demo-timeline.ts has the same numbers (a test checks).
  */
 function heroStory({ desk }) {
   const shared = [0, 900, 1900, 2200, 3200, 3900, 4600, 4900, 5900, 6200, 7300, 8200, 8900];
   const steps = desk ? [...shared, 10100, 13800] : [...shared, 11900];
-  const end = steps.length - 1; // the fade out before the loop starts again
+  const end = steps.length - 1; // the restart: the confirmation crossfades to the menu
+  // Under the confirmation (it lands at 8900 + 520 ms), the screens beneath go back to the loop's start.
+  const reset = { at: RESET };
   const m = { ms: 520, ease: "cubic-bezier(0.2, 0.8, 0.2, 1)" };
   const f = { ms: 280, ease: "ease" };
   const show = (sel, k) => ({ sel, prop: "opacity", start: "0", changes: [[k, "1"]], ramp: f });
@@ -90,7 +105,10 @@ function heroStory({ desk }) {
       sel: ".wrap .scroll",
       prop: "transform",
       start: "none",
-      changes: [[1, `translateY(calc(var(--k) * -${MENU_HEAD}))`]],
+      changes: [
+        [1, `translateY(calc(var(--k) * -${MENU_HEAD}))`],
+        [reset, "none"],
+      ],
       ramp: scroll,
       reduced: { dip: true },
     },
@@ -104,14 +122,28 @@ function heroStory({ desk }) {
     hide(".wrap [data-add-price] > :nth-child(1)", 4),
     { sel: ".wrap [data-add-price] > :nth-child(2)", prop: "opacity", start: "0", changes: [[4, "1"], [5, "0"]], ramp: f },
     show(".wrap [data-add-price] > :nth-child(3)", 5),
-    show(".wrap .inCart", 7),
+    { sel: ".wrap .inCart", prop: "opacity", start: "0", changes: [[7, "1"], [reset, "0"]], ramp: f },
     show(".wrap [data-paying] > :last-child", 11),
     hide(".wrap [data-paying] > :first-child", 11),
     pressAt(".wrap .sheet .action", 6),
     pressAt(".wrap .cartBar .action", 8),
     pressAt(".wrap .payBar .action", 11),
-    { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[7, "none"]], ramp: m, reduced: fadeAt([[7, "1"]]) },
-    { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[9, "none"]], ramp: m, reduced: fadeAt([[9, "1"]]) },
+    {
+      sel: ".wrap .cartBar",
+      prop: "transform",
+      start: "translateY(110%)",
+      changes: [[7, "none"], [reset, "translateY(110%)"]],
+      ramp: m,
+      reduced: fadeAt([[7, "1"], [reset, "0"]]),
+    },
+    {
+      sel: ".wrap .checkout",
+      prop: "transform",
+      start: "translateX(101%)",
+      changes: [[9, "none"], [reset, "translateX(101%)"]],
+      ramp: m,
+      reduced: fadeAt([[9, "1"], [reset, "0"]]),
+    },
     // Reduced motion: a dip down to Pay, which the diner taps.
     {
       sel: ".wrap .checkout .page",
@@ -121,22 +153,21 @@ function heroStory({ desk }) {
       ramp: scroll,
       reduced: { dip: true },
     },
-    { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[12, "none"]], ramp: m, reduced: fadeAt([[12, "1"]]) },
+    // The confirmation slides in, and at the restart fades out over the menu. Reduced motion: it fades in and out.
+    { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[12, "none"]], ramp: m, reduced: fadeAt([[12, "1"], [end, "0"]]) },
+    { sel: ".wrap .confirm", prop: "opacity", start: "1", changes: [[end, "0"]], ramp: restart, mode: "motion" },
   ];
   if (desk) {
     tracks.push(
-      // The kitchen display: the count and the ticket on step 13; the ticket leaves with the fade out (under the cover).
-      show(".wrap .kCount > :last-child", 13),
-      hide(".wrap .kCount > :first-child", 13),
-      show(".wrap .kActive > :last-child", 13),
-      hide(".wrap .kActive > :first-child", 13),
+      // The kitchen display: the count and the ticket on step 13; at the restart the ticket leaves and the counts go back.
+      ...[".wrap .kCount", ".wrap .kActive"].flatMap((sel) => [
+        { sel: `${sel} > :last-child`, prop: "opacity", start: "0", changes: [[13, "1"], [end, "0"]], ramp: f },
+        { sel: `${sel} > :first-child`, prop: "opacity", start: "1", changes: [[13, "0"], [end, "1"]], ramp: f },
+      ]),
       { sel: ".wrap .arrive", prop: "opacity", start: "0", changes: [[13, "1"], [end, "0"]], ramp: f },
       { sel: ".wrap .arrive", prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[13, "none"]], ramp: m, reduced: { hold: "none" } },
     );
   }
-  // The white cover: up before the loop starts again, and lifting at the top of each loop
-  // (not the first: the page opens on the menu, not on white).
-  tracks.push({ sel: ".wrap .cover", prop: "opacity", start: "1", changes: [[{ at: 0 }, "0"], [end, "1"]], ramp: { ms: 500, ease: "ease" }, firstRun: "0" });
   return {
     file: "hero",
     media: desk ? "(min-width: 1024px)" : "(max-width: 1023.98px)",

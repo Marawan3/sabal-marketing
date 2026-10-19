@@ -166,7 +166,7 @@ test("every visual with a story runs from mount and advances; with reduced motio
       return n.getAnimations({ subtree: true }).map((a) => ({
         name: (a as CSSAnimation).animationName,
         state: a.playState,
-        // Done already, by design: its whole life lies before now (the hero's first-run cover hold, 150 ms with reduced motion).
+        // Done already, by design: its whole life lies before now.
         over: Number(a.effect!.getComputedTiming().endTime) <= now,
       }));
     });

@@ -45,6 +45,37 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-19 · PR #52: The hero restarts with a crossfade, never a blank phone (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** after the confirmation, the hero phone faded to blank white for about a second, status bar and notch included, before the storefront came back. A white cover over the whole screen went up at the restart and lifted at the top of the next loop.
+
+**What changed:**
+- **The cover is gone.** The restart is now a direct crossfade from the confirmation to the menu: 300 ms with motion, 150 ms with reduced motion.
+- **The status bar and the Dynamic Island stay on screen** the whole time.
+- **The menu is ready under the confirmation.** From 10.0 s, while the confirmation covers the screen, everything under it goes back to where the loop starts:
+  - the checkout slides away;
+  - the cart bar and the dish's cart count go;
+  - the menu scrolls back up (with reduced motion, these are fades and a dip, unseen).
+- **The crossfade lands on the loop's first frame**, so the top of the next loop changes nothing you can see.
+- **Loop lengths are unchanged:** 14.4 s on desktop, 12.5 s on phones. The confirmation still holds about 2.5 s on phones.
+- **Desktop kitchen display:** at the restart its New count and "active" count now fade back with the leaving ticket. Before, they snapped back at the top of the loop.
+
+**How it was checked:**
+- **New test** (`hero-demo.spec.ts`), at 390 and 1280, with and without reduced motion. Through a whole loop, every 100 ms and every 25 ms across the restart and the top of the next loop:
+  - the status bar strip (the time, the island, the icons) must match the loop's first frame;
+  - at least 2% of the screen under it must show something.
+  - The barest moment measured has 4–5% ink, and the status strip drifts under 0.1.
+  - On the old restart the same test fails in all four, from 25 ms into the fade.
+- **The 390 restart test** now checks the crossfade (half-faded at 150 ms, gone by 320 ms) and that the menu then stands exactly as at the top of the loop.
+- **The reduced-motion hero test** counts the menu's second dip, back to the top under the confirmation.
+- **Local suite: 138 passed, 1 skipped** (chromium, and chromium with reduced motion). Honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` pass.
+- **WebKit iPhone** runs on the PR.
+- **Evidence:** `docs/marketing-site/evidence/hero-restart/restart-{390,1280}-{motion,reduced}.png`, before over after, the same six moments around the restart.
+
+---
+
 ## 2026-10-19 · PR #50: Hot Honey Soppressata gets its photo (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 50"). Squash commit `f4254e6` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone 52 of 52.

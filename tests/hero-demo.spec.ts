@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type BrowserContext, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { copy } from "../src/lib/copy";
@@ -161,6 +161,69 @@ test("at 1440 it plays the order through to the kitchen ticket beside the phone,
   expect(await slid(confirm)).toBe(true);
 });
 
+/** The menu screen as it stands: its scroll, the cart bar, the dish's cart count, and the checkout off to the side. `at` seeks first. */
+async function menuAsAtTheStart(page: Page, at?: number) {
+  if (at !== undefined) await seek(demo(page), at);
+  return demo(page).evaluate((root) => {
+    const style = (sel: string) => getComputedStyle(root.querySelector(sel)!);
+    return {
+      scroll: style("[data-scroll]").transform,
+      cart: [style("[data-cart]").transform, style("[data-cart]").opacity],
+      inCart: style('[data-screen="menu"] [class*="inCart"]').opacity,
+      checkout: [style('[data-screen="checkout"]').transform, style('[data-screen="checkout"]').opacity],
+    };
+  });
+}
+
+/**
+ * The phone's screen at one moment, read off a screenshot in a blank page: how
+ * far the status bar strip (the time, the island, the icons) is from the same
+ * strip at the top of the loop (0: the same pixels), and what share of the
+ * screen under it has ink on it (anything darker than near-white).
+ */
+async function readScreen(probe: Page, png: Buffer, reference: boolean) {
+  return probe.evaluate(
+    async ({ b64, reference }) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const c = document.createElement("canvas");
+      c.width = img.width;
+      c.height = img.height;
+      const g = c.getContext("2d")!;
+      g.drawImage(img, 0, 0);
+      const { data, width: w, height: h } = g.getImageData(0, 0, c.width, c.height);
+      // The screen is 844 of the phone's own pixels tall; the status bar is its top 47.
+      const k = h / 844;
+      const strip: number[] = [];
+      for (let y = Math.round(2 * k); y < Math.round(44 * k); y++) {
+        for (let x = Math.round(w * 0.08); x < Math.round(w * 0.92); x++) {
+          const i = (y * w + x) * 4;
+          strip.push(data[i], data[i + 1], data[i + 2]);
+        }
+      }
+      const store = window as unknown as { statusStrip?: number[] };
+      if (reference) store.statusStrip = strip;
+      const ref = store.statusStrip!;
+      let diff = 0;
+      for (let i = 0; i < strip.length; i++) diff += Math.abs(strip[i] - ref[i]);
+      // Under the status bar, clear of the screen's rounded corners.
+      let ink = 0;
+      let all = 0;
+      for (let y = Math.round(52 * k); y < Math.round((844 - 48) * k); y++) {
+        for (let x = Math.round(w * 0.06); x < Math.round(w * 0.94); x++) {
+          const i = (y * w + x) * 4;
+          const luma = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+          if (luma < 200) ink++;
+          all++;
+        }
+      }
+      return { statusDiff: diff / strip.length, ink: ink / all };
+    },
+    { b64: png.toString("base64"), reference },
+  );
+}
+
 /** The phone shows nothing of the kitchen display: no flipper, no ticket, none of its words. */
 async function noKitchenInPhone(page: Page) {
   await expect(demo(page).locator("[data-flipper]")).toHaveCount(0);
@@ -188,22 +251,27 @@ test("at 390 the phone never turns over: menu to confirmation, a 2.5 s hold, the
   expect(clockLength).toBe(NARROW_LOOP);
   const confirm = demo(page).locator('[data-screen="confirm"]');
   const shown = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform === "none");
-  const cover = () => demo(page).locator("[data-cover]").evaluate((el) => Number(getComputedStyle(el).opacity));
   await seek(demo(page), STEPS[12] - 100);
   expect(await shown(confirm)).toBe(false);
-  // The confirmation lands (520 ms) and holds about 2.5 s, until the fade out at step 13.
+  // The confirmation lands (520 ms) and holds about 2.5 s, until the restart at step 13.
   for (const t of [STEPS[12] + 600, STEPS[12] + 1_800, NARROW_STEPS[13] - 20]) {
     await seek(demo(page), t);
     expect(await shown(confirm), `confirmation at ${t} ms`).toBe(true);
-    expect(await cover(), `no cover at ${t} ms`).toBe(0);
+    expect(await opacity(confirm), `confirmation at ${t} ms`).toBe(1);
   }
   expect(NARROW_STEPS[13] - (STEPS[12] + 520)).toBeGreaterThanOrEqual(2_400);
   expect(NARROW_STEPS[13] - (STEPS[12] + 520)).toBeLessThanOrEqual(2_600);
-  // Then white, and round again on the menu.
-  await seek(demo(page), NARROW_STEPS[13] + 550);
-  expect(await cover()).toBe(1);
+  // The restart: the confirmation crossfades (300 ms) to the menu just as the loop starts it.
+  const menu = await menuAsAtTheStart(page, 50);
+  await seek(demo(page), NARROW_STEPS[13] + 150);
+  const mid = await opacity(confirm);
+  expect(mid).toBeGreaterThan(0);
+  expect(mid).toBeLessThan(1);
+  await seek(demo(page), NARROW_STEPS[13] + 320);
+  expect(await opacity(confirm)).toBe(0);
+  expect(await menuAsAtTheStart(page)).toEqual(menu);
+  // Round again: the confirmation is back off screen.
   await seek(demo(page), NARROW_LOOP + 600);
-  expect(await cover()).toBe(0);
   expect(await shown(confirm)).toBe(false);
   // Across one whole loop the kitchen never shows in the phone.
   for (let t = 0; t <= NARROW_LOOP; t += 400) {
@@ -211,6 +279,54 @@ test("at 390 the phone never turns over: menu to confirmation, a 2.5 s hold, the
     await noKitchenInPhone(page);
   }
 });
+
+/**
+ * The phone is never blank (owner, 2026-10-19: the restart used to fade the whole
+ * screen, status bar and island included, to white for about a second). At every
+ * moment of a loop, every 100 ms and every 25 ms across the restart and the top
+ * of the next loop: the status bar and the island are exactly as at the top of
+ * the loop, and the screen under them shows something.
+ */
+for (const width of [390, 1280]) {
+  for (const reducedMotion of ["no-preference", "reduce"] as const) {
+    test(`at ${width}${reducedMotion === "reduce" ? " with reduced motion" : ""} the phone screen is never blank, and the status bar and island never leave`, async ({
+      page,
+      context,
+    }) => {
+      test.setTimeout(240_000);
+      await page.emulateMedia({ reducedMotion });
+      // Tall enough that the whole phone is on screen without scrolling (scrolling would let the player run it).
+      await page.setViewportSize({ width, height: 1400 });
+      await page.goto("/");
+      await expect(demo(page)).toHaveAttribute("data-run", "");
+      await demo(page).evaluate((root) => Promise.all([...root.querySelectorAll("img")].map((img) => img.decode().catch(() => {}))));
+      const narrow = width < 1024;
+      const steps = narrow ? NARROW_STEPS : STEPS;
+      const loop = narrow ? NARROW_LOOP : LOOP;
+      const restart = steps[steps.length - 1];
+      const times = new Set<number>();
+      for (let t = 0; t < loop; t += 100) times.add(t);
+      for (let t = restart - 50; t <= loop + 200; t += 25) times.add(t);
+      const screen = demo(page).locator("[data-phone-screen]");
+      const probe = await (context as BrowserContext).newPage();
+      // Measured 2026-10-19: under the status bar the barest moment still has 4–5% ink on it, and
+      // the status strip drifts by under 0.1 (anti-aliasing). The old restart's white phone: 0% and tens.
+      const blank: string[] = [];
+      let least = { ink: 1, at: 0 };
+      for (const t of [...times].sort((a, b) => a - b)) {
+        await seek(demo(page), t);
+        const png = await page.screenshot({ clip: (await screen.boundingBox())!, scale: "css" });
+        const { statusDiff, ink } = await readScreen(probe, png, t === 0);
+        if (statusDiff > 1) blank.push(`${t} ms: the status bar or the island changed (${statusDiff.toFixed(2)} off)`);
+        if (ink < 0.02) blank.push(`${t} ms: ${(ink * 100).toFixed(2)}% of the screen under the status bar shows anything`);
+        if (ink < least.ink) least = { ink, at: t };
+      }
+      await probe.close();
+      test.info().annotations.push({ type: "barest moment", description: `${(least.ink * 100).toFixed(1)}% ink at ${least.at} ms` });
+      expect(blank).toEqual([]);
+    });
+  }
+}
 
 test("it holds when paused and while fully off screen, and runs again after", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -247,8 +363,9 @@ for (const width of [390, 1440]) {
     await expect.poll(async () => (await clock(demo(page))).state).toBe("running");
     // Nothing moves where it can be seen: the only transforms are the two scrolls (menu,
     // checkout), each a jump inside a dip to opacity 0. And the pause button is there.
+    // (The menu's second dip, back to the top, is under the confirmation before the restart, 2026-10-19.)
     const { changes, shown } = await transformsWhileShown(demo(page));
-    expect(changes).toBe(2);
+    expect(changes).toBe(3);
     expect(shown).toEqual([]);
     await expect(demo(page).getByRole("button", { name: copy.hero.demo.pause })).toBeVisible();
     // The menu's dip starts with the motion scroll (step 1) and is done 150 ms later.
