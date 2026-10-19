@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { copy } from "../src/lib/copy";
 import { demoOrder, SERVICE_FEE_PERCENT } from "../src/lib/demo-order";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
-import { LOOP, STEPS } from "../src/lib/hero-demo-timeline";
+import { LOOP, NARROW_LOOP, NARROW_STEPS, STEPS } from "../src/lib/hero-demo-timeline";
 import { clock, seek, stepAt, transformsWhileShown } from "./motion";
 
 /**
@@ -95,80 +95,86 @@ test("the phone shows the visitor's time, and the confirmation a ready time 20 m
   await expect(demo(page).locator('[data-clock="ready"]')).toHaveText("5:00 PM");
 });
 
-for (const width of [390, 1440]) {
-  test(`at ${width} it plays the order through to the kitchen ticket, then loops`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
-    // It runs from mount, on the browser's own clock.
-    await expect(demo(page)).toHaveAttribute("data-run", "");
-    await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(200);
-    expect((await clock(demo(page))).state).toBe("running");
-    const confirm = demo(page).locator('[data-screen="confirm"]');
-    const slid = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform !== "none");
-    await seek(demo(page), 600);
-    expect(await slid(confirm)).toBe(true);
-    // Step 12: the order lands in the kitchen.
-    // (On phones the ticket lands after the turn.)
-    await seek(demo(page), STEPS[12] + 2_000);
-    expect(stepAt(STEPS, (await clock(demo(page))).t)).toBe(12);
-    expect(await slid(confirm)).toBe(false);
-    // The ticket is this order: number, name, dish and option, and its timer runs from zero.
-    const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-flipper] [data-arrive]");
-    await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
-    await expect(ticket).toContainText(`Pickup · ${demoOrder.ticket.who}`);
-    await expect(ticket).toContainText(demoOrder.dish.name);
-    await expect(ticket).toContainText(`+ ${demoOrder.pick}`);
-    expect(await opacity(ticket)).toBe(1);
-    await seek(demo(page), STEPS[12] + 3_000);
-    await expect(ticket.locator("[data-timer]")).toHaveText("0:03");
-    // Phones turn over to the kitchen's side; desktop keeps the phone and shows the board beside it.
-    const flip = await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform);
-    if (width >= 1024) {
-      expect(flip).toBe("none");
-      await expect(demo(page).locator("[data-board]")).toBeVisible();
-    } else {
-      expect(flip).not.toBe("none");
-      await expect(demo(page).locator("[data-board]")).toBeHidden();
-    }
-    // Round again: the second time through starts on the menu.
-    await seek(demo(page), LOOP + 600);
-    expect(stepAt(STEPS, (await clock(demo(page))).t % LOOP)).toBe(0);
-    expect(await slid(confirm)).toBe(true);
-    expect(await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform)).toBe("none");
-  });
+test("at 1440 it plays the order through to the kitchen ticket beside the phone, then loops", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  // It runs from mount, on the browser's own clock.
+  await expect(demo(page)).toHaveAttribute("data-run", "");
+  await expect.poll(async () => (await clock(demo(page))).t).toBeGreaterThan(200);
+  expect((await clock(demo(page))).state).toBe("running");
+  const confirm = demo(page).locator('[data-screen="confirm"]');
+  const slid = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform !== "none");
+  await seek(demo(page), 600);
+  expect(await slid(confirm)).toBe(true);
+  // Step 12: the order lands on the kitchen display beside the phone.
+  await seek(demo(page), STEPS[12] + 2_000);
+  expect(stepAt(STEPS, (await clock(demo(page))).t)).toBe(12);
+  expect(await slid(confirm)).toBe(false);
+  await expect(demo(page).locator("[data-board]")).toBeVisible();
+  // The ticket is this order: number, name, dish and option, and its timer runs from zero.
+  const ticket = demo(page).locator("[data-board] [data-arrive]");
+  await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
+  await expect(ticket).toContainText(`Pickup · ${demoOrder.ticket.who}`);
+  await expect(ticket).toContainText(demoOrder.dish.name);
+  await expect(ticket).toContainText(`+ ${demoOrder.pick}`);
+  expect(await opacity(ticket)).toBe(1);
+  await seek(demo(page), STEPS[12] + 3_000);
+  await expect(ticket.locator("[data-timer]")).toHaveText("0:03");
+  // Round again: the second time through starts on the menu.
+  await seek(demo(page), LOOP + 600);
+  expect(stepAt(STEPS, (await clock(demo(page))).t % LOOP)).toBe(0);
+  expect(await slid(confirm)).toBe(true);
+});
+
+/** The phone shows nothing of the kitchen display: no flipper, no ticket, none of its words. */
+async function noKitchenInPhone(page: Page) {
+  await expect(demo(page).locator("[data-flipper]")).toHaveCount(0);
+  const phone = demo(page).locator("[data-phone]");
+  await expect(phone.locator("[data-arrive], [data-timer]")).toHaveCount(0);
+  const text = await phone.innerText();
+  expect(text).not.toContain(`Pickup · ${demoOrder.ticket.who}`);
+  // The kitchen display's own header: its location and "N active".
+  expect(text).not.toMatch(/\b\d+ active\b/);
+  expect(text).not.toContain(demoOrder.location);
+  await expect(demo(page).locator("[data-board]")).toBeHidden();
 }
 
-/** The mean brightness (0 to 255) of what is painted inside an element's box, read from a real screenshot. */
-async function brightness(page: Page, el: Locator) {
-  const png = (await el.screenshot()).toString("base64");
-  return page.evaluate(async (b64) => {
-    const img = await createImageBitmap(await (await fetch(`data:image/png;base64,${b64}`)).blob());
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext("2d")!;
-    ctx.drawImage(img, 0, 0);
-    const { data } = ctx.getImageData(0, 0, img.width, img.height);
-    let sum = 0;
-    for (let i = 0; i < data.length; i += 4) sum += (data[i] + data[i + 1] + data[i + 2]) / 3;
-    return sum / (data.length / 4);
-  }, png);
-}
-
-// Computed styles can't see this one: in WebKit the phone's front face stayed
-// painted after the turn, so it showed the confirmation mirrored instead of
-// the kitchen. Only the pixels tell.
-test("on phones the turn shows the kitchen's side, not the back of the confirmation", async ({ page }) => {
+test("at 390 the phone never turns over: menu to confirmation, a 2.5 s hold, then again", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto("/");
   await expect(demo(page)).toHaveAttribute("data-run", "");
-  const phone = demo(page).locator("[data-flipper]");
-  // Before the turn: the white confirmation.
-  await seek(demo(page), STEPS[11] + 500);
-  expect(await brightness(page, phone)).toBeGreaterThan(150);
-  // After it: the kitchen display, dark.
-  await seek(demo(page), STEPS[12] + 2_000);
-  expect(await brightness(page, phone)).toBeLessThan(90);
+  await noKitchenInPhone(page);
+  // Its own loop: the desktop's steps up to the confirmation, then the fade out.
+  expect(NARROW_STEPS.slice(0, 12)).toEqual(STEPS.slice(0, 12));
+  expect(await demo(page).getAttribute("data-steps-narrow")).toBe(NARROW_STEPS.join(" "));
+  const clockLength = await demo(page).evaluate((el) =>
+    Number(el.getAnimations().find((a) => (a as CSSAnimation).animationName === "vis-clock")!.effect!.getComputedTiming().duration),
+  );
+  expect(clockLength).toBe(NARROW_LOOP);
+  const confirm = demo(page).locator('[data-screen="confirm"]');
+  const shown = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform === "none");
+  const cover = () => demo(page).locator("[data-cover]").evaluate((el) => Number(getComputedStyle(el).opacity));
+  await seek(demo(page), STEPS[11] - 100);
+  expect(await shown(confirm)).toBe(false);
+  // The confirmation lands (520 ms) and holds about 2.5 s, until the fade out at step 12.
+  for (const t of [STEPS[11] + 600, STEPS[11] + 1_800, NARROW_STEPS[12] - 20]) {
+    await seek(demo(page), t);
+    expect(await shown(confirm), `confirmation at ${t} ms`).toBe(true);
+    expect(await cover(), `no cover at ${t} ms`).toBe(0);
+  }
+  expect(NARROW_STEPS[12] - (STEPS[11] + 520)).toBeGreaterThanOrEqual(2_400);
+  expect(NARROW_STEPS[12] - (STEPS[11] + 520)).toBeLessThanOrEqual(2_600);
+  // Then white, and round again on the menu.
+  await seek(demo(page), NARROW_STEPS[12] + 550);
+  expect(await cover()).toBe(1);
+  await seek(demo(page), NARROW_LOOP + 600);
+  expect(await cover()).toBe(0);
+  expect(await shown(confirm)).toBe(false);
+  // Across one whole loop the kitchen never shows in the phone.
+  for (let t = 0; t <= NARROW_LOOP; t += 400) {
+    await seek(demo(page), t);
+    await noKitchenInPhone(page);
+  }
 });
 
 test("it holds when paused and while fully off screen, and runs again after", async ({ page }) => {
@@ -232,16 +238,22 @@ for (const width of [390, 1440]) {
     expect(await opacity(confirm)).toBe(1);
     expect(await confirm.evaluate((el) => getComputedStyle(el).transform)).toBe("none");
     await expect(confirm.locator('[data-clock="ready"]')).toHaveText("5:00 PM");
-    // The kitchen ticket: beside the phone on desktop; on phones the kitchen's side crossfades in, with no turn.
-    await seek(demo(page), STEPS[12] + 2_000);
-    expect(await demo(page).locator("[data-flipper]").evaluate((el) => getComputedStyle(el).transform)).toBe("none");
-    const ticket = width >= 1024 ? demo(page).locator("[data-board] [data-arrive]") : demo(page).locator("[data-flipper] [data-arrive]");
-    expect(await opacity(ticket)).toBe(1);
-    await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
+    if (width >= 1024) {
+      // The kitchen ticket fades in on the display beside the phone.
+      await seek(demo(page), STEPS[12] + 2_000);
+      const ticket = demo(page).locator("[data-board] [data-arrive]");
+      expect(await opacity(ticket)).toBe(1);
+      await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
+      await seek(demo(page), LOOP + 600);
+    } else {
+      // Phones: no kitchen display. The confirmation holds until the fade out, then the menu again.
+      await noKitchenInPhone(page);
+      await seek(demo(page), NARROW_STEPS[12] - 20);
+      expect(await opacity(confirm)).toBe(1);
+      await seek(demo(page), NARROW_LOOP + 600);
+    }
     // Round again: back on the menu.
-    await seek(demo(page), LOOP + 600);
     expect(await opacity(confirm)).toBe(0);
-    if (width < 1024) expect(await opacity(ticket)).toBe(0);
   });
 }
 

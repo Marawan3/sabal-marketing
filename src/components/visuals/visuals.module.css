@@ -87,7 +87,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- A phone (the hero's frame, without the turn) ---------- */
+/* ---------- A phone (the hero's frame) ---------- */
 
 .phone {
   container-type: inline-size;

@@ -41,6 +41,9 @@ function fill(el: HTMLElement) {
   });
 }
 
+/** The width below which a visual with a narrow story runs it (globals.css says the same). */
+const NARROW = "(max-width: 1023.98px)";
+
 /** The wrapper's own clock: where the story is, in ms from the top (of the loop, for the hero). */
 function clockOf(el: HTMLElement) {
   return el.getAnimations?.().find((a) => (a as CSSAnimation).animationName === "vis-clock");
@@ -115,6 +118,7 @@ export function VisualPlayer({
   name,
   steps,
   loop,
+  narrow,
   className,
   stageClassName,
   buttonClassName,
@@ -129,6 +133,8 @@ export function VisualPlayer({
   steps: readonly number[];
   /** The hero's loop length in ms. Without it the visual plays once. */
   loop?: number;
+  /** Below 1024px, a different story's steps and loop (the hero: no kitchen display on phones). */
+  narrow?: { steps: readonly number[]; loop?: number };
   className: string;
   stageClassName: string;
   buttonClassName: string;
@@ -146,7 +152,12 @@ export function VisualPlayer({
   useEffect(() => {
     const el = root.current!;
     fill(el);
-    const entry: Entry = { name, el, steps, loop, seen: null, entries: 0 };
+    // The story this width runs: below 1024px, the narrow one if there is one.
+    const small = matchMedia(NARROW);
+    const story = () => (narrow && small.matches ? narrow : { steps, loop });
+    const entry: Entry = { name, el, ...story(), seen: null, entries: 0 };
+    const onWidth = () => Object.assign(entry, story());
+    small.addEventListener("change", onWidth);
     const undebug = debug(entry);
 
     // Start now; the observer pauses it only while it is fully off screen.
@@ -174,7 +185,7 @@ export function VisualPlayer({
     // Ticket timers count up from the story's own clock (text only).
     const timers = [...el.querySelectorAll<HTMLElement>("[data-timer]")];
     const count = () => {
-      const t = position(el, steps, loop);
+      const t = position(el, entry.steps, entry.loop);
       for (const timer of timers) {
         const secs = Number(timer.dataset.timer) + Math.max(0, Math.floor((t - Number(timer.dataset.from)) / 1000));
         const text = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
@@ -187,9 +198,10 @@ export function VisualPlayer({
       io.disconnect();
       el.removeEventListener("animationend", onEnd);
       clearInterval(id);
+      small.removeEventListener("change", onWidth);
       undebug();
     };
-  }, [name, steps, loop]);
+  }, [name, steps, loop, narrow]);
 
   return (
     <div
@@ -198,10 +210,11 @@ export function VisualPlayer({
       data-demo
       data-visual={name}
       data-steps={steps.join(" ")}
+      data-steps-narrow={narrow?.steps.join(" ")}
       data-loop={loop ? "" : undefined}
       data-hold={paused ? "" : undefined}
       data-pausable={pausable ? "" : undefined}
-      style={{ "--vis-dur": `${loop ?? end}ms` } as CSSProperties}
+      style={{ "--vis-dur": `${loop ?? end}ms`, ...(narrow ? { "--vis-dur-narrow": `${narrow.loop ?? narrow.steps[narrow.steps.length - 1]}ms` } : {}) } as CSSProperties}
     >
       <p className="sr-only">{description}</p>
       <div aria-hidden="true" className={stageClassName}>

@@ -5,7 +5,8 @@
  * on its own clock: no JavaScript tick, no gate.
  *
  * A visual: its step times in ms (the same as its component's STEPS; a test
- * checks they agree), and whether it loops (the hero only).
+ * checks they agree), whether it loops (the hero only), and a media query all
+ * its tracks apply under, if any (the hero's two shapes).
  *
  * A track: one CSS property of the elements a selector matches.
  *   start    the value at step 0; null means the element's own CSS value (its
@@ -55,6 +56,84 @@ const enter = (sel, k, shift, ramps = { opacity: fade, transform: move }) => [
 
 /** Reduced motion: hold `hold` and fade in at step k (a screen or panel that slid in). */
 const fadeIn = (k, hold = null) => ({ hold, show: { start: "0", changes: [[k, null]] } });
+
+/**
+ * The hero's order story (hero-order-demo.tsx), in one of its two shapes. Steps
+ * 0 to 11 are the same in both: 1 scroll the menu, 2 tap the dish, 3 its sheet
+ * opens, 4 pick Hot, 5 tap Add item, 6 the sheet closes and the cart bar shows,
+ * 7 tap the bar, 8 checkout, 9 scroll to Pay, 10 tap Pay, 11 the confirmation.
+ * Desktop then has 12 the kitchen ticket and 13 the fade out; phones go
+ * straight to the fade out (their step 12), 2.5 s after the confirmation lands.
+ * src/lib/hero-demo-timeline.ts has the same numbers (a test checks).
+ */
+function heroStory({ desk }) {
+  const shared = [0, 900, 1900, 2200, 3400, 4300, 4600, 5600, 5900, 7000, 7900, 8600];
+  const steps = desk ? [...shared, 9800, 13800] : [...shared, 11600];
+  const end = steps.length - 1; // the fade out before the loop starts again
+  const m = { ms: 520, ease: "cubic-bezier(0.2, 0.8, 0.2, 1)" };
+  const f = { ms: 280, ease: "ease" };
+  const show = (sel, k) => ({ sel, prop: "opacity", start: "0", changes: [[k, "1"]], ramp: f });
+  const hide = (sel, k) => ({ sel, prop: "opacity", start: "1", changes: [[k, "0"]], ramp: f });
+  const pressAt = (sel, k) => ({ sel, prop: "transform", start: "none", changes: [[k, "scale(0.97)"], [k + 1, "none"]], ramp: press, reduced: { hold: "none" } });
+  // Reduced motion: a screen that slides in fades in where it lands.
+  const fadeAt = (changes) => ({ hold: "none", show: { start: "0", changes } });
+  const tracks = [
+    // Reduced motion: a dip to the dish the diner taps.
+    {
+      sel: ".wrap .scroll",
+      prop: "transform",
+      start: "none",
+      changes: [[1, "translateY(calc(var(--k) * -96))"]],
+      ramp: scroll,
+      reduced: { dip: true },
+    },
+    ...[2, 4, 5, 7, 10].map((k) => ({ sel: `.wrap [data-tap="${k}"]`, tap: k })),
+    { sel: ".wrap .backdrop", prop: "opacity", start: "0", changes: [[3, "1"], [6, "0"]], ramp: f },
+    { sel: ".wrap .sheet", prop: "transform", start: "translateY(102%)", changes: [[3, "none"], [6, "translateY(102%)"]], ramp: m, reduced: fadeAt([[3, "1"], [6, "0"]]) },
+    show(".wrap .radio i", 4),
+    show(".wrap [data-pick] > :last-child", 4),
+    hide(".wrap [data-pick] > :first-child", 4),
+    show(".wrap .inCart", 6),
+    show(".wrap [data-paying] > :last-child", 10),
+    hide(".wrap [data-paying] > :first-child", 10),
+    pressAt(".wrap .sheet .action", 5),
+    pressAt(".wrap .cartBar .action", 7),
+    pressAt(".wrap .payBar .action", 10),
+    { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[6, "none"]], ramp: m, reduced: fadeAt([[6, "1"]]) },
+    { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[8, "none"]], ramp: m, reduced: fadeAt([[8, "1"]]) },
+    // Reduced motion: a dip down to Pay, which the diner taps.
+    {
+      sel: ".wrap .checkout .page",
+      prop: "transform",
+      start: "none",
+      changes: [[9, "translateY(calc(var(--k) * -500))"]],
+      ramp: scroll,
+      reduced: { dip: true },
+    },
+    { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[11, "none"]], ramp: m, reduced: fadeAt([[11, "1"]]) },
+  ];
+  if (desk) {
+    tracks.push(
+      // The kitchen display: the count and the ticket on step 12; the ticket leaves with the fade out (under the cover).
+      show(".wrap .kCount > :last-child", 12),
+      hide(".wrap .kCount > :first-child", 12),
+      show(".wrap .kActive > :last-child", 12),
+      hide(".wrap .kActive > :first-child", 12),
+      { sel: ".wrap .arrive", prop: "opacity", start: "0", changes: [[12, "1"], [end, "0"]], ramp: f },
+      { sel: ".wrap .arrive", prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[12, "none"]], ramp: m, reduced: { hold: "none" } },
+    );
+  }
+  // The white cover: up before the loop starts again, and lifting at the top of each loop
+  // (not the first: the page opens on the menu, not on white).
+  tracks.push({ sel: ".wrap .cover", prop: "opacity", start: "1", changes: [[{ at: 0 }, "0"], [end, "1"]], ramp: { ms: 500, ease: "ease" }, firstRun: "0" });
+  return {
+    file: "hero",
+    media: desk ? "(min-width: 1024px)" : "(max-width: 1023.98px)",
+    loop: steps[end] + 600,
+    steps,
+    tracks,
+  };
+}
 
 export const visuals = {
   /* ---------------- src/components/visuals/visuals.module.css ---------------- */
@@ -224,99 +303,9 @@ export const visuals = {
   },
 
   /* ---------------- src/components/hero-order-demo.module.css ---------------- */
-  hero: {
-    file: "hero",
-    loop: 14400,
-    steps: [0, 900, 1900, 2200, 3400, 4300, 4600, 5600, 5900, 7000, 7900, 8600, 9800, 13800],
-    tracks: (() => {
-      const m = { ms: 520, ease: "cubic-bezier(0.2, 0.8, 0.2, 1)" };
-      const f = { ms: 280, ease: "ease" };
-      const show = (sel, k) => ({ sel, prop: "opacity", start: "0", changes: [[k, "1"]], ramp: f });
-      const hide = (sel, k) => ({ sel, prop: "opacity", start: "1", changes: [[k, "0"]], ramp: f });
-      const pressAt = (sel, k) => ({ sel, prop: "transform", start: "none", changes: [[k, "scale(0.97)"], [k + 1, "none"]], ramp: press, reduced: { hold: "none" } });
-      // Reduced motion: a screen that slides in fades in where it lands.
-      const fadeAt = (changes) => ({ hold: "none", show: { start: "0", changes } });
-      // The ticket lands `extra` ms after step 12 and leaves with step 13 (under the cover).
-      const arrive = (sel, extra) => [
-        { sel, prop: "opacity", start: "0", changes: [[{ at: 9800 + extra }, "1"], [13, "0"]], ramp: f },
-        { sel, prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[{ at: 9800 + extra }, "none"]], ramp: m, reduced: { hold: "none" } },
-      ];
-      return [
-        // Reduced motion: a dip to the dish the diner taps.
-        {
-          sel: ".wrap .scroll",
-          prop: "transform",
-          start: "none",
-          changes: [[1, "translateY(calc(var(--k) * -96))"]],
-          ramp: scroll,
-          reduced: { dip: true },
-        },
-        ...[2, 4, 5, 7, 10].map((k) => ({ sel: `.wrap [data-tap="${k}"]`, tap: k })),
-        { sel: ".wrap .backdrop", prop: "opacity", start: "0", changes: [[3, "1"], [6, "0"]], ramp: f },
-        { sel: ".wrap .sheet", prop: "transform", start: "translateY(102%)", changes: [[3, "none"], [6, "translateY(102%)"]], ramp: m, reduced: fadeAt([[3, "1"], [6, "0"]]) },
-        show(".wrap .radio i", 4),
-        show(".wrap [data-pick] > :last-child", 4),
-        hide(".wrap [data-pick] > :first-child", 4),
-        show(".wrap .inCart", 6),
-        show(".wrap [data-paying] > :last-child", 10),
-        hide(".wrap [data-paying] > :first-child", 10),
-        show(".wrap .kCount > :last-child", 12),
-        hide(".wrap .kCount > :first-child", 12),
-        show(".wrap .kActive > :last-child", 12),
-        hide(".wrap .kActive > :first-child", 12),
-        pressAt(".wrap .sheet .action", 5),
-        pressAt(".wrap .cartBar .action", 7),
-        pressAt(".wrap .payBar .action", 10),
-        { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[6, "none"]], ramp: m, reduced: fadeAt([[6, "1"]]) },
-        { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[8, "none"]], ramp: m, reduced: fadeAt([[8, "1"]]) },
-        // Reduced motion: a dip down to Pay, which the diner taps.
-        {
-          sel: ".wrap .checkout .page",
-          prop: "transform",
-          start: "none",
-          changes: [[9, "translateY(calc(var(--k) * -500))"]],
-          ramp: scroll,
-          reduced: { dip: true },
-        },
-        { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[11, "none"]], ramp: m, reduced: fadeAt([[11, "1"]]) },
-        ...arrive(".wrap .arrive", 0),
-        // Phones: the back's ticket lands after the phone turns over.
-        ...arrive(".wrap .back .arrive", 650).map((t) => ({ ...t, media: "(max-width: 1023.98px)" })),
-        {
-          sel: ".wrap .flipper",
-          prop: "transform",
-          start: "none",
-          changes: [[12, "rotateY(180deg)"], [13, "none"]],
-          ramp: { ms: 800, ease: "cubic-bezier(0.45, 0, 0.2, 1)" },
-          media: "(max-width: 1023.98px)",
-          // The turn back starts with the cover and ends with the loop, under the cover.
-          clip: true,
-          reduced: { hold: null },
-        },
-        // Reduced motion: no turn. The kitchen's side crossfades over the phone's and back.
-        { mode: "reduced", sel: ".wrap .back", hold: "none", media: "(max-width: 1023.98px)" },
-        { mode: "reduced", sel: ".wrap .face:not(.back)", prop: "opacity", start: "1", changes: [[12, "0"], [13, "1"]], media: "(max-width: 1023.98px)" },
-        { mode: "reduced", sel: ".wrap .back", prop: "opacity", start: "0", changes: [[12, "1"], [13, "0"]], media: "(max-width: 1023.98px)" },
-        // WebKit (Safari) paints a face that has turned away despite backface-visibility, so the
-        // phone showed the confirmation mirrored instead of the kitchen. Each face also goes out
-        // the moment it passes edge-on: 295ms into the turn's 800ms ease, and 221ms into the turn
-        // back (clipped to 600ms by the loop's end).
-        ...[
-          [".wrap .face:not(.back)", "1", "0"],
-          [".wrap .back", "0", "1"],
-        ].map(([sel, before, after]) => ({
-          sel,
-          prop: "opacity",
-          mode: "motion",
-          start: before,
-          changes: [[{ at: 9800 + 295 }, after], [{ at: 13800 + 221 }, before]],
-          ramp: { ms: 1, ease: "linear" },
-          media: "(max-width: 1023.98px)",
-        })),
-        // The white cover: up before the loop starts again, and lifting at the top of each loop
-        // (not the first: the page opens on the menu, not on white).
-        { sel: ".wrap .cover", prop: "opacity", start: "1", changes: [[{ at: 0 }, "0"], [13, "1"]], ramp: { ms: 500, ease: "ease" }, firstRun: "0" },
-      ];
-    })(),
-  },
+  // Desktop: the phone and the kitchen display beside it, where the ticket lands.
+  hero: heroStory({ desk: true }),
+  // Phones: the phone alone. It never turns over to the kitchen display (2026-10-19): it holds
+  // on the confirmation for about 2.5 s and starts again. Every step before is the desktop's.
+  heroNarrow: heroStory({ desk: false }),
 };
