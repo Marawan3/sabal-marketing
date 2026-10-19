@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · PR #48: The demo restaurant becomes Palm&Stone Pizza, with a photo on every dish (PR open)
+## 2026-10-19 · PR #48: The demo restaurant becomes Palm&Stone Pizza, with a photo on every dish (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 48"). Squash commit `509f8a6` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone 52 of 52.
 
 **Why:** every visual leaned on one 174px meatballs photo, shown up to five times its size, so it looked grainy. The website phone had grey boxes where photos should be, and the catering phone showed no food. The owner replaced the Mediterranean menu with a pizzeria and approved the menu, prices and logo on 2026-10-19, and sent the photos (`palmstone-pizza-assets.zip`). The photos are AI-generated for the fictional demo restaurant; ASSETS.md says so.
 
@@ -113,7 +113,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - **Pictures:** every one has its width and height, `alt=""`, `decoding="async"`, and is eager only in the hero phone.
   - **Homepage weight:** its pictures weigh 681,843 bytes, under the 1 MB limit.
 - **Also run:** honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` all pass. The homepage is 6,688px at 390.
-- **WebKit iPhone:** the new spec is added to the `webkit-iphone` project; the workflow runs on the PR.
+- **WebKit iPhone: green, 52 of 52**, with and without reduced motion. The new spec is in the `webkit-iphone` project.
 - **Evidence** in `docs/marketing-site/evidence/pizza-refresh/`, at 390 and 1280:
   - `hero-*.png`: the menu, the dish sheet with steam, the kitchen ticket.
   - `phones-*.png`: the website's hero photo and Featured cards, /online-menu, /upsells, catering, loyalty, the tracking map with and without reduced motion.
