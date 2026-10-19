@@ -36,8 +36,8 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Spacing:** 64px between sections on phones, 80px from 640px, 112px from 1024px. White
   sections carry half the gap on each side. Gutters 16px on phones, 32px, then 48px.
 - **Homepage, in this order and nothing else:** hero (centered headline, one line, a
-  "Your restaurant's name" input with Get Started that opens Book a call with the name
-  filled in, then the storefront phone next to the orders board on a saffron panel);
+  "Your restaurant's name" input with Get Started that goes to the /contact form as a
+  call request with the name filled in, then the storefront phone next to the orders board on a saffron panel);
   outcome tabs (More direct orders, More repeat customers, Less busywork: a soft panel with
   one screenshot and up to three short lines); four product panels (online ordering,
   delivery, catering, order management); how it works in three steps; one pricing card
@@ -346,7 +346,9 @@ mobile menu stays.
 One action on the whole site: book a call. Same label everywhere, in the header,
 hero, pricing, and final band. Label: **"Book a call"** (fallback "Talk to us").
 The href is `demoHref` from `src/lib/site.ts`, driven by `NEXT_PUBLIC_DEMO_HREF`
-(Marawan will point it at his scheduling link) with a mailto fallback. The header
+(Marawan will point it at his scheduling link); by default it is the /contact form as a
+call request, `/contact?intent=call` (2026-10-19: the old mailto fallback did nothing
+on phones without a mail app). The header
 button is visible on mobile too, not hidden behind the menu. No forms, no API routes,
 no chat widgets, no exit popups, no sticky bars.
 

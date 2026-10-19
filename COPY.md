@@ -15,7 +15,7 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Line:** Your website, online ordering, delivery, and marketing, built and run for you.
 
-**Input:** Your restaurant's name · **Button:** Get Started (opens Book a call with the name filled in)
+**Input:** Your restaurant's name · **Button:** Get Started (goes to the /contact form as a call request, with the name in its Restaurant field; 2026-10-19)
 
 **Small card under the name field (2026-10-13):** **$0/month for the restaurant.** Customers pay 5% at checkout. *(The same terms as the service fee clause; the full pricing section stays lower down.)*
 
@@ -91,7 +91,7 @@ FAQ (`copy.faq` in `src/lib/copy.ts`), with one question added on 2026-10-13: **
 
 Since the upgrade of 2026-10-13 the homepage leaves out four questions the page already answers: **Is there a monthly fee or a contract?** and **Do my customers see the 5%?** (the trust line and the $0 card), **Does it work with my POS?** and **Do I have to set anything up myself?** (the how-it-works steps). The solution pages still ask them.
 
-**Final band (every page but /contact), 2026-10-13:** **Take control of your restaurant's direct business.** · Get Started · *under the button:* 20-minute call. We show WunTab on your own menu. No pressure. · Or send a message (→ /contact). The line that used to sit above the button ("A short call. We will show you WunTab on your own menu.") and the homepage's "or email hello@wuntab.com" went: the new line says the same, and the email is on /contact, /about and in the footer.
+**Final band (every page but /contact), 2026-10-13:** **Take control of your restaurant's direct business.** · Get Started · *under the button:* 20-minute call. We show WunTab on your own menu. No pressure. · Or send a message (→ /contact; left out since 2026-10-19 while Get Started itself goes to the /contact form). The line that used to sit above the button ("A short call. We will show you WunTab on your own menu.") and the homepage's "or email hello@wuntab.com" went: the new line says the same, and the email is on /contact, /about and in the footer.
 
 ## Moved off the homepage
 
@@ -137,7 +137,7 @@ Four columns: **Product** (every product page, then How it works and Pricing), *
 
 ## Navigation (2026-10-13)
 
-Product (the mega-menu, now with Integrations under Scale) · Solutions (Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants, Multi-Location Restaurants, each with its one line) · How it works · Pricing · Company (About, Contact). Get Started still books a call.
+Product (the mega-menu, now with Integrations under Scale) · Solutions (Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants, Multi-Location Restaurants, each with its one line) · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app).
 
 ## Product page template (2026-10-13)
 
@@ -175,8 +175,9 @@ Removed from the catalog with this change: the "Catering Businesses" solution (i
 
 ## /contact (new, 2026-10-13)
 
-- **Send us a message.** Tell us about your restaurant. We reply within one business day. · hello@wuntab.com · Rather talk? Book a 20-minute call.
+- **Send us a message.** Tell us about your restaurant. We reply within one business day. · hello@wuntab.com · Rather talk? Book a 20-minute call. (That last link shows only while Get Started goes somewhere other than this form; since 2026-10-19 it comes here, so it is hidden.)
 - Form: Your name, Restaurant, Phone (optional), Email, Message · **Send message**
+- **As a call request** (/contact?intent=call, where every Get Started goes, 2026-10-19): **Book a 20-minute call.** Tell us how to reach you. We'll set up a time and show WunTab on your own menu. · The Restaurant field holds the name typed in the hero, if any · Message starts as "I'd like a 20-minute call. Best time to reach me: " and stays editable · the phone field reads **Phone (for the call)** and stays optional. The email to hello@ is headed "Call request: name, restaurant" (otherwise "Website message: name, restaurant") and starts with an "Intent:" line.
 - Sent: Thanks. Your message is on its way. We reply within one business day.
 - If sending fails: We couldn't send your message. Please email us instead: hello@wuntab.com
 
@@ -212,7 +213,7 @@ Product facts below were checked against sabal-ros `main` at `a5418d4`, read-onl
 - You get a direct line, not a ticket queue.
 - Founding restaurants shape what we build next.
 
-Get Started (Book a call).
+Get Started (Book a call: the /contact form as a call request).
 
 The customer row (`src/components/customer-stories.tsx`) stays built for when there are real customers.
 

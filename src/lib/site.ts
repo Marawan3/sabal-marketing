@@ -10,10 +10,20 @@ export const site = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@wuntab.com",
 } as const;
 
-/** "Get Started" books a call (owner decision 2026-10-02) until self-serve signup is proven. NEXT_PUBLIC_DEMO_HREF can point at a scheduling link. */
-export const demoHref =
-  process.env.NEXT_PUBLIC_DEMO_HREF ??
-  `mailto:${site.contactEmail}?subject=Book%20a%20call%20with%20WunTab`;
+/**
+ * "Get Started" books a call (owner decision 2026-10-02) until self-serve
+ * signup is proven. It goes to the /contact form, set up for a call request
+ * (owner, 2026-10-19: a mailto link did nothing on phones without a mail
+ * app). NEXT_PUBLIC_DEMO_HREF can point it at a scheduling link instead.
+ */
+export const demoHref = process.env.NEXT_PUBLIC_DEMO_HREF ?? "/contact?intent=call";
+
+/**
+ * True while Get Started goes to this site's own /contact form. Then the
+ * links that would only repeat it (the final band's "Or send a message",
+ * /contact's "Rather talk?") step aside.
+ */
+export const demoIsContactForm = /^\/contact(?:[?#]|$)/.test(demoHref);
 
 /**
  * "See a live WunTab restaurant": the demo storefront (owner, 2026-10-13),

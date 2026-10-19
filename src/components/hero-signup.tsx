@@ -5,8 +5,10 @@ import { buttonBase } from "./cta-link";
 import { demoHrefWithName } from "@/lib/demo-href";
 
 /**
- * "Your restaurant's name" and Get Started. Opens Book a call with the name
- * filled in. Nothing is sent anywhere by this page: it only builds the link.
+ * "Your restaurant's name" and Get Started. Goes to Book a call with the name
+ * filled in: by default the /contact form as a call request, with the name in
+ * its Restaurant field (/contact?intent=call&restaurant=...). Nothing is sent
+ * anywhere by this page: it only builds the link.
  */
 export function HeroSignup({
   href,
