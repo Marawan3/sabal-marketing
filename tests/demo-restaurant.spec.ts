@@ -89,9 +89,19 @@ test("every dish a visual shows has its photo in public/demo/photos, and every p
     }
     for (const { src } of await pictures(page)) expect(existsSync(join(root, "public", src)), `${src} on ${path}`).toBe(true);
   }
-  // The pizza without a photo yet stays out.
+  // Every pizza shows (Hot Honey Soppressata's photo came after the others, 2026-10-19), and the sides and sandwiches the visuals use.
   expect([...seen].sort()).toEqual(
-    ["Pepperoni Pizza", "Margherita", "Buffalo Chicken", "White Pie", "Garlic Knots", "Loaded Fries", "Buffalo Wings", "Chicken Parm Sandwich"].sort(),
+    [
+      "Pepperoni Pizza",
+      "Margherita",
+      "Hot Honey Soppressata",
+      "Buffalo Chicken",
+      "White Pie",
+      "Garlic Knots",
+      "Loaded Fries",
+      "Buffalo Wings",
+      "Chicken Parm Sandwich",
+    ].sort(),
   );
 });
 

@@ -47,8 +47,12 @@ export const demoMenu: { category: string; dishes: Dish[] }[] = [
         photo: "pepperoni-pizza",
       },
       { name: "Margherita", cents: 1400, description: "San Marzano tomato, fresh mozzarella, basil and olive oil.", photo: "margherita" },
-      // Its photo is still to come (LOG.md follow-up), so no visual shows it yet.
-      { name: "Hot Honey Soppressata", cents: 1900, description: "Spicy soppressata and mozzarella, finished with chili honey.", photo: null },
+      {
+        name: "Hot Honey Soppressata",
+        cents: 1900,
+        description: "Spicy soppressata and mozzarella, finished with chili honey.",
+        photo: "hot-honey-soppressata",
+      },
       {
         name: "Buffalo Chicken",
         cents: 1800,

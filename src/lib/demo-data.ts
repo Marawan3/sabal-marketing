@@ -1,4 +1,4 @@
-import { demoOrder, dish, money, photoOf, SERVICE_FEE_PERCENT, TAX_BP, TIP_PERCENT, withPhoto } from "./demo-order";
+import { demoOrder, dish, money, photoOf, SERVICE_FEE_PERCENT, TAX_BP, TIP_PERCENT } from "./demo-order";
 
 /**
  * Demo restaurant data for the built visuals (src/components/visuals) that
@@ -84,13 +84,8 @@ export const demoDelivery = {
   deliveryStages: ["Confirming delivery", "Restaurant preparing", "Driver assigned", "Picked up", "On the way", "Delivered"],
 };
 
-/**
- * The dishes the website features (owner, 2026-10-19): Hot Honey Soppressata,
- * White Pie, Buffalo Wings and Chicken Parm Sandwich. A dish still waiting for
- * its photo steps aside, and Buffalo Chicken takes the fourth card.
- */
-const featured = withPhoto(["Hot Honey Soppressata", "White Pie", "Buffalo Wings", "Chicken Parm Sandwich"].map(dish));
-if (featured.length < 4) featured.push(dish("Buffalo Chicken"));
+/** The dishes the website features (owner, 2026-10-19), each a card with its photo. */
+const featured = ["Hot Honey Soppressata", "White Pie", "Buffalo Wings", "Chicken Parm Sandwich"].map(dish);
 
 /**
  * The demo restaurant's website (the storefront's clean theme), in the

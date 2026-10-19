@@ -373,7 +373,7 @@ Tabs: Pizzas, Starters & Sides, Sandwiches & Salads, Drinks & Dessert. A pizza's
 |---|---|---|---|
 | Pizzas | Pepperoni Pizza | $16.00 | Cup-and-char pepperoni, whole-milk mozzarella and tomato sauce, with oregano. |
 | Pizzas | Margherita | $14.00 | San Marzano tomato, fresh mozzarella, basil and olive oil. |
-| Pizzas | Hot Honey Soppressata | $19.00 | Spicy soppressata and mozzarella, finished with chili honey. *Not shown yet: its photo is to come (LOG.md).* |
+| Pizzas | Hot Honey Soppressata | $19.00 | Spicy soppressata and mozzarella, finished with chili honey. |
 | Pizzas | Buffalo Chicken | $18.00 | Buffalo chicken, mozzarella, a ranch drizzle and scallions. |
 | Pizzas | White Pie | $17.00 | Ricotta, mozzarella, roasted garlic, lemon zest and basil. |
 | Starters & Sides | Garlic Knots | $7.00 | Six knots brushed with garlic butter, parmesan and parsley, with marinara. |
@@ -392,7 +392,7 @@ Tabs: Pizzas, Starters & Sides, Sandwiches & Salads, Drinks & Dessert. A pizza's
 - **Delivery, #1931:** 1× Margherita (16-inch) $19.00 and 1× Garlic Knots $7.00, subtotal $26.00; the delivery fee stays the $4.99 example.
 
 ## The restaurant's words
-- **Website:** eyebrow "Pizza in Miami, FL"; heading "Stone-oven pizza in Brickell"; sub "Pies from a stone oven, wings, sandwiches and salads. Order ahead for pickup or delivery, or take a seat on the terrace."; intro band "Fired in stone, a block from the bay". The oven photo sits above the heading. Featured: White Pie, Buffalo Wings, Chicken Parm Sandwich and Buffalo Chicken (Hot Honey Soppressata takes the first card once its photo is in), each a card with its photo, name and price.
+- **Website:** eyebrow "Pizza in Miami, FL"; heading "Stone-oven pizza in Brickell"; sub "Pies from a stone oven, wings, sandwiches and salads. Order ahead for pickup or delivery, or take a seat on the terrace."; intro band "Fired in stone, a block from the bay". The oven photo sits above the heading. Featured: Hot Honey Soppressata, White Pie, Buffalo Wings and Chicken Parm Sandwich, each a card with its photo, name and price.
 - **Menu page (search result):** title "Menu | Palm&Stone Pizza, Brickell"; description "The full Palm&Stone Pizza menu: pizzas, starters and sides, sandwiches and salads, drinks and dessert, priced for pickup and delivery."; dish lines Pepperoni Pizza $16.00, Margherita $14.00, Garlic Knots $7.00, Buffalo Wings $16.00.
 - **Catering:** the spread photo at the top; "Party pies, trays of wings and garlic knots, and a big salad for an office lunch or a party at home. Tell us the date and the headcount and we will send back a plan." Form example: 40 guests, "Office lunch. Pizzas, wings and a big salad, two vegetarian guests."
 - **Text message:** "Your order #1930 at Palm&Stone Pizza is confirmed."

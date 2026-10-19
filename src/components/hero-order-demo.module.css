@@ -47,12 +47,18 @@
   gap: 16px;
 }
 
+/*
+ * Desktop: the phone and the kitchen display in two fixed columns. The phone
+ * holds its column from the first paint, even if the browser paints before it
+ * has read the display's markup (2026-10-19: a centred row put the phone in
+ * the middle, then moved it left when the display arrived, a layout shift).
+ */
 @media (min-width: 1024px) {
   .stage {
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 4%;
+    display: grid;
+    grid-template-columns: 30.6% 65.4%;
+    column-gap: 4%;
+    align-items: start;
     max-width: 980px;
     margin-inline: auto;
   }
@@ -78,7 +84,7 @@
 
 @media (min-width: 1024px) {
   .phoneBox {
-    width: 30.6%;
+    width: 100%;
   }
 }
 
@@ -840,7 +846,7 @@
   container-type: inline-size;
   display: none;
   position: relative;
-  width: 65.4%;
+  width: 100%;
   aspect-ratio: 900 / 884;
 }
 
