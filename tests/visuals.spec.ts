@@ -30,8 +30,8 @@ const home: Record<string, string> = {
   editor: "/menu-management",
   sms: "/how-it-works",
 };
-/** Visuals that show the hero's one dish photo (the only picture any visual carries). */
-const withDishPhoto = ["menu", "upsell", "editor"];
+/** Visuals that carry the demo restaurant's pictures: dish photos, its website and catering photos, its mark. */
+const withPictures = ["menu", "upsell", "editor", "storefront", "catering", "loyalty", "search", "delivery"];
 const names = Object.keys(home) as (keyof typeof copy.visuals)[];
 const pages = [
   "/",
@@ -77,7 +77,7 @@ async function shown(el: Locator) {
   });
 }
 
-test("each visual is built: real text, decorative for screen readers with one sentence, no screenshots or photos", async ({ page }) => {
+test("each visual is built: real text, decorative for screen readers with one sentence, no screenshots; pictures only the demo restaurant's own", async ({ page }) => {
   for (const name of names) {
     await page.goto(home[name]);
     const el = visual(page, name);
@@ -86,8 +86,10 @@ test("each visual is built: real text, decorative for screen readers with one se
     await expect(el.locator(":scope > .sr-only")).toHaveText(copy.visuals[name] as string);
     await expect(el.locator("video, canvas, figure, iframe, picture"), name).toHaveCount(0);
     const imgs = await el.locator("img").evaluateAll((els) => els.map((img) => img.getAttribute("src") ?? ""));
-    if (withDishPhoto.includes(name)) for (const src of imgs) expect(src, name).toBe(demoOrder.dish.photo);
-    else expect(imgs, name).toEqual([]);
+    if (withPictures.includes(name)) {
+      expect(imgs.length, name).toBeGreaterThan(0);
+      for (const src of imgs) expect(src, name).toMatch(/^\/demo\/(photos\/[a-z-]+-(360|900)\.webp|logo\/palmstone-pizza-mark\.svg)$/);
+    } else expect(imgs, name).toEqual([]);
     expect((await el.innerText()).trim().length, name).toBeGreaterThan(20);
   }
 });
@@ -195,7 +197,7 @@ for (const width of [390, 1440]) {
       storefront: (el) => el.getByText(`${demoOrder.restaurant} · Miami`, { exact: true }),
       kitchen: (el) => el.locator('[data-part="in"]'),
       dashboard: (el) => el.getByText("Average order", { exact: true }),
-      search: (el) => el.getByText("Hummus & Warm Pita", { exact: true }),
+      search: (el) => el.getByText("Buffalo Wings", { exact: true }),
       receipt: (el) => el.getByText("Paid by card", { exact: true }),
       flow: (el) => el.getByText("Customer receives it", { exact: true }),
       // Desktop: the drawer is open. Phones: the focal crop of the list.

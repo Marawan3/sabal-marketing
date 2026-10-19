@@ -364,10 +364,14 @@ test("no panel is empty, and every section's visual is a built one", async ({ pa
     await page.setViewportSize({ width, height: 900 });
     for (const path of pages) {
       await page.goto(path);
-      // No screenshots or photos anywhere: no figure, and the only picture is the hero phone's dish photo.
+      // No screenshots or stock photos: no figure, and every picture is the demo restaurant's own
+      // (its dish photos and its mark, public/demo), inside a built visual.
       expect(await page.locator("main figure").count(), `${path} at ${width}`).toBe(0);
-      const images = await page.locator("main img").evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src") ?? ""));
-      for (const src of images) expect(src, `${path} at ${width}`).toContain("/hero-demo/");
+      const images = await page.locator("main img").evaluateAll((imgs) => imgs.map((img) => [img.getAttribute("src") ?? "", !!img.closest("[data-demo]")] as [string, boolean]));
+      for (const [src, inVisual] of images) {
+        expect(src, `${path} at ${width}`).toMatch(/^\/demo\/(photos|logo)\//);
+        expect(inVisual, `${src} on ${path}`).toBe(true);
+      }
       // Every panel carries something to read or look at.
       const empty = await page.locator("main [class*='rounded-[20px]']").evaluateAll((els) =>
         els.filter((el) => el.getBoundingClientRect().height > 0 && !el.textContent?.trim() && !el.querySelector("img")).length,

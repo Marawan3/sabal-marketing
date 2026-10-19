@@ -409,8 +409,12 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   stock. Rendered with `next/image`.
 - Do not fake a screenshot.
 - No restaurant photos, menu scans, or live-site links until the owner's written OK.
-- No stock food photos. The JPGs in `public/demo/` are from the old site and must not
-  appear on the page.
+- The demo restaurant's own pictures are the one exception (owner, 2026-10-19): the
+  AI-generated Palm&Stone Pizza photos and logo in `public/demo/photos/` and
+  `public/demo/logo/` (ASSETS.md), only inside the built visuals, as plain `<img>`
+  with width and height set and `alt=""`; the hero phone's eager, the rest lazy.
+  Every dish a visual shows has its photo; a dish without one stays out.
+- No stock food photos.
 - Icons: none, unless a check mark in a checklist. No icon grids.
 - Logo: geometry is locked (rounded-square tile, one-stroke W with the raised center
   peak, WUNTAB wordmark caps / weight 500 / 3px tracking, tile + 14px gap lockup). The

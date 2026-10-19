@@ -1,13 +1,13 @@
 import { copy } from "@/lib/copy";
 import { demoEditor as e } from "@/lib/demo-data";
-import { demoOrder as o } from "@/lib/demo-order";
+import { DishImg } from "../demo-img";
 import { Visual } from "./visual";
 import v from "./visuals.module.css";
 
 /**
  * The dashboard's item editor (batch 1's menu-editor captures): photo, item
  * name, category, price and prep, availability, and modifier groups, for the
- * demo's Spiced Lamb Meatballs. A still: it shows what one edit touches.
+ * demo's Pepperoni Pizza. A still: it shows what one edit touches.
  */
 export function MenuEditor() {
   return (
@@ -21,8 +21,7 @@ export function MenuEditor() {
           <div className={v.meTop}>
             <div>
               <div className={v.meLabel}>Photo</div>
-              {/* eslint-disable-next-line @next/next/no-img-element -- the hero's dish photo, at its own size */}
-              <img src={o.dish.photo} alt="" width={o.dish.photoSize} height={o.dish.photoSize} className={v.mePhoto} decoding="async" />
+              <DishImg src={e.photo} className={v.mePhoto} />
             </div>
             <div className={v.meFields}>
               <div>

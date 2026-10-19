@@ -1,7 +1,9 @@
 /*
  * The built visuals (src/components/visuals), in the hero phone's language:
  * real text and shapes, the storefront's and the kitchen display's own
- * colours and type, the demo restaurant's dishes and prices.
+ * colours and type, the demo restaurant's dishes, prices and photos. The
+ * restaurant's own screens use its sand for bands and cards (2026-10-19);
+ * WunTab's own panels (the ground) stay mist.
  *
  * Inside a device every size is the device's own pixels times --k, as in the
  * hero (hero-order-demo.module.css). --k never drops below 0.6429px, so
@@ -25,6 +27,8 @@
   --sf-meta: var(--ink-muted);
   --sf-line: var(--mist);
   --sf-alt: var(--mist);
+  --sf-sand: #f3ead9;
+  --sf-terracotta: #c8693a;
   --kd-bg: var(--ink);
   --kd-card: var(--ink);
   --kd-rule: color-mix(in oklab, var(--paper) 15%, transparent);
@@ -601,14 +605,39 @@
   isolation: isolate;
 }
 
+/* The mark and name stay on one line beside Order online: a little tighter than the menu's bar. */
 .siteBar {
   justify-content: space-between;
+  gap: calc(var(--k) * 8);
+  padding: 0 calc(var(--k) * 12);
+  font-size: calc(var(--k) * 15);
+}
+
+.siteBar > :first-child {
+  min-width: 0;
+  gap: calc(var(--k) * 6);
+  white-space: nowrap;
+}
+
+.siteBar > :first-child img {
+  width: calc(var(--k) * 20);
+  height: calc(var(--k) * 20);
+}
+
+.siteBar > :first-child > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.siteBar .sitePill {
+  padding: 0 calc(var(--k) * 12);
 }
 
 .siteBarEnd {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: calc(var(--k) * 8);
+  gap: calc(var(--k) * 4);
 }
 
 .sitePill,
@@ -639,7 +668,7 @@
 
 .burger {
   display: flex;
-  width: calc(var(--k) * 44);
+  width: calc(var(--k) * 40);
   height: calc(var(--k) * 44);
   align-items: center;
   justify-content: center;
@@ -651,12 +680,31 @@
   height: calc(var(--k) * 22);
 }
 
+/* The website's hero photo, above its heading, and the catering page's photo. */
+.siteHeroImg,
+.pagePhoto {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.siteHeroImg {
+  aspect-ratio: 16 / 10;
+}
+
 .siteHero {
   display: flex;
   flex-direction: column;
   gap: calc(var(--k) * 12);
-  padding: calc(var(--k) * 56) calc(var(--k) * 16);
-  background: var(--sf-alt);
+  padding: calc(var(--k) * 28) calc(var(--k) * 16) calc(var(--k) * 32);
+  background: var(--sf-sand);
+}
+
+.eyebrow {
+  color: var(--sf-ink);
+  font-weight: 600;
 }
 
 .siteH1 {
@@ -692,42 +740,32 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  justify-content: flex-end;
   gap: calc(var(--k) * 4);
   width: calc(var(--k) * 160);
-  height: calc(var(--k) * 140);
-  padding: calc(var(--k) * 14);
+  padding: calc(var(--k) * 8) calc(var(--k) * 8) calc(var(--k) * 12);
   border-radius: calc(var(--k) * 12);
-  background: var(--sf-alt);
+  background: var(--sf-sand);
+}
+
+.railCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  margin-bottom: calc(var(--k) * 6);
+  border-radius: calc(var(--k) * 8);
+  object-fit: cover;
+}
+
+.railCard > span {
+  padding: 0 calc(var(--k) * 6);
 }
 
 .band {
   margin-top: calc(var(--k) * 32);
   padding: calc(var(--k) * 48) calc(var(--k) * 16);
-  background: var(--sf-alt);
-}
-
-.open {
-  display: inline-flex;
-  align-items: center;
-  gap: calc(var(--k) * 8);
-}
-
-.open i {
-  width: calc(var(--k) * 8);
-  height: calc(var(--k) * 8);
-  border-radius: 9999px;
-  background: var(--sf-action);
-}
-
-.selector {
-  display: flex;
-  align-items: center;
-  height: calc(var(--k) * 44);
-  padding: 0 calc(var(--k) * 12);
-  border-radius: 9999px;
-  background: var(--sf-alt);
-  color: var(--sf-ink);
+  border-top: calc(var(--k) * 3) solid var(--sf-terracotta);
+  background: var(--sf-sand);
 }
 
 .grid2 {
@@ -783,15 +821,9 @@
 }
 
 .badge {
-  display: flex;
+  display: block;
   width: calc(var(--k) * 32);
   height: calc(var(--k) * 32);
-  align-items: center;
-  justify-content: center;
-  border-radius: calc(var(--k) * 8);
-  background: var(--sf-action);
-  color: #fff;
-  font-weight: 700;
 }
 
 .cardHead {
@@ -822,6 +854,100 @@
   border-radius: 9999px;
   background: var(--sf-action);
   transition: opacity var(--fade);
+}
+
+/* The tracking page's drawn map (delivery-phone.tsx): no map provider, no real streets. */
+.map {
+  position: relative;
+  aspect-ratio: 320 / 140;
+  overflow: hidden;
+  border-radius: calc(var(--k) * 10);
+}
+
+.map svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mapGround {
+  fill: #f7f7f5;
+}
+
+.mapStreets {
+  fill: none;
+  stroke: #e3e5e9;
+  stroke-width: 9;
+  stroke-linecap: square;
+}
+
+.mapRoute {
+  fill: none;
+  stroke: var(--sf-action);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mapPin,
+.mapHome,
+.driver,
+.driverAt {
+  position: absolute;
+  border-radius: 9999px;
+}
+
+/* The restaurant: its terracotta, ringed in white. */
+.mapPin {
+  width: calc(var(--k) * 16);
+  height: calc(var(--k) * 16);
+  margin: calc(var(--k) * -8) 0 0 calc(var(--k) * -8);
+  border: calc(var(--k) * 4) solid #fff;
+  background: var(--sf-terracotta);
+  box-sizing: border-box;
+}
+
+/* The delivery address: a dark pin. */
+.mapHome {
+  width: calc(var(--k) * 18);
+  height: calc(var(--k) * 18);
+  margin: calc(var(--k) * -18) 0 0 calc(var(--k) * -9);
+  border-radius: 50% 50% 50% 0;
+  background: var(--sf-ink);
+  transform: rotate(-45deg);
+  transform-origin: 50% 100%;
+}
+
+/* The leg the travelling dot is on: the map's own size, so a translate in % is a share of the map. */
+.mapLeg {
+  position: absolute;
+  inset: 0;
+  transform: translate(50%, -57.1429%);
+}
+
+.driver,
+.driverAt {
+  width: calc(var(--k) * 16);
+  height: calc(var(--k) * 16);
+  margin: calc(var(--k) * -8) 0 0 calc(var(--k) * -8);
+  border: calc(var(--k) * 3) solid #fff;
+  background: var(--sf-action);
+  box-sizing: border-box;
+}
+
+/* With motion one dot travels; with reduced motion it is a still dot at each leg's end, in turn. */
+.driverAt {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapLeg {
+    display: none;
+  }
+
+  .driverAt[data-driver-at="3"] {
+    opacity: 1;
+  }
 }
 
 .current {
@@ -952,17 +1078,10 @@
 }
 
 .fav {
-  display: flex;
+  display: block;
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--sf-action);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .siteName {
@@ -1671,13 +1790,27 @@
 }
 
 .reward {
-  padding: calc(var(--k) * 14) calc(var(--k) * 16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--k) * 12);
+  padding: calc(var(--k) * 14) calc(var(--k) * 14) calc(var(--k) * 14) calc(var(--k) * 16);
   border-radius: calc(var(--k) * 12);
   background: var(--sf-action);
   color: var(--paper);
   font-size: calc(var(--k) * 14);
   line-height: 1.35;
   transition: transform var(--move), opacity var(--fade);
+}
+
+/* The dish the reward is for. */
+.rewardImg {
+  display: block;
+  flex-shrink: 0;
+  width: calc(var(--k) * 72);
+  height: calc(var(--k) * 72);
+  border-radius: calc(var(--k) * 10);
+  object-fit: cover;
 }
 
 .rewardLabel {
@@ -1701,6 +1834,7 @@
 }
 
 .upPhoto {
+  position: relative;
   height: calc(var(--k) * 200);
   overflow: hidden;
 }
@@ -1725,10 +1859,14 @@
   transition: transform var(--move), opacity var(--fade);
 }
 
-.oneLine {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+/* "Goes well with": the clean theme's rows, a little tighter: a smaller photo, one line of description. */
+.upRow > :last-child {
+  width: calc(var(--k) * 80);
+  height: calc(var(--k) * 80);
+}
+
+.upRow > :first-child > :last-child {
+  -webkit-line-clamp: 1;
 }
 
 /* ---------- The confirmation text on a lock screen (menu-phones.tsx) ---------- */
@@ -1979,6 +2117,12 @@
   }
   .delivery .current[data-cur="5-7"] {
     animation: m-delivery-13 2920ms ease 5100ms both;
+  }
+  .delivery .driver {
+    animation: m-delivery-14 320ms ease 7700ms both;
+  }
+  .delivery .mapLeg {
+    animation: m-delivery-15 1800ms linear 7700ms both;
   }
   .catering .scrollA {
     animation: m-catering-0 3100ms cubic-bezier(0.3, 0, 0.2, 1) 1200ms both;
@@ -2276,6 +2420,16 @@
   10.959% { opacity: 1; }
   89.041% { opacity: 1; }
 }
+@keyframes m-delivery-14 {
+  0% { opacity: 0; }
+}
+@keyframes m-delivery-15 {
+  0% { transform: none; }
+  33.333% { transform: translate(25%, 0); }
+  33.333% { transform: translate(25%, 0); }
+  66.667% { transform: translate(25%, -57.1429%); }
+  66.667% { transform: translate(25%, -57.1429%); }
+}
 @keyframes m-catering-0 {
   0% { transform: none; }
   29.032% { transform: translateY(calc(var(--k) * -330)); }
@@ -2520,6 +2674,15 @@
   }
   .delivery .current[data-cur="5-7"] {
     animation: m-delivery-r13 2750ms ease 5100ms both;
+  }
+  .delivery [data-driver-at="1"] {
+    animation: m-delivery-r16 750ms ease 7700ms both;
+  }
+  .delivery [data-driver-at="2"] {
+    animation: m-delivery-r17 750ms ease 8300ms both;
+  }
+  .delivery [data-driver-at="3"] {
+    animation: m-delivery-r18 150ms ease 8900ms both;
   }
   .catering .scrollA {
     animation: m-catering-r0 2350ms ease 1200ms both,
@@ -2768,6 +2931,21 @@
   0% { opacity: 0; }
   5.455% { opacity: 1; }
   94.545% { opacity: 1; }
+}
+@keyframes m-delivery-r16 {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes m-delivery-r17 {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes m-delivery-r18 {
+  0% { opacity: 0; }
 }
 @keyframes m-catering-r0 {
   0% { opacity: 1; }

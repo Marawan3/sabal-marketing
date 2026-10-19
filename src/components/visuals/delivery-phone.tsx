@@ -2,6 +2,7 @@ import { copy } from "@/lib/copy";
 import { demoDelivery as d } from "@/lib/demo-data";
 import { demoOrder as o } from "@/lib/demo-order";
 import h from "../hero-order-demo.module.css";
+import { RestaurantMark } from "../demo-img";
 import { Chevron } from "../hero-order-demo";
 import { Field, Phone } from "./phone";
 import { Tap, Visual } from "./visual";
@@ -10,9 +11,10 @@ import v from "./visuals.module.css";
 /**
  * Steps: 1 scroll to the delivery quote and Pay, 2 tap Pay, 3 the
  * confirmation, 4 tap Track your order, 5 the tracking page (restaurant
- * preparing), 6 driver assigned, 7 on the way.
+ * preparing), 6 driver assigned, 7 on the way: the driver's dot crosses the
+ * map (7700 to 9500 ms), then holds.
  */
-const STEPS = [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 8600];
+const STEPS = [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 10000];
 
 /**
  * A delivery order on the demo restaurant's website, in the order the
@@ -180,7 +182,7 @@ function Tracking() {
   return (
     <div className={`${v.layer} ${v.slideC}`}>
       <div className={v.trackBar}>
-        <span className={v.badge}>P</span>
+        <RestaurantMark className={v.badge} />
         <b>{o.restaurant}</b>
       </div>
       <div className={`${v.pad} ${v.scrollB}`}>
@@ -199,6 +201,7 @@ function Tracking() {
         </div>
         <div className={h.card}>
           <span className={v.cardHead}>Delivery</span>
+          <RouteMap />
           {d.deliveryStages.map((stage, i) => (
             <Stage key={stage} label={stage} reach={reach[i]} current={current[i]} />
           ))}
@@ -208,6 +211,50 @@ function Tracking() {
           <span className={v.textLink}>Track delivery</span>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The route on a small drawn map (no map provider, no real streets): streets
+ * in light grey, the route in the action colour, the restaurant's pin and the
+ * delivery address's. On the way, the driver's dot goes along the route in
+ * three equal legs (motion-spec.mjs: along the street, up, along again), and
+ * stops short of the address. With reduced motion it never slides: a dot
+ * fades in at the end of each leg in turn. Points are in the map's own units
+ * (320 by 140); the dot's legs are 80 units, 25% of the width or 57.14% of the
+ * height.
+ */
+const ROUTE = [
+  [60, 112],
+  [140, 112],
+  [140, 32],
+  [220, 32],
+  [276, 32],
+];
+const at = ([x, y]: number[]) => ({ left: `${(x / 320) * 100}%`, top: `${(y / 140) * 100}%` });
+
+function RouteMap() {
+  const [start, , , , home] = ROUTE;
+  return (
+    <div className={v.map} data-map>
+      <svg viewBox="0 0 320 140" preserveAspectRatio="none">
+        <rect width="320" height="140" className={v.mapGround} />
+        <g className={v.mapStreets}>
+          <path d="M0 32H320M0 112H320M60 0V140M140 0V140M220 0V140M290 0V140M0 72H60M220 80H320" />
+          <path d="M140 72L220 0" />
+        </g>
+        <path d={`M${ROUTE.map((p) => p.join(" ")).join("L")}`} className={v.mapRoute} />
+      </svg>
+      <span className={v.mapPin} data-pin="restaurant" style={at(start)} />
+      <span className={v.mapHome} data-pin="address" style={at(home)} />
+      {/* With motion: one dot that travels. With reduced motion: a still dot at the end of each leg. */}
+      <span className={v.mapLeg}>
+        <span className={v.driver} data-driver style={at(start)} />
+      </span>
+      {ROUTE.slice(1, 4).map((p, i) => (
+        <span key={i} className={v.driverAt} data-driver-at={i + 1} style={at(p)} />
+      ))}
     </div>
   );
 }

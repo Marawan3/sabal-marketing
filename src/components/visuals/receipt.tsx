@@ -14,7 +14,7 @@ const STEPS = [0, 300, 650, 1000, 1350, 1700, 2050, 2400, 2900];
 export function Receipt() {
   const c = o.checkout;
   const lines: [string, string][] = [
-    ["Subtotal", o.dish.price],
+    ["Subtotal", c.subtotal],
     [c.feeLabel, c.fee],
     ["Tax", c.tax],
     [`Tip (${c.tipChosen})`, c.tip],
@@ -34,10 +34,10 @@ export function Receipt() {
           <span>
             1× {o.dish.name}
             <span className={v.rMeta} style={{ display: "block" }}>
-              {o.pick}
+              {o.mods.join(", ")}
             </span>
           </span>
-          <span>{o.dish.price}</span>
+          <span>{o.linePrice}</span>
         </div>
         <div className={v.rRule} />
         {lines.map(([label, value], i) => (

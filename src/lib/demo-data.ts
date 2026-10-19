@@ -1,12 +1,15 @@
-import { demoOrder, money, SERVICE_FEE_PERCENT, TAX_BP, TIP_PERCENT } from "./demo-order";
+import { demoOrder, dish, money, photoOf, SERVICE_FEE_PERCENT, TAX_BP, TIP_PERCENT, withPhoto } from "./demo-order";
 
 /**
  * Demo restaurant data for the built visuals (src/components/visuals) that
- * isn't already in demo-order.ts. Each figure says where it comes from.
+ * isn't already in demo-order.ts. Each figure says where it comes from. The
+ * dishes, prices and the restaurant's words are the owner's Palm&Stone Pizza
+ * (2026-10-19, see demo-order.ts); the live demo restaurant is being updated
+ * to match, and the "See a live WunTab restaurant" link stays off until it does.
  */
 
 /**
- * The dashboard's Overview card for Palm&Stone Kitchen, "Last 30 days"
+ * The dashboard's Overview card for the demo restaurant, "Last 30 days"
  * (Sep 9 to Oct 8, 2026), as seeded on the demo and shown in the dashboard
  * screenshot from batch 1 (public/shots/dash-overview.png, removed with the
  * screenshot pipeline on 2026-10-13). Labels are the dashboard's own.
@@ -45,14 +48,16 @@ export const demoKitchen = {
 };
 
 /**
- * The delivery phone's order. Dishes and prices are the demo menu's (Lamb
- * Gyro with spice level Hot, Hummus & Warm Pita); the arithmetic is the
+ * The delivery phone's order, #1931. Dishes and prices are the demo menu's (a
+ * 16-inch Margherita, $14.00 + $5.00, and Garlic Knots); the arithmetic is the
  * hero's: tax 6.5%, the diner's 5% service fee and a 20% tip on the
  * subtotal. The delivery fee is the delivery provider's quote in the real
  * checkout; the demo restaurant has delivery switched off, so $4.99 here is
  * an example, not a quote. The address is made up.
  */
-const DELIVERY_SUBTOTAL = 1400 + 850;
+const MARGHERITA_16 = dish("Margherita").cents + 500;
+const KNOTS = dish("Garlic Knots").cents;
+const DELIVERY_SUBTOTAL = MARGHERITA_16 + KNOTS;
 const DELIVERY_FEE = 499;
 const dTax = Math.round((DELIVERY_SUBTOTAL * TAX_BP) / 10000);
 const dService = Math.round((DELIVERY_SUBTOTAL * SERVICE_FEE_PERCENT) / 100);
@@ -63,8 +68,8 @@ export const demoDelivery = {
   address: "300 Lantern Bay Dr, Miami",
   time: "ASAP (20–30 min)",
   items: [
-    { qty: 1, name: "Lamb Gyro", mods: ["Hot"], price: money(1400) },
-    { qty: 1, name: "Hummus & Warm Pita", mods: [] as string[], price: money(850) },
+    { qty: 1, name: "Margherita", mods: ["16-inch"], price: money(MARGHERITA_16) },
+    { qty: 1, name: "Garlic Knots", mods: [] as string[], price: money(KNOTS) },
   ],
   count: "2 items",
   subtotal: money(DELIVERY_SUBTOTAL),
@@ -80,38 +85,46 @@ export const demoDelivery = {
 };
 
 /**
- * The demo restaurant's website (the storefront's clean theme), with its own
- * words from the demo's site content: the hero, and the dishes it features.
+ * The dishes the website features (owner, 2026-10-19): Hot Honey Soppressata,
+ * White Pie, Buffalo Wings and Chicken Parm Sandwich. A dish still waiting for
+ * its photo steps aside, and Buffalo Chicken takes the fourth card.
+ */
+const featured = withPhoto(["Hot Honey Soppressata", "White Pie", "Buffalo Wings", "Chicken Parm Sandwich"].map(dish));
+if (featured.length < 4) featured.push(dish("Buffalo Chicken"));
+
+/**
+ * The demo restaurant's website (the storefront's clean theme), in the
+ * owner's words (2026-10-19): the hero with its photo, and the dishes it
+ * features.
  */
 export const demoSite = {
-  eyebrow: "Mediterranean in Miami, FL",
-  heading: "Mediterranean cooking, over fire, in Brickell",
-  sub: "Small plates, stone-oven flatbreads, grain bowls, and a grill that runs late. Order ahead for pickup or delivery, or take a seat on the terrace.",
-  intro: "Cooked over fire, a block from the bay",
-  featured: [
-    { name: "Chicken Shawarma Flatbread", price: "$14.50" },
-    { name: "Chicken Souvlaki Bowl", price: "$15.50" },
-    { name: "Mixed Grill for Two", price: "$48.00" },
-    { name: "Lamb Gyro", price: "$14.00" },
-  ],
+  eyebrow: "Pizza in Miami, FL",
+  heading: "Stone-oven pizza in Brickell",
+  sub: "Pies from a stone oven, wings, sandwiches and salads. Order ahead for pickup or delivery, or take a seat on the terrace.",
+  intro: "Fired in stone, a block from the bay",
+  /** The hero image above the heading (900×600, cropped to fit). */
+  photo: photoOf("hero-oven", 900),
+  featured,
   /** The demo site's address. demo.wuntab.com serves the demo storefront; its menu is /menu/brickell. */
   host: "demo.wuntab.com",
   menuPath: ["menu", "brickell"],
   /** The demo's own menu-page title and description (its SEO settings). */
-  menuTitle: "Menu | Palm&Stone Kitchen, Brickell",
+  menuTitle: "Menu | Palm&Stone Pizza, Brickell",
   menuDescription:
-    "The full Palm&Stone Kitchen menu: mezze, flatbreads, bowls and salads, grill plates, sandwiches, sides, desserts, and drinks, priced for pickup and delivery.",
+    "The full Palm&Stone Pizza menu: pizzas, starters and sides, sandwiches and salads, drinks and dessert, priced for pickup and delivery.",
 };
 
 /** The demo site's catering page and its enquiry form, in the product's words. */
 export const demoCatering = {
   heading: "Catering from the same kitchen",
-  body: "Mezze platters, flatbreads cut for sharing, and grill trays for an office lunch or a party at home. Tell us the date and the headcount and we will send back a plan.",
+  body: "Party pies, trays of wings and garlic knots, and a big salad for an office lunch or a party at home. Tell us the date and the headcount and we will send back a plan.",
+  /** The photo at the top of the page (900×600). */
+  photo: photoOf("catering-spread", 900),
   form: "Ask about catering",
   name: "Priya Medina",
   email: "priya@example.com",
   guests: "40",
-  event: "Office lunch. Mezze and grill trays, two vegan guests.",
+  event: "Office lunch. Pizzas, wings and a big salad, two vegetarian guests.",
   hint: "Include any allergies or dietary preferences we should plan around — please don't share medical details.",
   promise: "Your message goes to the restaurant. They reply when they can.",
 };
@@ -126,6 +139,11 @@ export const demoCatering = {
  */
 const orderTotal = (subtotal: number, tip: number) =>
   money(subtotal + Math.round((subtotal * SERVICE_FEE_PERCENT) / 100) + Math.round((subtotal * TAX_BP) / 10000) + tip);
+/** Each order's subtotal from the menu: #1925 Buffalo Wings and Garlic Knots, #1924 two Chicken Parm Sandwiches, #1929 a 12-inch Margherita. */
+const WINGS = dish("Buffalo Wings").cents;
+const MATEO = WINGS + dish("Garlic Knots").cents;
+const GRACE = 2 * dish("Chicken Parm Sandwich").cents;
+const LEILA = dish("Margherita").cents;
 
 export const demoOrders = {
   location: demoOrder.location,
@@ -141,9 +159,9 @@ export const demoOrders = {
     { label: "Ready", count: 1 },
   ],
   rows: [
-    { number: 1925, placed: "3:37 PM", who: "Mateo E.", items: "Pickup · 2 items", prep: "Prep by 3:57 PM", status: "Preparing", total: orderTotal(2100, 0) },
-    { number: 1924, placed: "3:38 PM", who: "Grace L.", items: "Pickup · 1 item", prep: "Ready since 3:41 PM", status: "Ready", total: orderTotal(1500, 300) },
-    { number: 1929, placed: "3:41 PM", who: "Leila P.", items: "Pickup · 1 item", prep: "Prep by 4:01 PM", status: "New", total: orderTotal(1150, 200) },
+    { number: 1925, placed: "3:37 PM", who: "Mateo E.", items: "Pickup · 2 items", prep: "Prep by 3:57 PM", status: "Preparing", total: orderTotal(MATEO, 0) },
+    { number: 1924, placed: "3:38 PM", who: "Grace L.", items: "Pickup · 2 items", prep: "Ready since 3:41 PM", status: "Ready", total: orderTotal(GRACE, 300) },
+    { number: 1929, placed: "3:41 PM", who: "Leila P.", items: "Pickup · 1 item", prep: "Prep by 4:01 PM", status: "New", total: orderTotal(LEILA, 200) },
     { number: 1930, placed: "3:42 PM", who: "Priya M.", items: "Pickup · 1 item", prep: "Prep by 4:02 PM", status: "New", total: demoOrder.total },
   ],
   /** The drawer: #1925, the order being prepared. */
@@ -152,14 +170,14 @@ export const demoOrders = {
     placed: "Placed 3:37 PM",
     who: "Mateo E.",
     items: [
-      { qty: 1, name: "Crispy Falafel (5 pcs)", mods: "Extra pita", price: money(950) },
-      { qty: 1, name: "Falafel Pita", mods: "", price: money(1150) },
+      { qty: 1, name: "Buffalo Wings", mods: "", price: money(WINGS) },
+      { qty: 1, name: "Garlic Knots", mods: "", price: money(MATEO - WINGS) },
     ],
-    subtotal: money(2100),
-    fee: money(Math.round((2100 * SERVICE_FEE_PERCENT) / 100)),
-    tax: money(Math.round((2100 * TAX_BP) / 10000)),
+    subtotal: money(MATEO),
+    fee: money(Math.round((MATEO * SERVICE_FEE_PERCENT) / 100)),
+    tax: money(Math.round((MATEO * TAX_BP) / 10000)),
     tip: money(0),
-    total: orderTotal(2100, 0),
+    total: orderTotal(MATEO, 0),
   },
 };
 
@@ -174,21 +192,23 @@ export const demoSettings = {
 };
 
 /**
- * The menu editor's item drawer for Spiced Lamb Meatballs (batch 1's
- * menu-editor and menu-editor-options captures): the dashboard's own labels,
- * the demo item's own values. "Available" is the selected availability.
+ * The menu editor's item drawer for Pepperoni Pizza (the layout and labels of
+ * batch 1's menu-editor and menu-editor-options captures), with the owner's
+ * menu values: category, the 12-inch price, and its two modifier groups. Prep
+ * is the restaurant's 20 minutes. "Available" is the selected availability.
  */
 export const demoEditor = {
   title: demoOrder.dish.name,
   sub: "Edit item details",
   category: demoOrder.category,
-  price: "12",
-  prep: "12",
+  photo: demoOrder.dish.photo,
+  price: String(dish(demoOrder.dish.name).cents / 100),
+  prep: "20",
   availability: ["Available", "Sold Out", "Hidden"],
-  groups: [
-    { name: "Spice level", meta: "Optional · 3 options" },
-    { name: "Extras", meta: "Optional · 4 options" },
-  ],
+  groups: demoOrder.dish.groups.map((g) => ({
+    name: g.name,
+    meta: `${g.instruction === "Required" ? "Required" : "Optional"} · ${g.options.length} options`,
+  })),
   save: "Save changes",
 };
 
@@ -201,16 +221,15 @@ export const demoEditor = {
 export const demoReward = {
   label: "Your reward",
   title: "Thanks for coming back.",
-  body: "Your next Hummus & Warm Pita is on us.",
+  body: "Your next cannoli is on us.",
+  photo: dish("Cannoli").photo!,
 };
 
 /**
  * "Goes well with" on the dish sheet (the clean theme shows at most two):
- * the restaurant's own picks for Spiced Lamb Meatballs, from the demo menu.
+ * the restaurant's picks for Pepperoni Pizza (owner, 2026-10-19).
  */
-export const demoPairings = ["Hummus & Warm Pita", "Stuffed Grape Leaves"].map(
-  (name) => demoOrder.rows.find((row) => row.name === name)!,
-);
+export const demoPairings = ["Garlic Knots", "Loaded Fries"].map(dish);
 
 /**
  * The customer's confirmation text, in the product's words

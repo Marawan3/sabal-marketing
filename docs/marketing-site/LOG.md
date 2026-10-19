@@ -24,23 +24,100 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **/about founder section.** Recorded 2026-10-13 (PR #30). Fill `src/lib/founder.ts`: the name, a photo in `public/about/` with its pixel size, and four sentences. It renders nothing until then.
-2. **Demo storefront link.** Recorded 2026-10-13 (PR #30). Set `NEXT_PUBLIC_SHOW_DEMO_LINK=true` in Vercel once the demo menu has photos.
-3. **/pricing comparison sources.** Recorded 2026-10-13 (PR #30). The delivery-app cells for customer fees and customer data cite the largest app's help pages. These were read through search results, because help.doordash.com doesn't resolve from the session. Owner to open them and confirm.
-4. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
-5. ~~**/integrations and the payment account.**~~ Closed in PR #31 (2026-10-13). The owner chose to describe the intended model: each restaurant has its own merchant account with our payment partner and is paid through it, and WunTab takes 5% from the customer at checkout. /integrations' line and the FAQs stay. Per-restaurant merchant accounts are a build commitment in REGISTER.md, next to the 5% fee.
-6. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
-7. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
-8. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
-9. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
-10. ~~**/how-it-works stage visuals.**~~ Done in PR #30 (2026-10-13): "Build the relationship" shows the loyalty reward card, and "Bring them back" shows the customer's confirmation text in the product's own words. The product sends no "ready" text, so the visual doesn't claim one.
-11. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
-12. **Hero: replace the dish photo with the original.** Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
-13. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
-14. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
-15. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
-16. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
-17. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+1. **Hot Honey Soppressata photo.** Recorded 2026-10-19 (PR #48). The asset zip had no photo for it, so no visual shows it yet: it's on the menu in `src/lib/demo-order.ts` with `photo: null`, and Buffalo Chicken is the website's fourth Featured card. When the photo comes, save a centred square crop as `public/demo/photos/hot-honey-soppressata-360.webp` (360×360, WebP quality 80) and set its `photo` to `"hot-honey-soppressata"`. It then shows in the Pizzas rows and takes the first Featured card.
+2. **/about founder section.** Recorded 2026-10-13 (PR #30). Fill `src/lib/founder.ts`: the name, a photo in `public/about/` with its pixel size, and four sentences. It renders nothing until then.
+3. **Demo storefront link.** Recorded 2026-10-13 (PR #30). Set `NEXT_PUBLIC_SHOW_DEMO_LINK=true` in Vercel once the live demo restaurant matches the visuals' Palm&Stone Pizza menu, with its photos (2026-10-19, PR #48).
+4. **/pricing comparison sources.** Recorded 2026-10-13 (PR #30). The delivery-app cells for customer fees and customer data cite the largest app's help pages. These were read through search results, because help.doordash.com doesn't resolve from the session. Owner to open them and confirm.
+5. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
+6. ~~**/integrations and the payment account.**~~ Closed in PR #31 (2026-10-13). The owner chose to describe the intended model: each restaurant has its own merchant account with our payment partner and is paid through it, and WunTab takes 5% from the customer at checkout. /integrations' line and the FAQs stay. Per-restaurant merchant accounts are a build commitment in REGISTER.md, next to the 5% fee.
+7. ~~**Homepage height at 390: 8,070 px, target under 7,000.**~~ Done in PR #28 (2026-10-13): the outcomes are tabs on phones too, and the homepage is 6,770 px at 390. A test keeps it under 7,000.
+8. ~~**Catering visual vs. the product.**~~ Done in PR #26 (2026-10-13): /catering and the homepage row describe the request form. WunTab staff forward every request to the restaurant (owner, 2026-10-13). The homepage tab and /how-it-works say "catering requests".
+9. ~~**Receipt visual.**~~ Closed 2026-10-13: the owner is fine with it as an illustration.
+10. ~~**Delivery phone examples.**~~ Closed 2026-10-13: the owner is fine with the example fee and address, and with "Tip".
+11. ~~**/how-it-works stage visuals.**~~ Done in PR #30 (2026-10-13): "Build the relationship" shows the loyalty reward card, and "Bring them back" shows the customer's confirmation text in the product's own words. The product sends no "ready" text, so the visual doesn't claim one.
+12. ~~**Hero: the checkout shows no 5% service fee, while the pricing section says customers pay 5% at checkout.**~~ Done in PR #23 (2026-10-13). The owner decided to add a "Service fee (5%)" line to the phone's checkout, between the subtotal and the total, at 5% of the subtotal ($0.60). The total is now $15.78 everywhere it appears. The live checkout still has no fee (platform finding 1).
+13. ~~**Hero: replace the dish photo with the original.**~~ Done in PR #48 (2026-10-19): the meatballs photo is gone with the old menu, and every dish the visuals show has its own photo from the owner's asset zip. Recorded 2026-10-13 (PR #22). The meatballs photo is a 174px crop of the menu-editor screenshot and looks soft in the item sheet. The 1024px original is in the demo's photo storage, which the session couldn't reach. The owner decided on 2026-10-13 to keep the current photo until they send the original. Then swap `public/hero-demo/spiced-lamb-meatballs.webp` and `photoSize` in `src/lib/demo-order.ts`.
+14. ~~**Hero: wording.**~~ Closed 2026-10-13. The owner decided to keep the product's own labels ("Add item", "Pay", "Order received", "Ready by").
+15. ~~**Retake `order-drawer` once the 5% service fee is in checkout.**~~ Closed by PR #24 (2026-10-13): the site no longer shows screenshots.
+16. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
+17. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
+18. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-19 · PR #48: The demo restaurant becomes Palm&Stone Pizza, with a photo on every dish (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** every visual leaned on one 174px meatballs photo, shown up to five times its size, so it looked grainy. The website phone had grey boxes where photos should be, and the catering phone showed no food. The owner replaced the Mediterranean menu with a pizzeria and approved the menu, prices and logo on 2026-10-19, and sent the photos (`palmstone-pizza-assets.zip`). The photos are AI-generated for the fictional demo restaurant; ASSETS.md says so.
+
+**What changed:**
+- **Assets:**
+  - The zip's `web/*.webp` are in `public/demo/photos/` and its logo SVGs in `public/demo/logo/`.
+  - Deleted: the meatballs photo and the four unused `public/demo/*.jpg`.
+  - Every picture is a plain `<img>` with its width and height set, `alt=""` (the visuals are aria-hidden) and `decoding="async"`. The hero phone's load eagerly; the rest are lazy.
+- **Restaurant:** "Palm&Stone Pizza", Brickell, 48 Coral Lantern Way, Miami, FL; tax 6.5%; prep 20 minutes. The owner's twelve dishes in four tabs, with the prices and words as given (COPY.md, "The demo restaurant").
+- **Hot Honey Soppressata:** the zip has no raw photo for it at its top level. Following the brief, no visual shows it, Buffalo Chicken is the fourth Featured card, and it's a follow-up above.
+- **The hero's order:**
+  - The diner taps 16-inch, then Hot-honey drizzle, and the Add item price follows: $16.00, $21.00, $22.50.
+  - Cart bar: "View cart · 1 item", $23.96.
+  - Checkout: $22.50 subtotal, $1.13 service fee, $1.46 tax, $4.50 tip, $29.59 total. All computed in code.
+  - Ticket #1930 Priya: 1× Pepperoni Pizza, + 16-inch, + Hot-honey drizzle.
+  - Loop length: the second tap came out of the kitchen ticket's hold, so desktop stays 14.4 s. Phones go from 12.2 s to 12.5 s, with the same 2.5 s hold on the confirmation.
+- **Other orders:**
+  - #1929 Leila: Margherita (12-inch).
+  - #1925 Mateo: Buffalo Wings and Garlic Knots. The drawer's subtotal is $23.00.
+  - #1924 Grace: 2× Chicken Parm Sandwich.
+  - Delivery #1931: a 16-inch Margherita ($19.00) and Garlic Knots ($7.00), $26.00 subtotal, with the $4.99 example delivery fee.
+- **Photos in each visual:**
+  - Menu rows (hero, /online-menu, the website's menu): each has its photo on the right, with the + on its corner.
+  - The dish sheet and /upsells: `pepperoni-pizza-900.webp` full width. "Goes well with" shows Garlic Knots and Loaded Fries.
+  - The editor: Pepperoni Pizza.
+  - The website: the oven photo above its heading, and Featured cards with photos.
+  - Catering: the spread photo.
+  - The loyalty reward card: the cannoli, "Your next cannoli is on us."
+  - The search result: Pepperoni Pizza, Margherita, Garlic Knots and Buffalo Wings.
+- **Logo:**
+  - The mark (about 20px in the phone's own pixels) sits beside the name in the restaurant's own bars: website, menu, catering, the order confirmation.
+  - It replaces the "P" on the tracking page and in the search result.
+  - The orders dashboard's avatar reads PP, the account's initials.
+- **Colours:**
+  - Sand #f3ead9 replaces grey on the website's bands and cards.
+  - Terracotta #c8693a marks the restaurant's pin on the map and the rule over the website's intro band.
+  - Teal stays the action colour. WunTab's own panels are unchanged.
+- **Steam:**
+  - Three blurred white wisps rise and fade over the pepperoni photo in the hero's sheet and on /upsells.
+  - The steam runs on its own loop, outside the story's steps, and the pace tests leave it out.
+  - With reduced motion there is none.
+- **Delivery map:**
+  - A small drawn map on the tracking page: streets in light grey, the route in teal, the restaurant's pin and the address's. There is no map provider and there are no real streets.
+  - During "On the way" the driver's dot crosses three equal legs (7.7 to 9.5 s), and the delivery story now ends at 10.0 s instead of 8.6 s.
+  - With reduced motion the dot never moves: a still dot fades in at the end of each leg in turn.
+- **Words:** the website, the menu page's title and description, catering, the text message, and every visual's screen-reader sentence in `copy.ts`. All are in COPY.md.
+- **Provenance comments:** `demo-order.ts` and `demo-data.ts` now say this is the owner's Palm&Stone Pizza menu (2026-10-19), that the live demo restaurant is being updated to match, and that "See a live WunTab restaurant" stays off until it does.
+
+**Calls I made that the brief didn't spell out:**
+- **The hero's first scroll:** Pepperoni Pizza is first on the menu, so there was nothing to scroll down to. The menu screen now opens on the menu page's head (name · Miami, Open now, Pickup, the address and time), the same head the website phone's menu has. The step-1 scroll takes that head up under the bar, and the Pizzas come up.
+- **Dish sheet photo:** 16:9, was 4:3, so the second tap (the first extra) sits above the sheet's footer instead of under it.
+- **Size group label:** "Required", as the editor's "Size · Required · 2 options" says.
+- **Menu editor prep:** the owner's menu gives no per-dish prep, so it shows the restaurant's 20 minutes.
+- **The website's header:** the name sets at 15px with tighter padding, so "Palm&Stone Pizza" fits beside Order online on one line.
+- **/online-ordering:** its hero is the same phone, so its pictures load eagerly too.
+
+**How it was checked:**
+- **Local suite: 134 passed, 1 skipped** (chromium, and chromium with reduced motion). It was built with the production indexing flags as before; without them the legal-pages indexing test fails locally on any branch. New tests:
+  - **Old names:** none of the old dishes, the old cuisine or "Palm&Stone Kitchen" anywhere in `src/` or `tests/`. (The old `tests/visuals.spec.ts` check for "Hummus & Warm Pita" now looks for Buffalo Wings.)
+  - **Photos:** every dish shown in any visual has its photo in `public/demo/photos/`, and every picture's file exists. Hot Honey Soppressata is shown nowhere.
+  - **Hero:** the money above, both picks and the Add item price at each step, and the ticket's two mods.
+  - **Reduced motion:** the steam is hidden with no animation, and the map dot has no transform animation, only three still dots fading in turn. With motion, the steam loops and the dot travels. The existing no-movement and pace rules pass.
+  - **Pictures:** every one has its width and height, `alt=""`, `decoding="async"`, and is eager only in the hero phone.
+  - **Homepage weight:** its pictures weigh 681,843 bytes, under the 1 MB limit.
+- **Also run:** honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` all pass. The homepage is 6,688px at 390.
+- **WebKit iPhone:** the new spec is added to the `webkit-iphone` project; the workflow runs on the PR.
+- **Evidence** in `docs/marketing-site/evidence/pizza-refresh/`, at 390 and 1280:
+  - `hero-*.png`: the menu, the dish sheet with steam, the kitchen ticket.
+  - `phones-*.png`: the website's hero photo and Featured cards, /online-menu, /upsells, catering, loyalty, the tracking map with and without reduced motion.
+  - `editor-search-*.png`: /menu-management and the search result.
 
 ---
 

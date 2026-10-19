@@ -19,6 +19,9 @@ const nav = ["Overview", "Orders", "Menu", "Customers", "Analytics", "Team"];
  * Narrower than about 900px the sidebar goes; narrower than 600px (phones,
  * and the small homepage row) it is a focal crop of the order list.
  */
+const words = o.restaurant.split(" ");
+const initials = (words[0][0] + words[words.length - 1][0]).toUpperCase();
+
 export function OrdersDashboard() {
   return (
     <Visual name="orders" steps={STEPS} description={copy.visuals.orders}>
@@ -38,7 +41,8 @@ export function OrdersDashboard() {
               </div>
             ))}
             <div className={v.odOrg}>
-              <span className={v.odAvatar}>PK</span>
+              {/* The account's initials: the first and last word of its name. */}
+              <span className={v.odAvatar}>{initials}</span>
               <span>
                 <b>{o.restaurant}</b>
                 <span className={v.odDim}>{d.location}</span>

@@ -10,13 +10,14 @@
  * The story is CSS @keyframes, one loop of 14.4 s on desktop, in the generated block at
  * the bottom (scripts/motion.mjs, from scripts/motion-spec.mjs); the rules
  * above it are where it starts. Below 1024px the phone runs its own, shorter
- * loop (12.2 s): no kitchen display, a hold on the confirmation. With reduced
+ * loop (12.5 s): no kitchen display, a hold on the confirmation. With reduced
  * motion the same loops run as opacity crossfades. visual-player.tsx only
  * pauses it off screen. Only transform and opacity change.
  *
- * Colours are the products' own: the demo restaurant's brand colour and the
- * storefront's neutrals (packages/ui/storefront tokens), and the kitchen
- * display's zinc and blue.
+ * Colours are the products' own: the demo restaurant's teal action colour
+ * (the sand and terracotta of its logo are in the visuals' CSS, on its
+ * website's bands and cards), the storefront's neutrals (packages/ui/storefront
+ * tokens), and the kitchen display's zinc and blue.
  */
 
 .wrap {
@@ -166,8 +167,16 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
   color: var(--sf-action);
   font-weight: 600;
+}
+
+.brand img {
+  width: calc(var(--k) * 22);
+  height: calc(var(--k) * 22);
 }
 
 .tabs {
@@ -231,6 +240,43 @@
   position: absolute;
   inset: calc(var(--k) * 112) 0 0;
   overflow: hidden;
+}
+
+/* The hero's menu page: its head scrolls away under the bar on step 1, and the tabs come up under it. */
+.menuPage {
+  position: absolute;
+  inset: calc(var(--k) * 56) 0 0;
+  overflow: hidden;
+}
+
+.menuHead {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--k) * 16);
+  padding: calc(var(--k) * 8) calc(var(--k) * 16) calc(var(--k) * 4);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--k) * 8);
+}
+
+.open i {
+  width: calc(var(--k) * 8);
+  height: calc(var(--k) * 8);
+  border-radius: 9999px;
+  background: var(--sf-action);
+}
+
+.selector {
+  display: flex;
+  align-items: center;
+  height: calc(var(--k) * 44);
+  padding: 0 calc(var(--k) * 12);
+  border-radius: 9999px;
+  background: var(--sf-alt);
+  color: var(--sf-ink);
 }
 
 .scroll {
@@ -383,7 +429,7 @@
   transition: opacity var(--fade);
 }
 
-.swap > :last-child {
+.swap > :not(:first-child) {
   opacity: 0;
 }
 
@@ -451,8 +497,63 @@
   color: var(--sf-ink);
 }
 
+/* 16:9, so the second choice (the first extra) sits above the sheet's footer. */
 .photo {
-  aspect-ratio: 4 / 3;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+/* Steam off the hot dish: its own loop, not a story step. With reduced motion there is none. */
+.steam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.steam i {
+  position: absolute;
+  bottom: 30%;
+  left: 38%;
+  width: 16%;
+  height: 40%;
+  border-radius: 50%;
+  background: #fff;
+  filter: blur(calc(var(--k) * 9));
+  opacity: 0;
+  animation: steam 3600ms ease-out infinite;
+}
+
+.steam i:nth-child(2) {
+  left: 52%;
+  width: 13%;
+  animation-delay: -1200ms;
+}
+
+.steam i:nth-child(3) {
+  left: 26%;
+  width: 12%;
+  animation-delay: -2400ms;
+}
+
+@keyframes steam {
+  0% {
+    opacity: 0;
+    transform: translateY(30%) scale(0.7);
+  }
+  35% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80%) scale(1.25, 1.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steam {
+    display: none;
+  }
 }
 
 .sheetBody {
@@ -522,6 +623,24 @@
 
 .check {
   border-radius: calc(var(--k) * 3);
+}
+
+.check i {
+  position: absolute;
+  inset: calc(var(--k) * -1.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--k) * 3);
+  background: var(--sf-action);
+  color: #fff;
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+.check i svg {
+  width: calc(var(--k) * 14);
+  height: calc(var(--k) * 14);
 }
 
 .radio i {
@@ -982,239 +1101,309 @@
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-tap="7"] {
+    .wrap [data-tap="6"] {
       animation: m-hero-4 14400ms ease-out 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-tap="10"] {
+    .wrap [data-tap="8"] {
       animation: m-hero-5 14400ms ease-out 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
+    .wrap [data-tap="11"] {
+      animation: m-hero-6 14400ms ease-out 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
     .wrap .backdrop {
-      animation: m-hero-6 14400ms ease 0ms infinite both;
+      animation: m-hero-7 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
     .wrap .sheet {
-      animation: m-hero-7 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-hero-8 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
     .wrap .radio i {
-      animation: m-hero-8 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap [data-pick] > :last-child {
       animation: m-hero-9 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-pick] > :first-child {
+    .wrap .check i {
       animation: m-hero-10 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .inCart {
+    .wrap [data-pick="4"] > :last-child {
       animation: m-hero-11 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-paying] > :last-child {
+    .wrap [data-pick="4"] > :first-child {
       animation: m-hero-12 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-paying] > :first-child {
+    .wrap [data-pick="5"] > :last-child {
       animation: m-hero-13 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .sheet .action {
+    .wrap [data-pick="5"] > :first-child {
       animation: m-hero-14 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .cartBar .action {
+    .wrap [data-add-price] > :nth-child(1) {
       animation: m-hero-15 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .payBar .action {
+    .wrap [data-add-price] > :nth-child(2) {
       animation: m-hero-16 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .cartBar {
-      animation: m-hero-17 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    .wrap [data-add-price] > :nth-child(3) {
+      animation: m-hero-17 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .checkout {
-      animation: m-hero-18 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    .wrap .inCart {
+      animation: m-hero-18 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .checkout .page {
-      animation: m-hero-19 14400ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
+    .wrap [data-paying] > :last-child {
+      animation: m-hero-19 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .confirm {
-      animation: m-hero-20 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    .wrap [data-paying] > :first-child {
+      animation: m-hero-20 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .kCount > :last-child {
+    .wrap .sheet .action {
       animation: m-hero-21 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .kCount > :first-child {
+    .wrap .cartBar .action {
       animation: m-hero-22 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .kActive > :last-child {
+    .wrap .payBar .action {
       animation: m-hero-23 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
+    .wrap .cartBar {
+      animation: m-hero-24 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .checkout {
+      animation: m-hero-25 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .checkout .page {
+      animation: m-hero-26 14400ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .confirm {
+      animation: m-hero-27 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kCount > :last-child {
+      animation: m-hero-28 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kCount > :first-child {
+      animation: m-hero-29 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kActive > :last-child {
+      animation: m-hero-30 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
     .wrap .kActive > :first-child {
-      animation: m-hero-24 14400ms ease 0ms infinite both;
+      animation: m-hero-31 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
     .wrap .arrive {
-      animation: m-hero-25 14400ms ease 0ms infinite both,
-        m-hero-26 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-hero-32 14400ms ease 0ms infinite both,
+        m-hero-33 14400ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
     .wrap .cover {
-      animation: m-hero-27 14400ms ease 0ms infinite both,
-        m-hero-27-first 500ms linear 0ms 1 none;
+      animation: m-hero-34 14400ms ease 0ms infinite both,
+        m-hero-34-first 500ms linear 0ms 1 none;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .scroll {
-      animation: m-heroNarrow-0 12200ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-0 12500ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="2"] {
-      animation: m-heroNarrow-1 12200ms ease-out 0ms infinite both;
+      animation: m-heroNarrow-1 12500ms ease-out 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="4"] {
-      animation: m-heroNarrow-2 12200ms ease-out 0ms infinite both;
+      animation: m-heroNarrow-2 12500ms ease-out 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="5"] {
-      animation: m-heroNarrow-3 12200ms ease-out 0ms infinite both;
+      animation: m-heroNarrow-3 12500ms ease-out 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-tap="7"] {
-      animation: m-heroNarrow-4 12200ms ease-out 0ms infinite both;
+    .wrap [data-tap="6"] {
+      animation: m-heroNarrow-4 12500ms ease-out 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-tap="10"] {
-      animation: m-heroNarrow-5 12200ms ease-out 0ms infinite both;
+    .wrap [data-tap="8"] {
+      animation: m-heroNarrow-5 12500ms ease-out 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-tap="11"] {
+      animation: m-heroNarrow-6 12500ms ease-out 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .backdrop {
-      animation: m-heroNarrow-6 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-7 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .sheet {
-      animation: m-heroNarrow-7 12200ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-8 12500ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .radio i {
-      animation: m-heroNarrow-8 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-9 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-pick] > :last-child {
-      animation: m-heroNarrow-9 12200ms ease 0ms infinite both;
+    .wrap .check i {
+      animation: m-heroNarrow-10 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-pick] > :first-child {
-      animation: m-heroNarrow-10 12200ms ease 0ms infinite both;
+    .wrap [data-pick="4"] > :last-child {
+      animation: m-heroNarrow-11 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="4"] > :first-child {
+      animation: m-heroNarrow-12 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="5"] > :last-child {
+      animation: m-heroNarrow-13 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="5"] > :first-child {
+      animation: m-heroNarrow-14 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(1) {
+      animation: m-heroNarrow-15 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(2) {
+      animation: m-heroNarrow-16 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(3) {
+      animation: m-heroNarrow-17 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .inCart {
-      animation: m-heroNarrow-11 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-18 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-paying] > :last-child {
-      animation: m-heroNarrow-12 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-19 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-paying] > :first-child {
-      animation: m-heroNarrow-13 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-20 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .sheet .action {
-      animation: m-heroNarrow-14 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-21 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .cartBar .action {
-      animation: m-heroNarrow-15 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-22 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .payBar .action {
-      animation: m-heroNarrow-16 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-23 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .cartBar {
-      animation: m-heroNarrow-17 12200ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-24 12500ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .checkout {
-      animation: m-heroNarrow-18 12200ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-25 12500ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .checkout .page {
-      animation: m-heroNarrow-19 12200ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-26 12500ms cubic-bezier(0.3, 0, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .confirm {
-      animation: m-heroNarrow-20 12200ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
+      animation: m-heroNarrow-27 12500ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .cover {
-      animation: m-heroNarrow-21 12200ms ease 0ms infinite both,
-        m-heroNarrow-21-first 500ms linear 0ms 1 none;
+      animation: m-heroNarrow-28 12500ms ease 0ms infinite both,
+        m-heroNarrow-28-first 500ms linear 0ms 1 none;
     }
   }
 }
 @keyframes m-hero-0 {
   0% { transform: none; }
   6.25% { transform: none; }
-  12.5% { transform: translateY(calc(var(--k) * -96)); }
-  100% { transform: translateY(calc(var(--k) * -96)); }
+  12.5% { transform: translateY(calc(var(--k) * -234)); }
+  100% { transform: translateY(calc(var(--k) * -234)); }
 }
 @keyframes m-hero-1 {
   0% { opacity: 0; transform: scale(0.4); }
@@ -1225,171 +1414,216 @@
 }
 @keyframes m-hero-2 {
   0% { opacity: 0; transform: scale(0.4); }
-  23.611% { opacity: 0; transform: scale(0.4); }
-  25.069% { opacity: 1; transform: scale(1); }
-  27.778% { opacity: 0; transform: scale(1.15); }
+  22.222% { opacity: 0; transform: scale(0.4); }
+  23.681% { opacity: 1; transform: scale(1); }
+  26.389% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-hero-3 {
   0% { opacity: 0; transform: scale(0.4); }
-  29.861% { opacity: 0; transform: scale(0.4); }
-  31.319% { opacity: 1; transform: scale(1); }
-  34.028% { opacity: 0; transform: scale(1.15); }
+  27.083% { opacity: 0; transform: scale(0.4); }
+  28.542% { opacity: 1; transform: scale(1); }
+  31.25% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-hero-4 {
   0% { opacity: 0; transform: scale(0.4); }
-  38.889% { opacity: 0; transform: scale(0.4); }
-  40.347% { opacity: 1; transform: scale(1); }
-  43.056% { opacity: 0; transform: scale(1.15); }
+  31.944% { opacity: 0; transform: scale(0.4); }
+  33.403% { opacity: 1; transform: scale(1); }
+  36.111% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-hero-5 {
   0% { opacity: 0; transform: scale(0.4); }
-  54.861% { opacity: 0; transform: scale(0.4); }
-  56.319% { opacity: 1; transform: scale(1); }
-  59.028% { opacity: 0; transform: scale(1.15); }
+  40.972% { opacity: 0; transform: scale(0.4); }
+  42.431% { opacity: 1; transform: scale(1); }
+  45.139% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-hero-6 {
+  0% { opacity: 0; transform: scale(0.4); }
+  56.944% { opacity: 0; transform: scale(0.4); }
+  58.403% { opacity: 1; transform: scale(1); }
+  61.111% { opacity: 0; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+@keyframes m-hero-7 {
   0% { opacity: 0; }
   15.278% { opacity: 0; }
   17.222% { opacity: 1; }
-  31.944% { opacity: 1; }
-  33.889% { opacity: 0; }
+  34.028% { opacity: 1; }
+  35.972% { opacity: 0; }
   100% { opacity: 0; }
 }
-@keyframes m-hero-7 {
+@keyframes m-hero-8 {
   0% { transform: translateY(102%); }
   15.278% { transform: translateY(102%); }
   18.889% { transform: none; }
-  31.944% { transform: none; }
-  35.556% { transform: translateY(102%); }
+  34.028% { transform: none; }
+  37.639% { transform: translateY(102%); }
   100% { transform: translateY(102%); }
-}
-@keyframes m-hero-8 {
-  0% { opacity: 0; }
-  23.611% { opacity: 0; }
-  25.556% { opacity: 1; }
-  100% { opacity: 1; }
 }
 @keyframes m-hero-9 {
   0% { opacity: 0; }
-  23.611% { opacity: 0; }
-  25.556% { opacity: 1; }
+  22.222% { opacity: 0; }
+  24.167% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-10 {
-  0% { opacity: 1; }
-  23.611% { opacity: 1; }
-  25.556% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  27.083% { opacity: 0; }
+  29.028% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-11 {
   0% { opacity: 0; }
-  31.944% { opacity: 0; }
-  33.889% { opacity: 1; }
+  22.222% { opacity: 0; }
+  24.167% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-12 {
-  0% { opacity: 0; }
-  54.861% { opacity: 0; }
-  56.806% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { opacity: 1; }
+  22.222% { opacity: 1; }
+  24.167% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-13 {
-  0% { opacity: 1; }
-  54.861% { opacity: 1; }
-  56.806% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  27.083% { opacity: 0; }
+  29.028% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-14 {
-  0% { transform: none; }
-  29.861% { transform: none; }
-  30.972% { transform: scale(0.97); }
-  31.944% { transform: scale(0.97); }
-  33.056% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 1; }
+  27.083% { opacity: 1; }
+  29.028% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-15 {
-  0% { transform: none; }
-  38.889% { transform: none; }
-  40% { transform: scale(0.97); }
-  40.972% { transform: scale(0.97); }
-  42.083% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 1; }
+  22.222% { opacity: 1; }
+  24.167% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-16 {
-  0% { transform: none; }
-  54.861% { transform: none; }
-  55.972% { transform: scale(0.97); }
-  59.722% { transform: scale(0.97); }
-  60.833% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 0; }
+  22.222% { opacity: 0; }
+  24.167% { opacity: 1; }
+  27.083% { opacity: 1; }
+  29.028% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-17 {
-  0% { transform: translateY(110%); }
-  31.944% { transform: translateY(110%); }
-  35.556% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 0; }
+  27.083% { opacity: 0; }
+  29.028% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-18 {
-  0% { transform: translateX(101%); }
-  40.972% { transform: translateX(101%); }
-  44.583% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 0; }
+  34.028% { opacity: 0; }
+  35.972% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-19 {
-  0% { transform: none; }
-  48.611% { transform: none; }
-  54.861% { transform: translateY(calc(var(--k) * -500)); }
-  100% { transform: translateY(calc(var(--k) * -500)); }
+  0% { opacity: 0; }
+  56.944% { opacity: 0; }
+  58.889% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-20 {
-  0% { transform: translateX(101%); }
-  59.722% { transform: translateX(101%); }
-  63.333% { transform: none; }
-  100% { transform: none; }
+  0% { opacity: 1; }
+  56.944% { opacity: 1; }
+  58.889% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-21 {
-  0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  70% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { transform: none; }
+  31.944% { transform: none; }
+  33.056% { transform: scale(0.97); }
+  34.028% { transform: scale(0.97); }
+  35.139% { transform: none; }
+  100% { transform: none; }
 }
 @keyframes m-hero-22 {
-  0% { opacity: 1; }
-  68.056% { opacity: 1; }
-  70% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { transform: none; }
+  40.972% { transform: none; }
+  42.083% { transform: scale(0.97); }
+  43.056% { transform: scale(0.97); }
+  44.167% { transform: none; }
+  100% { transform: none; }
 }
 @keyframes m-hero-23 {
-  0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  70% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { transform: none; }
+  56.944% { transform: none; }
+  58.056% { transform: scale(0.97); }
+  61.806% { transform: scale(0.97); }
+  62.917% { transform: none; }
+  100% { transform: none; }
 }
 @keyframes m-hero-24 {
-  0% { opacity: 1; }
-  68.056% { opacity: 1; }
-  70% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { transform: translateY(110%); }
+  34.028% { transform: translateY(110%); }
+  37.639% { transform: none; }
+  100% { transform: none; }
 }
 @keyframes m-hero-25 {
+  0% { transform: translateX(101%); }
+  43.056% { transform: translateX(101%); }
+  46.667% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-hero-26 {
+  0% { transform: none; }
+  50.694% { transform: none; }
+  56.944% { transform: translateY(calc(var(--k) * -500)); }
+  100% { transform: translateY(calc(var(--k) * -500)); }
+}
+@keyframes m-hero-27 {
+  0% { transform: translateX(101%); }
+  61.806% { transform: translateX(101%); }
+  65.417% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-hero-28 {
   0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  70% { opacity: 1; }
+  70.139% { opacity: 0; }
+  72.083% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-29 {
+  0% { opacity: 1; }
+  70.139% { opacity: 1; }
+  72.083% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-30 {
+  0% { opacity: 0; }
+  70.139% { opacity: 0; }
+  72.083% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-31 {
+  0% { opacity: 1; }
+  70.139% { opacity: 1; }
+  72.083% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-32 {
+  0% { opacity: 0; }
+  70.139% { opacity: 0; }
+  72.083% { opacity: 1; }
   95.833% { opacity: 1; }
   97.778% { opacity: 0; }
   100% { opacity: 0; }
 }
-@keyframes m-hero-26 {
+@keyframes m-hero-33 {
   0% { transform: translateX(calc(var(--k) * -60)); }
-  68.056% { transform: translateX(calc(var(--k) * -60)); }
-  71.667% { transform: none; }
+  70.139% { transform: translateX(calc(var(--k) * -60)); }
+  73.75% { transform: none; }
   100% { transform: none; }
 }
-@keyframes m-hero-27 {
+@keyframes m-hero-34 {
   0% { opacity: 1; }
   0% { opacity: 1; }
   3.472% { opacity: 0; }
@@ -1397,159 +1631,204 @@
   99.306% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-hero-27-first {
+@keyframes m-hero-34-first {
   0%, 100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-0 {
   0% { transform: none; }
-  7.377% { transform: none; }
-  14.754% { transform: translateY(calc(var(--k) * -96)); }
-  100% { transform: translateY(calc(var(--k) * -96)); }
+  7.2% { transform: none; }
+  14.4% { transform: translateY(calc(var(--k) * -234)); }
+  100% { transform: translateY(calc(var(--k) * -234)); }
 }
 @keyframes m-heroNarrow-1 {
   0% { opacity: 0; transform: scale(0.4); }
-  15.574% { opacity: 0; transform: scale(0.4); }
-  17.295% { opacity: 1; transform: scale(1); }
-  20.492% { opacity: 0; transform: scale(1.15); }
+  15.2% { opacity: 0; transform: scale(0.4); }
+  16.88% { opacity: 1; transform: scale(1); }
+  20% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-2 {
   0% { opacity: 0; transform: scale(0.4); }
-  27.869% { opacity: 0; transform: scale(0.4); }
-  29.59% { opacity: 1; transform: scale(1); }
-  32.787% { opacity: 0; transform: scale(1.15); }
+  25.6% { opacity: 0; transform: scale(0.4); }
+  27.28% { opacity: 1; transform: scale(1); }
+  30.4% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-3 {
   0% { opacity: 0; transform: scale(0.4); }
-  35.246% { opacity: 0; transform: scale(0.4); }
-  36.967% { opacity: 1; transform: scale(1); }
-  40.164% { opacity: 0; transform: scale(1.15); }
+  31.2% { opacity: 0; transform: scale(0.4); }
+  32.88% { opacity: 1; transform: scale(1); }
+  36% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-4 {
   0% { opacity: 0; transform: scale(0.4); }
-  45.902% { opacity: 0; transform: scale(0.4); }
-  47.623% { opacity: 1; transform: scale(1); }
-  50.82% { opacity: 0; transform: scale(1.15); }
+  36.8% { opacity: 0; transform: scale(0.4); }
+  38.48% { opacity: 1; transform: scale(1); }
+  41.6% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-5 {
   0% { opacity: 0; transform: scale(0.4); }
-  64.754% { opacity: 0; transform: scale(0.4); }
-  66.475% { opacity: 1; transform: scale(1); }
-  69.672% { opacity: 0; transform: scale(1.15); }
+  47.2% { opacity: 0; transform: scale(0.4); }
+  48.88% { opacity: 1; transform: scale(1); }
+  52% { opacity: 0; transform: scale(1.15); }
   100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-6 {
-  0% { opacity: 0; }
-  18.033% { opacity: 0; }
-  20.328% { opacity: 1; }
-  37.705% { opacity: 1; }
-  40% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; transform: scale(0.4); }
+  65.6% { opacity: 0; transform: scale(0.4); }
+  67.28% { opacity: 1; transform: scale(1); }
+  70.4% { opacity: 0; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.15); }
 }
 @keyframes m-heroNarrow-7 {
-  0% { transform: translateY(102%); }
-  18.033% { transform: translateY(102%); }
-  22.295% { transform: none; }
-  37.705% { transform: none; }
-  41.967% { transform: translateY(102%); }
-  100% { transform: translateY(102%); }
+  0% { opacity: 0; }
+  17.6% { opacity: 0; }
+  19.84% { opacity: 1; }
+  39.2% { opacity: 1; }
+  41.44% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-8 {
-  0% { opacity: 0; }
-  27.869% { opacity: 0; }
-  30.164% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { transform: translateY(102%); }
+  17.6% { transform: translateY(102%); }
+  21.76% { transform: none; }
+  39.2% { transform: none; }
+  43.36% { transform: translateY(102%); }
+  100% { transform: translateY(102%); }
 }
 @keyframes m-heroNarrow-9 {
   0% { opacity: 0; }
-  27.869% { opacity: 0; }
-  30.164% { opacity: 1; }
+  25.6% { opacity: 0; }
+  27.84% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-10 {
-  0% { opacity: 1; }
-  27.869% { opacity: 1; }
-  30.164% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  31.2% { opacity: 0; }
+  33.44% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-11 {
   0% { opacity: 0; }
-  37.705% { opacity: 0; }
-  40% { opacity: 1; }
+  25.6% { opacity: 0; }
+  27.84% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-12 {
-  0% { opacity: 0; }
-  64.754% { opacity: 0; }
-  67.049% { opacity: 1; }
-  100% { opacity: 1; }
-}
-@keyframes m-heroNarrow-13 {
   0% { opacity: 1; }
-  64.754% { opacity: 1; }
-  67.049% { opacity: 0; }
+  25.6% { opacity: 1; }
+  27.84% { opacity: 0; }
   100% { opacity: 0; }
 }
-@keyframes m-heroNarrow-14 {
-  0% { transform: none; }
-  35.246% { transform: none; }
-  36.557% { transform: scale(0.97); }
-  37.705% { transform: scale(0.97); }
-  39.016% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-15 {
-  0% { transform: none; }
-  45.902% { transform: none; }
-  47.213% { transform: scale(0.97); }
-  48.361% { transform: scale(0.97); }
-  49.672% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-16 {
-  0% { transform: none; }
-  64.754% { transform: none; }
-  66.066% { transform: scale(0.97); }
-  70.492% { transform: scale(0.97); }
-  71.803% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-17 {
-  0% { transform: translateY(110%); }
-  37.705% { transform: translateY(110%); }
-  41.967% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-18 {
-  0% { transform: translateX(101%); }
-  48.361% { transform: translateX(101%); }
-  52.623% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-19 {
-  0% { transform: none; }
-  57.377% { transform: none; }
-  64.754% { transform: translateY(calc(var(--k) * -500)); }
-  100% { transform: translateY(calc(var(--k) * -500)); }
-}
-@keyframes m-heroNarrow-20 {
-  0% { transform: translateX(101%); }
-  70.492% { transform: translateX(101%); }
-  74.754% { transform: none; }
-  100% { transform: none; }
-}
-@keyframes m-heroNarrow-21 {
-  0% { opacity: 1; }
-  0% { opacity: 1; }
-  4.098% { opacity: 0; }
-  95.082% { opacity: 0; }
-  99.18% { opacity: 1; }
+@keyframes m-heroNarrow-13 {
+  0% { opacity: 0; }
+  31.2% { opacity: 0; }
+  33.44% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-heroNarrow-21-first {
+@keyframes m-heroNarrow-14 {
+  0% { opacity: 1; }
+  31.2% { opacity: 1; }
+  33.44% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-15 {
+  0% { opacity: 1; }
+  25.6% { opacity: 1; }
+  27.84% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-16 {
+  0% { opacity: 0; }
+  25.6% { opacity: 0; }
+  27.84% { opacity: 1; }
+  31.2% { opacity: 1; }
+  33.44% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-17 {
+  0% { opacity: 0; }
+  31.2% { opacity: 0; }
+  33.44% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-18 {
+  0% { opacity: 0; }
+  39.2% { opacity: 0; }
+  41.44% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-19 {
+  0% { opacity: 0; }
+  65.6% { opacity: 0; }
+  67.84% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-20 {
+  0% { opacity: 1; }
+  65.6% { opacity: 1; }
+  67.84% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-21 {
+  0% { transform: none; }
+  36.8% { transform: none; }
+  38.08% { transform: scale(0.97); }
+  39.2% { transform: scale(0.97); }
+  40.48% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-22 {
+  0% { transform: none; }
+  47.2% { transform: none; }
+  48.48% { transform: scale(0.97); }
+  49.6% { transform: scale(0.97); }
+  50.88% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-23 {
+  0% { transform: none; }
+  65.6% { transform: none; }
+  66.88% { transform: scale(0.97); }
+  71.2% { transform: scale(0.97); }
+  72.48% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-24 {
+  0% { transform: translateY(110%); }
+  39.2% { transform: translateY(110%); }
+  43.36% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-25 {
+  0% { transform: translateX(101%); }
+  49.6% { transform: translateX(101%); }
+  53.76% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-26 {
+  0% { transform: none; }
+  58.4% { transform: none; }
+  65.6% { transform: translateY(calc(var(--k) * -500)); }
+  100% { transform: translateY(calc(var(--k) * -500)); }
+}
+@keyframes m-heroNarrow-27 {
+  0% { transform: translateX(101%); }
+  71.2% { transform: translateX(101%); }
+  75.36% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes m-heroNarrow-28 {
+  0% { opacity: 1; }
+  0% { opacity: 1; }
+  4% { opacity: 0; }
+  95.2% { opacity: 0; }
+  99.2% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-28-first {
   0%, 100% { opacity: 0; }
 }
 /* With reduced motion: the same stories, as opacity crossfades; nothing moves. */
@@ -1576,54 +1855,89 @@
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-tap="7"] {
+    .wrap [data-tap="6"] {
       animation: m-hero-r4 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-tap="10"] {
+    .wrap [data-tap="8"] {
       animation: m-hero-r5 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .backdrop {
+    .wrap [data-tap="11"] {
       animation: m-hero-r6 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .backdrop {
+      animation: m-hero-r7 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
     .wrap .sheet {
       transform: none;
-      animation: m-hero-r7 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .radio i {
       animation: m-hero-r8 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-pick] > :last-child {
+    .wrap .radio i {
       animation: m-hero-r9 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-pick] > :first-child {
+    .wrap .check i {
       animation: m-hero-r10 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .inCart {
+    .wrap [data-pick="4"] > :last-child {
       animation: m-hero-r11 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-paying] > :last-child {
+    .wrap [data-pick="4"] > :first-child {
       animation: m-hero-r12 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap [data-paying] > :first-child {
+    .wrap [data-pick="5"] > :last-child {
       animation: m-hero-r13 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-pick="5"] > :first-child {
+      animation: m-hero-r14 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-add-price] > :nth-child(1) {
+      animation: m-hero-r15 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-add-price] > :nth-child(2) {
+      animation: m-hero-r16 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-add-price] > :nth-child(3) {
+      animation: m-hero-r17 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .inCart {
+      animation: m-hero-r18 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-paying] > :last-child {
+      animation: m-hero-r19 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap [data-paying] > :first-child {
+      animation: m-hero-r20 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
@@ -1644,129 +1958,164 @@
   @media (min-width: 1024px) {
     .wrap .cartBar {
       transform: none;
-      animation: m-hero-r17 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .checkout {
-      transform: none;
-      animation: m-hero-r18 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .checkout .page {
-      animation: m-hero-r19 14400ms ease 0ms infinite both,
-        m-hero-r19j 14400ms linear 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .confirm {
-      transform: none;
-      animation: m-hero-r20 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .kCount > :last-child {
-      animation: m-hero-r21 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .kCount > :first-child {
-      animation: m-hero-r22 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .kActive > :last-child {
-      animation: m-hero-r23 14400ms ease 0ms infinite both;
-    }
-  }
-  @media (min-width: 1024px) {
-    .wrap .kActive > :first-child {
       animation: m-hero-r24 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
-    .wrap .arrive {
+    .wrap .checkout {
       transform: none;
       animation: m-hero-r25 14400ms ease 0ms infinite both;
     }
   }
   @media (min-width: 1024px) {
+    .wrap .checkout .page {
+      animation: m-hero-r26 14400ms ease 0ms infinite both,
+        m-hero-r26j 14400ms linear 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .confirm {
+      transform: none;
+      animation: m-hero-r27 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kCount > :last-child {
+      animation: m-hero-r28 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kCount > :first-child {
+      animation: m-hero-r29 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kActive > :last-child {
+      animation: m-hero-r30 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .kActive > :first-child {
+      animation: m-hero-r31 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
+    .wrap .arrive {
+      transform: none;
+      animation: m-hero-r32 14400ms ease 0ms infinite both;
+    }
+  }
+  @media (min-width: 1024px) {
     .wrap .cover {
-      animation: m-hero-r27 14400ms ease 0ms infinite both,
-        m-hero-r27-first 150ms linear 0ms 1 none;
+      animation: m-hero-r34 14400ms ease 0ms infinite both,
+        m-hero-r34-first 150ms linear 0ms 1 none;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .scroll {
-      animation: m-heroNarrow-r0 12200ms ease 0ms infinite both,
-        m-heroNarrow-r0j 12200ms linear 0ms infinite both;
+      animation: m-heroNarrow-r0 12500ms ease 0ms infinite both,
+        m-heroNarrow-r0j 12500ms linear 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="2"] {
-      animation: m-heroNarrow-r1 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r1 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="4"] {
-      animation: m-heroNarrow-r2 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r2 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-tap="5"] {
-      animation: m-heroNarrow-r3 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r3 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-tap="7"] {
-      animation: m-heroNarrow-r4 12200ms ease 0ms infinite both;
+    .wrap [data-tap="6"] {
+      animation: m-heroNarrow-r4 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-tap="10"] {
-      animation: m-heroNarrow-r5 12200ms ease 0ms infinite both;
+    .wrap [data-tap="8"] {
+      animation: m-heroNarrow-r5 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-tap="11"] {
+      animation: m-heroNarrow-r6 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .backdrop {
-      animation: m-heroNarrow-r6 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r7 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .sheet {
       transform: none;
-      animation: m-heroNarrow-r7 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r8 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .radio i {
-      animation: m-heroNarrow-r8 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r9 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-pick] > :last-child {
-      animation: m-heroNarrow-r9 12200ms ease 0ms infinite both;
+    .wrap .check i {
+      animation: m-heroNarrow-r10 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
-    .wrap [data-pick] > :first-child {
-      animation: m-heroNarrow-r10 12200ms ease 0ms infinite both;
+    .wrap [data-pick="4"] > :last-child {
+      animation: m-heroNarrow-r11 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="4"] > :first-child {
+      animation: m-heroNarrow-r12 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="5"] > :last-child {
+      animation: m-heroNarrow-r13 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-pick="5"] > :first-child {
+      animation: m-heroNarrow-r14 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(1) {
+      animation: m-heroNarrow-r15 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(2) {
+      animation: m-heroNarrow-r16 12500ms ease 0ms infinite both;
+    }
+  }
+  @media (max-width: 1023.98px) {
+    .wrap [data-add-price] > :nth-child(3) {
+      animation: m-heroNarrow-r17 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .inCart {
-      animation: m-heroNarrow-r11 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r18 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-paying] > :last-child {
-      animation: m-heroNarrow-r12 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r19 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap [data-paying] > :first-child {
-      animation: m-heroNarrow-r13 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r20 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
@@ -1787,31 +2136,31 @@
   @media (max-width: 1023.98px) {
     .wrap .cartBar {
       transform: none;
-      animation: m-heroNarrow-r17 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r24 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .checkout {
       transform: none;
-      animation: m-heroNarrow-r18 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r25 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .checkout .page {
-      animation: m-heroNarrow-r19 12200ms ease 0ms infinite both,
-        m-heroNarrow-r19j 12200ms linear 0ms infinite both;
+      animation: m-heroNarrow-r26 12500ms ease 0ms infinite both,
+        m-heroNarrow-r26j 12500ms linear 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .confirm {
       transform: none;
-      animation: m-heroNarrow-r20 12200ms ease 0ms infinite both;
+      animation: m-heroNarrow-r27 12500ms ease 0ms infinite both;
     }
   }
   @media (max-width: 1023.98px) {
     .wrap .cover {
-      animation: m-heroNarrow-r21 12200ms ease 0ms infinite both,
-        m-heroNarrow-r21-first 150ms linear 0ms 1 none;
+      animation: m-heroNarrow-r28 12500ms ease 0ms infinite both,
+        m-heroNarrow-r28-first 150ms linear 0ms 1 none;
     }
   }
 }
@@ -1826,8 +2175,8 @@
 @keyframes m-hero-r0j {
   0% { transform: none; }
   6.771% { transform: none; }
-  6.778% { transform: translateY(calc(var(--k) * -96)); }
-  100% { transform: translateY(calc(var(--k) * -96)); }
+  6.778% { transform: translateY(calc(var(--k) * -234)); }
+  100% { transform: translateY(calc(var(--k) * -234)); }
 }
 @keyframes m-hero-r1 {
   0% { opacity: 0; }
@@ -1839,153 +2188,199 @@
 }
 @keyframes m-hero-r2 {
   0% { opacity: 0; }
-  23.611% { opacity: 0; }
-  24.653% { opacity: 1; }
-  25.069% { opacity: 1; }
-  26.111% { opacity: 0; }
+  22.222% { opacity: 0; }
+  23.264% { opacity: 1; }
+  23.681% { opacity: 1; }
+  24.722% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r3 {
   0% { opacity: 0; }
-  29.861% { opacity: 0; }
-  30.903% { opacity: 1; }
-  31.319% { opacity: 1; }
-  32.361% { opacity: 0; }
+  27.083% { opacity: 0; }
+  28.125% { opacity: 1; }
+  28.542% { opacity: 1; }
+  29.583% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r4 {
   0% { opacity: 0; }
-  38.889% { opacity: 0; }
-  39.931% { opacity: 1; }
-  40.347% { opacity: 1; }
-  41.389% { opacity: 0; }
+  31.944% { opacity: 0; }
+  32.986% { opacity: 1; }
+  33.403% { opacity: 1; }
+  34.444% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r5 {
   0% { opacity: 0; }
-  54.861% { opacity: 0; }
-  55.903% { opacity: 1; }
-  56.319% { opacity: 1; }
-  57.361% { opacity: 0; }
+  40.972% { opacity: 0; }
+  42.014% { opacity: 1; }
+  42.431% { opacity: 1; }
+  43.472% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r6 {
   0% { opacity: 0; }
-  15.278% { opacity: 0; }
-  16.319% { opacity: 1; }
-  31.944% { opacity: 1; }
-  32.986% { opacity: 0; }
+  56.944% { opacity: 0; }
+  57.986% { opacity: 1; }
+  58.403% { opacity: 1; }
+  59.444% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r7 {
   0% { opacity: 0; }
   15.278% { opacity: 0; }
   16.319% { opacity: 1; }
-  31.944% { opacity: 1; }
-  32.986% { opacity: 0; }
+  34.028% { opacity: 1; }
+  35.069% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r8 {
   0% { opacity: 0; }
-  23.611% { opacity: 0; }
-  24.653% { opacity: 1; }
-  100% { opacity: 1; }
+  15.278% { opacity: 0; }
+  16.319% { opacity: 1; }
+  34.028% { opacity: 1; }
+  35.069% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-r9 {
   0% { opacity: 0; }
-  23.611% { opacity: 0; }
-  24.653% { opacity: 1; }
+  22.222% { opacity: 0; }
+  23.264% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-r10 {
-  0% { opacity: 1; }
-  23.611% { opacity: 1; }
-  24.653% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  27.083% { opacity: 0; }
+  28.125% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-r11 {
   0% { opacity: 0; }
-  31.944% { opacity: 0; }
-  32.986% { opacity: 1; }
+  22.222% { opacity: 0; }
+  23.264% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-r12 {
-  0% { opacity: 0; }
-  54.861% { opacity: 0; }
-  55.903% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { opacity: 1; }
+  22.222% { opacity: 1; }
+  23.264% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-hero-r13 {
+  0% { opacity: 0; }
+  27.083% { opacity: 0; }
+  28.125% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r14 {
   0% { opacity: 1; }
-  54.861% { opacity: 1; }
-  55.903% { opacity: 0; }
+  27.083% { opacity: 1; }
+  28.125% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r15 {
+  0% { opacity: 1; }
+  22.222% { opacity: 1; }
+  23.264% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r16 {
+  0% { opacity: 0; }
+  22.222% { opacity: 0; }
+  23.264% { opacity: 1; }
+  27.083% { opacity: 1; }
+  28.125% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-hero-r17 {
   0% { opacity: 0; }
-  31.944% { opacity: 0; }
-  32.986% { opacity: 1; }
+  27.083% { opacity: 0; }
+  28.125% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-r18 {
   0% { opacity: 0; }
-  40.972% { opacity: 0; }
-  42.014% { opacity: 1; }
+  34.028% { opacity: 0; }
+  35.069% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-hero-r19 {
-  0% { opacity: 1; }
-  48.611% { opacity: 1; }
-  49.132% { opacity: 0; }
-  49.139% { opacity: 0; }
-  49.653% { opacity: 1; }
+  0% { opacity: 0; }
+  56.944% { opacity: 0; }
+  57.986% { opacity: 1; }
   100% { opacity: 1; }
-}
-@keyframes m-hero-r19j {
-  0% { transform: none; }
-  49.132% { transform: none; }
-  49.139% { transform: translateY(calc(var(--k) * -500)); }
-  100% { transform: translateY(calc(var(--k) * -500)); }
 }
 @keyframes m-hero-r20 {
-  0% { opacity: 0; }
-  59.722% { opacity: 0; }
-  60.764% { opacity: 1; }
-  100% { opacity: 1; }
-}
-@keyframes m-hero-r21 {
-  0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  69.097% { opacity: 1; }
-  100% { opacity: 1; }
-}
-@keyframes m-hero-r22 {
   0% { opacity: 1; }
-  68.056% { opacity: 1; }
-  69.097% { opacity: 0; }
+  56.944% { opacity: 1; }
+  57.986% { opacity: 0; }
   100% { opacity: 0; }
-}
-@keyframes m-hero-r23 {
-  0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  69.097% { opacity: 1; }
-  100% { opacity: 1; }
 }
 @keyframes m-hero-r24 {
-  0% { opacity: 1; }
-  68.056% { opacity: 1; }
-  69.097% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  34.028% { opacity: 0; }
+  35.069% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-hero-r25 {
   0% { opacity: 0; }
-  68.056% { opacity: 0; }
-  69.097% { opacity: 1; }
+  43.056% { opacity: 0; }
+  44.097% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r26 {
+  0% { opacity: 1; }
+  50.694% { opacity: 1; }
+  51.215% { opacity: 0; }
+  51.222% { opacity: 0; }
+  51.736% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r26j {
+  0% { transform: none; }
+  51.215% { transform: none; }
+  51.222% { transform: translateY(calc(var(--k) * -500)); }
+  100% { transform: translateY(calc(var(--k) * -500)); }
+}
+@keyframes m-hero-r27 {
+  0% { opacity: 0; }
+  61.806% { opacity: 0; }
+  62.847% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r28 {
+  0% { opacity: 0; }
+  70.139% { opacity: 0; }
+  71.181% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r29 {
+  0% { opacity: 1; }
+  70.139% { opacity: 1; }
+  71.181% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r30 {
+  0% { opacity: 0; }
+  70.139% { opacity: 0; }
+  71.181% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-hero-r31 {
+  0% { opacity: 1; }
+  70.139% { opacity: 1; }
+  71.181% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-hero-r32 {
+  0% { opacity: 0; }
+  70.139% { opacity: 0; }
+  71.181% { opacity: 1; }
   95.833% { opacity: 1; }
   96.875% { opacity: 0; }
   100% { opacity: 0; }
 }
-@keyframes m-hero-r27 {
+@keyframes m-hero-r34 {
   0% { opacity: 1; }
   0% { opacity: 1; }
   1.042% { opacity: 0; }
@@ -1993,156 +2388,202 @@
   96.875% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-hero-r27-first {
+@keyframes m-hero-r34-first {
   0%, 100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r0 {
   0% { opacity: 1; }
-  7.377% { opacity: 1; }
-  7.992% { opacity: 0; }
-  8% { opacity: 0; }
-  8.607% { opacity: 1; }
+  7.2% { opacity: 1; }
+  7.8% { opacity: 0; }
+  7.808% { opacity: 0; }
+  8.4% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r0j {
   0% { transform: none; }
-  7.992% { transform: none; }
-  8% { transform: translateY(calc(var(--k) * -96)); }
-  100% { transform: translateY(calc(var(--k) * -96)); }
+  7.8% { transform: none; }
+  7.808% { transform: translateY(calc(var(--k) * -234)); }
+  100% { transform: translateY(calc(var(--k) * -234)); }
 }
 @keyframes m-heroNarrow-r1 {
   0% { opacity: 0; }
-  15.574% { opacity: 0; }
-  16.803% { opacity: 1; }
-  17.295% { opacity: 1; }
-  18.525% { opacity: 0; }
+  15.2% { opacity: 0; }
+  16.4% { opacity: 1; }
+  16.88% { opacity: 1; }
+  18.08% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r2 {
   0% { opacity: 0; }
-  27.869% { opacity: 0; }
-  29.098% { opacity: 1; }
-  29.59% { opacity: 1; }
-  30.82% { opacity: 0; }
+  25.6% { opacity: 0; }
+  26.8% { opacity: 1; }
+  27.28% { opacity: 1; }
+  28.48% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r3 {
   0% { opacity: 0; }
-  35.246% { opacity: 0; }
-  36.475% { opacity: 1; }
-  36.967% { opacity: 1; }
-  38.197% { opacity: 0; }
+  31.2% { opacity: 0; }
+  32.4% { opacity: 1; }
+  32.88% { opacity: 1; }
+  34.08% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r4 {
   0% { opacity: 0; }
-  45.902% { opacity: 0; }
-  47.131% { opacity: 1; }
-  47.623% { opacity: 1; }
-  48.852% { opacity: 0; }
+  36.8% { opacity: 0; }
+  38% { opacity: 1; }
+  38.48% { opacity: 1; }
+  39.68% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r5 {
   0% { opacity: 0; }
-  64.754% { opacity: 0; }
-  65.984% { opacity: 1; }
-  66.475% { opacity: 1; }
-  67.705% { opacity: 0; }
+  47.2% { opacity: 0; }
+  48.4% { opacity: 1; }
+  48.88% { opacity: 1; }
+  50.08% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r6 {
   0% { opacity: 0; }
-  18.033% { opacity: 0; }
-  19.262% { opacity: 1; }
-  37.705% { opacity: 1; }
-  38.934% { opacity: 0; }
+  65.6% { opacity: 0; }
+  66.8% { opacity: 1; }
+  67.28% { opacity: 1; }
+  68.48% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r7 {
   0% { opacity: 0; }
-  18.033% { opacity: 0; }
-  19.262% { opacity: 1; }
-  37.705% { opacity: 1; }
-  38.934% { opacity: 0; }
+  17.6% { opacity: 0; }
+  18.8% { opacity: 1; }
+  39.2% { opacity: 1; }
+  40.4% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r8 {
   0% { opacity: 0; }
-  27.869% { opacity: 0; }
-  29.098% { opacity: 1; }
-  100% { opacity: 1; }
+  17.6% { opacity: 0; }
+  18.8% { opacity: 1; }
+  39.2% { opacity: 1; }
+  40.4% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r9 {
   0% { opacity: 0; }
-  27.869% { opacity: 0; }
-  29.098% { opacity: 1; }
+  25.6% { opacity: 0; }
+  26.8% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r10 {
-  0% { opacity: 1; }
-  27.869% { opacity: 1; }
-  29.098% { opacity: 0; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  31.2% { opacity: 0; }
+  32.4% { opacity: 1; }
+  100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r11 {
   0% { opacity: 0; }
-  37.705% { opacity: 0; }
-  38.934% { opacity: 1; }
+  25.6% { opacity: 0; }
+  26.8% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r12 {
-  0% { opacity: 0; }
-  64.754% { opacity: 0; }
-  65.984% { opacity: 1; }
-  100% { opacity: 1; }
+  0% { opacity: 1; }
+  25.6% { opacity: 1; }
+  26.8% { opacity: 0; }
+  100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r13 {
+  0% { opacity: 0; }
+  31.2% { opacity: 0; }
+  32.4% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-r14 {
   0% { opacity: 1; }
-  64.754% { opacity: 1; }
-  65.984% { opacity: 0; }
+  31.2% { opacity: 1; }
+  32.4% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-r15 {
+  0% { opacity: 1; }
+  25.6% { opacity: 1; }
+  26.8% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-r16 {
+  0% { opacity: 0; }
+  25.6% { opacity: 0; }
+  26.8% { opacity: 1; }
+  31.2% { opacity: 1; }
+  32.4% { opacity: 0; }
   100% { opacity: 0; }
 }
 @keyframes m-heroNarrow-r17 {
   0% { opacity: 0; }
-  37.705% { opacity: 0; }
-  38.934% { opacity: 1; }
+  31.2% { opacity: 0; }
+  32.4% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r18 {
   0% { opacity: 0; }
-  48.361% { opacity: 0; }
-  49.59% { opacity: 1; }
+  39.2% { opacity: 0; }
+  40.4% { opacity: 1; }
   100% { opacity: 1; }
 }
 @keyframes m-heroNarrow-r19 {
-  0% { opacity: 1; }
-  57.377% { opacity: 1; }
-  57.992% { opacity: 0; }
-  58% { opacity: 0; }
-  58.607% { opacity: 1; }
+  0% { opacity: 0; }
+  65.6% { opacity: 0; }
+  66.8% { opacity: 1; }
   100% { opacity: 1; }
-}
-@keyframes m-heroNarrow-r19j {
-  0% { transform: none; }
-  57.992% { transform: none; }
-  58% { transform: translateY(calc(var(--k) * -500)); }
-  100% { transform: translateY(calc(var(--k) * -500)); }
 }
 @keyframes m-heroNarrow-r20 {
+  0% { opacity: 1; }
+  65.6% { opacity: 1; }
+  66.8% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes m-heroNarrow-r24 {
   0% { opacity: 0; }
-  70.492% { opacity: 0; }
-  71.721% { opacity: 1; }
+  39.2% { opacity: 0; }
+  40.4% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-heroNarrow-r21 {
-  0% { opacity: 1; }
-  0% { opacity: 1; }
-  1.23% { opacity: 0; }
-  95.082% { opacity: 0; }
-  96.311% { opacity: 1; }
+@keyframes m-heroNarrow-r25 {
+  0% { opacity: 0; }
+  49.6% { opacity: 0; }
+  50.8% { opacity: 1; }
   100% { opacity: 1; }
 }
-@keyframes m-heroNarrow-r21-first {
+@keyframes m-heroNarrow-r26 {
+  0% { opacity: 1; }
+  58.4% { opacity: 1; }
+  59% { opacity: 0; }
+  59.008% { opacity: 0; }
+  59.6% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-r26j {
+  0% { transform: none; }
+  59% { transform: none; }
+  59.008% { transform: translateY(calc(var(--k) * -500)); }
+  100% { transform: translateY(calc(var(--k) * -500)); }
+}
+@keyframes m-heroNarrow-r27 {
+  0% { opacity: 0; }
+  71.2% { opacity: 0; }
+  72.4% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-r28 {
+  0% { opacity: 1; }
+  0% { opacity: 1; }
+  1.2% { opacity: 0; }
+  95.2% { opacity: 0; }
+  96.4% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes m-heroNarrow-r28-first {
   0%, 100% { opacity: 0; }
 }
 /* motion:end */

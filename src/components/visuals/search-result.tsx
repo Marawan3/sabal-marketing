@@ -1,6 +1,7 @@
 import { copy } from "@/lib/copy";
 import { demoSite as site } from "@/lib/demo-data";
-import { demoOrder as o } from "@/lib/demo-order";
+import { demoOrder as o, dish } from "@/lib/demo-order";
+import { RestaurantMark } from "../demo-img";
 import { Visual } from "./visual";
 import v from "./visuals.module.css";
 
@@ -8,16 +9,11 @@ import v from "./visuals.module.css";
 const STEPS = [0, 300, 800, 1100, 1400, 1700, 2200];
 
 /** Dishes from the demo menu, with their prices, as the menu page lists them. */
-const dishes = [
-  ["Spiced Lamb Meatballs", "$12.00"],
-  ["Lamb Gyro", "$14.00"],
-  ["Chicken Shawarma Flatbread", "$14.50"],
-  ["Hummus & Warm Pita", "$8.50"],
-];
+const dishes = ["Pepperoni Pizza", "Margherita", "Garlic Knots", "Buffalo Wings"].map(dish);
 
 /**
  * A search result for the demo restaurant's menu page, in the usual style
- * (no search engine's logo or name): the site, its address, the page's own
+ * (no search engine's logo or name): the site with the restaurant's mark, its address, the page's own
  * title and description, and dish lines with prices. An illustration of what
  * a readable menu page can show, captioned so, with no promise of placement.
  */
@@ -34,7 +30,7 @@ export function SearchResult() {
         </div>
         <div className={v.result} data-line="1">
           <div className={v.site}>
-            <span className={v.fav}>P</span>
+            <RestaurantMark className={v.fav} />
             <span>
               <span className={v.siteName}>{o.restaurant}</span>
               <span className={v.url}>
@@ -45,7 +41,7 @@ export function SearchResult() {
           <div className={v.resultTitle}>{site.menuTitle}</div>
           <div className={v.resultText}>{site.menuDescription}</div>
           <div className={v.dishes}>
-            {dishes.map(([name, price], i) => (
+            {dishes.map(({ name, price }, i) => (
               <div key={name} className={v.dish} data-line={i + 2}>
                 <span>{name}</span>
                 <span>{price}</span>

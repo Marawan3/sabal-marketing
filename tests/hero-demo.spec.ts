@@ -24,19 +24,49 @@ const opacity = (el: Locator) =>
   });
 const NOON = new Date("2026-10-13T16:40:00-04:00");
 
-test("a drawn phone: real text, decorative for screen readers with one sentence, and only the dish photo as a picture", async ({ page }) => {
+test("a drawn phone: real text, decorative for screen readers with one sentence, and the restaurant's own pictures", async ({ page }) => {
   await page.goto("/");
   await expect(demo(page)).toHaveCount(1);
   await expect(demo(page).locator(":scope > [aria-hidden='true']")).toHaveCount(1);
   await expect(demo(page).locator(":scope > .sr-only")).toHaveText(copy.hero.demo.description);
   // No video, canvas or screenshot frame: the screens are text and shapes.
   await expect(demo(page).locator("video, canvas, figure, iframe")).toHaveCount(0);
+  // The pictures: each menu row's photo, the dish sheet's, and the restaurant's mark. Nothing else.
   const images = await demo(page).locator("img").evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src") ?? ""));
-  expect(images.length).toBeGreaterThan(0);
-  for (const src of images) expect(decodeURIComponent(src)).toContain(demoOrder.dish.photo);
-  // The real dishes and prices, as text.
-  for (const row of demoOrder.rows) await expect(demo(page).getByText(row.name, { exact: true }).first()).toBeAttached();
-  await expect(demo(page).getByText(demoOrder.dish.price, { exact: true }).first()).toBeAttached();
+  const allowed = [...demoOrder.rows.map((row) => row.photo), demoOrder.dish.photo, demoOrder.mark];
+  for (const src of images) expect(allowed).toContain(src);
+  for (const src of allowed) expect(images).toContain(src);
+  // The menu's dishes and prices, as text, every row with its photo.
+  for (const row of demoOrder.rows) {
+    const line = demo(page).locator('[data-screen="menu"] [data-scroll] > :last-child > div', { hasText: row.name });
+    await expect(line.getByText(row.price, { exact: true })).toBeAttached();
+    await expect(line.locator("img")).toHaveAttribute("src", row.photo!);
+  }
+});
+
+test("the diner picks 16-inch, then Hot-honey drizzle, and Add item's price follows: $16.00, $21.00, $22.50", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const sheet = demo(page).locator("[data-sheet]");
+  const price = sheet.locator("[data-add-price] > *");
+  const shown = async () => {
+    const all = await price.evaluateAll((els) => els.map((el) => [el.textContent, Number(getComputedStyle(el).opacity)] as [string, number]));
+    return all.filter(([, o]) => o === 1).map(([t]) => t);
+  };
+  const picked = (step: number) => sheet.locator(`[data-pick="${step}"] > :last-child`).evaluate((el) => Number(getComputedStyle(el).opacity));
+  await expect(sheet.locator('[data-pick="4"]')).toContainText("16-inch");
+  await expect(sheet.locator('[data-pick="5"]')).toContainText("Hot-honey drizzle");
+  await seek(demo(page), STEPS[4] - 10);
+  expect(await shown()).toEqual(["$16.00"]);
+  expect([await picked(4), await picked(5)]).toEqual([0, 0]);
+  await seek(demo(page), STEPS[5] - 10);
+  expect(await shown()).toEqual(["$21.00"]);
+  expect([await picked(4), await picked(5)]).toEqual([1, 0]);
+  await seek(demo(page), STEPS[6] - 10);
+  expect(await shown()).toEqual([demoOrder.linePrice]);
+  expect([await picked(4), await picked(5)]).toEqual([1, 1]);
+  // The cart bar then says 1 item, at subtotal plus tax.
+  await expect(demo(page).locator("[data-cart]")).toContainText(`View cart · 1 item${demoOrder.cartAmount}`);
 });
 
 test("checkout shows the diner's service fee as /pricing and /terms state it, and every total agrees", async ({ page, request }) => {
@@ -53,13 +83,17 @@ test("checkout shows the diner's service fee as /pricing and /terms state it, an
     const line = checkout.locator("div", { has: page.getByText(label, { exact: true }) }).last();
     return cents((await line.locator("span").last().textContent())!.trim());
   };
-  const subtotal = cents(demoOrder.dish.price);
+  const subtotal = await row("1 item");
   const fee = await row(`Service fee (${SERVICE_FEE_PERCENT}%)`);
   const tax = await row("Taxes and fees ⓘ");
   const tip = await row("Tip");
   const total = await row("Total");
   expect(fee).toBe(Math.round((subtotal * SERVICE_FEE_PERCENT) / 100));
   expect(total).toBe(subtotal + fee + tax + tip);
+  // The owner's figures (2026-10-19): a 16-inch Pepperoni Pizza ($16.00 + $5.00) with Hot-honey drizzle ($1.50).
+  expect({ subtotal, fee, tax, tip, total }).toEqual({ subtotal: 2250, fee: 113, tax: 146, tip: 450, total: 2959 });
+  expect(demoOrder.cartAmount).toBe("$23.96");
+  expect(cents(demoOrder.cartAmount)).toBe(subtotal + tax);
   // The fee sits between the subtotal (the items row) and the total.
   const text = (await checkout.innerText()).replace(/\s+/g, " ");
   const at = (needle: string) => text.indexOf(needle);
@@ -106,9 +140,9 @@ test("at 1440 it plays the order through to the kitchen ticket beside the phone,
   const slid = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform !== "none");
   await seek(demo(page), 600);
   expect(await slid(confirm)).toBe(true);
-  // Step 12: the order lands on the kitchen display beside the phone.
-  await seek(demo(page), STEPS[12] + 2_000);
-  expect(stepAt(STEPS, (await clock(demo(page))).t)).toBe(12);
+  // Step 13: the order lands on the kitchen display beside the phone.
+  await seek(demo(page), STEPS[13] + 2_000);
+  expect(stepAt(STEPS, (await clock(demo(page))).t)).toBe(13);
   expect(await slid(confirm)).toBe(false);
   await expect(demo(page).locator("[data-board]")).toBeVisible();
   // The ticket is this order: number, name, dish and option, and its timer runs from zero.
@@ -116,9 +150,10 @@ test("at 1440 it plays the order through to the kitchen ticket beside the phone,
   await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
   await expect(ticket).toContainText(`Pickup · ${demoOrder.ticket.who}`);
   await expect(ticket).toContainText(demoOrder.dish.name);
-  await expect(ticket).toContainText(`+ ${demoOrder.pick}`);
+  // Both choices, as mods under the dish.
+  for (const mod of demoOrder.mods) await expect(ticket).toContainText(`+ ${mod}`);
   expect(await opacity(ticket)).toBe(1);
-  await seek(demo(page), STEPS[12] + 3_000);
+  await seek(demo(page), STEPS[13] + 3_000);
   await expect(ticket.locator("[data-timer]")).toHaveText("0:03");
   // Round again: the second time through starts on the menu.
   await seek(demo(page), LOOP + 600);
@@ -145,7 +180,7 @@ test("at 390 the phone never turns over: menu to confirmation, a 2.5 s hold, the
   await expect(demo(page)).toHaveAttribute("data-run", "");
   await noKitchenInPhone(page);
   // Its own loop: the desktop's steps up to the confirmation, then the fade out.
-  expect(NARROW_STEPS.slice(0, 12)).toEqual(STEPS.slice(0, 12));
+  expect(NARROW_STEPS.slice(0, 13)).toEqual(STEPS.slice(0, 13));
   expect(await demo(page).getAttribute("data-steps-narrow")).toBe(NARROW_STEPS.join(" "));
   const clockLength = await demo(page).evaluate((el) =>
     Number(el.getAnimations().find((a) => (a as CSSAnimation).animationName === "vis-clock")!.effect!.getComputedTiming().duration),
@@ -154,18 +189,18 @@ test("at 390 the phone never turns over: menu to confirmation, a 2.5 s hold, the
   const confirm = demo(page).locator('[data-screen="confirm"]');
   const shown = (el: Locator) => el.evaluate((n) => getComputedStyle(n).transform === "none");
   const cover = () => demo(page).locator("[data-cover]").evaluate((el) => Number(getComputedStyle(el).opacity));
-  await seek(demo(page), STEPS[11] - 100);
+  await seek(demo(page), STEPS[12] - 100);
   expect(await shown(confirm)).toBe(false);
-  // The confirmation lands (520 ms) and holds about 2.5 s, until the fade out at step 12.
-  for (const t of [STEPS[11] + 600, STEPS[11] + 1_800, NARROW_STEPS[12] - 20]) {
+  // The confirmation lands (520 ms) and holds about 2.5 s, until the fade out at step 13.
+  for (const t of [STEPS[12] + 600, STEPS[12] + 1_800, NARROW_STEPS[13] - 20]) {
     await seek(demo(page), t);
     expect(await shown(confirm), `confirmation at ${t} ms`).toBe(true);
     expect(await cover(), `no cover at ${t} ms`).toBe(0);
   }
-  expect(NARROW_STEPS[12] - (STEPS[11] + 520)).toBeGreaterThanOrEqual(2_400);
-  expect(NARROW_STEPS[12] - (STEPS[11] + 520)).toBeLessThanOrEqual(2_600);
+  expect(NARROW_STEPS[13] - (STEPS[12] + 520)).toBeGreaterThanOrEqual(2_400);
+  expect(NARROW_STEPS[13] - (STEPS[12] + 520)).toBeLessThanOrEqual(2_600);
   // Then white, and round again on the menu.
-  await seek(demo(page), NARROW_STEPS[12] + 550);
+  await seek(demo(page), NARROW_STEPS[13] + 550);
   expect(await cover()).toBe(1);
   await seek(demo(page), NARROW_LOOP + 600);
   expect(await cover()).toBe(0);
@@ -234,13 +269,13 @@ for (const width of [390, 1440]) {
     const confirm = demo(page).locator('[data-screen="confirm"]');
     await seek(demo(page), 600);
     expect(await opacity(confirm)).toBe(0);
-    await seek(demo(page), STEPS[11] + 600);
+    await seek(demo(page), STEPS[12] + 600);
     expect(await opacity(confirm)).toBe(1);
     expect(await confirm.evaluate((el) => getComputedStyle(el).transform)).toBe("none");
     await expect(confirm.locator('[data-clock="ready"]')).toHaveText("5:00 PM");
     if (width >= 1024) {
       // The kitchen ticket fades in on the display beside the phone.
-      await seek(demo(page), STEPS[12] + 2_000);
+      await seek(demo(page), STEPS[13] + 2_000);
       const ticket = demo(page).locator("[data-board] [data-arrive]");
       expect(await opacity(ticket)).toBe(1);
       await expect(ticket).toContainText(`#${demoOrder.ticket.number}`);
@@ -248,7 +283,7 @@ for (const width of [390, 1440]) {
     } else {
       // Phones: no kitchen display. The confirmation holds until the fade out, then the menu again.
       await noKitchenInPhone(page);
-      await seek(demo(page), NARROW_STEPS[12] - 20);
+      await seek(demo(page), NARROW_STEPS[13] - 20);
       expect(await opacity(confirm)).toBe(1);
       await seek(demo(page), NARROW_LOOP + 600);
     }

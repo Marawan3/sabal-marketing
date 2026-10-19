@@ -45,7 +45,9 @@ export const stepAt = (steps: readonly number[], t: number) => steps.reduce((n, 
  * A visual's timing, read from its running animations: the clock's length
  * and repeats, when each change starts and how long it takes (any two
  * neighbouring keyframes whose values differ), and when the last animation
- * settles. Times are ms from the top of the story.
+ * settles. Times are ms from the top of the story. The steam over a hot dish
+ * ([data-steam], 2026-10-19) is its own loop, not part of the story, so it
+ * isn't read.
  */
 export type Timing = { clock: number; repeats: number; changes: { at: number; ms: number; what: string }[]; settles: number };
 export function timing(el: Locator): Promise<Timing> {
@@ -54,7 +56,7 @@ export function timing(el: Locator): Promise<Timing> {
     // document.getAnimations() also has the ones on ::before and ::after, which a subtree read can miss.
     const mine = document.getAnimations().filter((a) => {
       const target = (a.effect as KeyframeEffect | null)?.target;
-      return !!target && root.contains(target);
+      return !!target && root.contains(target) && !target.closest("[data-steam]");
     });
     for (const a of mine) {
       const effect = a.effect as KeyframeEffect;

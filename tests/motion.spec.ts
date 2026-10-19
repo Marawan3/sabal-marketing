@@ -59,8 +59,8 @@ test("?debug=motion lists each visual's play state, its last isIntersecting and 
   const hero = panel.locator("tr", { hasText: /^hero/ });
   await expect(hero).toContainText("running");
   await expect(hero).toContainText("true");
-  // At phone width the hero runs its narrow story: steps 0 to 12.
-  await expect(hero).toContainText(/\d+\/12/);
+  // At phone width the hero runs its narrow story: steps 0 to 13.
+  await expect(hero).toContainText(/\d+\/13/);
   // Off screen: paused.
   await expect(panel.locator("tr", { hasText: /^kitchen/ })).toContainText("paused: off screen");
   // With reduced motion it says so.

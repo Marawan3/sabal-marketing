@@ -45,6 +45,11 @@ const move = { ms: 560, ease: "cubic-bezier(0.2, 0.8, 0.2, 1)" };
 const fade = { ms: 320, ease: "ease" };
 const scroll = { ms: 900, ease: "cubic-bezier(0.3, 0, 0.2, 1)" };
 const press = { ms: 160, ease: "ease" };
+/** A leg of the delivery driver's route: steady, so the three legs run as one drive. */
+const leg = { ms: 600, ease: "linear" };
+
+/** The hero menu page's head (.menuHead), in the phone's own pixels: the step-1 scroll's length. */
+const MENU_HEAD = 234;
 
 const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
 
@@ -59,16 +64,18 @@ const fadeIn = (k, hold = null) => ({ hold, show: { start: "0", changes: [[k, nu
 
 /**
  * The hero's order story (hero-order-demo.tsx), in one of its two shapes. Steps
- * 0 to 11 are the same in both: 1 scroll the menu, 2 tap the dish, 3 its sheet
- * opens, 4 pick Hot, 5 tap Add item, 6 the sheet closes and the cart bar shows,
- * 7 tap the bar, 8 checkout, 9 scroll to Pay, 10 tap Pay, 11 the confirmation.
- * Desktop then has 12 the kitchen ticket and 13 the fade out; phones go
- * straight to the fade out (their step 12), 2.5 s after the confirmation lands.
+ * 0 to 12 are the same in both: 1 scroll the menu (its head goes up under the
+ * bar), 2 tap the dish, 3 its sheet opens, 4 pick 16-inch, 5 pick Hot-honey
+ * drizzle (the Add item price follows each), 6 tap Add item, 7 the sheet
+ * closes and the cart bar shows, 8 tap the bar, 9 checkout, 10 scroll to Pay,
+ * 11 tap Pay, 12 the confirmation. Desktop then has 13 the kitchen ticket and
+ * 14 the fade out; phones go straight to the fade out (their step 13), 2.5 s
+ * after the confirmation lands.
  * src/lib/hero-demo-timeline.ts has the same numbers (a test checks).
  */
 function heroStory({ desk }) {
-  const shared = [0, 900, 1900, 2200, 3400, 4300, 4600, 5600, 5900, 7000, 7900, 8600];
-  const steps = desk ? [...shared, 9800, 13800] : [...shared, 11600];
+  const shared = [0, 900, 1900, 2200, 3200, 3900, 4600, 4900, 5900, 6200, 7300, 8200, 8900];
+  const steps = desk ? [...shared, 10100, 13800] : [...shared, 11900];
   const end = steps.length - 1; // the fade out before the loop starts again
   const m = { ms: 520, ease: "cubic-bezier(0.2, 0.8, 0.2, 1)" };
   const f = { ms: 280, ease: "ease" };
@@ -78,49 +85,53 @@ function heroStory({ desk }) {
   // Reduced motion: a screen that slides in fades in where it lands.
   const fadeAt = (changes) => ({ hold: "none", show: { start: "0", changes } });
   const tracks = [
-    // Reduced motion: a dip to the dish the diner taps.
+    // The menu's head goes up under the bar, and the pizzas come up. Reduced motion: a dip.
     {
       sel: ".wrap .scroll",
       prop: "transform",
       start: "none",
-      changes: [[1, "translateY(calc(var(--k) * -96))"]],
+      changes: [[1, `translateY(calc(var(--k) * -${MENU_HEAD}))`]],
       ramp: scroll,
       reduced: { dip: true },
     },
-    ...[2, 4, 5, 7, 10].map((k) => ({ sel: `.wrap [data-tap="${k}"]`, tap: k })),
-    { sel: ".wrap .backdrop", prop: "opacity", start: "0", changes: [[3, "1"], [6, "0"]], ramp: f },
-    { sel: ".wrap .sheet", prop: "transform", start: "translateY(102%)", changes: [[3, "none"], [6, "translateY(102%)"]], ramp: m, reduced: fadeAt([[3, "1"], [6, "0"]]) },
+    ...[2, 4, 5, 6, 8, 11].map((k) => ({ sel: `.wrap [data-tap="${k}"]`, tap: k })),
+    { sel: ".wrap .backdrop", prop: "opacity", start: "0", changes: [[3, "1"], [7, "0"]], ramp: f },
+    { sel: ".wrap .sheet", prop: "transform", start: "translateY(102%)", changes: [[3, "none"], [7, "translateY(102%)"]], ramp: m, reduced: fadeAt([[3, "1"], [7, "0"]]) },
+    // 4: 16-inch, 5: Hot-honey drizzle. Each lights its mark and its name, and the Add item price follows.
     show(".wrap .radio i", 4),
-    show(".wrap [data-pick] > :last-child", 4),
-    hide(".wrap [data-pick] > :first-child", 4),
-    show(".wrap .inCart", 6),
-    show(".wrap [data-paying] > :last-child", 10),
-    hide(".wrap [data-paying] > :first-child", 10),
-    pressAt(".wrap .sheet .action", 5),
-    pressAt(".wrap .cartBar .action", 7),
-    pressAt(".wrap .payBar .action", 10),
-    { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[6, "none"]], ramp: m, reduced: fadeAt([[6, "1"]]) },
-    { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[8, "none"]], ramp: m, reduced: fadeAt([[8, "1"]]) },
+    show(".wrap .check i", 5),
+    ...[4, 5].flatMap((k) => [show(`.wrap [data-pick="${k}"] > :last-child`, k), hide(`.wrap [data-pick="${k}"] > :first-child`, k)]),
+    hide(".wrap [data-add-price] > :nth-child(1)", 4),
+    { sel: ".wrap [data-add-price] > :nth-child(2)", prop: "opacity", start: "0", changes: [[4, "1"], [5, "0"]], ramp: f },
+    show(".wrap [data-add-price] > :nth-child(3)", 5),
+    show(".wrap .inCart", 7),
+    show(".wrap [data-paying] > :last-child", 11),
+    hide(".wrap [data-paying] > :first-child", 11),
+    pressAt(".wrap .sheet .action", 6),
+    pressAt(".wrap .cartBar .action", 8),
+    pressAt(".wrap .payBar .action", 11),
+    { sel: ".wrap .cartBar", prop: "transform", start: "translateY(110%)", changes: [[7, "none"]], ramp: m, reduced: fadeAt([[7, "1"]]) },
+    { sel: ".wrap .checkout", prop: "transform", start: "translateX(101%)", changes: [[9, "none"]], ramp: m, reduced: fadeAt([[9, "1"]]) },
     // Reduced motion: a dip down to Pay, which the diner taps.
     {
       sel: ".wrap .checkout .page",
       prop: "transform",
       start: "none",
-      changes: [[9, "translateY(calc(var(--k) * -500))"]],
+      changes: [[10, "translateY(calc(var(--k) * -500))"]],
       ramp: scroll,
       reduced: { dip: true },
     },
-    { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[11, "none"]], ramp: m, reduced: fadeAt([[11, "1"]]) },
+    { sel: ".wrap .confirm", prop: "transform", start: "translateX(101%)", changes: [[12, "none"]], ramp: m, reduced: fadeAt([[12, "1"]]) },
   ];
   if (desk) {
     tracks.push(
-      // The kitchen display: the count and the ticket on step 12; the ticket leaves with the fade out (under the cover).
-      show(".wrap .kCount > :last-child", 12),
-      hide(".wrap .kCount > :first-child", 12),
-      show(".wrap .kActive > :last-child", 12),
-      hide(".wrap .kActive > :first-child", 12),
-      { sel: ".wrap .arrive", prop: "opacity", start: "0", changes: [[12, "1"], [end, "0"]], ramp: f },
-      { sel: ".wrap .arrive", prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[12, "none"]], ramp: m, reduced: { hold: "none" } },
+      // The kitchen display: the count and the ticket on step 13; the ticket leaves with the fade out (under the cover).
+      show(".wrap .kCount > :last-child", 13),
+      hide(".wrap .kCount > :first-child", 13),
+      show(".wrap .kActive > :last-child", 13),
+      hide(".wrap .kActive > :first-child", 13),
+      { sel: ".wrap .arrive", prop: "opacity", start: "0", changes: [[13, "1"], [end, "0"]], ramp: f },
+      { sel: ".wrap .arrive", prop: "transform", start: "translateX(calc(var(--k) * -60))", changes: [[13, "none"]], ramp: m, reduced: { hold: "none" } },
     );
   }
   // The white cover: up before the loop starts again, and lifting at the top of each loop
@@ -233,7 +244,7 @@ export const visuals = {
   },
   delivery: {
     file: "visuals",
-    steps: [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 8600],
+    steps: [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 10000],
     tracks: [
       { sel: ".delivery .scrollA", prop: "transform", start: "none", changes: [[1, null]], ramp: scroll, reduced: { dip: true } },
       { sel: '.delivery [data-tap="2"]', tap: 2 },
@@ -249,6 +260,25 @@ export const visuals = {
       { sel: '.delivery .current[data-cur="5-6"]', prop: "opacity", start: "0", changes: [[5, "1"], [6, null]], ramp: fade },
       { sel: '.delivery .current[data-cur="6-7"]', prop: "opacity", start: "0", changes: [[6, "1"], [7, null]], ramp: fade },
       { sel: '.delivery .current[data-cur="5-7"]', prop: "opacity", start: "0", changes: [[5, "1"], [7, null]], ramp: fade },
+      // On the way (2026-10-19): the driver's dot appears at the restaurant and crosses the map in three
+      // equal legs (delivery-phone.tsx), stopping short of the address. Reduced motion: no travelling
+      // dot (its CSS hides it); a still dot fades in at the end of each leg as the moving one would set off.
+      { sel: ".delivery .driver", prop: "opacity", start: "0", changes: [[7, null]], ramp: fade, mode: "motion" },
+      {
+        sel: ".delivery .mapLeg",
+        prop: "transform",
+        start: "none",
+        changes: [
+          [7, "translate(25%, 0)"],
+          [{ at: 8300 }, "translate(25%, -57.1429%)"],
+          [{ at: 8900 }, null],
+        ],
+        ramp: leg,
+        mode: "motion",
+      },
+      { sel: '.delivery [data-driver-at="1"]', prop: "opacity", start: "0", changes: [[7, "1"], [{ at: 8300 }, "0"]], ramp: fade, mode: "reduced" },
+      { sel: '.delivery [data-driver-at="2"]', prop: "opacity", start: "0", changes: [[{ at: 8300 }, "1"], [{ at: 8900 }, "0"]], ramp: fade, mode: "reduced" },
+      { sel: '.delivery [data-driver-at="3"]', prop: "opacity", start: "0", changes: [[{ at: 8900 }, null]], ramp: fade, mode: "reduced" },
     ],
   },
   catering: {

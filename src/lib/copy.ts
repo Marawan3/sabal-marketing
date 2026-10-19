@@ -37,7 +37,7 @@ export const copy = {
     /** The hero animation: one sentence for screen readers, and its pause button. */
     demo: {
       description:
-        "An animation: on a phone, a diner orders Spiced Lamb Meatballs, spice level Hot, from Palm&Stone Kitchen, our demo restaurant, and the order arrives as a new ticket on the kitchen display.",
+        "An animation: on a phone, a diner orders a 16-inch Pepperoni Pizza with a hot-honey drizzle from Palm&Stone Pizza, our demo restaurant, and the order arrives as a new ticket on the kitchen display.",
       pause: "Pause the animation",
       play: "Play the animation",
     },
@@ -45,11 +45,11 @@ export const copy = {
   /** The built visuals (src/components/visuals): one sentence each for screen readers, and shared captions. */
   visuals: {
     delivery:
-      "An animation: a delivery checkout on Palm&Stone Kitchen's website, our demo restaurant, then the tracking page showing the driver on the way.",
+      "An animation: a delivery checkout on Palm&Stone Pizza's website, our demo restaurant, then the tracking page, where a small map shows the driver on the way.",
     catering:
-      "An animation: the demo restaurant's catering page, where a customer fills in the catering enquiry form and sends it.",
+      "An animation: the demo restaurant's catering page, with a photo of a catering spread, where a customer fills in the catering enquiry form and sends it.",
     storefront:
-      "An animation: the demo restaurant's own website, its featured dishes and prices, then a tap on Order online that opens the menu.",
+      "An animation: the demo restaurant's own website, with a photo of its pizza oven and its featured dishes with photos and prices, then a tap on Order online that opens the menu.",
     kitchen:
       "An animation of the kitchen display on a tablet: tickets in New, Preparing and Ready with running timers, and one order moving from New to Preparing.",
     dashboard:
@@ -64,15 +64,15 @@ export const copy = {
     settings:
       "The online ordering settings: accepting orders, prep time, the ASAP quote and closing time, with controls to pause ordering and adjust prep time. Prep time goes from 20 to 25 minutes.",
     editor:
-      "The menu editor in the WunTab dashboard: the demo restaurant's Spiced Lamb Meatballs with its photo, name, category, price, availability set to Available, and its two modifier groups.",
+      "The menu editor in the WunTab dashboard: the demo restaurant's Pepperoni Pizza with its photo, name, category, price, availability set to Available, and its two modifier groups, Size and Extras.",
     loyalty:
-      "An animation: the demo restaurant's order confirmation on a phone, where a reward card appears for a returning customer: their next Hummus & Warm Pita is on the restaurant.",
+      "An animation: the demo restaurant's order confirmation on a phone, where a reward card appears for a returning customer: their next cannoli is on the restaurant.",
     menu:
-      "The demo restaurant's online menu on a phone: the Small Plates & Mezze category with each dish's name, price and description, and a photo of the Spiced Lamb Meatballs.",
+      "The demo restaurant's online menu on a phone: the Pizzas category, each pizza with its name, price, description and photo.",
     upsell:
-      "The demo restaurant's dish sheet for Spiced Lamb Meatballs on a phone, with two suggestions under Goes well with: Hummus & Warm Pita and Stuffed Grape Leaves.",
+      "The demo restaurant's dish sheet for Pepperoni Pizza on a phone, with its photo and two suggestions under Goes well with: Garlic Knots and Loaded Fries.",
     sms:
-      "A text message on a phone's lock screen from the demo restaurant: Your order #1930 at Palm&Stone Kitchen is confirmed. Pickup in about 20 minutes.",
+      "A text message on a phone's lock screen from the demo restaurant: Your order #1930 at Palm&Stone Pizza is confirmed. Pickup in about 20 minutes.",
     demoCaption: "Demo restaurant",
     searchCaption: "Illustration. We don't promise rankings.",
   },
