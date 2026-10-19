@@ -198,7 +198,12 @@ their reasoning. Where they disagree with this section, this section wins.
   app named.
 - **/about:** the owner's beliefs. The founder section is the one place besides the hero dish
   where a photo may appear, and only once `src/lib/founder.ts` is filled.
-- **Demo link:** "See a live WunTab restaurant" sits behind `NEXT_PUBLIC_SHOW_DEMO_LINK` (off).
+- **Demo link (2026-10-19):** "See a live restaurant" (with a new-tab icon and "Demo restaurant")
+  opens demo.wuntab.com in a new tab. On by default; `NEXT_PUBLIC_SHOW_DEMO_LINK=false` hides it.
+  It sits under the hero's $0 card, in the mobile menu, the phone footer, the final band, the
+  homepage products and /restaurant-websites (`src/components/demo-link.tsx`).
+- **Phones (2026-10-19):** the footer is six closed groups (the mobile menu's); the homepage
+  products are cards to swipe, the one horizontal scroller on the site.
 
 ## 1. What we are designing for
 

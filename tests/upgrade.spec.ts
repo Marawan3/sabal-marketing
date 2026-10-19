@@ -69,8 +69,12 @@ test("hero: the trust line above the headline, and the $0 card under the name fi
   await expect(page.locator("#pricing")).toContainText(copy.pricing.stat);
 });
 
-test("calculator: between products and how it works; empty until both numbers are in, then the 15–30% range", async ({ page }) => {
+test("calculator: between products and how it works; the owner's example on load, then the visitor's numbers, the 15–30% range", async ({ page }) => {
   expect(yearlyRange(100, 30)).toEqual([23_400, 46_800]);
+  // The example (owner, 2026-10-19): 60 orders a week at $30, × 52 weeks × 15% and 30%.
+  expect(copy.savings.example).toEqual({ orders: 60, value: 30, note: "Example — change these" });
+  expect(yearlyRange(60, 30)).toEqual([(60 * 30 * 52 * 15) / 100, (60 * 30 * 52 * 30) / 100]);
+  expect(yearlyRange(60, 30)).toEqual([14_040, 28_080]);
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
@@ -80,9 +84,25 @@ test("calculator: between products and how it works; empty until both numbers ar
     const calc = page.locator("#savings [data-calculator]");
     const orders = calc.getByLabel(copy.savings.orders);
     const value = calc.getByLabel(copy.savings.value);
-    // No pre-filled averages.
-    await expect(orders).toHaveValue("");
-    await expect(value).toHaveValue("");
+    // The example is filled in and marked as one, and the range shows at once.
+    await expect(calc.locator("[data-example]")).toHaveText(copy.savings.example.note);
+    await expect(orders).toHaveValue("60");
+    await expect(value).toHaveValue("30");
+    const [low, high] = yearlyRange(60, 30).map((n) => `$${n.toLocaleString("en-US")}`);
+    await expect(calc.locator("[data-result]")).toHaveText(`Between ${low} and ${high}`);
+    // Numbers keypads, the $ before the order value, and the result larger and bolder than the labels.
+    await expect(orders).toHaveAttribute("inputmode", "numeric");
+    await expect(value).toHaveAttribute("inputmode", "numeric");
+    const dollar = (await calc.getByText("$", { exact: true }).boundingBox())!;
+    const valueBox = (await value.boundingBox())!;
+    expect(dollar.x).toBeGreaterThan(valueBox.x);
+    expect(dollar.x + dollar.width).toBeLessThan(valueBox.x + 28);
+    const result = await calc.locator("[data-result]").evaluate((el) => ({ size: parseFloat(getComputedStyle(el).fontSize), weight: Number(getComputedStyle(el).fontWeight) }));
+    expect(result.size).toBeGreaterThanOrEqual(30);
+    expect(result.weight).toBeGreaterThanOrEqual(700);
+    // Cleared, it asks for both numbers again.
+    await orders.fill("");
+    await value.fill("");
     await expect(calc.locator("[data-result]")).toHaveText(copy.savings.empty);
     await orders.fill("100");
     await expect(calc.locator("[data-result]")).toHaveText(copy.savings.empty);

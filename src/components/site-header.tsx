@@ -1,5 +1,6 @@
 import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
+import { DemoLink } from "./demo-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
 import { bySlug, megaMenu, pillars, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
@@ -183,7 +184,9 @@ export function SiteHeader() {
                   </li>
                 ) : null}
               </ul>
+              {/* The demo restaurant's website above Get Started (owner, 2026-10-19). */}
               <div className="mt-auto pt-8">
+                <DemoLink className="mb-2 w-full" />
                 <CtaLink href={demoHref} className="w-full">
                   {copy.cta.primary}
                 </CtaLink>

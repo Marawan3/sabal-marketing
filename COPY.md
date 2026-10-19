@@ -19,6 +19,8 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Small card under the name field (2026-10-13):** **$0/month for the restaurant.** Customers pay 5% at checkout. *(The same terms as the service fee clause; the full pricing section stays lower down.)*
 
+**Under the card, centred (2026-10-19):** See a live restaurant ↗ Demo restaurant *(to demo.wuntab.com, in a new tab; see Demo link below)*
+
 **Visual:** a live phone drawn in HTML and CSS (2026-10-13; the demo restaurant became Palm&Stone Pizza on 2026-10-19, see "The demo restaurant" below). On the demo restaurant's storefront, the menu's head scrolls away to the Pizzas, each with its photo; a diner opens Pepperoni Pizza ($16.00), taps 16-inch (+$5.00), then Hot-honey drizzle (+$1.50), and the Add item price follows ($16.00, $21.00, $22.50). The cart bar shows "View cart · 1 item" at $23.96 (subtotal plus tax). Checkout: subtotal $22.50, Service fee (5%) $1.13, tax $1.46, tip $4.50, total $29.59; then the confirmation with a ready time 20 minutes after the visitor's own clock. Steam rises off the dish sheet's photo (none with reduced motion). On desktop the order then lands as ticket #1930 (1× Pepperoni Pizza, + 16-inch, + Hot-honey drizzle) in the New column of the kitchen display beside the phone. On phones there is no kitchen display in the hero (2026-10-19): the phone holds on the confirmation for about 2.5 seconds and starts again; the kitchen band just below shows the display. Every string on the screens is the storefront's or the kitchen display's own, except the "Service fee (5%)" line: the owner added it on 2026-10-13 to match /pricing and /terms, and the live checkout doesn't show it yet; every dish and price is the owner's Palm&Stone Pizza menu (`src/lib/demo-order.ts`). About 14 seconds on desktop and 12.5 on phones, then it loops; the second tap came out of the kitchen ticket's hold, so the desktop loop is as long as before. It starts again with a direct crossfade from the confirmation to the menu (300 ms; 150 ms with reduced motion), with the status bar and the island on screen throughout (2026-10-19: it used to fade to a blank white phone for about a second).
 
 **Screen readers hear:** An animation: on a phone, a diner orders a 16-inch Pepperoni Pizza with a hot-honey drizzle from Palm&Stone Pizza, our demo restaurant, and the order arrives as a new ticket on the kitchen display.
@@ -41,7 +43,9 @@ The two lines that left the tabs are in the FAQ: "Search engines can read every 
 
 ## c. Everything you need to sell direct.
 
-Four rows, each the product's name (the link) and its page's headline, with the product's visual from 768px. The "More about …" links went on 2026-10-13 to make room for the calculator; the name is the link now.
+From 768px: four rows, each the product's name (the link) and its page's headline, with the product's visual. The "More about …" links went on 2026-10-13 to make room for the calculator; the name is the link now.
+
+On phones (2026-10-19): a row of four cards you swipe, the next one peeking at the edge. Each card is one link: a small still of the product's visual, the name, the headline, and **Learn more →**.
 
 - **Online Ordering:** Take orders on your own website, under your own name. · *storefront phone*
 - **Delivery:** Delivery without building a delivery fleet. · *delivery phone*
@@ -52,8 +56,9 @@ Four rows, each the product's name (the link) and its page's headline, with the 
 
 **What commission would you keep?**
 
-- **Delivery-app orders per week** · **Average order value** (both empty: no averages are filled in for the owner)
-- **Estimated commission kept each year:** Between $X and $Y (orders × average order × 52 weeks × 15%, and × 30%). Before both numbers are in: "Enter both numbers to see the range."
+- Over the boxes, small (2026-10-19): **Example — change these**
+- **Delivery-app orders per week** · **Average order value** ($ before the box). Both open on the owner's example, 60 orders and $30 (2026-10-19; until then both were empty), and both bring up the number keypad on phones.
+- **Estimated commission kept each year:** Between $X and $Y (orders × average order × 52 weeks × 15%, and × 30%), in larger, bolder type since 2026-10-19. On load: **Between $14,040 and $28,080**. With a box emptied: "Enter both numbers to see the range."
 - Under it: Third-party apps charge 15–30% commission; we charge the restaurant $0.
 
 Source for 15–30% (kept here, never named on the site): the largest delivery app's own US merchant pricing page lists 15%, 25% and 30% commission on delivery orders for its Basic, Plus and Premier plans (merchants.doordash.com/en-us/products/pricing, read 2026-10-13). Uber Eats' plans now run 20–30% (Restaurant Dive, "Uber Eats increases marketplace fees"). Pickup orders on the apps cost less (about 6–10%), so the range describes delivery orders, which is what the first box asks for.
@@ -91,7 +96,7 @@ FAQ (`copy.faq` in `src/lib/copy.ts`), with one question added on 2026-10-13: **
 
 Since the upgrade of 2026-10-13 the homepage leaves out four questions the page already answers: **Is there a monthly fee or a contract?** and **Do my customers see the 5%?** (the trust line and the $0 card), **Does it work with my POS?** and **Do I have to set anything up myself?** (the how-it-works steps). The solution pages still ask them.
 
-**Final band (every page but /contact), 2026-10-13:** **Take control of your restaurant's direct business.** · Get Started · *under the button:* 20-minute call. We show WunTab on your own menu. No pressure. · Or send a message (→ /contact; left out since 2026-10-19 while Get Started itself goes to the /contact form). The line that used to sit above the button ("A short call. We will show you WunTab on your own menu.") and the homepage's "or email hello@wuntab.com" went: the new line says the same, and the email is on /contact, /about and in the footer.
+**Final band (every page but /contact), 2026-10-13:** **Take control of your restaurant's direct business.** · Get Started · See a live restaurant ↗ Demo restaurant (2026-10-19) · *under that:* 20-minute call. We show WunTab on your own menu. No pressure. · Or send a message (→ /contact; left out since 2026-10-19 while Get Started itself goes to the /contact form). The line that used to sit above the button ("A short call. We will show you WunTab on your own menu.") and the homepage's "or email hello@wuntab.com" went: the new line says the same, and the email is on /contact, /about and in the footer.
 
 ## Moved off the homepage
 
@@ -133,11 +138,16 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 ## Footer (2026-10-13)
 
-Four columns: **Product** (every product page, then How it works and Pricing), **Solutions** (the four solution pages), **Company** (About, Contact), **Legal** (Terms, Privacy). Under them: the logo and © year, then hello@wuntab.com and **Or send a message**. The blurb under the logo went: it repeated the hero's line.
+From 768px, four columns: **Product** (every product page, then How it works and Pricing), **Solutions** (the four solution pages), **Company** (About, Contact), **Legal** (Terms, Privacy). Under them: the logo and © year, then hello@wuntab.com and **Or send a message**. The blurb under the logo went: it repeated the hero's line.
+
+**On phones (2026-10-19):**
+- The logo, then **$0 for the restaurant. Customers pay 5% at checkout.**, a full-width **Get Started**, and **See a live restaurant ↗ Demo restaurant**.
+- Six closed groups, the mobile menu's: **Sell** (Online Ordering, Delivery, Catering, Online Menu, Recommended Add-ons), **Grow** (Restaurant Websites, Restaurant SEO, Loyalty & Rewards), **Operate** (Menu Management, Order Management, Kitchen Display, Payments), **Scale** (Integrations), **Solutions** (the four solution pages), **Company** (How it works, Pricing, About, Contact). How it works and Pricing joined Company so every page is still linked.
+- hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Or send a message" on phones: Contact is in Company.
 
 ## Navigation (2026-10-13)
 
-Product (the mega-menu, now with Integrations under Scale) · Solutions (Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants, Multi-Location Restaurants, each with its one line) · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app).
+Product (the mega-menu, now with Integrations under Scale) · Solutions (Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants, Multi-Location Restaurants, each with its one line) · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app). On phones the menu ends with **See a live restaurant ↗ Demo restaurant** above Get Started (2026-10-19).
 
 ## Product page template (2026-10-13)
 
@@ -344,10 +354,10 @@ All six follow the product template. They're linked from the footer and from the
 - Every item on every product, solution and /how-it-works page now links to a page. Products without a page are left out rather than shown unlinked.
 - "Restaurant Listings" is gone from every list.
 
-## Demo link
-- "See a live WunTab restaurant" points at https://demo.wuntab.com.
-- It sits in the homepage products section and in /restaurant-websites' hero links.
-- It's behind `NEXT_PUBLIC_SHOW_DEMO_LINK`, which is off. It stays off until the live demo restaurant matches the visuals' Palm&Stone Pizza menu (2026-10-19); then set it to `true` in Vercel. It adds about 60px to the homepage at 390, which still stays under 7,000.
+## Demo link (on since 2026-10-19)
+- **See a live restaurant**, then a new-tab icon and **Demo restaurant** in small type, so nobody takes it for a customer's site. It opens https://demo.wuntab.com in a new tab.
+- Where: under the hero's $0 card (centred), in the mobile menu above Get Started, in the phone footer, under the final band's button, under the homepage products, and in /restaurant-websites' hero links.
+- The owner said demo.wuntab.com is live and ready (2026-10-19), so it shows by default. Setting `NEXT_PUBLIC_SHOW_DEMO_LINK` to `false` in Vercel hides it everywhere. (It isn't set in Vercel today.)
 
 ## /how-it-works
 - **Build the relationship:** the reward card on the order confirmation (the /loyalty visual).

@@ -28,7 +28,7 @@ test("the spec's step times are each component's own", async ({ page }) => {
   for (const path of pages) {
     await page.goto(path);
     for (const [name, steps, narrow] of await page
-      .locator("[data-demo]")
+      .locator("[data-demo]:not([data-still])")
       .evaluateAll((els) => els.map((el) => [el.getAttribute("data-visual")!, el.getAttribute("data-steps")!, el.getAttribute("data-steps-narrow")] as [string, string, string | null]))) {
       // A visual with its own story below 1024px (the hero): the spec's "<name>Narrow".
       if (narrow) {
@@ -99,7 +99,7 @@ test("with reduced motion every visual keeps the same pace: same loop and play-t
   const read = async (name: string, path: string, reducedMotion: "reduce" | "no-preference") => {
     await page.emulateMedia({ reducedMotion });
     await page.goto(path);
-    const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]`).first();
+    const el = page.locator(name === "hero" ? "#top [data-demo]" : `main [data-visual="${name}"]:not([data-still])`).first();
     await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
     // Below 1024px a visual with a narrow story (the hero) runs that one.
     const steps = (page.viewportSize()!.width < 1024 && (await el.getAttribute("data-steps-narrow"))) || (await el.getAttribute("data-steps"))!;

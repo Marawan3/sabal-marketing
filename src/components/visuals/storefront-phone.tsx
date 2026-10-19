@@ -18,9 +18,9 @@ const STEPS = [0, 1100, 2600, 2900, 3900];
  * site's own words (demo-data.ts). Its bands and cards are the restaurant's
  * sand, not grey.
  */
-export function StorefrontPhone({ cut = false, width }: { cut?: boolean; width?: string }) {
+export function StorefrontPhone({ cut = false, width, still = false }: { cut?: boolean; width?: string; still?: boolean }) {
   return (
-    <Visual name="storefront" steps={STEPS} description={copy.visuals.storefront} className={v.storefront}>
+    <Visual name="storefront" steps={STEPS} description={copy.visuals.storefront} className={v.storefront} still={still}>
       <Phone cut={cut} width={width}>
         <div className={v.layer}>
           <SiteHeader tap={<Tap step={2} x={60} y={22} />} />

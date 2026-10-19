@@ -26,7 +26,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 1. ~~**Hot Honey Soppressata photo.**~~ Done in PR #50 (2026-10-19): the owner sent the photo, and it's in `public/demo/photos/hot-honey-soppressata-360.webp`. The pizza shows in the Pizzas rows and takes the website's first Featured card. Recorded 2026-10-19 (PR #48).
 2. **/about founder section.** Recorded 2026-10-13 (PR #30). Fill `src/lib/founder.ts`: the name, a photo in `public/about/` with its pixel size, and four sentences. It renders nothing until then.
-3. **Demo storefront link.** Recorded 2026-10-13 (PR #30). Set `NEXT_PUBLIC_SHOW_DEMO_LINK=true` in Vercel once the live demo restaurant matches the visuals' Palm&Stone Pizza menu, with its photos (2026-10-19, PR #48).
+3. ~~**Demo storefront link.**~~ Done in PR #54 (2026-10-19): the owner said demo.wuntab.com is live and ready, so "See a live restaurant" now shows by default. It hides only if `NEXT_PUBLIC_SHOW_DEMO_LINK` is set to `false` (it isn't set in Vercel). Recorded 2026-10-13 (PR #30).
 4. **/pricing comparison sources.** Recorded 2026-10-13 (PR #30). The delivery-app cells for customer fees and customer data cite the largest app's help pages. These were read through search results, because help.doordash.com doesn't resolve from the session. Owner to open them and confirm.
 5. **Contact form: switch on sending.** Recorded 2026-10-13 (PR #29). /contact works, but it can't send until `CONTACT_EMAIL_API_KEY` (a Resend key for this site only) is set in Vercel. Until then it shows hello@wuntab.com instead. The steps and the DNS records for Namecheap are in the PR #29 description. Careful with Namecheap's Custom MX switch if hello@ uses Namecheap forwarding.
 6. ~~**/integrations and the payment account.**~~ Closed in PR #31 (2026-10-13). The owner chose to describe the intended model: each restaurant has its own merchant account with our payment partner and is paid through it, and WunTab takes 5% from the customer at checkout. /integrations' line and the FAQs stay. Per-restaurant merchant accounts are a build commitment in REGISTER.md, next to the 5% fee.
@@ -42,6 +42,70 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 16. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
 17. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
 18. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-19 · PR #54: Mobile polish: footer, demo link, product cards, calculator (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** at 375px the footer was 766px on every page (25 links wrapped inline, like a tag cloud; 43% of /contact), the products section was a stack of underlined headings, the calculator showed nothing until both boxes were filled, and the live demo restaurant had no link. Item 5 of the request (the hero restart) was already merged as PR #52.
+
+**What changed (below 768px only; from 768px everything is as it was):**
+- **Footer:**
+  - Top: the logo, "$0 for the restaurant. Customers pay 5% at checkout.", a full-width Get Started and See a live restaurant.
+  - Then the mobile menu's six groups (Sell, Grow, Operate, Scale, Solutions, Company), each a closed 48px row with a chevron that opens to one link per row (44px).
+  - They're native disclosures, so the keyboard and screen readers work, and the links stay in the page when closed. How it works and Pricing sit in Company, so every page the footer linked to is still linked.
+  - Bottom: hello@wuntab.com, then Terms · Privacy · © 2026 WunTab. "Or send a message" is gone on phones (Contact is in Company).
+- **See a live restaurant:**
+  - On by default. It opens demo.wuntab.com in a new tab, with a new-tab icon and "Demo restaurant" beside it.
+  - Places: under the hero's $0 card (centred), in the mobile menu above Get Started, in the phone footer, under the final band's button. It's kept on the homepage products and /restaurant-websites.
+- **Everything you need to sell direct:**
+  - A row of four cards to swipe: scroll-snap, the next card peeking 24px, no scrollbar, no script.
+  - Each card is one link: a 160px still of the product's own visual (the same component, held on its first frame, aria-hidden), the name, the line and Learn more →.
+- **Calculator:**
+  - It opens on the owner's example, 60 orders a week at $30, marked "Example — change these", so the range shows at once: Between $14,040 and $28,080.
+  - Both boxes bring up the number keypad. The $ sits before the order value, and the result is in the larger, bolder type.
+
+**Heights at 375px (Chromium; before is `main` at `b766b61`, built and measured the same way):**
+
+| | Before | After |
+|---|---|---|
+| Homepage | 6,728 px (wuntab.com: 6,692) | 6,661 px |
+| Footer, closed | 810 px (wuntab.com: 766) | 655 px |
+| /contact | 1,835 px | 1,679 px |
+| /pricing | 3,317 px | 3,162 px |
+
+The homepage at 390 is 6,665 px (the limit is 7,000).
+
+**Not met: the footer's 450px target.**
+- The six 48px group rows, the 48px button and three 44px tap rows (the demo link, the address, Terms and Privacy) come to 474px before the logo and the line.
+- The footer is 655px closed, and the test holds it there.
+- To get near 450, the groups would need two to a row, or the top block would have to lose something. That's the owner's call.
+
+**How it was checked:**
+- **New `tests/phone.spec.ts`**, run in Chromium and in WebKit on an iPhone profile, with and without reduced motion:
+  - the closed footer at 375 on /, /contact and /pricing;
+  - each group opens and closes, with one link per row at 44px or more;
+  - Enter and Space toggle a group (Chromium);
+  - every link is still in the page when closed;
+  - from 768px, the four columns;
+  - the demo link in all six places, to https://demo.wuntab.com, `target="_blank"`, `rel="noopener"`;
+  - the cards: snap, 24px peek, no scrollbar, the stills never running;
+  - the homepage at 375 no taller than 6,692.
+- **The calculator test** checks the pre-filled result against the formula (60 × $30 × 52 × 15% and 30%), the keypads, the $ and the result's size.
+- **The footer from 768px is pixel-identical to `main`** on /contact at 768, 1024, 1280 and 1440.
+- **Tests changed:**
+  - The old "demo link stays off" test is replaced.
+  - "Nothing swipes sideways" now allows the one product row.
+  - Tests that look at every visual skip the stills.
+  - Footer link counts look at what shows.
+- **Evidence:** `docs/marketing-site/evidence/mobile-polish/`:
+  - full pages of /, /contact and /pricing at 375 and 1280;
+  - the footer before and after, closed and with Sell open;
+  - the footer at 1280;
+  - the mobile menu;
+  - the hero, the cards, the calculator and the final band at 375.
 
 ---
 

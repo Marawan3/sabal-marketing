@@ -18,8 +18,9 @@ const dollars = (n: number) =>
 /**
  * What the restaurant would keep in a year if its delivery-app orders came
  * direct: orders a week × average order × 52 weeks × the apps' 15–30%
- * commission. Both inputs are the owner's own; nothing is pre-filled, so no
- * average is implied. Real text, no library, like the built visuals.
+ * commission. It opens on the owner's example, 60 orders a week at $30
+ * (2026-10-19), marked as an example, so the range shows at once; both boxes
+ * are the visitor's to change. Real text, no library, like the built visuals.
  */
 export function yearlyRange(orders: number, value: number) {
   const sales = orders * value * WEEKS;
@@ -28,8 +29,8 @@ export function yearlyRange(orders: number, value: number) {
 
 export function SavingsCalculator() {
   const id = useId();
-  const [orders, setOrders] = useState("");
-  const [value, setValue] = useState("");
+  const [orders, setOrders] = useState(String(t.example.orders));
+  const [value, setValue] = useState(String(t.example.value));
   const o = parse(orders);
   const v = parse(value);
   const range = o !== null && v !== null && o * v > 0 ? yearlyRange(o, v) : null;
@@ -37,6 +38,9 @@ export function SavingsCalculator() {
     "block min-h-12 w-full rounded-[12px] border border-ink-muted bg-paper text-body text-ink tabular-nums focus-visible:border-ink";
   return (
     <div className="rounded-[20px] bg-paper p-4 sm:p-8" data-calculator>
+      <p className="mb-3 text-small text-ink-muted sm:mb-4" data-example>
+        {t.example.note}
+      </p>
       <div className="grid grid-cols-2 gap-3 sm:gap-6">
         <label htmlFor={`${id}-o`} className="flex flex-col justify-between text-small font-medium">
           {t.orders}
@@ -57,7 +61,7 @@ export function SavingsCalculator() {
             </span>
             <input
               id={`${id}-v`}
-              inputMode="decimal"
+              inputMode="numeric"
               autoComplete="off"
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -68,7 +72,7 @@ export function SavingsCalculator() {
       </div>
       <div className="mt-5 border-t border-mist pt-4 sm:mt-8 sm:pt-6" aria-live="polite">
         <p className="text-small font-medium">{t.result}</p>
-        <p className="mt-1 text-h3 tabular-nums" data-result>
+        <p className="mt-1 text-h2 text-balance tabular-nums" data-result>
           {range ? `Between ${dollars(range[0])} and ${dollars(range[1])}` : <span className="text-body text-ink-muted">{t.empty}</span>}
         </p>
       </div>

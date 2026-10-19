@@ -1,4 +1,5 @@
 import { CtaLink, TextLink } from "./cta-link";
+import { DemoLink } from "./demo-link";
 import { Section } from "./section";
 import { copy } from "@/lib/copy";
 import { demoHref, demoIsContactForm } from "@/lib/site";
@@ -9,7 +10,8 @@ import { demoHref, demoIsContactForm } from "@/lib/site";
  * Started goes to a scheduling link, a quiet link to /contact follows for
  * owners who would rather write; while it goes to the /contact form itself
  * (2026-10-19), that link would only repeat the button, so it is left out.
- * Not dark, because the kitchen band on the homepage is.
+ * Under the button, "See a live restaurant" (owner, 2026-10-19). Not dark,
+ * because the kitchen band on the homepage is.
  */
 export function FinalCta({ message = true }: { message?: boolean }) {
   return (
@@ -21,6 +23,7 @@ export function FinalCta({ message = true }: { message?: boolean }) {
             {copy.cta.primary}
           </CtaLink>
         </div>
+        <DemoLink tone="saffron" className="mt-2" />
         <p className="mx-auto mt-4 max-w-[40ch] text-body">{copy.finalCta.after}</p>
         {message && !demoIsContactForm ? <TextLink href="/contact">{copy.finalCta.message}</TextLink> : null}
       </div>

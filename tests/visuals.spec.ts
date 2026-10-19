@@ -59,7 +59,8 @@ const pages = [
 ];
 test.use({ timezoneId: "America/New_York" });
 
-const visual = (page: Page, name: string) => page.locator(`main [data-visual="${name}"]`).first();
+/** A visual by name: the player, not a still (the homepage's phone product cards, phone.spec.ts). */
+const visual = (page: Page, name: string) => page.locator(`main [data-visual="${name}"]:not([data-still])`).first();
 
 async function intoView(el: Locator) {
   await el.evaluate((n) => n.scrollIntoView({ block: "center", behavior: "instant" }));
@@ -232,8 +233,8 @@ test("on phones every visual is full width with 16px gutters, and its text rende
   await page.setViewportSize({ width: 390, height: 844 });
   for (const path of pages) {
     await page.goto(path);
-    const found = await page.locator("main [data-demo]").evaluateAll((els) =>
-      // Visuals hidden on phones (the homepage product rows) aren't checked.
+    const found = await page.locator("main [data-demo]:not([data-still])").evaluateAll((els) =>
+      // Visuals hidden on phones (the homepage product rows) aren't checked, nor the product cards' small stills.
       els.filter((el) => el.getBoundingClientRect().width > 0).map((el) => {
         const ground = (el.closest('[class*="ground"], [class*="rounded-[20px]"]') ?? el) as HTMLElement;
         let smallest = 99;

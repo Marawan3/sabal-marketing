@@ -22,9 +22,9 @@ const nav = ["Overview", "Orders", "Menu", "Customers", "Analytics", "Team"];
 const words = o.restaurant.split(" ");
 const initials = (words[0][0] + words[words.length - 1][0]).toUpperCase();
 
-export function OrdersDashboard() {
+export function OrdersDashboard({ still = false }: { still?: boolean }) {
   return (
-    <Visual name="orders" steps={STEPS} description={copy.visuals.orders}>
+    <Visual name="orders" steps={STEPS} description={copy.visuals.orders} still={still}>
       <div className={v.od}>
         <div className={v.odFrame}>
           <aside className={v.odSide}>
