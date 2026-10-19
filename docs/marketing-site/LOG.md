@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · PR #50: Hot Honey Soppressata gets its photo (PR open)
+## 2026-10-19 · PR #50: Hot Honey Soppressata gets its photo (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 50"). Squash commit `f4254e6` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone 52 of 52.
 
 **Why:** PR #48 left Hot Honey Soppressata out of every visual because the asset zip had no photo for it (follow-up 1). The owner sent the photo.
 
@@ -64,7 +64,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 **How it was checked:**
 - Local suite: 134 passed, 1 skipped (chromium, and chromium with reduced motion).
 - Honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` pass.
-- The WebKit iPhone workflow runs on the PR.
+- WebKit iPhone: green, 52 of 52, with and without reduced motion.
 - Evidence: `docs/marketing-site/evidence/hot-honey/hot-honey-{390,1280}.png`, showing the hero menu, the website's Featured cards, the website's menu and /online-menu.
 
 ---
