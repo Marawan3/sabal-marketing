@@ -44,9 +44,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · Get Started goes to the contact form (PR open)
+## 2026-10-19 · PR #46: Get Started goes to the contact form (merged)
 
-**Status:** open, for the owner to merge. This entry moves to "merged" when it is.
+**Merged by:** Claude, on the owner's instruction ("merge 46"). Squash commit `050cf4f` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone 45 of 45.
 
 **Why:** every Get Started opened a mailto link to hello@wuntab.com. On phones without a mail app set up, the button looked like it did nothing. The /contact form sends for real now (`CONTACT_EMAIL_API_KEY` is set, and the owner has tested it).
 
