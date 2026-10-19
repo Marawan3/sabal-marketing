@@ -24,7 +24,7 @@ Recorded 2026-10-02 from the read-only audit of sabal-ros at `92b07e6`. These ar
 
 Open items the owner asked to be recorded. Newest first. Strike one through when it's done, with the PR that did it.
 
-1. **Hot Honey Soppressata photo.** Recorded 2026-10-19 (PR #48). The asset zip had no photo for it, so no visual shows it yet: it's on the menu in `src/lib/demo-order.ts` with `photo: null`, and Buffalo Chicken is the website's fourth Featured card. When the photo comes, save a centred square crop as `public/demo/photos/hot-honey-soppressata-360.webp` (360×360, WebP quality 80) and set its `photo` to `"hot-honey-soppressata"`. It then shows in the Pizzas rows and takes the first Featured card.
+1. ~~**Hot Honey Soppressata photo.**~~ Done in PR #50 (2026-10-19): the owner sent the photo, and it's in `public/demo/photos/hot-honey-soppressata-360.webp`. The pizza shows in the Pizzas rows and takes the website's first Featured card. Recorded 2026-10-19 (PR #48).
 2. **/about founder section.** Recorded 2026-10-13 (PR #30). Fill `src/lib/founder.ts`: the name, a photo in `public/about/` with its pixel size, and four sentences. It renders nothing until then.
 3. **Demo storefront link.** Recorded 2026-10-13 (PR #30). Set `NEXT_PUBLIC_SHOW_DEMO_LINK=true` in Vercel once the live demo restaurant matches the visuals' Palm&Stone Pizza menu, with its photos (2026-10-19, PR #48).
 4. **/pricing comparison sources.** Recorded 2026-10-13 (PR #30). The delivery-app cells for customer fees and customer data cite the largest app's help pages. These were read through search results, because help.doordash.com doesn't resolve from the session. Owner to open them and confirm.
@@ -42,6 +42,30 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 16. ~~**The multi-location diagram on `/how-it-works` is cramped on phones.**~~ Done in PR #24 (2026-10-13): the locations stack on phones.
 17. ~~**3x retakes of all batch-1 screenshots.**~~ Closed by PR #24 (2026-10-13): screenshots replaced with built visuals; PR #20 closed as superseded.
 18. ~~**`analytics.png` retake pending.**~~ Closed by PR #24 (2026-10-13): no screenshots on the site.
+
+---
+
+## 2026-10-19 · PR #50: Hot Honey Soppressata gets its photo (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** PR #48 left Hot Honey Soppressata out of every visual because the asset zip had no photo for it (follow-up 1). The owner sent the photo.
+
+**What changed:**
+- **The photo:** `public/demo/photos/hot-honey-soppressata-360.webp`, a centred square of the owner's 1254×1254 image at 360×360, WebP quality 80, as the brief set out (41 KB, like the others). ASSETS.md lists it.
+- **The menu** (`demo-order.ts`): the pizza has its photo, so it shows as the third Pizzas row in the hero, /online-menu and the website's menu.
+- **The website's Featured cards** (`demo-data.ts`): Hot Honey Soppressata, White Pie, Buffalo Wings and Chicken Parm Sandwich, as the owner asked. Buffalo Chicken, which stood in, goes back to the menu rows only. The stand-in logic is gone, since every featured dish now has its photo.
+- **Test** (`tests/demo-restaurant.spec.ts`): Hot Honey Soppressata is now expected among the dishes the visuals show, and its photo file must exist.
+- **The hero's first paint on desktop:** the phone and the kitchen display now sit in two fixed grid columns, with the same sizes and positions as before.
+  - Why: the full suite caught a 0.017 layout shift at 1440 under load. On a slow CPU the browser can paint before it has read the kitchen display's markup. The centred row put the phone in the middle, then moved it left when the display arrived.
+  - The longer phone markup since PR #48 made that early paint more likely.
+  - With the grid, the phone starts in its place. Measured with the CPU slowed 6× and 12×: the phone is at x 230 on the first frame, where it was a jump from x 570 before.
+
+**How it was checked:**
+- Local suite: 134 passed, 1 skipped (chromium, and chromium with reduced motion).
+- Honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` pass.
+- The WebKit iPhone workflow runs on the PR.
+- Evidence: `docs/marketing-site/evidence/hot-honey/hot-honey-{390,1280}.png`, showing the hero menu, the website's Featured cards, the website's menu and /online-menu.
 
 ---
 

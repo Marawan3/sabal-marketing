@@ -29,7 +29,7 @@ The screenshot pipeline went with them: the shot catalog, `SHOTS.md`, `public/sh
 
 Since 2026-10-19 the demo restaurant is the owner's **Palm&Stone Pizza**, and the visuals carry its pictures: a photo on every dish they show, the website's and the catering page's photos, and its logo mark. **Every photo is AI-generated for this fictional demo restaurant.** None shows a real restaurant, a real dish served anywhere, or a real person.
 
-Source: `palmstone-pizza-assets.zip`, sent by the owner on 2026-10-19 (its `README.txt` maps each dish to its file). The zip's `web/` files are used as they came, already sized and saved as WebP; its `demo-restaurant-uploads/` JPEGs are for the live demo restaurant's menu and are not in this repo.
+Source: `palmstone-pizza-assets.zip`, sent by the owner on 2026-10-19 (its `README.txt` maps each dish to its file), and the Hot Honey Soppressata photo, sent on its own the same day. The zip's `web/` files are used as they came, already sized and saved as WebP; its `demo-restaurant-uploads/` JPEGs are for the live demo restaurant's menu and are not in this repo.
 
 They are plain `<img>` tags with their width and height set (no layout shift) and `alt=""`, because every visual is `aria-hidden` with one sentence for screen readers (`src/components/demo-img.tsx`). The hero phone's load at once; every other one is `loading="lazy"`. The homepage's pictures weigh about 680 KB in all (a test keeps them under 1 MB).
 
@@ -40,7 +40,8 @@ They are plain `<img>` tags with their width and height set (no layout shift) an
 | `pepperoni-pizza-360.webp` | 360×360 | Pepperoni Pizza | Menu rows (hero, /online-menu, the website's menu) |
 | `pepperoni-pizza-900.webp` | 900×900 | Pepperoni Pizza | The hero's dish sheet, the /upsells sheet (both with steam), the /menu-management editor |
 | `margherita-360.webp` | 360×360 | Margherita | Menu rows |
-| `buffalo-chicken-pizza-360.webp` | 360×360 | Buffalo Chicken | Menu rows; the website's fourth Featured card |
+| `hot-honey-soppressata-360.webp` | 360×360 | Hot Honey Soppressata | Menu rows; the website's first Featured card. Sent by the owner on its own on 2026-10-19 (a 1254×1254 WebP, also AI-generated); exported here as a centred square crop at 360×360, WebP quality 80 |
+| `buffalo-chicken-pizza-360.webp` | 360×360 | Buffalo Chicken | Menu rows |
 | `white-pie-360.webp` | 360×360 | White Pie | Menu rows; Featured |
 | `garlic-knots-360.webp` | 360×360 | Garlic Knots | "Goes well with" (/upsells) |
 | `loaded-fries-360.webp` | 360×360 | Loaded Fries | "Goes well with" (/upsells) |
@@ -52,7 +53,7 @@ They are plain `<img>` tags with their width and height set (no layout shift) an
 | `hero-oven-900.webp` | 900×600 | A pizza at the stone oven | The website's hero image, above its heading (cropped with `object-fit: cover`) |
 | `catering-spread-900.webp` | 900×600 | A catering spread: pizzas, wings, sandwiches, salad | The top of the catering page |
 
-**Still to come:** Hot Honey Soppressata. The zip has no photo for it (its README says "still to come"), so no visual shows it yet: it is on the menu in `demo-order.ts` with `photo: null`, and the website features Buffalo Chicken in its place. When the photo arrives, add `hot-honey-soppressata-360.webp` (360×360, a centred square crop, WebP quality 80, like the others) and set its `photo`; it then takes the first Featured card (LOG.md follow-up).
+**Hot Honey Soppressata** had no photo in the zip. Its photo came separately the same day and is in the table above, so every pizza on the menu now shows.
 
 ### Logo: `public/demo/logo/`
 
