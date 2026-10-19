@@ -44,9 +44,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · PR #44: the hero phone no longer turns over to the kitchen display (open, for the owner to merge)
+## 2026-10-19 · PR #44: the hero phone no longer turns over to the kitchen display (merged)
 
-**Status:** open, CI green (Vercel, WebKit iPhone with and without reduced motion). Not merged: the owner merges this one.
+**Merged by:** Claude, on the owner's instruction ("merge 44"). Squash commit `6c73383` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone with and without reduced motion.
 
 **Why:** below 1024px the hero phone turned over after the confirmation and showed the kitchen display on its back. That read as if the display ran on a phone, and the kitchen band just below already shows it.
 
