@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · PR #52: The hero restarts with a crossfade, never a blank phone (PR open)
+## 2026-10-19 · PR #52: The hero restarts with a crossfade, never a blank phone (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 52"). Squash commit `ee26f4a` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green: Vercel, and WebKit iPhone 56 of 56.
 
 **Why:** after the confirmation, the hero phone faded to blank white for about a second, status bar and notch included, before the storefront came back. A white cover over the whole screen went up at the restart and lifted at the top of the next loop.
 
@@ -71,7 +71,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 - **The 390 restart test** now checks the crossfade (half-faded at 150 ms, gone by 320 ms) and that the menu then stands exactly as at the top of the loop.
 - **The reduced-motion hero test** counts the menu's second dip, back to the top under the confirmation.
 - **Local suite: 138 passed, 1 skipped** (chromium, and chromium with reduced motion). Honesty, copy-lint, boundary-check, lint, `tsc` and `motion --check` pass.
-- **WebKit iPhone** runs on the PR.
+- **WebKit iPhone: green, 56 of 56**, with and without reduced motion, including the four new never-blank checks.
 - **Evidence:** `docs/marketing-site/evidence/hero-restart/restart-{390,1280}-{motion,reduced}.png`, before over after, the same six moments around the restart.
 
 ---
