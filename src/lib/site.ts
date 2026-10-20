@@ -29,13 +29,17 @@ export const demoIsContactForm = /^\/contact(?:[?#]|$)/.test(demoHref);
  * "See a live restaurant": the demo restaurant's own website (owner,
  * 2026-10-19: demo.wuntab.com is live and ready), opened in a new tab and
  * marked "Demo restaurant" (DemoLink). Under the hero signup, in the mobile
- * menu, the footer and the final band, the homepage products section and
- * /restaurant-websites. On unless NEXT_PUBLIC_SHOW_DEMO_LINK is "false".
+ * menu and the final band, the homepage products section and
+ * /restaurant-websites; on phones, the footer's Company group ends with
+ * "Live demo restaurant" (owner, 2026-10-20). On unless
+ * NEXT_PUBLIC_SHOW_DEMO_LINK is "false".
  */
 export const demoStorefront = {
   href: `https://${demoSite.host}`,
   label: "See a live restaurant",
   tag: "Demo restaurant",
+  /** The phone footer's Company link. */
+  footerLabel: "Live demo restaurant",
   on: process.env.NEXT_PUBLIC_SHOW_DEMO_LINK !== "false",
 } as const;
 

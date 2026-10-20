@@ -1,10 +1,9 @@
 import { SmartLink } from "./smart-link";
-import { CtaLink } from "./cta-link";
-import { DemoLink } from "./demo-link";
+import { ExternalIcon } from "./demo-link";
 import { Logo } from "./logo";
 import { builtProducts, bySlug, megaMenu, pillars, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { companyLinks, demoHref, legalNav, primaryLinks, site } from "@/lib/site";
+import { companyLinks, demoStorefront, legalNav, primaryLinks, site } from "@/lib/site";
 
 /** Every product page: the mega-menu's, in its order, then the secondary pages, then How it works and Pricing. */
 const productLinks = [
@@ -19,9 +18,12 @@ const solutionLinks = solutions.map((s) => ({ href: solutionHref(s.slug), label:
 /**
  * Phones: the mobile menu's groups (owner, 2026-10-19), each with every
  * built page in its pillar (the secondary pages too, so the footer still
- * links to every page). How it works and Pricing join Company.
+ * links to every page). How it works and Pricing join Company, and the
+ * demo restaurant ends it, in a new tab (owner, 2026-10-20).
  */
-const phoneGroups = [
+type FooterLink = { href: string; label: string; external?: boolean };
+
+const phoneGroups: { title: string; links: FooterLink[] }[] = [
   ...megaMenu.map((group) => ({
     title: pillars[group.pillar].name,
     links: [...group.slugs, ...builtProducts]
@@ -29,7 +31,14 @@ const phoneGroups = [
       .map((slug) => ({ href: productHref(slug)!, label: bySlug[slug].name })),
   })),
   { title: "Solutions", links: solutionLinks },
-  { title: "Company", links: [...primaryLinks, ...companyLinks] },
+  {
+    title: "Company",
+    links: [
+      ...primaryLinks,
+      ...companyLinks,
+      ...(demoStorefront.on ? [{ href: demoStorefront.href, label: demoStorefront.footerLabel, external: true }] : []),
+    ],
+  },
 ].filter((group) => group.links.length > 0);
 
 const year = new Date().getFullYear();
@@ -93,7 +102,7 @@ function Legal() {
 }
 
 /** A phone footer group: a 48px row that opens to its links, one per row. Closed, the links stay in the page. */
-function Group({ title, links }: { title: string; links: readonly { href: string; label: string }[] }) {
+function Group({ title, links }: { title: string; links: readonly FooterLink[] }) {
   return (
     <details name="footer-group" className="group/fg border-b border-paper/15" data-footer-group>
       <summary className="flex min-h-12 cursor-pointer items-center justify-between text-body font-medium">
@@ -116,9 +125,23 @@ function Group({ title, links }: { title: string; links: readonly { href: string
       <ul className="pb-2">
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} className="flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
-              {link.label}
-            </SmartLink>
+            {link.external ? (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener"
+                data-demo-link
+                className="flex min-h-11 items-center gap-2 text-small text-paper/80 hover:text-paper"
+              >
+                {link.label}
+                <ExternalIcon />
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            ) : (
+              <SmartLink href={link.href} className="flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
+                {link.label}
+              </SmartLink>
+            )}
           </li>
         ))}
       </ul>
@@ -130,22 +153,9 @@ export function SiteFooter() {
   return (
     <footer className="on-dark bg-ink text-paper">
       <div className="mx-auto max-w-[1120px] px-4 py-6 sm:px-8 md:py-14 lg:px-12 lg:py-20">
-        {/* Phones (owner, 2026-10-19): the logo, the price, Get Started and the demo restaurant, then the groups. */}
+        {/* Phones: the logo, then the groups (owner, 2026-10-20: the $0 line, Get Started and the demo link went; the final band right above has them). */}
         <div className="md:hidden" data-footer="phone">
           <Logo tone="dark" size={28} />
-          {/* One sentence a line: at phone width the line would leave "checkout." on its own. */}
-          <p className="mt-3 text-small text-paper/80">
-            {copy.footer.line.split(/(?<=\.) /).map((sentence, i) => (
-              <span key={i} className="block">
-                {i > 0 ? " " : null}
-                {sentence}
-              </span>
-            ))}
-          </p>
-          <CtaLink href={demoHref} className="mt-4 w-full">
-            {copy.cta.primary}
-          </CtaLink>
-          <DemoLink tone="dark" className="mt-1 w-full" />
           <div className="mt-4 border-t border-paper/15">
             {phoneGroups.map((group) => (
               <Group key={group.title} title={group.title} links={group.links} />

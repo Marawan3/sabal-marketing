@@ -27,33 +27,38 @@ export function OrdersDashboard({ still = false }: { still?: boolean }) {
     <Visual name="orders" steps={STEPS} description={copy.visuals.orders} still={still}>
       <div className={v.od}>
         <div className={v.odFrame}>
-          <aside className={v.odSide}>
-            <div className={v.odBrand}>
-              <span className={v.odTile}>W</span>
-              <span>
-                <b>WUNTAB</b>
-                <span className={v.odDim}>Restaurant OS</span>
-              </span>
-            </div>
-            {nav.map((item) => (
-              <div key={item} className={item === "Orders" ? `${v.odNav} ${v.odNavOn}` : v.odNav}>
-                {item}
+          {/* A still is the focal crop's first screen: no sidebar, top bar or drawer (CSS hides them at that size anyway). */}
+          {still ? null : (
+            <aside className={v.odSide}>
+              <div className={v.odBrand}>
+                <span className={v.odTile}>W</span>
+                <span>
+                  <b>WUNTAB</b>
+                  <span className={v.odDim}>Restaurant OS</span>
+                </span>
               </div>
-            ))}
-            <div className={v.odOrg}>
-              {/* The account's initials: the first and last word of its name. */}
-              <span className={v.odAvatar}>{initials}</span>
-              <span>
-                <b>{o.restaurant}</b>
-                <span className={v.odDim}>{d.location}</span>
-              </span>
-            </div>
-          </aside>
+              {nav.map((item) => (
+                <div key={item} className={item === "Orders" ? `${v.odNav} ${v.odNavOn}` : v.odNav}>
+                  {item}
+                </div>
+              ))}
+              <div className={v.odOrg}>
+                {/* The account's initials: the first and last word of its name. */}
+                <span className={v.odAvatar}>{initials}</span>
+                <span>
+                  <b>{o.restaurant}</b>
+                  <span className={v.odDim}>{d.location}</span>
+                </span>
+              </div>
+            </aside>
+          )}
           <div className={v.odMain}>
-            <div className={v.odTop}>
-              <b>Orders</b>
-              <span className={v.odDim}>Signed in as Owner</span>
-            </div>
+            {still ? null : (
+              <div className={v.odTop}>
+                <b>Orders</b>
+                <span className={v.odDim}>Signed in as Owner</span>
+              </div>
+            )}
             <div className={v.odPage}>
               <div className={v.odH1}>Orders</div>
               <div className={v.odDim}>Track and manage live orders at this location.</div>
@@ -95,65 +100,69 @@ export function OrdersDashboard({ still = false }: { still?: boolean }) {
               </div>
             </div>
           </div>
-          <div className={v.odShade} />
-          <div className={v.odDrawer}>
-            <div className={v.odDrawerHead}>
-              <span>
-                <b>Order #{d.open.number}</b>
-                <span className={v.odDim}>Pickup</span>
-              </span>
-              <span className={v.odDim}>×</span>
-            </div>
-            <div className={v.odDrawerBody}>
-              <div>
-                <span className={v.odStatus} data-status="Preparing">
-                  Preparing
-                </span>{" "}
-                <span className={v.odDim}>{d.open.placed}</span>
-              </div>
-              <div>
-                <div className={v.odLabel}>Customer</div>
-                <div>{d.open.who}</div>
-                <div className={v.odDim}>Pickup</div>
-              </div>
-              <div>
-                <div className={v.odLabel}>Items</div>
-                {d.open.items.map((item) => (
-                  <div key={item.name} className={v.odLine}>
-                    <span>
-                      {item.qty}× {item.name}
-                      {item.mods ? <span className={v.odDim}>{item.mods}</span> : null}
-                    </span>
-                    <span>{item.price}</span>
+          {still ? null : (
+            <>
+              <div className={v.odShade} />
+              <div className={v.odDrawer}>
+                <div className={v.odDrawerHead}>
+                  <span>
+                    <b>Order #{d.open.number}</b>
+                    <span className={v.odDim}>Pickup</span>
+                  </span>
+                  <span className={v.odDim}>×</span>
+                </div>
+                <div className={v.odDrawerBody}>
+                  <div>
+                    <span className={v.odStatus} data-status="Preparing">
+                      Preparing
+                    </span>{" "}
+                    <span className={v.odDim}>{d.open.placed}</span>
                   </div>
-                ))}
-              </div>
-              <div className={v.odTotals}>
-                {[
-                  ["Subtotal", d.open.subtotal],
-                  [o.checkout.feeLabel, d.open.fee],
-                  ["Tax", d.open.tax],
-                  ["Tip", d.open.tip],
-                ].map(([label, value]) => (
-                  <div key={label} className={v.odLine}>
-                    <span className={v.odDim}>{label}</span>
-                    <span className={v.odDim}>{value}</span>
+                  <div>
+                    <div className={v.odLabel}>Customer</div>
+                    <div>{d.open.who}</div>
+                    <div className={v.odDim}>Pickup</div>
                   </div>
-                ))}
-                <div className={`${v.odLine} ${v.odGrand}`}>
-                  <b>Total</b>
-                  <b>{d.open.total}</b>
+                  <div>
+                    <div className={v.odLabel}>Items</div>
+                    {d.open.items.map((item) => (
+                      <div key={item.name} className={v.odLine}>
+                        <span>
+                          {item.qty}× {item.name}
+                          {item.mods ? <span className={v.odDim}>{item.mods}</span> : null}
+                        </span>
+                        <span>{item.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={v.odTotals}>
+                    {[
+                      ["Subtotal", d.open.subtotal],
+                      [o.checkout.feeLabel, d.open.fee],
+                      ["Tax", d.open.tax],
+                      ["Tip", d.open.tip],
+                    ].map(([label, value]) => (
+                      <div key={label} className={v.odLine}>
+                        <span className={v.odDim}>{label}</span>
+                        <span className={v.odDim}>{value}</span>
+                      </div>
+                    ))}
+                    <div className={`${v.odLine} ${v.odGrand}`}>
+                      <b>Total</b>
+                      <b>{d.open.total}</b>
+                    </div>
+                  </div>
+                </div>
+                <div className={v.odActions}>
+                  <span className={v.odPrimary}>Mark ready</span>
+                  <span className={v.odButtons}>
+                    <span className={v.odSecondary}>Print receipt</span>
+                    <span className={`${v.odSecondary} ${v.odDanger}`}>Cancel order</span>
+                  </span>
                 </div>
               </div>
-            </div>
-            <div className={v.odActions}>
-              <span className={v.odPrimary}>Mark ready</span>
-              <span className={v.odButtons}>
-                <span className={v.odSecondary}>Print receipt</span>
-                <span className={`${v.odSecondary} ${v.odDanger}`}>Cancel order</span>
-              </span>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </Visual>

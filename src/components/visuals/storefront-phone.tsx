@@ -50,27 +50,30 @@ export function StorefrontPhone({ cut = false, width, still = false }: { cut?: b
             </div>
           </div>
         </div>
-        <div className={`${v.layer} ${v.slideB}`}>
-          <div className={h.bar}>
-            <Brand />
+        {/* A still is the first screen only: the website, not the menu it opens. */}
+        {still ? null : (
+          <div className={`${v.layer} ${v.slideB}`}>
+            <div className={h.bar}>
+              <Brand />
+            </div>
+            <MenuHead />
+            <div className={h.tabs}>
+              {o.tabs.map((tab) => (
+                <span key={tab} className={`${h.pill} ${tab === o.category ? h.pillOn : ""}`}>
+                  {tab}
+                </span>
+              ))}
+            </div>
+            <div className={h.h2}>{o.category}</div>
+            <div className={h.rows}>
+              {o.rows.slice(0, 3).map((row) => (
+                <div key={row.name} className={h.row}>
+                  <MenuRow row={row} />
+                </div>
+              ))}
+            </div>
           </div>
-          <MenuHead />
-          <div className={h.tabs}>
-            {o.tabs.map((tab) => (
-              <span key={tab} className={`${h.pill} ${tab === o.category ? h.pillOn : ""}`}>
-                {tab}
-              </span>
-            ))}
-          </div>
-          <div className={h.h2}>{o.category}</div>
-          <div className={h.rows}>
-            {o.rows.slice(0, 3).map((row) => (
-              <div key={row.name} className={h.row}>
-                <MenuRow row={row} />
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
       </Phone>
     </Visual>
   );

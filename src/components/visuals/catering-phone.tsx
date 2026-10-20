@@ -51,10 +51,13 @@ export function CateringPhone({ cut = false, width, still = false }: { cut?: boo
                     </span>
                     <span className={h.meta}>{c.promise}</span>
                   </div>
-                  <div className={v.thanks}>
-                    <b>Thank you.</b>
-                    <span>{c.promise}</span>
-                  </div>
+                  {/* A still is the first screen only: no thank-you. */}
+                  {still ? null : (
+                    <div className={v.thanks}>
+                      <b>Thank you.</b>
+                      <span>{c.promise}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

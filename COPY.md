@@ -140,9 +140,9 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 From 768px, four columns: **Product** (every product page, then How it works and Pricing), **Solutions** (the four solution pages), **Company** (About, Contact), **Legal** (Terms, Privacy). Under them: the logo and © year, then hello@wuntab.com and **Or send a message**. The blurb under the logo went: it repeated the hero's line.
 
-**On phones (2026-10-19):**
-- The logo, then **$0 for the restaurant. Customers pay 5% at checkout.**, a full-width **Get Started**, and **See a live restaurant ↗ Demo restaurant**.
-- Six closed groups, the mobile menu's: **Sell** (Online Ordering, Delivery, Catering, Online Menu, Recommended Add-ons), **Grow** (Restaurant Websites, Restaurant SEO, Loyalty & Rewards), **Operate** (Menu Management, Order Management, Kitchen Display, Payments), **Scale** (Integrations), **Solutions** (the four solution pages), **Company** (How it works, Pricing, About, Contact). How it works and Pricing joined Company so every page is still linked.
+**On phones (2026-10-19; top trimmed 2026-10-20):**
+- The logo. The $0 line, Get Started and See a live restaurant went from here on 2026-10-20: the final band right above has them. On /contact, which has no final band, Get Started is in the header.
+- Six closed groups, the mobile menu's: **Sell** (Online Ordering, Delivery, Catering, Online Menu, Recommended Add-ons), **Grow** (Restaurant Websites, Restaurant SEO, Loyalty & Rewards), **Operate** (Menu Management, Order Management, Kitchen Display, Payments), **Scale** (Integrations), **Solutions** (the four solution pages), **Company** (How it works, Pricing, About, Contact, **Live demo restaurant ↗**). How it works and Pricing joined Company so every page is still linked. Live demo restaurant opens demo.wuntab.com in a new tab.
 - hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Or send a message" on phones: Contact is in Company.
 
 ## Navigation (2026-10-13)
@@ -356,7 +356,7 @@ All six follow the product template. They're linked from the footer and from the
 
 ## Demo link (on since 2026-10-19)
 - **See a live restaurant**, then a new-tab icon and **Demo restaurant** in small type, so nobody takes it for a customer's site. It opens https://demo.wuntab.com in a new tab.
-- Where: under the hero's $0 card (centred), in the mobile menu above Get Started, in the phone footer, under the final band's button, under the homepage products, and in /restaurant-websites' hero links.
+- Where: under the hero's $0 card (centred), in the mobile menu above Get Started, under the final band's button, under the homepage products, and in /restaurant-websites' hero links. In the phone footer it's the last link in Company, as **Live demo restaurant ↗** (2026-10-20).
 - The owner said demo.wuntab.com is live and ready (2026-10-19), so it shows by default. Setting `NEXT_PUBLIC_SHOW_DEMO_LINK` to `false` in Vercel hides it everywhere. (It isn't set in Vercel today.)
 
 ## /how-it-works

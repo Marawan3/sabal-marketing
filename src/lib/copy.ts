@@ -279,10 +279,6 @@ export const copy = {
     after: "20-minute call. We show WunTab on your own menu. No pressure.",
     message: "Or send a message",
   },
-  /** The phone footer's line under the logo (owner, 2026-10-19). Same terms as SERVICE_FEE_CLAUSE. */
-  footer: {
-    line: "$0 for the restaurant. Customers pay 5% at checkout.",
-  },
   /**
    * /contact: the form posts to /api/contact, which emails hello@wuntab.com.
    * Get Started lands here too, as /contact?intent=call (owner, 2026-10-19).

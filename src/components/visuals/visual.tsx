@@ -11,6 +11,7 @@ import v from "./visuals.module.css";
  * `still`: the visual's first frame and nothing else, for the homepage's
  * product cards on phones (owner, 2026-10-19). No player and no script: it
  * never gets data-run, so globals.css holds every animation at its start.
+ * Each visual leaves its later screens out of a still (2026-10-20).
  * No pause button and no sentence for screen readers; the card around it
  * says what it is.
  */

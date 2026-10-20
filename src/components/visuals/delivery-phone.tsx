@@ -26,8 +26,13 @@ export function DeliveryPhone({ cut = false, width, still = false }: { cut?: boo
     <Visual name="delivery" steps={STEPS} description={copy.visuals.delivery} className={v.delivery} still={still}>
       <Phone cut={cut} width={width}>
         <Checkout />
-        <Confirmation />
-        <Tracking />
+        {/* A still is the first screen only. */}
+        {still ? null : (
+          <>
+            <Confirmation />
+            <Tracking />
+          </>
+        )}
       </Phone>
     </Visual>
   );

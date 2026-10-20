@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
+import { demoOrder } from "../src/lib/demo-order";
 import { companyLinks, demoHref, demoStorefront, primaryLinks } from "../src/lib/site";
 
 /**
@@ -20,13 +21,11 @@ const phone = { width: 375, height: 812 };
 const HOMEPAGE_BEFORE = 6_692;
 
 /**
- * The closed footer at 375. The owner's target was 450px; six 48px group
- * rows, the 48px Get Started button and three 44px tap rows (the demo link,
- * the address and Terms and Privacy) are 474px on their own, before the logo
- * and the line, so the footer is held at what it measured instead (655px,
- * from 766px).
+ * The closed footer at 375: the owner's target, 520px (2026-10-20), once the
+ * $0 line, Get Started and the demo link left the top of it. (The first
+ * target, 450px, couldn't hold those too: 766px before, 655px with them.)
  */
-const FOOTER_CLOSED_MAX = 660;
+const FOOTER_CLOSED_MAX = 520;
 
 const groupTitles = ["Sell", "Grow", "Operate", "Scale", "Solutions", "Company"];
 
@@ -36,7 +35,8 @@ async function noSideScroll(page: Page) {
 
 test("phone footer: six closed groups, each opens and closes, every link still in the page", async ({ page, browserName }) => {
   await page.setViewportSize(phone);
-  for (const path of ["/", "/contact", "/pricing"]) {
+  // /contact last: the checks after the loop run on it.
+  for (const path of ["/", "/pricing", "/contact"]) {
     await page.goto(path);
     const footer = page.locator("footer");
     const top = footer.locator('[data-footer="phone"]');
@@ -53,16 +53,16 @@ test("phone footer: six closed groups, each opens and closes, every link still i
 
   const footer = page.locator("footer");
   const top = footer.locator('[data-footer="phone"]');
-  // Above the groups: the logo, the line, Get Started full width and the demo restaurant.
+  // Above the groups, only the logo (owner, 2026-10-20): the final band right above has Get Started and the demo link.
   await expect(top.locator("[data-logo]").first()).toBeVisible();
-  await expect(top).toContainText(copy.footer.line);
-  const start = top.getByRole("link", { name: copy.cta.primary });
-  await expect(start).toHaveAttribute("href", demoHref);
-  const startBox = (await start.boundingBox())!;
-  const groupsBox = (await top.locator("details").first().boundingBox())!;
-  expect(Math.round(startBox.width)).toBe(Math.round(groupsBox.width));
-  expect(startBox.height).toBeGreaterThanOrEqual(48);
-  await expect(top.locator("[data-demo-link]")).toBeVisible();
+  await expect(top.getByRole("link", { name: copy.cta.primary })).toHaveCount(0);
+  await expect(top).not.toContainText("Customers pay 5% at checkout");
+  await expect(top).not.toContainText(demoStorefront.label);
+  // /contact has no final band, and Get Started is still in its header.
+  await expect(page.locator("#cta")).toHaveCount(0);
+  const headerStart = page.locator("header").getByRole("link", { name: copy.cta.primary });
+  await expect(headerStart).toBeVisible();
+  await expect(headerStart).toHaveAttribute("href", demoHref);
 
   // Each group: a 48px row; open, one link per row at 44px or more; closed again, hidden but still in the page.
   const groups = top.locator("details[data-footer-group]");
@@ -98,6 +98,18 @@ test("phone footer: six closed groups, each opens and closes, every link still i
     await expect(groups.first()).toHaveJSProperty("open", false);
   }
 
+  // Company ends with the demo restaurant, in a new tab, with the new-tab icon.
+  const company = groups.nth(groupTitles.indexOf("Company"));
+  await company.locator("summary").click();
+  const demo = company.locator("a").last();
+  await expect(demo).toHaveText(new RegExp(`^${demoStorefront.footerLabel}`));
+  await expect(demo).toHaveAttribute("href", "https://demo.wuntab.com");
+  await expect(demo).toHaveAttribute("target", "_blank");
+  await expect(demo).toHaveAttribute("rel", /\bnoopener\b/);
+  await expect(demo.locator('svg[aria-hidden="true"]')).toHaveCount(1);
+  await expect(top.locator("[data-demo-link]")).toHaveCount(1);
+  await company.locator("summary").click();
+
   // Closed, every page the footer links to is still in the groups (they're crawl paths).
   const hrefs = await groups.locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
   const expected = [
@@ -105,6 +117,7 @@ test("phone footer: six closed groups, each opens and closes, every link still i
     ...solutions.map((s) => solutionHref(s.slug)),
     ...primaryLinks.map((l) => l.href),
     ...companyLinks.map((l) => l.href),
+    demoStorefront.href,
   ];
   expect([...hrefs].sort()).toEqual([...expected].sort());
   // Each product sits under its own pillar.
@@ -168,8 +181,16 @@ test("See a live restaurant: on by default, in every place, to demo.wuntab.com i
   await check(band, "final band");
   const bandButton = (await page.locator("#cta").getByRole("link", { name: copy.cta.primary }).boundingBox())!;
   expect((await band.boundingBox())!.y).toBeGreaterThanOrEqual(bandButton.y + bandButton.height);
-  // The footer.
-  await check(page.locator('footer [data-footer="phone"] [data-demo-link]'), "footer");
+  // The phone footer: the last link in Company, "Live demo restaurant" (owner, 2026-10-20).
+  const company = page.locator('footer [data-footer="phone"] details', { hasText: "Company" });
+  await company.locator("summary").click();
+  const inFooter = company.locator("[data-demo-link]");
+  await expect(inFooter).toBeVisible();
+  await expect(inFooter).toHaveAttribute("href", "https://demo.wuntab.com");
+  await expect(inFooter).toHaveAttribute("target", "_blank");
+  await expect(inFooter).toHaveAttribute("rel", /\bnoopener\b/);
+  await expect(inFooter).toContainText(demoStorefront.footerLabel);
+  await company.locator("summary").click();
   // The mobile menu, above Get Started.
   await page.locator("header summary", { hasText: "Menu" }).click();
   const menu = page.locator('header nav[aria-label="Mobile"]');
@@ -204,6 +225,18 @@ test("products on phones: cards to swipe, each a still of its visual, its name, 
     await expect(still.locator("button")).toHaveCount(0);
     expect(await still.evaluate((el) => el.getAnimations({ subtree: true }).filter((a) => a.playState === "running").length)).toBe(0);
     expect(Math.round((await card.locator(":scope > div").first().boundingBox())!.height)).toBe(160);
+  }
+  // Each still is its visual's first screen only (owner, 2026-10-20): none of the later ones are in the page.
+  const later: Record<string, string> = {
+    "online-ordering": demoOrder.tabs[1], // the menu the website opens
+    delivery: "Delivered", // the tracking page
+    catering: "Thank you.", // the sent form
+    "order-management": "Mark ready", // the order drawer
+  };
+  for (const [i, slug] of copy.products.slugs.entries()) {
+    expect(await cards.nth(i).locator("[data-still]").textContent(), slug).not.toContain(later[slug]);
+    // The same visual, playing on the wider rows, has it.
+    expect(await page.locator("#products > div > ul:not([data-product-cards]) > li").nth(i).locator("[data-demo]").textContent(), slug).toContain(later[slug]);
   }
   // The first card sits on the gutter; the next one peeks about 24px.
   const first = (await cards.nth(0).boundingBox())!;
