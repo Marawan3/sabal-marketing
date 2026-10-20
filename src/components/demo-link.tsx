@@ -1,3 +1,6 @@
+import { DemoImg } from "./demo-img";
+import { copy } from "@/lib/copy";
+import { demoOrder, photoOf } from "@/lib/demo-order";
 import { demoStorefront } from "@/lib/site";
 
 const tones = {
@@ -36,6 +39,73 @@ export function DemoLink({ tone = "light", className = "" }: { tone?: keyof type
       <span className={`underline underline-offset-4 transition-colors duration-150 ${t.link}`}>{demoStorefront.label}</span>
       <ExternalIcon />
       <span className={`text-small font-normal ${t.tag}`}>{demoStorefront.tag}</span>
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
+
+/**
+ * The Product menu's demo card (owner, 2026-10-20): the demo restaurant's
+ * pepperoni pizza, "Demo restaurant", its name, what it is, and "See a live
+ * restaurant", in a new tab like the other demo links. The photo loads only
+ * once the menu opens. Nothing while the demo link is off.
+ */
+export function DemoCard() {
+  if (!demoStorefront.on) return null;
+  return (
+    <a
+      href={demoStorefront.href}
+      target="_blank"
+      rel="noopener"
+      data-demo-link
+      data-demo-card
+      className="group/card flex flex-col self-start overflow-hidden rounded-[16px] bg-panel"
+    >
+      <DemoImg src={photoOf("pepperoni-pizza", 900)} width={300} height={150} className="aspect-[2/1] h-auto w-full object-cover" />
+      <span className="flex flex-col gap-1 p-4">
+        <span className="text-small text-ink-muted">{demoStorefront.tag}</span>
+        <span className="text-body font-[650] tracking-[-0.01em]">{demoOrder.restaurant}</span>
+        <span className="mb-2 text-small">{copy.nav.demoCard}</span>
+        <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold underline underline-offset-4 group-hover/card:decoration-2">
+          {demoStorefront.label}
+          <ExternalIcon />
+        </span>
+      </span>
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
+
+/**
+ * The phone menu's compact demo row (owner, 2026-10-20): an 88px thumbnail,
+ * "Demo restaurant · Palm&Stone Pizza" and the link. That first line is 241px
+ * in the small size, so it's one line from a 394px screen; narrower, it's two
+ * lines with the dot hidden, so it never breaks inside the name or ends a
+ * line on the dot.
+ */
+export function DemoRow({ className = "" }: { className?: string }) {
+  if (!demoStorefront.on) return null;
+  return (
+    <a
+      href={demoStorefront.href}
+      target="_blank"
+      rel="noopener"
+      data-demo-link
+      className={`flex min-h-[88px] items-center gap-3.5 overflow-hidden rounded-[14px] bg-panel pr-3 ${className}`}
+    >
+      <DemoImg src={photoOf("pepperoni-pizza")} width={88} height={88} className="h-[88px] w-[88px] shrink-0 object-cover" />
+      <span className="@container flex min-w-0 flex-1 flex-col gap-0.5">
+        <span data-demo-names className="text-small text-ink-muted">
+          <span className="whitespace-nowrap">{demoStorefront.tag}</span>
+          <span data-sep className="@max-[248px]:hidden">{" · "}</span>
+          <br className="@min-[248px]:hidden" />
+          <span className="whitespace-nowrap">{demoOrder.restaurant}</span>
+        </span>
+        <span className="inline-flex items-center gap-1.5 text-body font-semibold underline underline-offset-4">
+          {demoStorefront.label}
+          <ExternalIcon />
+        </span>
+      </span>
       <span className="sr-only">(opens in a new tab)</span>
     </a>
   );

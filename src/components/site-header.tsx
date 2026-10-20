@@ -1,9 +1,10 @@
 import { SmartLink } from "./smart-link";
 import { CtaLink } from "./cta-link";
-import { DemoLink } from "./demo-link";
+import { DemoCard, DemoRow } from "./demo-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
-import { bySlug, megaMenu, pillars, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
+import { NavIcon, isIconName, solutionIcons, type IconName } from "./nav-icon";
+import { productMenu, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { appHref, companyLinks, demoHref, primaryLinks } from "@/lib/site";
 
@@ -15,16 +16,42 @@ import { appHref, companyLinks, demoHref, primaryLinks } from "@/lib/site";
  */
 
 /**
- * The Product mega-menu, in the spec's four pillar groups. An item appears
- * once its page exists, and a group with no pages does not render.
- * Then Solutions (the four solution pages), the plain links (How it works,
- * Pricing), and Company (About, Contact) last (owner, 2026-10-13).
+ * The Product menu (owner, 2026-10-20: option A): every built product page,
+ * with its icon, under the three headings in productGroups (catalog.ts), the
+ * same list the phone menu and both footers read. Then the demo restaurant's
+ * card, and "New to WunTab?" with How it works and Pricing. Then Solutions
+ * (the four solution pages, with icons and their lines), the plain links
+ * (How it works, Pricing), and Company (About, Contact) last (2026-10-13).
  */
+const iconOf = (name: string): IconName | undefined => (isIconName(name) ? name : undefined);
+
+const productNav: NavMenu = {
+  key: "product",
+  label: "Product",
+  width: "product",
+  groups: productMenu.map((group) => ({
+    title: group.title,
+    items: group.items.map((item) => ({ href: item.href, name: item.name, icon: iconOf(item.slug) })),
+  })),
+  card: <DemoCard />,
+  more: {
+    lead: copy.nav.newTo,
+    links: [
+      { href: "/how-it-works", label: copy.nav.howItWorks },
+      { href: "/pricing", label: copy.nav.pricing },
+    ],
+  },
+};
+
 const solutionsMenu: NavMenu = {
   key: "solutions",
   label: "Solutions",
-  width: "narrow",
-  groups: [{ items: solutions.map((s) => ({ href: solutionHref(s.slug), name: s.name, blurb: s.blurb })) }],
+  width: "solutions",
+  groups: [
+    {
+      items: solutions.map((s) => ({ href: solutionHref(s.slug), name: s.name, blurb: s.blurb, icon: iconOf(solutionIcons[s.slug] ?? "") })),
+    },
+  ],
 };
 
 const companyMenu: NavMenu = {
@@ -34,23 +61,10 @@ const companyMenu: NavMenu = {
   groups: [{ items: companyLinks.map((l) => ({ href: l.href, name: l.label })) }],
 };
 
-function buildMenus(): NavMenu[] {
-  const groups = megaMenu
-    .map((group) => ({
-      title: pillars[group.pillar].name,
-      items: group.slugs.flatMap((slug) => {
-        // Secondary pages are linked from the footer and their parent pages only.
-        const href = secondaryProducts.has(slug) ? null : productHref(slug);
-        return href ? [{ href, name: bySlug[slug].name, blurb: bySlug[slug].blurb }] : [];
-      }),
-    }))
-    .filter((group) => group.items.length > 0);
-  return [{ key: "product", label: "Product", width: "wide", groups }, solutionsMenu];
-}
-
-function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
+function MobileLink({ href, icon, children }: { href: string; icon?: IconName; children: React.ReactNode }) {
   return (
-    <SmartLink href={href} className="flex min-h-12 items-center px-3 text-body font-medium hover:bg-panel">
+    <SmartLink href={href} className={`flex min-h-12 items-center px-3 text-body font-medium hover:bg-panel ${icon ? "gap-3.5" : ""}`}>
+      {icon ? <NavIcon name={icon} size={22} /> : null}
       {children}
     </SmartLink>
   );
@@ -82,8 +96,6 @@ function MobileAccordion({ label, children }: { label: string; children: React.R
 }
 
 export function SiteHeader() {
-  const menus = buildMenus();
-  const pillarGroups = menus[0].groups;
   return (
     <header className="sticky top-0 z-40 border-b border-rule bg-paper">
       <div className="relative mx-auto flex h-[68px] max-w-[1120px] items-center justify-between gap-3 px-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6 lg:px-12">
@@ -92,7 +104,7 @@ export function SiteHeader() {
         </SmartLink>
 
         <nav className="hidden lg:block" aria-label="Primary">
-          <DesktopNav menus={menus} links={primaryLinks} after={[companyMenu]} />
+          <DesktopNav menus={[productNav, solutionsMenu]} links={primaryLinks} after={[companyMenu]} />
         </nav>
 
         <div className="flex items-center gap-2 justify-self-end sm:gap-3">
@@ -108,7 +120,7 @@ export function SiteHeader() {
             {copy.cta.primary}
           </CtaLink>
 
-          {/* Below lg: a full-screen menu, one accordion per pillar. */}
+          {/* Below lg: a full-screen menu, an accordion per Product group, then Solutions and Company. */}
           <details className="mobile-nav group lg:hidden">
             <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[12px] border border-rule">
               <span className="sr-only">Menu</span>
@@ -143,12 +155,14 @@ export function SiteHeader() {
               className="fixed inset-x-0 top-[69px] bottom-0 z-50 flex flex-col overflow-y-auto bg-paper px-4 pt-2 pb-8 sm:px-8"
               aria-label="Mobile"
             >
-              {pillarGroups.map((group, index) => (
+              {productNav.groups.map((group, index) => (
                 <MobileAccordion key={group.title ?? index} label={group.title ?? "Product"}>
                   <ul>
                     {group.items.map((item) => (
                       <li key={item.href}>
-                        <MobileLink href={item.href}>{item.name}</MobileLink>
+                        <MobileLink href={item.href} icon={item.icon}>
+                          {item.name}
+                        </MobileLink>
                       </li>
                     ))}
                   </ul>
@@ -184,9 +198,9 @@ export function SiteHeader() {
                   </li>
                 ) : null}
               </ul>
-              {/* The demo restaurant's website above Get Started (owner, 2026-10-19). */}
+              {/* The demo restaurant above Get Started (owner, 2026-10-19), as a compact row with its photo (2026-10-20). */}
               <div className="mt-auto pt-8">
-                <DemoLink className="mb-2 w-full" />
+                <DemoRow className="mb-3" />
                 <CtaLink href={demoHref} className="w-full">
                   {copy.cta.primary}
                 </CtaLink>

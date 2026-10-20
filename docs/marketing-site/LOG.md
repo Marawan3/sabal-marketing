@@ -45,6 +45,75 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-20 · PR #63: Header menus, option A: every product page with an icon, under three outcome headings (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** the owner chose option A from the "WunTab submenu options" canvas (2026-10-20).
+
+**What changed:**
+- **One list:** `productGroups` in `catalog.ts` replaces `megaMenu` and the four pillars in the menus.
+  - **The groups, in order:**
+    - "Sell directly": Online Ordering, Online Menu, Delivery, Catering, Recommended Add-ons;
+    - "Get found and come back": Restaurant Websites, Restaurant SEO, Loyalty & Rewards;
+    - "Run the restaurant": Order Management, Menu Management, Kitchen Display, Payments, Integrations.
+  - **All 13 built pages:** the six secondary pages joined the menu. This reverses the 2026-10-13 rule, with the owner's approval.
+  - **Who reads it:** the desktop Product menu, the phone menu, the desktop footer and the phone footer, so they can't drift. The footer is now five groups: the three, then Solutions and Company.
+  - **Unbuilt pages** stay out everywhere.
+  - **Removed as unused:** `megaMenu`, `byPillar`, the `pillars` record and each product's `inMenu`. The products keep their spec `pillar`.
+- **Icons:** the owner's 17, as JSX in `src/components/nav-icon.tsx`.
+  - **How they're drawn:** no icon library, no `dangerouslySetInnerHTML`. viewBox 0 0 24 24, stroke 1.75, round caps and joins, `aria-hidden`.
+  - **Colour:** navy, never saffron.
+  - **Size:** 20px on desktop, 22px on phones.
+  - **Which:** one per product page, and storefront, stopwatch, fork and knife, and two pins for the solutions.
+- **Desktop Product panel:**
+  - **Layout:** the three groups as columns, then the demo card. The card is 300px from 1200px and narrows to 240px from 1024 to 1199, where 300 would leave the columns too narrow. Each column is at least as wide as its longest name.
+  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name at 15px weight 500. No descriptions.
+  - **Headings:** 13px weight 600, ink-muted.
+  - **Card:** warm #F7F3EC, radius 16.
+    - The demo photo at 300×150, lazy.
+    - "Demo restaurant", "Palm&Stone Pizza", "Order like a guest and see what your customers get. Orders here aren't real.", and "See a live restaurant" with the new-tab icon.
+    - It opens in a new tab, and it's absent when the demo link is off.
+  - **Bottom row:** under a hairline, "New to WunTab?", then "See how it works" and "Pricing", with drawn arrows.
+- **Solutions menu:** each page with its icon and its one line.
+- **Phone menu:** the three headings as accordions, icons at 22px, 48px rows. Before Get Started, a compact demo row replaces the plain link: an 88px thumbnail, "Demo restaurant · Palm&Stone Pizza" and "See a live restaurant ↗". Below a 394px screen that first line is two lines, with the dot hidden.
+- **Keyboard fix:** Escape from inside an open menu used to hand focus back to its button, which opened the menu again. It now stays closed. This was the case before this change too, but no test pressed Escape from inside the panel.
+
+**Notes for the owner:**
+- **Type sizes:** 15px names and 13px headings are the owner's sizes and sit outside the site's five-size scale (14px small, 16 to 18px body). The five-size test counts only what's on screen when a page loads, and the desktop panel isn't, so it doesn't flag them. If the menu should stay on the scale, both go to 14px.
+- **No arrow keys:** the menu has never had arrow-key navigation. Tab moves through it, and Escape closes it and returns focus. The fix above makes that work from inside the panel. Arrow keys would be new behaviour.
+- **Solutions and Company on phones** stay as they were, with no icons, as the brief says ("everything else stays as today").
+
+**Footer heights:** 533px at 1280 (unchanged); 441px at 375, down from 490px (five groups instead of six).
+
+**How it was checked:**
+- **New tests** (`tests/menu.spec.ts`):
+  - the three groups hold the 13 built pages once each, in order, and the Product menu, the phone menu, the desktop footer and the phone footer show the same groups and pages;
+  - every menu item has exactly one icon, the right page link, and the owner's shapes and attributes, in navy;
+  - from 1024 to 1440 (1024, 1100, 1199, 1200, 1280, 1440) no name wraps, rows are 44px, the card is 300 or 240px, and the panel fits the window;
+  - the demo card's photo, text, link and new tab;
+  - the keyboard, from inside the panel.
+- **The demo-off path:** run on a build with `NEXT_PUBLIC_SHOW_DEMO_LINK=false`. The card and every demo.wuntab.com link are gone, and the panel's columns still fit.
+- **Phone menu test** (`tests/phone.spec.ts`, so WebKit on an iPhone profile runs it too), at 320, 360, 375, 390 and 430:
+  - the accordions, the 22px icons and the 48px rows;
+  - the demo row's photo and its place above Get Started;
+  - its first line never breaks inside the name or ends on the dot.
+- **Updated tests:**
+  - `fill.spec` (the secondary pages are now in the menu);
+  - the menu's link count;
+  - the phone menu's headings;
+  - the footer's five groups;
+  - the screenshot run's group name.
+- **One test changed how it runs:** the contrast scan's planted probe now goes in after React has hydrated `<main>`. Before that, hydration replaced `<main>` and dropped the probe; the page itself logs no hydration error.
+- **Local suite:** 163 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **Evidence:** `docs/marketing-site/evidence/menu/`, before over after:
+  - the Product and Solutions menus open at 1024, 1280 and 1440;
+  - the phone menu at 375, closed and with the first group open;
+  - the footer at 375 and 1280;
+  - after only: the Product menu with the demo link off.
+
+---
+
 ## 2026-10-20 · PR #62: "Restaurant OS" leaves the orders-dashboard picture, and its mark reads "WunTab" (the owner merges)
 
 **What changed.**

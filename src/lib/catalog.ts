@@ -29,11 +29,10 @@ export type Faq = { question: string; answer: string };
 export type Product = {
   slug: string;
   name: string;
-  /** One line under the name in the mega-menu. */
+  /** One line about the product: the homepage cards, solution pages and Works with. */
   blurb: string;
+  /** The spec's pillar (SPEC section 4). The site's menus group pages by `productGroups` instead. */
   pillar: Pillar;
-  /** Appears in the Product mega-menu. */
-  inMenu: boolean;
   headline: string;
   sub: string;
   capabilitiesTitle?: string;
@@ -49,32 +48,6 @@ export type Product = {
   faq?: Faq[];
 };
 
-export const pillars: Record<
-  Pillar,
-  { name: string; verb: string; blurb: string }
-> = {
-  sell: {
-    name: "Sell",
-    verb: "Sell directly",
-    blurb: "Give customers more ways to order from you.",
-  },
-  grow: {
-    name: "Grow",
-    verb: "Get found and come back",
-    blurb: "Turn searches into orders and customers into regulars.",
-  },
-  operate: {
-    name: "Operate",
-    verb: "Run the restaurant",
-    blurb: "Everything after Place Order.",
-  },
-  scale: {
-    name: "Scale",
-    verb: "Grow to more locations",
-    blurb: "One restaurant or fifty.",
-  },
-};
-
 export const products: Product[] = [
   // ───────────────────────────── SELL ─────────────────────────────
   {
@@ -82,7 +55,6 @@ export const products: Product[] = [
     name: "Online Ordering",
     blurb: "Take direct pickup and delivery orders.",
     pillar: "sell",
-    inMenu: true,
     headline: "Take orders on your own website, under your own name.",
     sub: "Pickup, delivery, and scheduled orders through a branded ordering experience that looks like your restaurant, not a marketplace.",
     capabilities: [
@@ -133,7 +105,6 @@ export const products: Product[] = [
     name: "Online Menu",
     blurb: "Your menu as your storefront.",
     pillar: "sell",
-    inMenu: false,
     headline: "Your menu is your storefront.",
     sub: "Categories, photos, prices and choices, on your own website, ready to order from.",
     capabilities: [
@@ -170,7 +141,6 @@ export const products: Product[] = [
     name: "Delivery",
     blurb: "Offer delivery without your own drivers.",
     pillar: "sell",
-    inMenu: true,
     headline: "Delivery without building a delivery fleet.",
     sub: "Your customers order from you. WunTab handles the driver.",
     capabilities: [
@@ -222,7 +192,6 @@ export const products: Product[] = [
      */
     blurb: "Take catering requests on your website.",
     pillar: "sell",
-    inMenu: true,
     headline: "Take catering requests on your own website.",
     sub: "Customers send the date, the headcount and what they need. You reply and confirm the order with them.",
     capabilities: [
@@ -260,7 +229,6 @@ export const products: Product[] = [
     name: "Table Ordering",
     blurb: "Order and pay from the table.",
     pillar: "sell",
-    inMenu: true,
     headline: "Order and pay from the table.",
     sub: "A QR code on the table opens your menu. Guests order and pay from their phone.",
     capabilities: ["QR-code ordering for dine-in", "Pay at the table"],
@@ -271,7 +239,6 @@ export const products: Product[] = [
     name: "Self-Service Kiosk",
     blurb: "Self-service ordering you control.",
     pillar: "sell",
-    inMenu: true,
     headline: "In-store ordering you control.",
     sub: "A self-service kiosk running your menu, your branding, and your prices.",
     capabilities: [
@@ -286,7 +253,6 @@ export const products: Product[] = [
     name: "Branded Mobile App",
     blurb: "Your own iOS and Android app.",
     pillar: "sell",
-    inMenu: true,
     headline: "Your own app on their phone.",
     sub: "An iOS and Android ordering app with your name and your icon, so regulars are one tap from ordering again.",
     capabilities: [
@@ -301,7 +267,6 @@ export const products: Product[] = [
     name: "Gift Cards",
     blurb: "Digital gift cards sold online.",
     pillar: "sell",
-    inMenu: false,
     headline: "Digital gift cards, sold from your website.",
     sub: "Customers buy a gift card online and the recipient spends it on your food.",
     capabilities: ["Digital gift cards", "Bought online, spent on online orders"],
@@ -312,7 +277,6 @@ export const products: Product[] = [
     name: "Recommended Add-ons",
     blurb: "Suggest add-ons when they pick a dish.",
     pillar: "sell",
-    inMenu: false,
     /*
      * Rule-based only, as built (owner, 2026-10-13): the restaurant's own
      * picks per dish, then its most-ordered dishes. No "smart", no AI.
@@ -351,7 +315,6 @@ export const products: Product[] = [
     name: "Restaurant Websites",
     blurb: "Your digital storefront.",
     pillar: "grow",
-    inMenu: true,
     headline: "Your digital storefront.",
     sub: "A website with your branding, your own web address, your menu built in, and ordering on every page.",
     capabilities: [
@@ -394,7 +357,6 @@ export const products: Product[] = [
     name: "Restaurant SEO",
     blurb: "Built so search engines read your menu.",
     pillar: "grow",
-    inMenu: true,
     headline: "Built so Google can read your menu.",
     sub: "Every dish, price, and description is in the page itself, with the structured details search engines look for.",
     capabilitiesTitle: "What we build in",
@@ -439,7 +401,6 @@ export const products: Product[] = [
     name: "Restaurant Listings",
     blurb: "Consistent name, hours, and address everywhere.",
     pillar: "grow",
-    inMenu: false,
     headline: "The same name, hours, and address everywhere.",
     sub: "Keep your business listings consistent so customers and search engines find the right information.",
     capabilities: [
@@ -453,7 +414,6 @@ export const products: Product[] = [
     name: "Guest Feedback",
     blurb: "Capture feedback and resolve issues faster.",
     pillar: "grow",
-    inMenu: true,
     headline: "Know what your guests think.",
     sub: "A QR code or a tap on the table lets guests tell you how it went, while they are still in the restaurant.",
     capabilities: [
@@ -484,7 +444,6 @@ export const products: Product[] = [
     name: "Reviews",
     blurb: "Ask for reviews and watch what comes in.",
     pillar: "grow",
-    inMenu: true,
     headline: "More reviews, watched in one place.",
     sub: "Ask every customer for a Google review and keep an eye on what comes in.",
     capabilities: [
@@ -501,7 +460,6 @@ export const products: Product[] = [
     name: "Loyalty & Rewards",
     blurb: "Give regulars a reason to come back.",
     pillar: "grow",
-    inMenu: true,
     /*
      * A build commitment (REGISTER.md, owner 2026-10-13): outcome-level words
      * only. No points math, no tiers, no app.
@@ -537,7 +495,6 @@ export const products: Product[] = [
     name: "Customer Database",
     blurb: "Know who your direct customers are.",
     pillar: "grow",
-    inMenu: false,
     headline: "Know who your direct customers are.",
     sub: "Every direct order builds a list of real customers, with what they ordered and how often they come back.",
     capabilities: [
@@ -554,7 +511,6 @@ export const products: Product[] = [
     name: "Customer Marketing",
     blurb: "Text and automatic campaigns.",
     pillar: "grow",
-    inMenu: true,
     headline: "Turn customers into regulars.",
     sub: "Text and automatic campaigns that bring people back without you sitting at a computer.",
     capabilities: [
@@ -573,7 +529,6 @@ export const products: Product[] = [
     name: "SMS Marketing",
     blurb: "Short texts to opted-in customers.",
     pillar: "grow",
-    inMenu: false,
     headline: "A text they actually read.",
     sub: "Short text-message offers to customers who opted in.",
     capabilities: [
@@ -590,7 +545,6 @@ export const products: Product[] = [
     name: "Menu Management",
     blurb: "Change the menu once, everywhere.",
     pillar: "operate",
-    inMenu: true,
     headline: "Change the menu once. It changes everywhere.",
     sub: "Edit a dish in one place. Your website and online ordering show it the moment you save.",
     capabilities: [
@@ -628,7 +582,6 @@ export const products: Product[] = [
     name: "Order Management",
     blurb: "Every order from new to done.",
     pillar: "operate",
-    inMenu: true,
     headline: "Every order, from new to done.",
     sub: "See incoming, in-progress, ready, and completed orders. Pause ordering, set prep times, and get every order to the kitchen.",
     capabilities: [
@@ -671,7 +624,6 @@ export const products: Product[] = [
     name: "Kitchen Display",
     blurb: "Orders on a kitchen screen.",
     pillar: "operate",
-    inMenu: true,
     headline: "Orders on a screen, in the order they came in.",
     sub: "Every order in New, Preparing and Ready. Your team taps each one along.",
     capabilities: [
@@ -704,7 +656,6 @@ export const products: Product[] = [
     name: "Payments",
     blurb: "Card and Apple Pay at checkout.",
     pillar: "operate",
-    inMenu: true,
     /*
      * The intended model (owner, 2026-10-13): each restaurant has its own
      * merchant account with our payment partner and is paid through it;
@@ -755,7 +706,6 @@ export const products: Product[] = [
     name: "Analytics",
     blurb: "Sales, orders, menu, and customer reports.",
     pillar: "operate",
-    inMenu: true,
     headline: "Know what's working.",
     sub: "Sales, orders, menu, customers, and feedback in one place.",
     capabilities: [
@@ -772,7 +722,6 @@ export const products: Product[] = [
     name: "WunTab AI",
     blurb: "An assistant that knows your orders.",
     pillar: "scale",
-    inMenu: true,
     headline: "An assistant that knows your menu and your orders.",
     sub: "Ask questions about your restaurant in plain words, and get menu suggestions based on what actually sells.",
     capabilities: [
@@ -790,7 +739,6 @@ export const products: Product[] = [
     name: "Multi-Location",
     blurb: "Every location on one account.",
     pillar: "scale",
-    inMenu: true,
     headline: "One restaurant or fifty.",
     sub: "Run every location from one account, with menus, orders, and feedback per location.",
     capabilities: [
@@ -806,7 +754,6 @@ export const products: Product[] = [
     name: "Restaurant Groups & Franchises",
     blurb: "Group controls, location freedom.",
     pillar: "scale",
-    inMenu: true,
     headline: "Controls for the group. Freedom for the location.",
     sub: "Set what the organization decides and what each location decides.",
     capabilities: [
@@ -822,7 +769,6 @@ export const products: Product[] = [
     name: "Integrations",
     blurb: "Payments, delivery, and your POS.",
     pillar: "scale",
-    inMenu: true,
     headline: "Works with what you already use.",
     sub: "Payments, third-party delivery, and your POS, connected.",
     /*
@@ -866,7 +812,6 @@ export const products: Product[] = [
     name: "Partners",
     blurb: "Offer WunTab under your own brand.",
     pillar: "scale",
-    inMenu: false,
     headline: "Offer WunTab under your own brand.",
     sub: "White-label WunTab for the restaurants you already serve.",
     capabilities: ["White-label platform", "Your brand on the product"],
@@ -887,8 +832,7 @@ export const builtProducts = [
   "restaurant-seo",
   "order-management",
   "integrations",
-  // Secondary pages (owner, 2026-10-13): linked from the footer and from
-  // their parent pages' Works with, not from the mega-menu.
+  // Secondary pages (owner, 2026-10-13), in the Product menu since 2026-10-20.
   "online-menu",
   "upsells",
   "loyalty",
@@ -897,7 +841,11 @@ export const builtProducts = [
   "payments",
 ] as const;
 
-/** Built pages that stay out of the mega-menu. */
+/**
+ * The six pages added on 2026-10-13, with the shorter page template. They
+ * stayed out of the Product menu until the owner put every built page in it
+ * (2026-10-20).
+ */
 export const secondaryProducts = new Set<string>(["online-menu", "upsells", "loyalty", "kitchen-display", "menu-management", "payments"]);
 
 const built = new Set<string>(builtProducts);
@@ -912,42 +860,29 @@ export const bySlug = Object.fromEntries(products.map((p) => [p.slug, p])) as Re
   Product
 >;
 
-export function byPillar(pillar: Pillar, menuOnly = false) {
-  return products.filter((p) => p.pillar === pillar && (!menuOnly || p.inMenu));
-}
-
-/** Mega-menu groups, in the spec's order. */
-export const megaMenu: { pillar: Pillar; slugs: string[] }[] = [
-  {
-    pillar: "sell",
-    slugs: ["online-ordering", "delivery", "catering", "table-ordering", "kiosk", "restaurant-app"],
-  },
-  {
-    pillar: "grow",
-    slugs: [
-      "restaurant-websites",
-      "restaurant-seo",
-      "guest-feedback",
-      "reviews",
-      "loyalty",
-      "restaurant-marketing",
-    ],
-  },
-  {
-    pillar: "operate",
-    slugs: [
-      "menu-management",
-      "order-management",
-      "kitchen-display",
-      "payments",
-      "analytics",
-          ],
-  },
-  {
-    pillar: "scale",
-    slugs: ["multi-location", "enterprise", "integrations", "ai"],
-  },
+/**
+ * The Product menu's groups (owner, 2026-10-20): every built product page,
+ * under three outcome headings, in this order. The one list behind the
+ * desktop Product menu, the phone menu, and both footers, so they can't
+ * drift. A page that isn't built stays out everywhere (productHref), and a
+ * test fails if a built page is in no group.
+ */
+export const productGroups: readonly { title: string; slugs: readonly string[] }[] = [
+  { title: "Sell directly", slugs: ["online-ordering", "online-menu", "delivery", "catering", "upsells"] },
+  { title: "Get found and come back", slugs: ["restaurant-websites", "restaurant-seo", "loyalty"] },
+  { title: "Run the restaurant", slugs: ["order-management", "menu-management", "kitchen-display", "payments", "integrations"] },
 ];
+
+/** productGroups with each built page's link and name. */
+export const productMenu = productGroups
+  .map((group) => ({
+    title: group.title,
+    items: group.slugs.flatMap((slug) => {
+      const href = productHref(slug);
+      return href ? [{ slug, href, name: bySlug[slug].name }] : [];
+    }),
+  }))
+  .filter((group) => group.items.length > 0);
 
 // ───────────────────────────── SOLUTIONS ─────────────────────────────
 

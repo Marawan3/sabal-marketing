@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../src/lib/catalog";
+import { builtProducts, bySlug, productGroups, productHref, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoOrder } from "../src/lib/demo-order";
 import { companyLinks, demoHref, demoStorefront, legalNav, primaryLinks } from "../src/lib/site";
@@ -31,7 +31,8 @@ const HOMEPAGE_BEFORE_BRAND_PASS = 6_496;
  */
 const FOOTER_CLOSED_MAX = 520;
 
-const groupTitles = ["Sell", "Grow", "Operate", "Scale", "Solutions", "Company"];
+/** The footer's groups (owner, 2026-10-20): the Product menu's three, then Solutions and Company. */
+const groupTitles = [...productGroups.map((g) => g.title), "Solutions", "Company"];
 
 async function noSideScroll(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
@@ -124,10 +125,9 @@ test("phone footer: six closed groups, each opens and closes, every link still i
     demoStorefront.href,
   ];
   expect([...hrefs].sort()).toEqual([...expected].sort());
-  // Each product sits under its own pillar.
-  for (const slug of builtProducts) {
-    const title = { sell: "Sell", grow: "Grow", operate: "Operate", scale: "Scale" }[bySlug[slug].pillar as string];
-    await expect(groups.nth(groupTitles.indexOf(title!)).locator(`a[href="/${slug}"]`), slug).toHaveCount(1);
+  // Each product sits under its Product menu group.
+  for (const group of productGroups) {
+    for (const slug of group.slugs) await expect(groups.nth(groupTitles.indexOf(group.title)).locator(`a[href="/${slug}"]`), slug).toHaveCount(1);
   }
 
   // Below: the address, then Terms · Privacy · © year WunTab. No "Or send a message" (Contact is in Company).
@@ -142,7 +142,7 @@ test("phone footer: six closed groups, each opens and closes, every link still i
 /** The footer at 1280 before the desktop rebuild (2026-10-20, `main` at d4c25f9): one "Product" column of 15 links. */
 const FOOTER_1280_BEFORE = 1_013;
 
-test("from 768px the footer is the same six groups as columns, then the bottom bar", async ({ page }) => {
+test("from 768px the footer is the same five groups as columns, then the bottom bar", async ({ page }) => {
   for (const width of [768, 900, 1023, 1024, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
@@ -204,10 +204,10 @@ test("from 768px the footer is the same six groups as columns, then the bottom b
       const next = layout[i + 1];
       if (next && Math.abs(next.top - col.top) < 1) expect(Math.max(...col.links.map((l) => l.right)), groupTitles[i]).toBeLessThanOrEqual(next.left);
     }
-    // One row of six from 1024px; below, two rows of three: Sell, Grow, Operate, then Scale, Solutions, Company.
+    // One row of five from 1024px; below, the three Product groups, then Solutions and Company.
     const rows = [...new Set(layout.map((c) => Math.round(c.top)))];
     expect(rows.length, `rows at ${width}`).toBe(width >= 1024 ? 1 : 2);
-    if (width < 1024) expect(layout.map((c) => rows.indexOf(Math.round(c.top)))).toEqual([0, 0, 0, 1, 1, 1]);
+    if (width < 1024) expect(layout.map((c) => rows.indexOf(Math.round(c.top)))).toEqual([0, 0, 0, 1, 1]);
 
     // Company ends with the demo restaurant, in a new tab, with the new-tab icon, as on phones.
     const demo = columns.nth(groupTitles.indexOf("Company")).locator("a").last();
@@ -247,6 +247,63 @@ test("from 768px the footer is the same six groups as columns, then the bottom b
       // The owner's aim: about 550px (2026-10-20).
       expect(height).toBeLessThanOrEqual(560);
     }
+  }
+});
+
+test("the phone menu: the Product groups as accordions, 22px icons on 48px rows, then the demo row above Get Started", async ({ page }) => {
+  for (const width of [320, 360, 375, 390, 430]) {
+    await page.setViewportSize({ width, height: 812 });
+    await page.goto("/");
+    await page.locator("header summary", { hasText: "Menu" }).click();
+    const nav = page.locator('header nav[aria-label="Mobile"]');
+    const groups = nav.locator("details");
+    await expect(groups.locator("summary")).toHaveText([...productGroups.map((g) => g.title), "Solutions", "Company"]);
+    for (const [i, group] of productGroups.entries()) {
+      const details = groups.nth(i);
+      await details.locator("summary").click();
+      const rows = details.locator("a");
+      expect(await rows.evaluateAll((as) => as.map((a) => a.getAttribute("href")))).toEqual(group.slugs.map((slug) => `/${slug}`));
+      for (const row of await rows.all()) {
+        await expect(row.locator("svg[data-icon]")).toHaveCount(1);
+        expect((await row.boundingBox())!.height, `${await row.textContent()} at ${width}`).toBeGreaterThanOrEqual(48);
+        const icon = (await row.locator("svg").boundingBox())!;
+        expect([Math.round(icon.width), Math.round(icon.height)]).toEqual([22, 22]);
+      }
+      await details.locator("summary").click();
+    }
+    // Solutions and Company stay as they were: no icons.
+    await expect(groups.nth(3).locator("svg[data-icon]")).toHaveCount(0);
+    await expect(groups.nth(4).locator("svg[data-icon]")).toHaveCount(0);
+    if (!demoStorefront.on) continue;
+
+    // The demo row, last before Get Started: the photo at 88px, "Demo restaurant · Palm&Stone Pizza", and the link.
+    const row = nav.locator("[data-demo-link]");
+    await row.scrollIntoViewIfNeeded();
+    const img = row.locator("img");
+    await expect(img).toHaveAttribute("src", "/demo/photos/pepperoni-pizza-360.webp");
+    await expect(img).toHaveAttribute("loading", "lazy");
+    const photo = (await img.boundingBox())!;
+    expect([Math.round(photo.width), Math.round(photo.height)]).toEqual([88, 88]);
+    await expect(row).toContainText(demoStorefront.label);
+    await expect(row.locator("[data-demo-names]")).toHaveText(`${demoStorefront.tag} · ${demoOrder.restaurant}`);
+    // One line where it fits; narrower, two lines with the dot hidden. Never a break inside a name, never a dot at a line's end.
+    const names = await row.locator("[data-demo-names]").evaluate((el) => {
+      const [tag, sep, , name] = [...el.children] as HTMLElement[];
+      const lines = (n: Element) => {
+        const range = document.createRange();
+        range.selectNodeContents(n);
+        return [...range.getClientRects()].map((r) => Math.round(r.top));
+      };
+      return { tag: lines(tag), name: lines(name), sep: sep.getBoundingClientRect().width > 0 ? lines(sep) : null };
+    });
+    expect(new Set(names.tag).size, `${width}`).toBe(1);
+    expect(new Set(names.name).size, `${width}`).toBe(1);
+    if (names.sep) expect([...new Set([...names.tag, ...names.sep, ...names.name])], `the dot's line at ${width}`).toHaveLength(1);
+    else expect(names.name[0], `${width}`).toBeGreaterThan(names.tag[0]);
+    if (width >= 430) expect(names.sep, `one line at ${width}`).not.toBeNull();
+    const button = (await nav.getByRole("link", { name: copy.cta.primary }).boundingBox())!;
+    const rowBox = (await row.boundingBox())!;
+    expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(button.y);
   }
 });
 

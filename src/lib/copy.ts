@@ -283,6 +283,15 @@ export const copy = {
   },
   /** The desktop footer's bottom bar (owner, 2026-10-20): it follows the address, so no "Or". */
   footer: { message: "Send a message" },
+  /** The header menus (owner, 2026-10-20: option A). */
+  nav: {
+    /** Under a hairline at the bottom of the Product menu, then its two links. */
+    newTo: "New to WunTab?",
+    howItWorks: "See how it works",
+    pricing: "Pricing",
+    /** The Product menu's demo card, under the restaurant's name. */
+    demoCard: "Order like a guest and see what your customers get. Orders here aren't real.",
+  },
   /**
    * /contact: the form posts to /api/contact, which emails hello@wuntab.com.
    * Get Started lands here too, as /contact?intent=call (owner, 2026-10-19).
