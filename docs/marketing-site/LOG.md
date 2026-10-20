@@ -45,6 +45,63 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-20 · PR #60: The desktop footer becomes the six groups, with a bottom bar (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** at 1280 the footer was 1,013px tall: one "Product" column of 15 links next to three short ones (owner, 2026-10-20).
+
+**What changed:**
+- **Six groups from 768px:** Sell, Grow, Operate, Scale, Solutions, Company, as on phones and in the mega-menu.
+  - **One list:** the columns and the phone groups both come from one list in `site-footer.tsx` (`footerGroups`, which was `phoneGroups`). A new page lands in the same group on every screen, and the two can't drift.
+  - **Company:** How it works, Pricing, About, Contact, then Live demo restaurant, in a new tab with the new-tab icon, as on phones. How it works and Pricing left Product, which is gone.
+- **Layout:**
+  - **From 1024px:** one row of six columns, one link per line.
+  - **From 768 to 1023px:** two rows of three, Sell, Grow, Operate, then Scale, Solutions, Company.
+- **Column widths:** from 1024px each column is as wide as its longest name, and the spare width goes between the columns.
+  - **Why not equal columns:** six equal columns at 1024 would be 135px each. That's too narrow for "Recommended Add-ons" (157px), "Restaurant Websites" (138px), "Live demo restaurant" with its icon (about 159px) and "Multi-Location Restaurants" (180px).
+  - **Result:** no name was shortened. The gaps are about 18px at 1024 and 37px from 1280.
+- **Bottom bar, under a hairline:** the logo, hello@wuntab.com and **Send a message** (to /contact) on the left, and "Terms · Privacy · © 2026 WunTab" on the right. The Legal column is gone.
+- **One label:** the footer's link said "Or send a message"; it now says "Send a message", as the owner wrote. It has its own copy key, `copy.footer.message`. The final band and /about keep "Or send a message", where it follows a button.
+- **Terms and Privacy:** still one element in the page. The phone footer's last row is the same element as the bottom bar's right end from 768px, so `legal.spec.ts`'s count (one link to each in the footer, visible or not) didn't change.
+- **Unchanged:**
+  - navy, white links, headings white at 75%, 44px link rows;
+  - the secondary pages, still linked once in view (`fill.spec.ts`).
+- **The phone footer is identical, pixel for pixel.** Closed at 320, 375, 414 and 767, and at 375 with each of the six groups open, no pixel differs.
+
+**Footer heights (Chromium):**
+
+| Width | Before | After |
+| --- | --- | --- |
+| 1024, 1280, 1440 | 1,013px | **533px** |
+| 768 | 638px | 742px |
+| 375 | 490px | 490px |
+
+At 768 it's taller: the old layout ran each column's links together in rows, and now they're one per line in two rows of three.
+
+**How it was checked:**
+- **New test** (`tests/phone.spec.ts`), at 768, 900, 1023, 1024, 1280 and 1440:
+  - the six columns carry the phone groups' titles;
+  - each column has its phone group's links, the same addresses and names in the same order;
+  - the links that show are exactly those, plus Terms, Privacy, the address and the contact form;
+  - headings are white at 75%, and links are white, 44px tall, one per line;
+  - no name wraps, and no column runs into the next;
+  - it's one row from 1024px, and two rows of three below;
+  - Company ends with the demo restaurant in a new tab;
+  - the bottom bar is under a hairline: the logo, address and "Send a message" on the left, the legal row on the right, all on one line;
+  - nothing scrolls sideways;
+  - the footer at 1280 is 560px or less.
+- **The test can fail:** with six equal columns it fails at 1024, where "Recommended Add-ons" wraps.
+- **Updated tests:**
+  - the footer titles in the navigation test;
+  - the footer's label in the final band test;
+  - the phone footer test's "no Send a message on phones".
+- **Local suite:** 156 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **No sideways scrolling:** all 24 pages at 375, 768, 1024, 1280 and 1440 scroll sideways nowhere (a one-off check of every page in the sitemap, plus /terms, /privacy and /contact).
+- **Evidence:** `docs/marketing-site/evidence/desktop-footer/` has before over after at 768, 1024, 1280 and 1440, and before beside after at 375.
+
+---
+
 ## 2026-10-20 · PR #58: Brand pass: navy and saffron, the WunTab wordmark, a calmer first phone screen (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 58"), after the owner reviewed the preview at 375 and 1280 and asked for the second round below. Squash commit `618b58c` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`4b42df1`): Vercel, and WebKit iPhone 71 of 71, with and without reduced motion.

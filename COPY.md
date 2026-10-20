@@ -142,14 +142,19 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 /restaurant-seo's two notes were already its two FAQ answers, so they are no longer shown twice.
 
-## Footer (2026-10-13)
+## Footer (2026-10-13; desktop rebuilt 2026-10-20)
 
-From 768px, four columns: **Product** (every product page, then How it works and Pricing), **Solutions** (the four solution pages), **Company** (About, Contact), **Legal** (Terms, Privacy). Under them: the logo and © year, then hello@wuntab.com and **Or send a message**. The blurb under the logo went: it repeated the hero's line.
+**From 768px (2026-10-20):** the same six groups as on phones, as columns, built from the same list, so a new page lands in the same group on every screen.
+- **Layout:** one row of six from 1024px. From 768 to 1023px, two rows of three: Sell, Grow, Operate, then Scale, Solutions, Company.
+- **Bottom bar, under a hairline:** the logo, hello@wuntab.com and **Send a message** (→ /contact) on the left, and **Terms · Privacy · © 2026 WunTab** on the right.
+- **What went:** the Legal column. Terms and Privacy are the bottom bar's.
+- **The label:** it was "Or send a message"; the owner wrote "Send a message", since it follows the address, not a button. The final band and /about keep "Or send a message".
+- *Was (2026-10-13):* four columns, Product (every product page, then How it works and Pricing), Solutions, Company (About, Contact) and Legal (Terms, Privacy). Under them sat the logo and © year, then hello@wuntab.com and Or send a message.
 
 **On phones (2026-10-19; top trimmed 2026-10-20):**
 - The logo. The $0 line, Get Started and See a live restaurant went from here on 2026-10-20: the final band right above has them. On /contact, which has no final band, Get Started is in the header.
 - Six closed groups, the mobile menu's: **Sell** (Online Ordering, Delivery, Catering, Online Menu, Recommended Add-ons), **Grow** (Restaurant Websites, Restaurant SEO, Loyalty & Rewards), **Operate** (Menu Management, Order Management, Kitchen Display, Payments), **Scale** (Integrations), **Solutions** (the four solution pages), **Company** (How it works, Pricing, About, Contact, **Live demo restaurant ↗**). How it works and Pricing joined Company so every page is still linked. Live demo restaurant opens demo.wuntab.com in a new tab.
-- hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Or send a message" on phones: Contact is in Company.
+- hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Send a message" on phones: Contact is in Company.
 
 ## Navigation (2026-10-13)
 
