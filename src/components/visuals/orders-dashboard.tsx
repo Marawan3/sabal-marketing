@@ -34,7 +34,6 @@ export function OrdersDashboard({ still = false }: { still?: boolean }) {
                 <span className={v.odTile}>W</span>
                 <span>
                   <b>WUNTAB</b>
-                  <span className={v.odDim}>Restaurant OS</span>
                 </span>
               </div>
               {nav.map((item) => (

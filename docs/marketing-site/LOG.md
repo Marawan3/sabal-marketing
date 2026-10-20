@@ -45,6 +45,20 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-20 · PR (this one): "Restaurant OS" leaves the orders-dashboard picture (open; the owner merges)
+
+**What changed.** The orders-dashboard picture (homepage, /how-it-works, and the product and solution pages) drew a second line, "Restaurant OS", under the WUNTAB mark in its sidebar (`src/components/visuals/orders-dashboard.tsx:37`). That line is gone, so the mark stands alone, as it now does in the product's own sidebar (sabal-ros #552).
+
+**Why.** Owner, 2026-10-20: "Remove 'Restaurant OS' from everything users can see … the marketing site … I'll merge."
+
+**Guard.** `scripts/copy-lint.mjs` now bans `/restaurant[\s-]?os\b/i` across `src/`. It failed on this line before the change and passes after.
+
+**Checks.** `npm run copy-lint`, `npm run honesty` and `npm run boundary-check` pass. The published legal text (`src/lib/legal.ts`) never said "ROS". The `legal/*.md` drafts, the lawyer notes and `HANDOFF.md` aren't rendered and are unchanged.
+
+**Done by** the sabal-ros UI agent, on the owner's instruction. One line, outside this site's usual lane, and stated here for that reason.
+
+---
+
 ## 2026-10-20 · PR #60: The desktop footer becomes the six groups, with a bottom bar (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 60"). Squash commit `3676666` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`6ca922a`): Vercel, and WebKit iPhone 71 of 71, with and without reduced motion.
