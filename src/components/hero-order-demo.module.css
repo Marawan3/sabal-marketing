@@ -25,8 +25,9 @@
   --sf-ink: var(--ink);
   --sf-body: var(--ink-muted);
   --sf-meta: var(--ink-muted);
-  --sf-line: var(--mist);
-  --sf-alt: var(--mist);
+  /* The storefront's own grey, unchanged by the brand pass (2026-10-20). */
+  --sf-line: #e6e9ef;
+  --sf-alt: #e6e9ef;
   --kd-bg: var(--ink);
   --kd-card: var(--ink);
   --kd-rule: color-mix(in oklab, var(--paper) 15%, transparent);
@@ -1067,7 +1068,7 @@
 }
 
 .playPause:hover {
-  background: var(--mist);
+  background: var(--rule);
 }
 
 .playPause svg {

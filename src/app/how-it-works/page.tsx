@@ -94,12 +94,12 @@ export default function HowItWorksPage() {
 
       {/* The six stages: square rows between thin rules, no cards. */}
       <Section>
-        <ol className="border-t border-mist">
+        <ol className="border-t border-rule">
           {lifecycle.map((stage, index) => {
             return (
-              <li key={stage.name} className="border-b border-mist py-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-14">
+              <li key={stage.name} className="border-b border-rule py-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-14">
                 <div className="lg:col-span-5">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-saffron text-body font-semibold tabular-nums">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-navy text-body font-semibold text-navy tabular-nums">
                     {index + 1}
                   </span>
                   <h2 className="mt-5 text-h2">{stage.name}</h2>

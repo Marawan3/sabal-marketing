@@ -282,14 +282,24 @@ test("only transform and opacity animate in the visuals", () => {
 
 test("no layout shift while the visuals play", async ({ page }) => {
   test.setTimeout(120_000);
+  type Shift = { value: number; hadRecentInput: boolean; startTime: number; sources: { node: Node | null; previousRect: DOMRectReadOnly; currentRect: DOMRectReadOnly }[] };
   for (const width of [390, 1440]) {
     for (const path of ["/", "/delivery"]) {
       await page.setViewportSize({ width, height: 900 });
       await page.addInitScript(() => {
-        (window as unknown as { cls: number }).cls = 0;
+        const w = window as unknown as { cls: number; shifted: string[] };
+        w.cls = 0;
+        // What moved, for the failure message.
+        w.shifted = [];
+        const rect = (r: DOMRectReadOnly) => [r.x, r.y, r.width, r.height].map(Math.round).join(",");
         new PerformanceObserver((list) => {
-          for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
-            if (!e.hadRecentInput) (window as unknown as { cls: number }).cls += e.value;
+          for (const e of list.getEntries() as unknown as Shift[]) {
+            if (e.hadRecentInput) continue;
+            w.cls += e.value;
+            for (const s of e.sources) {
+              const el = s.node instanceof Element ? s.node : s.node?.parentElement;
+              w.shifted.push(`${Math.round(e.startTime)}ms at scroll ${scrollY}: ${el?.outerHTML.slice(0, 160)} from ${rect(s.previousRect)} to ${rect(s.currentRect)}`);
+            }
           }
         }).observe({ type: "layout-shift", buffered: true });
       });
@@ -299,7 +309,11 @@ test("no layout shift while the visuals play", async ({ page }) => {
         await page.evaluate((top) => window.scrollTo(0, top), y);
         await page.waitForTimeout(700);
       }
-      expect(await page.evaluate(() => (window as unknown as { cls: number }).cls), `${path} at ${width}`).toBe(0);
+      const { cls, shifted } = await page.evaluate(() => {
+        const w = window as unknown as { cls: number; shifted: string[] };
+        return { cls: w.cls, shifted: w.shifted };
+      });
+      expect(cls, `${path} at ${width}: ${shifted.join("; ")}`).toBe(0);
     }
   }
 });

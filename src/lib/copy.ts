@@ -26,14 +26,14 @@ export const copy = {
     line: "Your website, online ordering, delivery, and marketing, built and run for you.",
     inputLabel: "Your restaurant's name",
     /**
-     * The trust line over the headline (owner, 2026-10-13). Sources: $0 is
-     * SERVICE_FEE_CLAUSE (legal.ts); "No lock-in" is /terms 4.2 (you may end
-     * the agreement at any time) and the "monthly fee or a contract" answer
-     * below; "your customers" is /terms 1.2 (your customer list is yours).
+     * The trust line over the headline (owner, 2026-10-20: it took in the $0
+     * card's 5%, and "Your customers, your data" moved to the founding
+     * section). Sources: "$0 for the restaurant" and "Customers pay 5% at
+     * checkout" are SERVICE_FEE_CLAUSE (legal.ts), so the hero's pricing
+     * matches /terms; "No lock-in" is /terms 4.2 (you may end the agreement
+     * at any time) and the "monthly fee or a contract" answer below.
      */
-    trust: "$0 for the restaurant · No lock-in · Your customers, your data",
-    /** The small card under the name field: the pricing fact, moved up. Same terms as SERVICE_FEE_CLAUSE. */
-    price: { lead: "$0/month for the restaurant.", rest: "Customers pay 5% at checkout." },
+    trust: "$0 for the restaurant · Customers pay 5% at checkout · No lock-in",
     /** The hero animation: one sentence for screen readers, and its pause button. */
     demo: {
       description:
@@ -153,6 +153,8 @@ export const copy = {
       "The people who built WunTab set up your restaurant themselves.",
       "You get a direct line, not a ticket queue.",
       "Founding restaurants shape what we build next.",
+      /** From the hero's trust line (owner, 2026-10-20). Source: /terms 1.2 (your customer list is yours). */
+      "Your customers, your data.",
     ],
   },
   stories: { heading: "Restaurants on WunTab" },

@@ -24,7 +24,7 @@ export function PriceCard({
         <p className="mt-4 max-w-[20ch] text-h3">{copy.pricing.line}</p>
         <ul className="mt-6">
           {lines.map((line) => (
-            <li key={line} className="border-t border-mist py-3 text-body text-ink-muted first:border-t-0 first:pt-0">
+            <li key={line} className="border-t border-rule py-3 text-body text-ink-muted first:border-t-0 first:pt-0">
               {line}
             </li>
           ))}

@@ -2,21 +2,24 @@
 
 :root {
   --paper: #ffffff;
-  /* Near-black text (design pass, 2026-10-07). The logo keeps its navy tile.
-     Two greys only (2026-10-13): ink, and ink-muted for secondary text and
-     control borders, 64% ink on white (5.1:1 on paper, 4.8:1 on warm). */
+  /* Near-black text on light surfaces (design pass, 2026-10-07). Two greys
+     only (2026-10-13): ink, and ink-muted for secondary text and control
+     borders (5.1:1 on paper, 4.6:1 on the panel neutral). */
   --ink: #1d1d1b;
   --ink-muted: #6e6e6d;
-  /* The logo's navy: the tile, and the one dark band on the homepage. */
+  /* Brand pass (owner, 2026-10-20, option B): navy is the one dark. The logo
+     tile, the kitchen band, the footer and every dark-filled button. */
   --navy: #13213c;
-  /* The one accent: buttons, the hero art panel, step markers, the final band. */
+  --navy-deep: #0b1528;
+  /* Saffron is the one accent: it fills buttons, the hero panel and the
+     final band, nothing else, and is never a text color on white (2.0:1). */
   --saffron: #f4a83a;
   --saffron-deep: #e2962c;
-  /* The one cool light neutral: hairlines and hover fills, used sparingly.
-     No beige anywhere (layout pass, 2026-10-11). */
-  --mist: #e6e9ef;
-  /* A section background, on at most two sections a page (2026-10-13). */
-  --warm: #faf7f2;
+  /* One warm neutral for the panels behind the visuals and the toned
+     sections (it replaced the cool mist #e6e9ef and the warm #faf7f2), and
+     its line for hairlines and dividers. */
+  --panel: #f7f3ec;
+  --rule: #e8e1d5;
 }
 
 /*
@@ -27,11 +30,12 @@
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
-  --color-warm: var(--warm);
   --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
   --color-saffron: var(--saffron);
   --color-saffron-deep: var(--saffron-deep);
-  --color-mist: var(--mist);
+  --color-panel: var(--panel);
+  --color-rule: var(--rule);
   --font-sans: var(--font-archivo);
   /* Overlays only (the mega-menu). Cards and frames carry no shadow. */
   --shadow-lift:

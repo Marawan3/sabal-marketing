@@ -125,7 +125,7 @@ export function DesktopNav({
               aria-controls={panelId}
               aria-haspopup="true"
               className={`${triggerClass} ${
-                isOpen ? "bg-mist text-ink" : "text-ink hover:text-ink-muted"
+                isOpen ? "bg-panel text-ink" : "text-ink hover:text-ink-muted"
               }`}
               onPointerEnter={(event) => {
                 if (isHoverPointer(event)) openNow(menu.key);
@@ -162,7 +162,7 @@ export function DesktopNav({
               hidden={!isOpen}
               className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 ${widths[menu.width]}`}
             >
-              <div className="rounded-[20px] border border-mist bg-paper shadow-lift">
+              <div className="rounded-[20px] border border-rule bg-paper shadow-lift">
                 <div
                   className={`grid gap-6 ${
                     menu.width === "wide"
@@ -182,7 +182,7 @@ export function DesktopNav({
                           <li key={item.href}>
                             <SmartLink
                               href={item.href}
-                              className="block px-3 py-2.5 transition-colors duration-150 hover:bg-mist focus-visible:bg-mist"
+                              className="block px-3 py-2.5 transition-colors duration-150 hover:bg-panel focus-visible:bg-panel"
                             >
                               <span className="block text-small font-medium">
                                 {item.name}

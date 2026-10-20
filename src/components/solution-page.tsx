@@ -72,7 +72,7 @@ export function SolutionPage({ solution }: { solution: Solution }) {
         </div>
       </Section>
 
-      <Section id="included" tone="warm">
+      <Section id="included" tone="panel">
         <SectionHead heading="What's included" />
         <TwoColumnList
           items={solution.picks.map((slug) => (

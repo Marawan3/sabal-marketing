@@ -37,7 +37,7 @@ export default function AboutPage() {
       <Beliefs />
       <Founder />
 
-      <Section id="for" tone="warm">
+      <Section id="for" tone="panel">
         <SectionHead heading={copy.about.forHeading} sub={copy.about.forLine} />
         <TwoColumnList
           items={solutions.map((s) => (

@@ -2,7 +2,7 @@ import { demoStorefront } from "@/lib/site";
 
 const tones = {
   light: { link: "text-ink decoration-ink-muted hover:decoration-ink", tag: "text-ink-muted" },
-  dark: { link: "text-paper decoration-paper/40 hover:decoration-paper", tag: "text-paper/80" },
+  dark: { link: "text-paper decoration-paper/40 hover:decoration-paper", tag: "text-paper/75" },
   // On the saffron band muted grey doesn't read, so the tag stays ink.
   saffron: { link: "text-ink decoration-ink/50 hover:decoration-ink", tag: "text-ink" },
 } as const;

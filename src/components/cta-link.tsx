@@ -12,7 +12,8 @@ export const buttonSizes = {
 
 /**
  * The one action on the site. Saffron fill and ink text, except on the
- * saffron band, where it turns ink with white text so it still reads.
+ * saffron band, where it turns navy with white text so it still reads (navy
+ * is the one dark, owner 2026-10-20).
  */
 export function CtaLink({
   href,
@@ -27,7 +28,7 @@ export function CtaLink({
   className?: string;
   onSaffron?: boolean;
 }) {
-  const fill = onSaffron ? "bg-ink text-paper hover:bg-navy" : "bg-saffron text-ink hover:bg-saffron-deep";
+  const fill = onSaffron ? "bg-navy text-paper hover:bg-navy-deep" : "bg-saffron text-ink hover:bg-saffron-deep";
   return (
     <SmartLink href={href} className={`${buttonBase} ${buttonSizes[size]} ${fill} ${className}`}>
       {children}

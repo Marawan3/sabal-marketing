@@ -29,7 +29,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Outcomes" className="grid grid-cols-3 gap-3 border-b border-mist lg:flex lg:gap-10">
+      <div role="tablist" aria-label="Outcomes" className="grid grid-cols-3 gap-3 border-b border-rule lg:flex lg:gap-10">
         {tabs.map((tab, index) => {
           const selected = index === active;
           return (
@@ -75,7 +75,7 @@ export function OutcomeTabs({ tabs }: { tabs: OutcomeTab[] }) {
                 {tab.lines.map((line) => (
                   <li
                     key={line}
-                    className={`border-t border-mist py-3 text-body text-ink-muted first:border-t-0 first:pt-0 ${
+                    className={`border-t border-rule py-3 text-body text-ink-muted first:border-t-0 first:pt-0 ${
                       tab.visual ? "" : "lg:border-t-0 lg:border-l lg:py-0 lg:pl-6 lg:first:border-l-0 lg:first:pl-0"
                     }`}
                   >

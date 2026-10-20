@@ -3,7 +3,8 @@
  * real text and shapes, the storefront's and the kitchen display's own
  * colours and type, the demo restaurant's dishes, prices and photos. The
  * restaurant's own screens use its sand for bands and cards (2026-10-19);
- * WunTab's own panels (the ground) stay mist.
+ * WunTab's own panels (the ground) are the site's warm neutral (owner,
+ * 2026-10-20); inside the screens the old cool grey stays as --vis-mist.
  *
  * Inside a device every size is the device's own pixels times --k, as in the
  * hero (hero-order-demo.module.css). --k never drops below 0.6429px, so
@@ -21,12 +22,14 @@
  */
 
 .vis {
+  /* The screens' own grey (lines, chips, borders), unchanged by the brand pass (2026-10-20). */
+  --vis-mist: #e6e9ef;
   --sf-action: #0f766e;
   --sf-ink: var(--ink);
   --sf-body: var(--ink-muted);
   --sf-meta: var(--ink-muted);
-  --sf-line: var(--mist);
-  --sf-alt: var(--mist);
+  --sf-line: var(--vis-mist);
+  --sf-alt: var(--vis-mist);
   --sf-sand: #f3ead9;
   --sf-terracotta: #c8693a;
   --kd-bg: var(--ink);
@@ -69,7 +72,7 @@
 }
 
 .btn:hover {
-  background: var(--mist);
+  background: var(--rule);
 }
 
 .btn svg {
@@ -287,7 +290,7 @@
 
 .dashCard {
   padding: 20px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 12px;
   background: #fff;
   color: var(--ink);
@@ -322,7 +325,7 @@
 .dashPeriod {
   flex-shrink: 0;
   padding: 6px 12px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
@@ -388,7 +391,7 @@
 
 .stat {
   padding: 16px 20px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 12px;
   background: #fff;
   color: var(--ink);
@@ -451,7 +454,7 @@
 
 .rRule {
   margin: 14px 0;
-  border-top: 1px dashed var(--mist);
+  border-top: 1px dashed var(--vis-mist);
 }
 
 .rLine {
@@ -489,12 +492,13 @@
   left: 10%;
   right: 10%;
   height: 2px;
-  background: var(--mist);
+  background: var(--rule);
 }
 
+/* The flow is WunTab's own diagram, in the site's palette (owner, 2026-10-20): navy, never saffron. */
 .trackFill,
 .gfill {
-  background: var(--ink);
+  background: var(--navy);
   transform-origin: left;
   transition: transform var(--move);
 }
@@ -518,7 +522,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--navy);
   background: var(--paper);
 }
 
@@ -534,8 +538,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: var(--saffron);
-  color: var(--ink);
+  background: var(--navy);
+  color: var(--paper);
   transition: opacity var(--fade);
 }
 
@@ -543,7 +547,7 @@
   display: grid;
   gap: 0;
   margin-top: 28px;
-  border-top: 1px solid var(--mist);
+  border-top: 1px solid var(--rule);
 }
 
 @media (min-width: 768px) {
@@ -557,7 +561,7 @@
   display: flex;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--rule);
   font-size: 15px;
   line-height: 1.4;
   transition: opacity var(--fade);
@@ -571,7 +575,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: var(--saffron);
+  border: 2px solid var(--navy);
+  background: var(--paper);
+  color: var(--navy);
   font-size: 13px;
   font-weight: 600;
 }
@@ -786,7 +792,7 @@
   flex-direction: column;
   gap: calc(var(--k) * 2);
   padding: calc(var(--k) * 12) calc(var(--k) * 16);
-  border: calc(var(--k) * 1) solid var(--mist);
+  border: calc(var(--k) * 1) solid var(--vis-mist);
   border-radius: calc(var(--k) * 12);
   background: var(--paper);
   color: var(--sf-ink);
@@ -845,7 +851,7 @@
   width: calc(var(--k) * 10);
   height: calc(var(--k) * 10);
   border-radius: 9999px;
-  background: var(--mist);
+  background: var(--vis-mist);
 }
 
 .dot i {
@@ -978,7 +984,7 @@
   flex-direction: column;
   gap: calc(var(--k) * 12);
   padding: calc(var(--k) * 20);
-  border: calc(var(--k) * 1) solid var(--mist);
+  border: calc(var(--k) * 1) solid var(--vis-mist);
   border-radius: calc(var(--k) * 8);
   opacity: 0;
 }
@@ -1049,7 +1055,7 @@
   gap: 10px;
   height: 44px;
   padding: 0 16px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 9999px;
   font-size: 16px;
 }
@@ -1111,7 +1117,7 @@
 
 .dishes {
   margin-top: 10px;
-  border-top: 1px solid var(--mist);
+  border-top: 1px solid var(--vis-mist);
 }
 
 .dish {
@@ -1119,7 +1125,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 8px 0;
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
   color: var(--ink);
   transition: transform var(--move), opacity var(--fade);
 }
@@ -1137,7 +1143,7 @@
   padding: 24px 16px;
   overflow: hidden;
   border-radius: 20px;
-  background: var(--mist);
+  background: var(--panel);
 }
 
 .ground[data-bleed] {
@@ -1181,7 +1187,7 @@
   display: flex;
   height: calc(var(--k) * 680);
   overflow: hidden;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -1278,7 +1284,7 @@
   justify-content: space-between;
   height: calc(var(--k) * 64);
   padding: 0 calc(var(--k) * 24);
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
   background: #fff;
 }
 
@@ -1296,7 +1302,7 @@
   gap: calc(var(--k) * 4);
   margin-top: calc(var(--k) * 20);
   overflow: hidden;
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
   white-space: nowrap;
 }
 
@@ -1316,7 +1322,7 @@
   margin-left: calc(var(--k) * 6);
   padding: 0 calc(var(--k) * 6);
   border-radius: calc(var(--k) * 6);
-  background: var(--mist);
+  background: var(--vis-mist);
   color: var(--ink-muted);
   font-size: calc(var(--k) * 14);
 }
@@ -1336,12 +1342,12 @@
 .odChip {
   padding: calc(var(--k) * 6) calc(var(--k) * 12);
   border-radius: 9999px;
-  background: var(--mist);
+  background: var(--vis-mist);
 }
 
 .odList {
   overflow: hidden;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: calc(var(--k) * 10);
   background: #fff;
 }
@@ -1353,7 +1359,7 @@
   align-items: center;
   gap: calc(var(--k) * 12);
   padding: calc(var(--k) * 12) calc(var(--k) * 16);
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
 }
 
 .odRow > * {
@@ -1436,7 +1442,7 @@
   display: flex;
   justify-content: space-between;
   padding: calc(var(--k) * 18) calc(var(--k) * 20);
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
 }
 
 .odDrawerBody {
@@ -1468,13 +1474,13 @@
 
 .odTotals {
   padding-top: calc(var(--k) * 12);
-  border-top: 1px solid var(--mist);
+  border-top: 1px solid var(--vis-mist);
 }
 
 .odGrand {
   margin-top: calc(var(--k) * 4);
   padding-top: calc(var(--k) * 8);
-  border-top: 1px solid var(--mist);
+  border-top: 1px solid var(--vis-mist);
   font-size: calc(var(--k) * 17);
 }
 
@@ -1483,7 +1489,7 @@
   flex-direction: column;
   gap: calc(var(--k) * 8);
   padding: calc(var(--k) * 16) calc(var(--k) * 20);
-  border-top: 1px solid var(--mist);
+  border-top: 1px solid var(--vis-mist);
 }
 
 .odPrimary,
@@ -1508,7 +1514,7 @@
 }
 
 .odSecondary {
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
 }
 
 .odDanger {
@@ -1574,7 +1580,7 @@
 .setCard {
   margin-top: 14px;
   padding: 16px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 12px;
   background: #fff;
 }
@@ -1654,7 +1660,7 @@
 }
 
 .setAdjust {
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   background: #fff;
 }
 
@@ -1665,7 +1671,7 @@
   max-width: 560px;
   margin-inline: auto;
   overflow: hidden;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);
@@ -1674,7 +1680,7 @@
 
 .meHead {
   padding: 14px 16px;
-  border-bottom: 1px solid var(--mist);
+  border-bottom: 1px solid var(--vis-mist);
 }
 
 .meTitle {
@@ -1714,7 +1720,7 @@
   display: block;
   width: 100%;
   height: auto;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 8px;
 }
 
@@ -1731,7 +1737,7 @@
 
 .meInput {
   padding: 8px 10px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -1746,7 +1752,7 @@
 
 .meSeg > span {
   padding: 8px 4px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 8px;
   text-align: center;
 }
@@ -1763,7 +1769,7 @@
   flex-direction: column;
   margin-top: 8px;
   padding: 8px 12px;
-  border: 1px solid var(--mist);
+  border: 1px solid var(--vis-mist);
   border-radius: 8px;
 }
 
