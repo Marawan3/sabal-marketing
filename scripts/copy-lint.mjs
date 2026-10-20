@@ -9,6 +9,8 @@ const banned = [
   /AI-powered/i,
   /ranks #1/i,
   /\bsabal\b/i,
+  // "Restaurant OS" is not a name a visitor reads (owner, 2026-10-20): the product is WunTab.
+  /restaurant[\s-]?os\b/i,
   /owner\.com/i,
   /AggregateRating/,
   /"@type":\s*"Review"/,

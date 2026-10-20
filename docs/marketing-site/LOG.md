@@ -45,6 +45,23 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-20 · PR #62: "Restaurant OS" leaves the orders-dashboard picture, and its mark reads "WunTab" (the owner merges)
+
+**What changed.**
+- The orders-dashboard picture drew a second line, "Restaurant OS", under the WUNTAB mark in its sidebar (`src/components/visuals/orders-dashboard.tsx:37`). That line is gone, so the mark stands alone, as it now does in the product's own sidebar (sabal-ros #552).
+- The mark's text reads "WunTab", as the real logo does (owner, 2026-10-20: "the mock's logo text 'WUNTAB' → 'WunTab', matching the real logo"). The 0.08em tracking that suited the capitals is dropped. This settles the 2026-10-20 note below that the visual's "WUNTAB" would follow the product's sidebar.
+- **Where a visitor sees it.** The sidebar draws only when the picture has 900px or more (`visuals.module.css`, the `@container (max-width: 899px)` rule). Measured on every sitemap page at 2560px wide: only `/order-management` and `/solutions/quick-service` (960px) show it; the homepage (336px) and `/how-it-works` (513px) hide it.
+
+**Why.** Owner, 2026-10-20: "Remove 'Restaurant OS' from everything users can see … the marketing site … I'll merge."
+
+**Guard.** `scripts/copy-lint.mjs` now bans `/restaurant[\s-]?os\b/i` across `src/`. It failed on this line before the change and passes after.
+
+**Checks.** `npm run copy-lint`, `npm run honesty`, `npm run boundary-check` and `tsc --noEmit` pass. Before/after of the mark on `/order-management` at 1280 and 1440 were taken against `next dev`. The published legal text (`src/lib/legal.ts`) never said "ROS". The `legal/*.md` drafts, the lawyer notes and `HANDOFF.md` aren't rendered and are unchanged.
+
+**Done by** the sabal-ros UI agent, on the owner's instruction. One line, outside this site's usual lane, and stated here for that reason.
+
+---
+
 ## 2026-10-20 · PR #60: The desktop footer becomes the six groups, with a bottom bar (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 60"). Squash commit `3676666` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`6ca922a`): Vercel, and WebKit iPhone 71 of 71, with and without reduced motion.

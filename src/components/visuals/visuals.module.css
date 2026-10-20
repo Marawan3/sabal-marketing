@@ -1222,7 +1222,6 @@
   align-items: center;
   gap: calc(var(--k) * 12);
   margin: 0 calc(var(--k) * 8) calc(var(--k) * 24);
-  letter-spacing: 0.08em;
 }
 
 .odTile {
