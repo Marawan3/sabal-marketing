@@ -105,7 +105,11 @@ test("a visual runs from mount, pauses only while fully off screen, plays once, 
   await expect(flow).not.toHaveAttribute("data-run");
   const held = await clock(flow);
   expect(held.state).toBe("paused");
-  expect(held.t).toBeLessThan(100);
+  // Held before its first visible step, read from its own step times. A busy
+  // WebKit runner can take just over 100 ms to that first report (owner, 2026-10-20).
+  const firstStep = Number((await flow.getAttribute("data-steps"))!.split(" ")[1]);
+  expect(firstStep).toBeGreaterThan(0);
+  expect(held.t).toBeLessThan(firstStep);
   await page.waitForTimeout(800);
   expect(await clock(flow)).toEqual(held);
   await intoView(flow);
