@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoOrder } from "../src/lib/demo-order";
-import { companyLinks, demoHref, demoStorefront, primaryLinks } from "../src/lib/site";
+import { companyLinks, demoHref, demoStorefront, legalNav, primaryLinks } from "../src/lib/site";
 import { expectTrustLineBreaks } from "./trust-line";
 
 /**
@@ -136,19 +136,117 @@ test("phone footer: six closed groups, each opens and closes, every link still i
   await expect(legal).toBeVisible();
   const row = legal.locator("xpath=ancestor::div[1]");
   expect((await row.innerText()).replace(/\s+/g, " ").trim()).toBe(`Terms · Privacy · © ${new Date().getFullYear()} WunTab`);
-  await expect(footer.getByRole("link", { name: copy.finalCta.message })).toHaveCount(0);
+  await expect(footer.getByRole("link", { name: copy.footer.message })).toHaveCount(0);
 });
 
-test("from 768px the footer is the four columns, unchanged", async ({ page }) => {
-  for (const width of [768, 1280]) {
+/** The footer at 1280 before the desktop rebuild (2026-10-20, `main` at d4c25f9): one "Product" column of 15 links. */
+const FOOTER_1280_BEFORE = 1_013;
+
+test("from 768px the footer is the same six groups as columns, then the bottom bar", async ({ page }) => {
+  for (const width of [768, 900, 1023, 1024, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     const footer = page.locator("footer");
+    const columns = footer.locator('[data-footer="desktop"] [data-footer-column]');
     await expect(footer.locator('[data-footer="phone"]')).toBeHidden();
-    await expect(footer.locator("p.font-medium")).toHaveText(["Product", "Solutions", "Company", "Legal"]);
-    for (const title of await footer.locator("p.font-medium").all()) await expect(title).toBeVisible();
-    await expect(footer.getByRole("link", { name: copy.finalCta.message })).toHaveAttribute("href", "/contact");
-    for (const href of ["/privacy", "/terms"]) await expect(footer.locator(`a[href="${href}"]`)).toBeVisible();
+    await expect(columns.locator("p")).toHaveText(groupTitles);
+    await expect(footer.getByText("Legal", { exact: true })).toHaveCount(0);
+
+    // Each column has the phone group's links, in its order: both come from one list (site-footer.tsx).
+    const read = (links: ReturnType<Page["locator"]>) =>
+      links.evaluateAll((as) => as.map((a) => `${a.getAttribute("href")} ${(a.firstChild?.textContent ?? "").trim()}`));
+    const groups = footer.locator("[data-footer-group]");
+    for (const [i, title] of groupTitles.entries()) {
+      expect(await read(columns.nth(i).locator("a")), `${title} at ${width}`).toEqual(await read(groups.nth(i).locator("a")));
+    }
+    // What shows: those links, plus Terms, Privacy, the address and the contact form. Nothing else.
+    const shown = await footer.locator("a:visible").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+    const expected = [
+      ...(await groups.locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("href")))),
+      ...legalNav.map((l) => l.href),
+      "mailto:hello@wuntab.com",
+      "/contact",
+    ];
+    expect([...shown].sort(), `${width}`).toEqual([...expected].sort());
+
+    // Headings white at 75%, links white on 44px rows, one per line, and no name wraps.
+    const layout = await columns.evaluateAll((cols) => {
+      // A computed color as [r, g, b, a], whatever notation the browser reports it in.
+      const ctx = document.createElement("canvas").getContext("2d")!;
+      const rgba = (color: string) => {
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, 1, 1);
+        return [...ctx.getImageData(0, 0, 1, 1).data];
+      };
+      return cols.map((col) => {
+        const heading = col.querySelector("p")!;
+        const links = [...col.querySelectorAll("a")].map((a) => {
+          const range = document.createRange();
+          range.selectNodeContents(a.firstChild!);
+          const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+          const box = a.getBoundingClientRect();
+          return { label: a.firstChild!.textContent, lines, top: box.top, height: box.height, right: box.right, color: rgba(getComputedStyle(a).color) };
+        });
+        return { top: col.getBoundingClientRect().top, left: col.getBoundingClientRect().left, heading: rgba(getComputedStyle(heading).color), links };
+      });
+    });
+    for (const [i, col] of layout.entries()) {
+      expect(col.heading.slice(0, 3), groupTitles[i]).toEqual([255, 255, 255]);
+      expect(Math.abs(col.heading[3] - 0.75 * 255), groupTitles[i]).toBeLessThanOrEqual(1);
+      for (const [j, link] of col.links.entries()) {
+        expect(link.lines, `"${link.label}" wraps at ${width}`).toBe(1);
+        expect(link.height, `${link.label}`).toBeGreaterThanOrEqual(44);
+        expect(link.color, `${link.label}`).toEqual([255, 255, 255, 255]);
+        if (j > 0) expect(link.top, "one link per line").toBeGreaterThanOrEqual(col.links[j - 1].top + col.links[j - 1].height - 1);
+      }
+      // No column runs into the next one in its row.
+      const next = layout[i + 1];
+      if (next && Math.abs(next.top - col.top) < 1) expect(Math.max(...col.links.map((l) => l.right)), groupTitles[i]).toBeLessThanOrEqual(next.left);
+    }
+    // One row of six from 1024px; below, two rows of three: Sell, Grow, Operate, then Scale, Solutions, Company.
+    const rows = [...new Set(layout.map((c) => Math.round(c.top)))];
+    expect(rows.length, `rows at ${width}`).toBe(width >= 1024 ? 1 : 2);
+    if (width < 1024) expect(layout.map((c) => rows.indexOf(Math.round(c.top)))).toEqual([0, 0, 0, 1, 1, 1]);
+
+    // Company ends with the demo restaurant, in a new tab, with the new-tab icon, as on phones.
+    const demo = columns.nth(groupTitles.indexOf("Company")).locator("a").last();
+    await expect(demo).toHaveText(new RegExp(`^${demoStorefront.footerLabel}`));
+    await expect(demo).toHaveAttribute("href", demoStorefront.href);
+    await expect(demo).toHaveAttribute("target", "_blank");
+    await expect(demo).toHaveAttribute("rel", /\bnoopener\b/);
+    await expect(demo.locator('svg[aria-hidden="true"]')).toHaveCount(1);
+
+    // The bottom bar, under a hairline: the logo, the address and "Send a message" on the left; Terms · Privacy · © on the right.
+    const logo = footer.locator("[data-logo]:visible");
+    const email = footer.getByRole("link", { name: "hello@wuntab.com" });
+    const message = footer.getByRole("link", { name: copy.footer.message });
+    const terms = footer.getByRole("link", { name: "Terms" });
+    await expect(message).toHaveAttribute("href", "/contact");
+    await expect(email).toHaveAttribute("href", "mailto:hello@wuntab.com");
+    const legalRow = terms.locator("xpath=ancestor::div[1]");
+    expect((await legalRow.innerText()).replace(/\s+/g, " ").trim()).toBe(`Terms · Privacy · © ${new Date().getFullYear()} WunTab`);
+    const bar = legalRow.locator("xpath=..");
+    expect(await bar.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe("1px");
+    const [logoBox, emailBox, messageBox, legalBox, barBox, lastColumn] = await Promise.all([
+      logo.boundingBox(), email.boundingBox(), message.boundingBox(), legalRow.boundingBox(), bar.boundingBox(), columns.last().boundingBox(),
+    ]);
+    expect(barBox!.y).toBeGreaterThanOrEqual(lastColumn!.y + lastColumn!.height);
+    expect(logoBox!.x).toBeCloseTo(barBox!.x, 0);
+    expect(emailBox!.x).toBeGreaterThan(logoBox!.x + logoBox!.width);
+    expect(messageBox!.x).toBeGreaterThan(emailBox!.x + emailBox!.width);
+    expect(legalBox!.x + legalBox!.width).toBeCloseTo(barBox!.x + barBox!.width, 0);
+    // All on one line.
+    const middle = (b: { y: number; height: number }) => b.y + b.height / 2;
+    for (const box of [emailBox!, messageBox!, legalBox!]) expect(Math.abs(middle(box) - middle(logoBox!)), `${width}`).toBeLessThanOrEqual(2);
+
+    await noSideScroll(page);
+    if (width === 1280) {
+      const height = (await footer.boundingBox())!.height;
+      test.info().annotations.push({ type: "footer at 1280", description: `${Math.round(height)}px, was ${FOOTER_1280_BEFORE}px` });
+      // The owner's aim: about 550px (2026-10-20).
+      expect(height).toBeLessThanOrEqual(560);
+    }
   }
 });
 

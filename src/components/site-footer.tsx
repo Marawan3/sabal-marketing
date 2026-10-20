@@ -1,36 +1,29 @@
 import { SmartLink } from "./smart-link";
 import { ExternalIcon } from "./demo-link";
 import { Logo } from "./logo";
-import { builtProducts, bySlug, megaMenu, pillars, productHref, secondaryProducts, solutionHref, solutions } from "@/lib/catalog";
+import { builtProducts, bySlug, megaMenu, pillars, productHref, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { companyLinks, demoStorefront, legalNav, primaryLinks, site } from "@/lib/site";
 
-/** Every product page: the mega-menu's, in its order, then the secondary pages, then How it works and Pricing. */
-const productLinks = [
-  ...megaMenu.flatMap((group) => group.slugs).filter((slug) => productHref(slug) && !secondaryProducts.has(slug)),
-  ...builtProducts.filter((slug) => secondaryProducts.has(slug)),
-]
-  .map((slug) => ({ href: productHref(slug)!, label: bySlug[slug].name }))
-  .concat(primaryLinks.map((l) => ({ href: l.href, label: l.label })));
-
-const solutionLinks = solutions.map((s) => ({ href: solutionHref(s.slug), label: s.name }));
-
-/**
- * Phones: the mobile menu's groups (owner, 2026-10-19), each with every
- * built page in its pillar (the secondary pages too, so the footer still
- * links to every page). How it works and Pricing join Company, and the
- * demo restaurant ends it, in a new tab (owner, 2026-10-20).
- */
 type FooterLink = { href: string; label: string; external?: boolean };
 
-const phoneGroups: { title: string; links: FooterLink[] }[] = [
+/**
+ * The footer's six groups, on every screen: the mobile menu's groups (owner,
+ * 2026-10-19), each with every built page in its pillar (the secondary pages
+ * too, so the footer still links to every page). How it works and Pricing
+ * join Company, and the demo restaurant ends it, in a new tab (owner,
+ * 2026-10-20). Phones show them as closed groups and wider screens as
+ * columns (owner, 2026-10-20), both from this one list, so a new page lands
+ * in the same group everywhere.
+ */
+const footerGroups: { title: string; links: FooterLink[] }[] = [
   ...megaMenu.map((group) => ({
     title: pillars[group.pillar].name,
     links: [...group.slugs, ...builtProducts]
       .filter((slug, i, all) => all.indexOf(slug) === i && productHref(slug) && bySlug[slug].pillar === group.pillar)
       .map((slug) => ({ href: productHref(slug)!, label: bySlug[slug].name })),
   })),
-  { title: "Solutions", links: solutionLinks },
+  { title: "Solutions", links: solutions.map((s) => ({ href: solutionHref(s.slug), label: s.name })) },
   {
     title: "Company",
     links: [
@@ -43,25 +36,36 @@ const phoneGroups: { title: string; links: FooterLink[] }[] = [
 
 const year = new Date().getFullYear();
 
-function Column({
-  title,
-  links,
-  className = "",
-}: {
-  title: string;
-  links: readonly { href: string; label: string }[];
-  className?: string;
-}) {
+/** A group's link: the page, or the demo restaurant in a new tab with the new-tab icon. A row on phones, inline in a column. */
+function GroupLink({ link, display }: { link: FooterLink; display: "flex" | "inline-flex" }) {
+  return link.external ? (
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener"
+      data-demo-link
+      className={`${display} min-h-11 items-center gap-2 text-small text-paper underline-offset-4 hover:underline`}
+    >
+      {link.label}
+      <ExternalIcon />
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  ) : (
+    <SmartLink href={link.href} className={`${display} min-h-11 items-center text-small text-paper underline-offset-4 hover:underline`}>
+      {link.label}
+    </SmartLink>
+  );
+}
+
+/** A desktop column: the group's name, then its links, one per line. */
+function Column({ title, links }: { title: string; links: readonly FooterLink[] }) {
   return (
-    <div className={className}>
+    <div data-footer-column>
       <p className="text-small font-medium text-paper/75">{title}</p>
-      {/* From md to lg the links wrap in a row, so four columns stay short; from lg, one per line. */}
-      <ul className="mt-1 flex flex-wrap gap-x-5 lg:mt-2 lg:block">
+      <ul className="mt-2">
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper underline-offset-4 hover:underline">
-              {link.label}
-            </SmartLink>
+            <GroupLink link={link} display="inline-flex" />
           </li>
         ))}
       </ul>
@@ -70,18 +74,17 @@ function Column({
 }
 
 /**
- * Terms and Privacy, once in the page: the Legal column from md, and on
- * phones the last row, "Terms · Privacy · © 2026 WunTab".
+ * Terms and Privacy, once in the page: "Terms · Privacy · © 2026 WunTab",
+ * the phone footer's last row and the right end of the bottom bar from md.
  */
 function Legal() {
   return (
-    <div className="flex flex-wrap items-center gap-x-2 md:block">
-      <p className="hidden text-small font-medium text-paper/75 md:block">Legal</p>
-      <ul className="flex flex-wrap items-center gap-x-2 md:mt-1 md:items-stretch md:gap-x-5 lg:mt-2 lg:block">
+    <div className="flex flex-wrap items-center gap-x-2">
+      <ul className="flex flex-wrap items-center gap-x-2">
         {legalNav.map((link, i) => (
-          <li key={link.href} className="max-md:flex max-md:items-center max-md:gap-x-2">
+          <li key={link.href} className="flex items-center gap-x-2">
             {i > 0 ? (
-              <span aria-hidden className="text-small text-paper/75 md:hidden">
+              <span aria-hidden className="text-small text-paper/75">
                 ·
               </span>
             ) : null}
@@ -91,12 +94,10 @@ function Legal() {
           </li>
         ))}
       </ul>
-      <span aria-hidden className="text-small text-paper/75 md:hidden">
+      <span aria-hidden className="text-small text-paper/75">
         ·
       </span>
-      <p className="text-small text-paper/75 md:hidden">
-        © {year} WunTab
-      </p>
+      <p className="text-small text-paper/75">© {year} WunTab</p>
     </div>
   );
 }
@@ -125,29 +126,16 @@ function Group({ title, links }: { title: string; links: readonly FooterLink[] }
       <ul className="pb-2">
         {links.map((link) => (
           <li key={link.href}>
-            {link.external ? (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener"
-                data-demo-link
-                className="flex min-h-11 items-center gap-2 text-small text-paper underline-offset-4 hover:underline"
-              >
-                {link.label}
-                <ExternalIcon />
-                <span className="sr-only">(opens in a new tab)</span>
-              </a>
-            ) : (
-              <SmartLink href={link.href} className="flex min-h-11 items-center text-small text-paper underline-offset-4 hover:underline">
-                {link.label}
-              </SmartLink>
-            )}
+            <GroupLink link={link} display="flex" />
           </li>
         ))}
       </ul>
     </details>
   );
 }
+
+const barLink =
+  "inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper";
 
 export function SiteFooter() {
   return (
@@ -157,46 +145,41 @@ export function SiteFooter() {
         <div className="md:hidden" data-footer="phone">
           <Logo tone="dark" size={28} />
           <div className="mt-4 border-t border-paper/15">
-            {phoneGroups.map((group) => (
+            {footerGroups.map((group) => (
               <Group key={group.title} title={group.title} links={group.links} />
             ))}
           </div>
           <div className="mt-2">
-            <SmartLink
-              href={`mailto:${site.contactEmail}`}
-              className="inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
-            >
+            <SmartLink href={`mailto:${site.contactEmail}`} className={barLink}>
               {site.contactEmail}
             </SmartLink>
           </div>
         </div>
-        {/* From md: four columns (owner, 2026-10-13), Product, Solutions, Company, Legal; Product and Solutions full width until lg. On phones only Legal shows, as the last row. */}
-        <div className="contents md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-6 lg:grid-cols-4">
-          <Column title="Product" links={productLinks} className="col-span-2 hidden md:block lg:col-span-1" />
-          <Column title="Solutions" links={solutionLinks} className="col-span-2 hidden md:block lg:col-span-1" />
-          <Column title="Company" links={companyLinks} className="hidden md:block" />
-          <Legal />
+        {/*
+          From md: the same six groups as columns (owner, 2026-10-20). Two rows of three until lg, then one row of six.
+          From lg each column is as wide as its longest name, and the spare width goes between them, so no name wraps
+          at 1024: six equal columns there would be 135px, and "Multi-Location Restaurants" is 180.
+        */}
+        <div
+          data-footer="desktop"
+          className="hidden md:grid md:grid-cols-3 md:gap-x-6 md:gap-y-8 lg:grid-cols-[repeat(6,auto)] lg:justify-between lg:gap-x-4"
+        >
+          {footerGroups.map((group) => (
+            <Column key={group.title} title={group.title} links={group.links} />
+          ))}
         </div>
-        {/* From md: the logo and the year on one line; the address and the contact link under them. */}
-        <div className="mt-8 hidden border-t border-paper/15 pt-6 md:block lg:mt-12 lg:pt-8">
-          <div className="flex items-center justify-between gap-4">
+        {/* From md, under a hairline: the logo, the address and the contact form, then Terms · Privacy · © on the right. On phones only the legal row shows, as the last row. */}
+        <div className="md:mt-8 md:flex md:flex-wrap md:items-center md:justify-between md:gap-x-6 md:border-t md:border-paper/15 md:pt-6 lg:mt-12 lg:pt-8">
+          <div className="hidden md:flex md:flex-wrap md:items-center md:gap-x-6">
             <Logo tone="dark" size={28} />
-            <p className="text-small text-paper/75">© {year} WunTab</p>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-x-6">
-            <SmartLink
-              href={`mailto:${site.contactEmail}`}
-              className="inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
-            >
+            <SmartLink href={`mailto:${site.contactEmail}`} className={barLink}>
               {site.contactEmail}
             </SmartLink>
-            <SmartLink
-              href="/contact"
-              className="inline-flex min-h-11 items-center text-small font-medium underline decoration-paper/40 underline-offset-4 hover:decoration-paper"
-            >
-              {copy.finalCta.message}
+            <SmartLink href="/contact" className={barLink}>
+              {copy.footer.message}
             </SmartLink>
           </div>
+          <Legal />
         </div>
       </div>
     </footer>

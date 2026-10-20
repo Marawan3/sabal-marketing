@@ -281,6 +281,8 @@ export const copy = {
     after: "20-minute call. We show WunTab on your own menu. No pressure.",
     message: "Or send a message",
   },
+  /** The desktop footer's bottom bar (owner, 2026-10-20): it follows the address, so no "Or". */
+  footer: { message: "Send a message" },
   /**
    * /contact: the form posts to /api/contact, which emails hello@wuntab.com.
    * Get Started lands here too, as /contact?intent=call (owner, 2026-10-19).
