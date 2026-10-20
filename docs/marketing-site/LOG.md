@@ -66,6 +66,11 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 - **Calculator:**
   - It opens on the owner's example, 60 orders a week at $30, marked "Example — change these", so the range shows at once: Between $14,040 and $28,080.
   - Both boxes bring up the number keypad. The $ sits before the order value, and the result is in the larger, bolder type.
+- **Hero name box:**
+  - It's read when Get Started is pressed, not from the page's script state.
+  - On this PR's first WebKit run, a name typed before the page's script took over didn't reach /contact.
+  - Chromium never lost it, even with typing held before the script ran. WebKit can't run here, so its CI is the check.
+  - A new test types before the scripts run, in both browsers.
 
 **Heights at 375px (Chromium; before is `main` at `b766b61`, built and measured the same way):**
 
@@ -77,6 +82,12 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 | /pricing | 3,317 px | 3,162 px |
 
 The homepage at 390 is 6,665 px (the limit is 7,000).
+
+**Page weight:**
+- **Homepage HTML: 49.9 KB gzipped, up from 37.7 KB** (435 KB raw, up from 311 KB).
+  - Almost all of it is the four stills. Each is the whole visual's markup, every screen of its story, though a still shows only the first.
+  - Rendering only each still's first screen would cut most of that. It wasn't done here, because it changes each visual.
+- **The phone footer adds 2.3 KB gzipped to every page** (/contact: 9.1 KB to 11.4 KB).
 
 **Not met: the footer's 450px target.**
 - The six 48px group rows, the 48px button and three 44px tap rows (the demo link, the address, Terms and Privacy) come to 474px before the logo and the line.
@@ -100,6 +111,8 @@ The homepage at 390 is 6,665 px (the limit is 7,000).
   - "Nothing swipes sideways" now allows the one product row.
   - Tests that look at every visual skip the stills.
   - Footer link counts look at what shows.
+- **Local suite: 150 passed, 1 skipped** (Chromium, and Chromium with reduced motion). Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **WebKit iPhone, first run: 67 of 68 passed.** Every new phone test passed, with and without reduced motion, including the homepage height. The one failure was the hero name box (above); the fix and its test are in.
 - **Evidence:** `docs/marketing-site/evidence/mobile-polish/`:
   - full pages of /, /contact and /pricing at 375 and 1280;
   - the footer before and after, closed and with Sell open;

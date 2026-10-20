@@ -26,6 +26,22 @@ test("the hero's Get Started carries the name to the form, which asks for a call
   await expect(page.locator('main input[name="intent"]')).toHaveValue("call");
 });
 
+test("a name typed before the page's script has run still goes to the form", async ({ page }) => {
+  // Hold the scripts back, type, then let the page take over before Get Started.
+  await page.route("**/_next/static/chunks/**", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+    await route.continue();
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.getByLabel(copy.hero.inputLabel).fill("Palm & Stone");
+  // The hero's player sets data-run once the page's script is running.
+  await expect(page.locator("#top [data-demo]")).toHaveAttribute("data-run", "", { timeout: 15_000 });
+  await page.locator("#top form").getByRole("button", { name: copy.cta.primary }).click();
+  await page.waitForURL(/\/contact\?/);
+  expect(new URL(page.url()).searchParams.get("restaurant")).toBe("Palm & Stone");
+  await expect(page.getByLabel(c.fields.restaurant)).toHaveValue("Palm & Stone");
+});
+
 test("with no name typed, the hero's Get Started goes to the call form with the Restaurant field empty", async ({ page }) => {
   await page.goto("/");
   await page.locator("#top form").getByRole("button", { name: copy.cta.primary }).click();
