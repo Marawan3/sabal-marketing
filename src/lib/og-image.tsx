@@ -1,6 +1,16 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { brand } from "./brand";
 import { WORDMARK } from "./wordmark";
+
+/**
+ * The title's face: Archivo at the H1's weight (750) and width (110%), a
+ * static TTF instanced from the site's own Archivo file by
+ * scripts/og-font.py (owner, 2026-10-20). The renderer reads TTF, not the
+ * site's WOFF2. Read once, at module scope, as the next/og docs advise.
+ */
+const archivo = await readFile(join(process.cwd(), "assets/og/archivo-750-110.ttf"));
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -18,7 +28,7 @@ export function createOgImage(title: string) {
           background: brand.paper,
           color: brand.ink,
           padding: "72px",
-          fontFamily: "ui-sans-serif, system-ui, sans-serif",
+          fontFamily: "Archivo",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -58,7 +68,8 @@ export function createOgImage(title: string) {
               fontSize: 64,
               fontWeight: 700,
               lineHeight: 1.05,
-              letterSpacing: -1.5,
+              // The H1's tracking, -0.025em.
+              letterSpacing: -1.6,
               maxWidth: 1000,
             }}
           >
@@ -67,6 +78,10 @@ export function createOgImage(title: string) {
         </div>
       </div>
     ),
-    ogSize,
+    {
+      ...ogSize,
+      // The one face, registered as 700: the file itself is the 750 instance at 110% width.
+      fonts: [{ name: "Archivo", data: archivo, weight: 700, style: "normal" }],
+    },
   );
 }

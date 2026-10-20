@@ -10,6 +10,7 @@ import { OWNER, publishedFounder } from "../src/lib/founder";
 import { customerStories, storiesFor } from "../src/lib/stories";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
 import { yearlyRange } from "../src/components/savings-calculator";
+import { expectTrustLineBreaks } from "./trust-line";
 
 /**
  * The competitive upgrade (owner, 2026-10-13): two greys and a warm band, the
@@ -56,9 +57,8 @@ test("hero: the trust line above the headline carries the $0 and the 5%; no card
   // The owner's line (2026-10-20): the 5% stays in the hero, so its pricing matches /terms.
   expect(copy.hero.trust).toBe("$0 for the restaurant · Customers pay 5% at checkout · No lock-in");
   expect(SERVICE_FEE_CLAUSE).toContain("the customer pays a service fee of 5% of the order");
-  // Each fact stays whole ("No lock-in" never breaks at its hyphen), and each dot ends a fact, so no line starts with one.
-  const whole = trust.locator(".whitespace-nowrap");
-  expect(await whole.allTextContents()).toEqual(["$0 for the restaurant ·", "Customers pay 5% at checkout ·", "No lock-in"]);
+  const facts = trust.locator("[data-fact]");
+  expect(await facts.allTextContents()).toEqual(["$0 for the restaurant", "Customers pay 5% at checkout", "No lock-in"]);
   // A navy dot, then the text: saffron fills only buttons, the hero panel and the final band.
   const dot = await trust.locator("span[aria-hidden]").evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(dot).toBe("rgb(19, 33, 60)");
@@ -67,17 +67,14 @@ test("hero: the trust line above the headline carries the $0 and the 5%; no card
   await expect(hero).not.toContainText("Your customers, your data");
   await expect(page.locator("#founding li")).toHaveText([...copy.founding.points]);
   expect(copy.founding.points.at(-1)).toBe("Your customers, your data.");
+  // Every width from 320 to 1280: each fact whole on one line, and a separator never starts or ends a line.
+  await expectTrustLineBreaks(page, trust);
   for (const width of [360, 375, 390, 1440]) {
     await page.setViewportSize({ width, height: 800 });
     const box = async (loc: ReturnType<typeof page.locator>) => (await loc.boundingBox())!;
     expect((await box(trust)).y, `${width}`).toBeLessThan((await box(hero.locator("h1"))).y);
-    // Every fact on a single line, and the trust line in the first screen.
-    const lineHeight = await trust.evaluate((el) => parseFloat(getComputedStyle(el).lineHeight));
-    for (const fact of await whole.all()) expect((await box(fact)).height, `${await fact.textContent()} at ${width}`).toBeLessThanOrEqual(lineHeight + 1);
+    // The trust line in the first screen.
     expect((await box(trust)).y + (await box(trust)).height).toBeLessThan(800);
-    // Two lines on phones from 360px: "$0 for the restaurant ·", then the other two. One from 640px.
-    const lines = Math.round((await box(trust)).height / lineHeight);
-    expect(lines, `trust line at ${width}`).toBe(width < 640 ? 2 : 1);
     // The headline: at most four lines (owner, 2026-10-20, at 360).
     const h1 = hero.locator("h1");
     const h1Lines = Math.round((await box(h1)).height / (await h1.evaluate((el) => parseFloat(getComputedStyle(el).lineHeight))));

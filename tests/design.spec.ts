@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { beliefs, OWNER_TO_WRITE, publishedBeliefs } from "../src/lib/beliefs";
 import { builtProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
@@ -181,6 +182,28 @@ test("the WunTab wordmark is drawn as outlines in Archivo, lined up with the til
   }
   // The old blue "S" logo is gone.
   expect((await page.request.get("/logo-mark.png")).status()).toBe(404);
+});
+
+test("OG images: 1200 by 630 for /, /terms and /privacy, the title's face a static Archivo at the H1's weight and width", async ({ page }) => {
+  // The file og-image.tsx reads (owner, 2026-10-20): TrueType with no variation tables (the renderer can't read
+  // the site's variable WOFF2), weight 750, width class 6 (semi-expanded, the nearest class to 110%).
+  const font = readFileSync("assets/og/archivo-750-110.ttf");
+  const tables = new Map<string, number>();
+  for (let i = 0; i < font.readUInt16BE(4); i++) {
+    const at = 12 + i * 16;
+    tables.set(font.toString("latin1", at, at + 4), font.readUInt32BE(at + 8));
+  }
+  expect(font.readUInt32BE(0)).toBe(0x00010000);
+  expect(["fvar", "gvar", "HVAR"].filter((tag) => tables.has(tag))).toEqual([]);
+  const os2 = tables.get("OS/2")!;
+  expect([font.readUInt16BE(os2 + 4), font.readUInt16BE(os2 + 6)]).toEqual([750, 6]);
+  for (const path of ["/opengraph-image", "/terms/opengraph-image", "/privacy/opengraph-image"]) {
+    const response = await page.request.get(path);
+    expect(response.status(), path).toBe(200);
+    expect(response.headers()["content-type"], path).toBe("image/png");
+    const png = await response.body();
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)], path).toEqual([1200, 630]);
+  }
 });
 
 /** WCAG 2.2 contrast between two sRGB colors, the text's alpha composited over the background. */

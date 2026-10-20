@@ -87,16 +87,28 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 Left as they are:
 - **Legal pages:** the 28 "Wuntab" in `src/lib/legal.ts` are the approved entity wording and its defined name, and need the owner's written approval to change.
-- **Dashboard visual:** "WUNTAB" in its sidebar depicts the product's own sidebar.
+- **Dashboard visual:** "WUNTAB" in its sidebar depicts the product's own sidebar. The owner said to leave it for now (2026-10-20). It will follow the product's sidebar once the dashboard color pass lands.
 - **Demo banner:** its "Wuntab" is in the product repo, not this one.
 
 **First phone screen.**
 - **The $0 card is gone.** It sat under the name box ("$0/month for the restaurant. Customers pay 5% at checkout.").
-- **New trust line:** "$0 for the restaurant · Customers pay 5% at checkout · No lock-in", so the 5% stays in the hero and matches /terms. Each fact stays whole and no line starts with a dot. On phones it's two lines: "$0 for the restaurant ·", then the other two.
+- **New trust line:** "$0 for the restaurant · Customers pay 5% at checkout · No lock-in", so the 5% stays in the hero and matches /terms. Each fact stays whole, and a dot never starts or ends a line (see the second round below).
 - **"Your customers, your data."** It moved to the founding section as its fourth line. Its three lines are what a restaurant gets by joining early, and owning its customer list belongs with them. The section is four across from 1024px and two by two from 640px.
 - **The H1** is still 4 lines at 360 and 375.
 
 **Heights at 375 (Chromium):** the homepage went from 6,496 to 6,467px. At 1280 it went from 9,434 to 9,402px.
+
+**Second round (owner's review on the preview at 375 and 1280, 2026-10-20):**
+- **OG images:** the title on /, /terms and /privacy is set in Archivo at the H1's weight (750) and width (110%), at the H1's tracking (-0.025em).
+  - The face is a static TTF, `assets/og/archivo-750-110.ttf` (41KB), instanced from the site's own Archivo file with fontTools by `scripts/og-font.py`, because the image renderer can't read WOFF2.
+  - Archivo's license (SIL Open Font License) is next to it in `assets/og/OFL.txt`.
+  - The saffron bar and the new lockup are kept.
+- **Trust line on phones:**
+  - **What changed:** "$0 for the restaurant" is on its own line, with the dot after it hidden, and "Customers pay 5% at checkout · No lock-in" is the second line. It's still one line on desktop.
+  - **Where it splits:** the owner asked for the split below 480px. The whole line is 452px wide and needs a screen 484px wide with its margins, so the split runs to 519px, with one line from 520px.
+  - **Narrowest screens:** below 340px the second line no longer fits beside its dot, so each fact gets its own line, with no dots.
+  - **The rule:** a dot never starts or ends a line at any width from 320 to 1280.
+- **Answers:** keep the -0.02em tracking on the wordmark; keep the warm hover fills; leave the dashboard visual's "WUNTAB" (above).
 
 **How it was checked:**
 - **New tests** (`tests/design.spec.ts`):
@@ -106,23 +118,30 @@ Left as they are:
   - nothing is ink-filled;
   - the footer is navy and the final band's button navy with white text;
   - the wordmark is outlines, as tall as the tile and level with it, 14px from it, ink on light and white on navy;
-  - /logo-mark.png returns 404.
+  - /logo-mark.png returns 404;
+  - the OG images for /, /terms and /privacy are 1200 by 630 PNGs, and the title's font file is a static TrueType at weight 750, width class 6 (the nearest to 110%).
 - **Updated tests:**
-  - the hero's trust line and the 5%, with no card;
+  - the hero's trust line and the 5%, with no card. Every width from 320 to 1280 (every 10px, plus 339, 340, 479, 480, 519 and 520) checks that:
+    - each fact is whole on one line;
+    - every dot that shows has a fact on both sides of it on its line;
+    - the line count is 3, 2 or 1;
+    - nothing overflows.
+    The test caught a first draft whose breakpoints were a pixel apart, at 339px. The sweep is shared (`tests/trust-line.ts`): `tests/phone.spec.ts` runs it too, so WebKit on an iPhone profile checks it, with and without reduced motion;
   - the H1 at most 4 lines at 360;
   - the step markers;
   - "only cards" (the step circles aren't cards);
   - the warm-neutral section count;
   - the homepage height in Chromium, now held at 6,496px.
-- **Local suite:** 153 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **Local suite:** 156 passed, 1 skipped, after the second round. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+  - **One failure along the way:** "no layout shift while the visuals play" measured a shift of 0.0063 on /delivery at 1440 in Chromium. It didn't come back in about 30 tries, nor in the next full run, and the round didn't touch /delivery.
+  - **What changed:** the trace didn't say what moved, so the test now names each shifted element, with its box before and after, in its failure message. It's no less strict: any shift still fails.
 - **Evidence:** `docs/marketing-site/evidence/brand-pass/`, with before and after:
   - at 375 and 1280: the first screen, the panels, the products, the calculator, How it works, the final band, the footer, and the header and footer logos;
-  - the OG image;
-  - after only: the founding section and the /delivery flow.
+  - the OG image, and the OG titles for /, /terms and /privacy (`og-title-*.png`, before and after the Archivo title);
+  - after only: the founding section, the /delivery flow, and the trust line at 320, 375, 480, 520 and 1280 (`trust-line-*.png`).
 
 **Notes:**
-- **Tracking:** the brief says the H1 is -0.02em. The H1 is actually -0.025em, and the wordmark uses the brief's -0.02em.
-- **The OG image** keeps its saffron accent bar and its title in the image library's default font.
+- **Tracking:** the brief says the H1 is -0.02em. The H1 is actually -0.025em, and the wordmark uses the brief's -0.02em, which the owner kept.
 
 ---
 

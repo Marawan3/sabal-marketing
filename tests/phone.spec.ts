@@ -3,6 +3,7 @@ import { builtProducts, bySlug, productHref, solutionHref, solutions } from "../
 import { copy } from "../src/lib/copy";
 import { demoOrder } from "../src/lib/demo-order";
 import { companyLinks, demoHref, demoStorefront, primaryLinks } from "../src/lib/site";
+import { expectTrustLineBreaks } from "./trust-line";
 
 /**
  * Mobile polish (owner, 2026-10-19), measured at 375px: the footer as six
@@ -204,6 +205,11 @@ test("See a live restaurant: on by default, in every place, to demo.wuntab.com i
   // /restaurant-websites keeps its own.
   await page.goto("/restaurant-websites");
   await check(page.locator("main section").first().locator("[data-demo-link]"), "/restaurant-websites");
+});
+
+test("the hero's trust line: each fact whole, and a dot never starts or ends a line, from 320 to 1280", async ({ page }) => {
+  await page.goto("/");
+  await expectTrustLineBreaks(page, page.locator("#top").getByText(copy.hero.trust));
 });
 
 test("products on phones: cards to swipe, each a still of its visual, its name, its line and Learn more", async ({ page, browserName }) => {

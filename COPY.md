@@ -8,7 +8,11 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Trust line (2026-10-20), over the headline, after a navy dot:** $0 for the restaurant · Customers pay 5% at checkout · No lock-in
 - It took in the $0 card's 5%, so the hero's pricing still matches /terms. "Your customers, your data" moved to the founding section. *(Was, 2026-10-13: $0 for the restaurant · No lock-in · Your customers, your data.)*
-- Each fact stays whole and a line never starts with a dot. On phones it's two lines: "$0 for the restaurant ·", then the other two.
+- Each fact stays whole, and a dot never starts or ends a line at any width from 320 to 1280 (owner, 2026-10-20):
+  - from 520px wide, one line;
+  - from 340 to 519px, two lines: "$0 for the restaurant", with no dot after it, then "Customers pay 5% at checkout · No lock-in";
+  - below 340px, one fact a line, with no dots.
+  - The owner asked for the split below 480px. The whole line is 452px wide and needs a screen at least 484px wide (with the 16px margins), so at 480 to 483 a dot would end the first line. The split runs to 519px, which leaves a margin for browsers that set the text a little wider.
 - *$0 for the restaurant:* the service fee clause in /terms ("Wuntab is free to the restaurant").
 - *No lock-in:* /terms 4.2 ("You may end this agreement at any time, for any reason or none"). The owner chose "No lock-in" over "No contract" (PR #29), since /terms is itself an agreement.
 - *Your customers, your data:* /terms 1.2 ("What is yours: ... your customer list. Those stay yours throughout and you can take them with you").
@@ -96,7 +100,7 @@ Built but empty: `src/lib/stories.ts`. Each entry is a real restaurant, a real r
 
 FAQ (`copy.faq` in `src/lib/copy.ts`), with one question added on 2026-10-13: **Can search engines read my menu?** Yes. Every dish and price is in the page itself, so search engines can read them. Nobody can promise rankings, and we don't.
 
-Since the upgrade of 2026-10-13 the homepage leaves out four questions the page already answers: **Is there a monthly fee or a contract?** and **Do my customers see the 5%?** (the trust line and the $0 card), **Does it work with my POS?** and **Do I have to set anything up myself?** (the how-it-works steps). The solution pages still ask them.
+Since the upgrade of 2026-10-13 the homepage leaves out four questions the page already answers: **Is there a monthly fee or a contract?** and **Do my customers see the 5%?** (the trust line, and until 2026-10-20 the $0 card), **Does it work with my POS?** and **Do I have to set anything up myself?** (the how-it-works steps). The solution pages still ask them.
 
 **Final band (every page but /contact), 2026-10-13:** **Take control of your restaurant's direct business.** · Get Started · See a live restaurant ↗ Demo restaurant (2026-10-19) · *under that:* 20-minute call. We show WunTab on your own menu. No pressure. · Or send a message (→ /contact; left out since 2026-10-19 while Get Started itself goes to the /contact form). The line that used to sit above the button ("A short call. We will show you WunTab on your own menu.") and the homepage's "or email hello@wuntab.com" went: the new line says the same, and the email is on /contact, /about and in the footer.
 
@@ -359,7 +363,7 @@ All six follow the product template. They're linked from the footer and from the
 
 ## Demo link (on since 2026-10-19)
 - **See a live restaurant**, then a new-tab icon and **Demo restaurant** in small type, so nobody takes it for a customer's site. It opens https://demo.wuntab.com in a new tab.
-- Where: under the hero's $0 card (centred), in the mobile menu above Get Started, under the final band's button, under the homepage products, and in /restaurant-websites' hero links. In the phone footer it's the last link in Company, as **Live demo restaurant ↗** (2026-10-20).
+- Where: under the hero's name box (centred; under the $0 card until 2026-10-20), in the mobile menu above Get Started, under the final band's button, under the homepage products, and in /restaurant-websites' hero links. In the phone footer it's the last link in Company, as **Live demo restaurant ↗** (2026-10-20).
 - The owner said demo.wuntab.com is live and ready (2026-10-19), so it shows by default. Setting `NEXT_PUBLIC_SHOW_DEMO_LINK` to `false` in Vercel hides it everywhere. (It isn't set in Vercel today.)
 
 ## /how-it-works

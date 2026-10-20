@@ -100,6 +100,35 @@ const productStills: Record<string, ProductStill> = {
   "order-management": { node: <OrdersDashboard still />, width: 340, scale: 0.5 },
 };
 
+/** The hero's trust line (see the comment where it's used). Three facts. */
+function TrustLine({ facts: [first, second, third] }: { facts: string[] }) {
+  const fact = "whitespace-nowrap";
+  return (
+    <p className="mx-auto mb-5 text-small font-medium min-[520px]:whitespace-nowrap lg:mb-6">
+      <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-navy align-middle" />
+      <span data-fact className={fact}>
+        {first}
+      </span>
+      <span data-sep className="max-[520px]:hidden">
+        {" · "}
+      </span>
+      <br className="min-[520px]:hidden" />
+      <span className="whitespace-nowrap max-[340px]:whitespace-normal">
+        <span data-fact className={fact}>
+          {second}
+        </span>
+        <span data-sep className="max-[340px]:hidden">
+          {" · "}
+        </span>
+        <br className="min-[340px]:hidden" />
+        <span data-fact className={fact}>
+          {third}
+        </span>
+      </span>
+    </p>
+  );
+}
+
 export default function HomePage() {
   return (
     <>
@@ -109,19 +138,14 @@ export default function HomePage() {
         <Container className="pt-8 pb-10 text-center sm:pt-20 lg:pt-24 lg:pb-14">
           {/*
             The trust line: a navy dot, then the three facts (owner, 2026-10-20). It carries the 5%,
-            so the hero's pricing matches /terms now that the $0 card is gone. On phones it is two
-            lines: "$0 for the restaurant ·", then the other two.
+            so the hero's pricing matches /terms now that the $0 card is gone. Each fact stays whole,
+            and a separator never starts or ends a line, at any width: the lines break only where
+            a separator is hidden. The whole line is 452px wide, so:
+            - from 520px, one line;
+            - below 520px, "$0 for the restaurant" alone, then "Customers pay 5% at checkout · No lock-in" (287px);
+            - below 340px, each fact on its own line.
           */}
-          <p className="mx-auto mb-5 text-small font-medium text-balance lg:mb-6">
-            <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-navy align-middle" />
-            {/* Each fact stays whole ("No lock-in" must not break at its hyphen), and a line never starts with a dot. */}
-            {copy.hero.trust.split(" · ").map((fact, i, all) => (
-              <span key={fact}>
-                <span className="whitespace-nowrap">{i < all.length - 1 ? `${fact} ·` : fact}</span>
-                {i < all.length - 1 ? " " : null}
-              </span>
-            ))}
-          </p>
+          <TrustLine facts={copy.hero.trust.split(" · ")} />
           {/* One sentence per line from lg up; they flow together on phones. */}
           <h1 className="mx-auto max-w-[15ch] text-display lg:max-w-none">
             {copy.hero.headline.split(/(?<=\.) /).map((sentence, index) => (
