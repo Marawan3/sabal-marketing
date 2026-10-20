@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { builtProducts, products, secondaryProducts } from "../src/lib/catalog";
+import { builtProducts, products } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
-import { allRoutes, demoHref } from "../src/lib/site";
+import { allRoutes, demoHref, demoStorefront } from "../src/lib/site";
 
 /** Phase 1 (SPEC section 15): the pages this release publishes. */
 const phase1 = [
@@ -202,21 +202,22 @@ test("cut products do not exist as routes", async ({ request }) => {
   }
 });
 
-test("product mega-menu opens on hover and lists only pages that exist", async ({ page }) => {
+test("the Product menu opens on hover and lists every built page, and only those", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const product = page.getByRole("button", { name: "Product" });
   await product.hover();
   await expect(product).toHaveAttribute("aria-expanded", "true");
   const panel = page.locator(`[id="${await product.getAttribute("aria-controls")}"]`);
-  // The secondary pages are linked from the footer and their parent pages, not here (2026-10-13).
-  const inMenu = builtProducts.filter((slug) => !secondaryProducts.has(slug));
-  for (const slug of inMenu) {
+  // Every built page since 2026-10-20 (owner), the six secondary pages too.
+  for (const slug of builtProducts) {
     await expect(panel.locator(`a[href="/${slug}"]`), slug).toBeVisible();
   }
-  await expect(panel.locator("a")).toHaveCount(inMenu.length);
+  // Those, the demo card (while the demo link is on), and How it works and Pricing under the hairline.
+  await expect(panel.locator("a")).toHaveCount(builtProducts.length + (demoStorefront.on ? 1 : 0) + 2);
   // Hovering Pricing closes the menu.
-  await page.locator('header a[href="/pricing"]').first().hover();
+  // The top-level Pricing link (the panel has its own under "New to WunTab?").
+  await page.locator('header nav[aria-label="Primary"] > div > a[href="/pricing"]').hover();
   await expect(product).toHaveAttribute("aria-expanded", "false");
 });
 

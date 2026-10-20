@@ -14,7 +14,7 @@ import { allRoutes, demoHref } from "../src/lib/site";
 
 const secondary = ["online-menu", "upsells", "loyalty", "kitchen-display", "menu-management", "payments"];
 
-test("the six secondary pages exist, stay out of the mega-menu, and are in the footer and their parents' Works with", async ({ page, request }) => {
+test("the six secondary pages exist, and are in the Product menu, the footer and their parents' Works with", async ({ page, request }) => {
   expect([...secondaryProducts].sort()).toEqual([...secondary].sort());
   for (const slug of secondary) {
     expect(builtProducts as readonly string[], slug).toContain(slug);
@@ -24,7 +24,8 @@ test("the six secondary pages exist, stay out of the mega-menu, and are in the f
   await page.goto("/");
   const nav = page.locator('header nav[aria-label="Primary"]');
   await nav.getByRole("button", { name: "Product" }).hover();
-  for (const slug of secondary) await expect(nav.locator(`a[href="/${slug}"]`), slug).toHaveCount(0);
+  // In the menu since 2026-10-20 (owner): every built page is, under its group.
+  for (const slug of secondary) await expect(nav.locator(`a[href="/${slug}"]`), slug).toBeVisible();
   // Once in the columns, and once in the phone footer's groups (closed, hidden at this width).
   for (const slug of secondary) await expect(page.locator(`footer a[href="/${slug}"]:visible`), slug).toHaveCount(1);
   for (const slug of secondary) await expect(page.locator(`footer [data-footer-group] a[href="/${slug}"]`), slug).toHaveCount(1);

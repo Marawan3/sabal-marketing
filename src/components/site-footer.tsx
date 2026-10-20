@@ -1,28 +1,22 @@
 import { SmartLink } from "./smart-link";
 import { ExternalIcon } from "./demo-link";
 import { Logo } from "./logo";
-import { builtProducts, bySlug, megaMenu, pillars, productHref, solutionHref, solutions } from "@/lib/catalog";
+import { productMenu, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { companyLinks, demoStorefront, legalNav, primaryLinks, site } from "@/lib/site";
 
 type FooterLink = { href: string; label: string; external?: boolean };
 
 /**
- * The footer's six groups, on every screen: the mobile menu's groups (owner,
- * 2026-10-19), each with every built page in its pillar (the secondary pages
- * too, so the footer still links to every page). How it works and Pricing
- * join Company, and the demo restaurant ends it, in a new tab (owner,
- * 2026-10-20). Phones show them as closed groups and wider screens as
- * columns (owner, 2026-10-20), both from this one list, so a new page lands
- * in the same group everywhere.
+ * The footer's five groups, on every screen (owner, 2026-10-20): the Product
+ * menu's three (productGroups in catalog.ts, the list the header menus read,
+ * with every built page), then Solutions and Company. How it works and
+ * Pricing join Company, and the demo restaurant ends it, in a new tab.
+ * Phones show them as closed groups and wider screens as columns, both from
+ * this one list, so a new page lands in the same group everywhere.
  */
 const footerGroups: { title: string; links: FooterLink[] }[] = [
-  ...megaMenu.map((group) => ({
-    title: pillars[group.pillar].name,
-    links: [...group.slugs, ...builtProducts]
-      .filter((slug, i, all) => all.indexOf(slug) === i && productHref(slug) && bySlug[slug].pillar === group.pillar)
-      .map((slug) => ({ href: productHref(slug)!, label: bySlug[slug].name })),
-  })),
+  ...productMenu.map((group) => ({ title: group.title, links: group.items.map((item) => ({ href: item.href, label: item.name })) })),
   { title: "Solutions", links: solutions.map((s) => ({ href: solutionHref(s.slug), label: s.name })) },
   {
     title: "Company",
@@ -156,13 +150,13 @@ export function SiteFooter() {
           </div>
         </div>
         {/*
-          From md: the same six groups as columns (owner, 2026-10-20). Two rows of three until lg, then one row of six.
-          From lg each column is as wide as its longest name, and the spare width goes between them, so no name wraps
-          at 1024: six equal columns there would be 135px, and "Multi-Location Restaurants" is 180.
+          From md: the same five groups as columns (owner, 2026-10-20). Three, then Solutions and Company, until lg;
+          then one row of five. From lg each column is as wide as its longest name, and the spare width goes between
+          them, so no name wraps at 1024 ("Multi-Location Restaurants" is 180px).
         */}
         <div
           data-footer="desktop"
-          className="hidden md:grid md:grid-cols-3 md:gap-x-6 md:gap-y-8 lg:grid-cols-[repeat(6,auto)] lg:justify-between lg:gap-x-4"
+          className="hidden md:grid md:grid-cols-3 md:gap-x-6 md:gap-y-8 lg:grid-cols-[repeat(5,auto)] lg:justify-between lg:gap-x-4"
         >
           {footerGroups.map((group) => (
             <Column key={group.title} title={group.title} links={group.links} />

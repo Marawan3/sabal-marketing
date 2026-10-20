@@ -392,7 +392,7 @@ test("final band: Get Started and the line under it, no second link to the same 
   }
 });
 
-test("navigation: Product, Solutions, How it works, Pricing, Company; the footer's six groups", async ({ page }) => {
+test("navigation: Product, Solutions, How it works, Pricing, Company; the footer's five groups", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const nav = page.locator('header nav[aria-label="Primary"]');
@@ -404,7 +404,7 @@ test("navigation: Product, Solutions, How it works, Pricing, Company; the footer
   for (const l of companyLinks) await expect(nav.locator(`a[href="${l.href}"]`)).toBeVisible();
   const footer = page.locator("footer");
   const titles = await footer.locator("p.font-medium").allTextContents();
-  expect(titles).toEqual(["Sell", "Grow", "Operate", "Scale", "Solutions", "Company"]);
+  expect(titles).toEqual(["Sell directly", "Get found and come back", "Run the restaurant", "Solutions", "Company"]);
   for (const href of [...productPaths, ...solutionPaths, ...companyLinks.map((l) => l.href), ...legalNav.map((l) => l.href)]) {
     await expect(footer.locator(`a[href="${href}"]`).first()).toBeAttached();
   }

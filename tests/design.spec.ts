@@ -237,7 +237,11 @@ test("every text on every page meets WCAG AA against what's behind it, at 375 an
       await page.goto(path);
       // Once, a probe the scan must catch: saffron text on white (2.0:1).
       const probe = path === "/" && width === 375;
-      if (probe) await page.evaluate(() => document.querySelector("main")!.insertAdjacentHTML("afterbegin", '<p data-probe style="color:#F4A83A">Probe text</p>'));
+      if (probe) {
+        // After React has hydrated main: earlier, hydration finds the stray probe, renders main again, and drops it.
+        await page.waitForFunction(() => Object.keys(document.querySelector("main")!).some((key) => key.startsWith("__react")));
+        await page.evaluate(() => document.querySelector("main")!.insertAdjacentHTML("afterbegin", '<p data-probe style="color:#F4A83A">Probe text</p>'));
+      }
       const { fails, checked } = await page.evaluate(() => {
         // Any computed color (rgb(), or oklab() from a Tailwind opacity) as [r, g, b, a], through a canvas.
         const ctx = Object.assign(document.createElement("canvas"), { width: 1, height: 1 }).getContext("2d", { willReadFrequently: true })!;
@@ -341,7 +345,7 @@ test("tap targets are at least 44px tall on a phone", async ({ page }) => {
   }
 });
 
-test("the phone header shows the logo, Get Started and a menu that opens full screen by pillar", async ({ page }) => {
+test("the phone header shows the logo, Get Started and a menu that opens full screen by group", async ({ page }) => {
   for (const width of [360, 390, 430]) {
     await page.setViewportSize({ width, height: 780 });
     await page.goto("/");
@@ -355,8 +359,8 @@ test("the phone header shows the logo, Get Started and a menu that opens full sc
     const box = await nav.boundingBox();
     expect(box!.width, `menu width at ${width}`).toBe(width);
     expect(box!.y + box!.height, `menu reaches the bottom at ${width}`).toBeGreaterThanOrEqual(779);
-    for (const pillar of ["Sell", "Grow", "Operate"]) {
-      await expect(nav.locator("summary", { hasText: pillar })).toBeVisible();
+    for (const group of ["Sell directly", "Get found and come back", "Run the restaurant"]) {
+      await expect(nav.locator("summary", { hasText: group })).toBeVisible();
     }
   }
 });

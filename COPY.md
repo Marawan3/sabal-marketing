@@ -144,8 +144,8 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 ## Footer (2026-10-13; desktop rebuilt 2026-10-20)
 
-**From 768px (2026-10-20):** the same six groups as on phones, as columns, built from the same list, so a new page lands in the same group on every screen.
-- **Layout:** one row of six from 1024px. From 768 to 1023px, two rows of three: Sell, Grow, Operate, then Scale, Solutions, Company.
+**From 768px (2026-10-20):** the same groups as on phones, as columns, built from the same list as the header menus, so a new page lands in the same group on every screen. Since the menu rebuild (2026-10-20) that's five: Sell directly, Get found and come back, Run the restaurant, Solutions, Company.
+- **Layout:** one row of five from 1024px. From 768 to 1023px, the three Product groups, then Solutions and Company.
 - **Bottom bar, under a hairline:** the logo, hello@wuntab.com and **Send a message** (→ /contact) on the left, and **Terms · Privacy · © 2026 WunTab** on the right.
 - **What went:** the Legal column. Terms and Privacy are the bottom bar's.
 - **The label:** it was "Or send a message"; the owner wrote "Send a message", since it follows the address, not a button. The final band and /about keep "Or send a message".
@@ -153,12 +153,39 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 **On phones (2026-10-19; top trimmed 2026-10-20):**
 - The logo. The $0 line, Get Started and See a live restaurant went from here on 2026-10-20: the final band right above has them. On /contact, which has no final band, Get Started is in the header.
-- Six closed groups, the mobile menu's: **Sell** (Online Ordering, Delivery, Catering, Online Menu, Recommended Add-ons), **Grow** (Restaurant Websites, Restaurant SEO, Loyalty & Rewards), **Operate** (Menu Management, Order Management, Kitchen Display, Payments), **Scale** (Integrations), **Solutions** (the four solution pages), **Company** (How it works, Pricing, About, Contact, **Live demo restaurant ↗**). How it works and Pricing joined Company so every page is still linked. Live demo restaurant opens demo.wuntab.com in a new tab.
+- Five closed groups, the Product menu's three and then two more (2026-10-20; there were six, Sell, Grow, Operate and Scale before them):
+  - **Sell directly:** Online Ordering, Online Menu, Delivery, Catering, Recommended Add-ons.
+  - **Get found and come back:** Restaurant Websites, Restaurant SEO, Loyalty & Rewards.
+  - **Run the restaurant:** Order Management, Menu Management, Kitchen Display, Payments, Integrations.
+  - **Solutions:** the four solution pages.
+  - **Company:** How it works, Pricing, About, Contact, then **Live demo restaurant ↗**, which opens demo.wuntab.com in a new tab. How it works and Pricing joined Company so every page is still linked.
 - hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Send a message" on phones: Contact is in Company.
 
-## Navigation (2026-10-13)
+## Navigation (2026-10-13; menus rebuilt 2026-10-20)
 
-Product (the mega-menu, now with Integrations under Scale) · Solutions (Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants, Multi-Location Restaurants, each with its one line) · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app). On phones the menu ends with **See a live restaurant ↗ Demo restaurant** above Get Started (2026-10-19).
+Product · Solutions · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app).
+
+**Product menu (2026-10-20, option A):** every built product page, each with a navy line icon, under three headings.
+- **Sell directly:** Online Ordering · Online Menu · Delivery · Catering · Recommended Add-ons
+- **Get found and come back:** Restaurant Websites · Restaurant SEO · Loyalty & Rewards
+- **Run the restaurant:** Order Management · Menu Management · Kitchen Display · Payments · Integrations
+- **Changes from before:**
+  - the six secondary pages joined the menu (owner, reversing 2026-10-13);
+  - Integrations moved from Scale to Run the restaurant;
+  - no descriptions under the names.
+- **Card, on the right:** the demo restaurant's pepperoni pizza. Under it:
+  - **Demo restaurant**
+  - **Palm&Stone Pizza**
+  - "Order like a guest and see what your customers get. Orders here aren't real."
+  - **See a live restaurant ↗**, which opens demo.wuntab.com in a new tab.
+
+  It isn't shown while the demo link is off.
+- **Under a hairline:** "New to WunTab?", then **See how it works →** and **Pricing →**.
+- **The footer** is the same three groups, then Solutions and Company.
+
+**Solutions menu:** Independent Restaurants, Quick-Service Restaurants, Full-Service Restaurants and Multi-Location Restaurants, each with its icon (2026-10-20) and its one line.
+
+**Phone menu:** the three groups as accordions with the same icons, then Solutions, Company, How it works and Pricing. Above Get Started, a compact row: the pizza photo, "Demo restaurant · Palm&Stone Pizza" and **See a live restaurant ↗**. Before 2026-10-20 it was the plain link "See a live restaurant ↗ Demo restaurant".
 
 ## Product page template (2026-10-13)
 

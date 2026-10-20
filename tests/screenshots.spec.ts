@@ -46,7 +46,7 @@ test.describe("screenshots", () => {
         });
       } else {
         await page.locator("header summary", { hasText: "Menu" }).click();
-        await page.locator("header summary", { hasText: "Sell" }).click();
+        await page.locator("header summary", { hasText: "Sell directly" }).click();
         await page.screenshot({ path: `${outDir}/mobile-menu-${width}.png` });
       }
     }

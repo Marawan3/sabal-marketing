@@ -48,7 +48,8 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Less text:** visuals plus at most one line each. No section has more than three short
   lines of body text on a phone. Homepage under 10,000px tall at 390 (tested).
 - **Mobile (360, 390, 430):** the header always shows the logo, Get Started and a menu icon;
-  the menu opens full screen with an accordion per pillar. Rows of cards use `.snap-row`
+  the menu opens full screen with an accordion per Product group, then Solutions and Company
+  (section 0f). Rows of cards use `.snap-row`
   (scroll snap, next card peeking) below lg. No horizontal page scroll at any width.
 - **Visuals:** every frame goes through `src/lib/catalog.ts` and
   `src/lib/shot-placements.ts`, so `docs/marketing-site/SHOTS.md` stays complete. Missing
@@ -179,8 +180,8 @@ their reasoning. Where they disagree with this section, this section wins.
   /menu-management and /payments.
   - They use the product template. Each has one visual in the hero, and its steps listed in
     How it works (/payments has its flow there).
-  - They are linked from the footer and from their parents' Works with, never the mega-menu
-    (`secondaryProducts` in catalog.ts).
+  - Since 2026-10-20 they're in the Product menu like every built page (owner, reversing the
+    2026-10-13 rule that kept them out), and still in the footer and their parents' Works with.
 - **Works with always links.** A product without a page is left out, never shown unlinked.
   Restaurant Listings is gone.
 - **Say only what the product does** (check the product repo first):
@@ -202,8 +203,55 @@ their reasoning. Where they disagree with this section, this section wins.
   opens demo.wuntab.com in a new tab. On by default; `NEXT_PUBLIC_SHOW_DEMO_LINK=false` hides it.
   It sits under the hero's $0 card, in the mobile menu, the phone footer, the final band, the
   homepage products and /restaurant-websites (`src/components/demo-link.tsx`).
-- **Phones (2026-10-19):** the footer is six closed groups (the mobile menu's); the homepage
-  products are cards to swipe, the one horizontal scroller on the site.
+- **Phones (2026-10-19):** the footer is closed groups (the mobile menu's: five since 2026-10-20);
+  the homepage products are cards to swipe, the one horizontal scroller on the site.
+
+## 0f. Header menus, 2026-10-20 (option A, the "WunTab submenu options" canvas)
+
+- **One list:** `productGroups` in `src/lib/catalog.ts` holds every built product page, in order,
+  under three headings:
+  - "Sell directly": Online Ordering, Online Menu, Delivery, Catering, Recommended Add-ons;
+  - "Get found and come back": Restaurant Websites, Restaurant SEO, Loyalty & Rewards;
+  - "Run the restaurant": Order Management, Menu Management, Kitchen Display, Payments,
+    Integrations.
+
+  The desktop Product menu, the phone menu, the desktop footer and the phone footer all read it,
+  so they can't drift. The footer is those three, then Solutions and Company. An unbuilt page stays
+  out everywhere, and a test fails if a built page is in no group.
+- **Icons:** one thin navy line icon per product and solution page, the owner's 17, drawn for
+  WunTab, in `src/components/nav-icon.tsx`.
+  - **How they're drawn:** inline SVG in JSX, with no icon library and no
+    `dangerouslySetInnerHTML`. viewBox 0 0 24 24, stroke `currentColor` at 1.75, round caps and
+    joins, `aria-hidden`.
+  - **Colour:** navy, never saffron.
+  - **Size:** 20px in the desktop menus, 22px in the phone menu.
+  - **Where:** only in the menus.
+- **Desktop Product panel:**
+  - **Layout:** the three groups as columns, then the demo card. The card is 300px from 1200px and
+    240px from 1024 to 1199, so no name wraps.
+  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name in the small size (14px) at weight
+    500.
+  - **Headings:** the small size, weight 600, ink-muted.
+  - **Type sizes:** every piece of menu text is on the five sizes (owner, 2026-10-20). The card's
+    title is the body size, and the rest is small. A test opens each menu and checks.
+  - **Nothing else in a row:** no descriptions, no "New" badges, no numbers.
+  - **Bottom row:** under a hairline, "New to WunTab?" (muted), then "See how it works" and
+    "Pricing", each with a drawn arrow.
+- **Demo card** (`DemoCard` in `demo-link.tsx`):
+  - **Card:** panel #F7F3EC, radius 16.
+  - **Photo:** `public/demo/photos/pepperoni-pizza-900.webp` at 300×150, lazy.
+  - **Text:** "Demo restaurant" (small, muted), "Palm&Stone Pizza", "Order like a guest and see what
+    your customers get. Orders here aren't real.", and "See a live restaurant" with the new-tab
+    icon.
+  - **Behaviour:** opens in a new tab. Absent while the demo link is off.
+- **Phone menu:** the three groups as accordions, rows 48px, icons 22px. Before Get Started, a
+  compact demo row (`DemoRow`): an 88px thumbnail, "Demo restaurant · Palm&Stone Pizza", and
+  "See a live restaurant ↗". The first line goes to two lines, with the dot hidden, below a 394px
+  screen. It's in the small size: 13px there showed up as a sixth size.
+- **Solutions menu:** each page with its icon (storefront, stopwatch, fork and knife, two pins)
+  and its one line.
+- **Keyboard:** focus opens a menu, Tab goes into it, Escape closes it and returns focus to its
+  button (it stays closed). No arrow keys: Tab and Escape are enough (owner, 2026-10-20).
 
 ## 1. What we are designing for
 
@@ -421,11 +469,12 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
 - No restaurant photos, menu scans, or live-site links until the owner's written OK.
 - The demo restaurant's own pictures are the one exception (owner, 2026-10-19): the
   AI-generated Palm&Stone Pizza photos and logo in `public/demo/photos/` and
-  `public/demo/logo/` (ASSETS.md), only inside the built visuals, as plain `<img>`
+  `public/demo/logo/` (ASSETS.md), only inside the built visuals (and, since 2026-10-20, the
+  menus' demo card and demo row, section 0f), as plain `<img>`
   with width and height set and `alt=""`; the hero phone's eager, the rest lazy.
   Every dish a visual shows has its photo; a dish without one stays out.
 - No stock food photos.
-- Icons: none, unless a check mark in a checklist. No icon grids.
+- Icons: only the menus' line icons (section 0f) and check marks in checklists. No icon grids.
 - Logo: the tile's geometry is locked (rounded-square tile, one-stroke W with the raised
   center peak, tile + 14px gap lockup). Never symmetrize the W. The wordmark is
   "WunTab" in Archivo, weight 750, width 110%, tracking -0.02em (2026-10-20, it replaced
