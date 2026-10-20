@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-20 · PR #60: The desktop footer becomes the six groups, with a bottom bar (PR open)
+## 2026-10-20 · PR #60: The desktop footer becomes the six groups, with a bottom bar (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 60"). Squash commit `3676666` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`6ca922a`): Vercel, and WebKit iPhone 71 of 71, with and without reduced motion.
 
 **Why:** at 1280 the footer was 1,013px tall: one "Product" column of 15 links next to three short ones (owner, 2026-10-20).
 
@@ -97,6 +97,7 @@ At 768 it's taller: the old layout ran each column's links together in rows, and
   - the footer's label in the final band test;
   - the phone footer test's "no Send a message on phones".
 - **Local suite:** 156 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **WebKit iPhone:** 71 of 71, with and without reduced motion, including the new footer test.
 - **No sideways scrolling:** all 24 pages at 375, 768, 1024, 1280 and 1440 scroll sideways nowhere (a one-off check of every page in the sitemap, plus /terms, /privacy and /contact).
 - **Evidence:** `docs/marketing-site/evidence/desktop-footer/` has before over after at 768, 1024, 1280 and 1440, and before beside after at 375.
 
