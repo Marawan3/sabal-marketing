@@ -144,7 +144,8 @@ test("H1s fit: at most 4 lines at 360 and 3 at 1440; no headline is wider than i
 
 test("the WUNTAB wordmark is drawn as outlines, not set in the page font", async ({ page }) => {
   await page.goto("/");
-  for (const logo of await page.locator("[data-logo]").all()) {
+  // The logos that show at this width (the phone footer has its own, below 768px).
+  for (const logo of await page.locator("[data-logo]:visible").all()) {
     const mark = logo.locator('svg[aria-label="WunTab"]');
     await expect(mark).toHaveCount(1);
     expect(await mark.locator("path").count()).toBe(1);
@@ -192,7 +193,7 @@ test("the phone header shows the logo, Get Started and a menu that opens full sc
   }
 });
 
-test("nothing swipes sideways: no horizontal scroller in any page's content on phones", async ({ page }) => {
+test("nothing swipes sideways on phones but the homepage's product cards", async ({ page }) => {
   for (const width of [360, 390]) {
     await page.setViewportSize({ width, height: 844 });
     for (const path of pages) {
@@ -200,9 +201,10 @@ test("nothing swipes sideways: no horizontal scroller in any page's content on p
       const scrollers = await page.evaluate(() =>
         [...document.querySelectorAll("main *")]
           .filter((el) => /(auto|scroll)/.test(getComputedStyle(el).overflowX) && el.scrollWidth > el.clientWidth + 1)
-          .map((el) => el.className.toString().slice(0, 60)),
+          .map((el) => (el.hasAttribute("data-product-cards") ? "product cards" : el.className.toString().slice(0, 60))),
       );
-      expect(scrollers, `${path} at ${width}`).toEqual([]);
+      // The one row to swipe is the products' cards (owner, 2026-10-19; phone.spec.ts).
+      expect(scrollers, `${path} at ${width}`).toEqual(path === "/" ? ["product cards"] : []);
     }
   }
 });
@@ -290,7 +292,7 @@ test("homepage sections come in the owner's order, and nothing else", async ({ p
   expect(ids).toEqual(expected);
   await expect(page.getByLabel(copy.hero.inputLabel)).toBeVisible();
   for (const slug of copy.products.slugs) {
-    await expect(page.locator(`#products a[href="/${slug}"]`)).toBeVisible();
+    await expect(page.locator(`#products a[href="/${slug}"]:visible`)).toBeVisible();
   }
 });
 
@@ -304,14 +306,17 @@ test("homepage is under 7,000px tall at 390, with motion and with reduced motion
   }
 });
 
-test("homepage product rows: on phones a title, one line and a link; the visual from 768px", async ({ page }) => {
+test("homepage products: on phones cards to swipe (phone.spec.ts); the rows and their visuals from 768px", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  for (const row of await page.locator("#products li").all()) {
+  const rows = page.locator("#products > div > ul:not([data-product-cards]) > li");
+  for (const row of await rows.all()) {
     expect(await row.locator("[data-demo]").evaluate((el) => el.getBoundingClientRect().height)).toBe(0);
   }
+  await expect(page.locator("#products [data-product-card]")).toHaveCount(copy.products.slugs.length);
   await page.setViewportSize({ width: 1024, height: 900 });
-  for (const row of await page.locator("#products li").all()) await expect(row.locator("[data-demo]")).toBeVisible();
+  await expect(page.locator("#products [data-product-cards]")).toBeHidden();
+  for (const row of await rows.all()) await expect(row.locator("[data-demo]")).toBeVisible();
 });
 
 test("What we believe: the owner's three on /about, and a placeholder still hides them all", async ({ request }) => {

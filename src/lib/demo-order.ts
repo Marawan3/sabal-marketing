@@ -4,8 +4,8 @@ import { ARRIVES_AT } from "./hero-demo-timeline";
  * The demo restaurant the visuals show: Palm&Stone Pizza, Brickell. The menu,
  * its prices, its modifier groups and the logo are the owner's (approved
  * 2026-10-19), replacing the menu the visuals showed before.
- * The live demo restaurant is being updated to match; until it does, the
- * "See a live WunTab restaurant" link (demoStorefront in site.ts) stays off.
+ * The live demo restaurant, demo.wuntab.com, is live (owner, 2026-10-19), and
+ * "See a live restaurant" (demoStorefront in site.ts) links to it.
  * The location (48 Coral Lantern Way, Miami, FL; tax 6.5%; prep 20 minutes)
  * and the action colour (teal #0f766e, in the module CSS) are unchanged.
  * Labels are the storefront's and the kitchen display's own strings.

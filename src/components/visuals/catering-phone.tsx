@@ -16,9 +16,9 @@ const STEPS = [0, 1200, 2900, 3400, 4300];
  * the form's thank-you. The product takes catering as an enquiry; there is
  * no catering checkout, lead time or minimum in it yet.
  */
-export function CateringPhone({ cut = false, width }: { cut?: boolean; width?: string }) {
+export function CateringPhone({ cut = false, width, still = false }: { cut?: boolean; width?: string; still?: boolean }) {
   return (
-    <Visual name="catering" steps={STEPS} description={copy.visuals.catering} className={v.catering}>
+    <Visual name="catering" steps={STEPS} description={copy.visuals.catering} className={v.catering} still={still}>
       <Phone cut={cut} width={width}>
         <div className={v.layer}>
           <SiteHeader />
@@ -51,10 +51,13 @@ export function CateringPhone({ cut = false, width }: { cut?: boolean; width?: s
                     </span>
                     <span className={h.meta}>{c.promise}</span>
                   </div>
-                  <div className={v.thanks}>
-                    <b>Thank you.</b>
-                    <span>{c.promise}</span>
-                  </div>
+                  {/* A still is the first screen only: no thank-you. */}
+                  {still ? null : (
+                    <div className={v.thanks}>
+                      <b>Thank you.</b>
+                      <span>{c.promise}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

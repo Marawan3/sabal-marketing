@@ -8,6 +8,7 @@ import { HeroOrderDemo } from "@/components/hero-order-demo";
 import { HeroSignup } from "@/components/hero-signup";
 import { OutcomeTabs } from "@/components/outcome-tabs";
 import { PriceCard } from "@/components/price-card";
+import { ProductCards, type ProductStill } from "@/components/product-cards";
 import { SmartLink } from "@/components/smart-link";
 import { SavingsCalculator } from "@/components/savings-calculator";
 import { Steps } from "@/components/steps";
@@ -22,7 +23,8 @@ import { StorefrontPhone } from "@/components/visuals/storefront-phone";
 import { Panel, Section, SectionHead } from "@/components/section";
 import { bySlug, productHref } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
-import { demoHref, demoStorefront, site } from "@/lib/site";
+import { demoHref, site } from "@/lib/site";
+import { DemoLink } from "@/components/demo-link";
 
 export const dynamic = "error";
 
@@ -85,6 +87,19 @@ const productVisuals: Record<string, ReactNode> = {
   ),
 };
 
+/**
+ * Phones: the same visuals as stills in the product cards (owner,
+ * 2026-10-19), scaled into the card's 160px box: a cut phone drawn 280px
+ * wide, the dashboard's focal crop 340px wide, each at half size and running
+ * off the box's bottom edge, as the phones do on the wider rows.
+ */
+const productStills: Record<string, ProductStill> = {
+  "online-ordering": { node: <StorefrontPhone cut still />, width: 280, scale: 0.5 },
+  delivery: { node: <DeliveryPhone cut still />, width: 280, scale: 0.5 },
+  catering: { node: <CateringPhone cut still />, width: 280, scale: 0.5 },
+  "order-management": { node: <OrdersDashboard still />, width: 340, scale: 0.5 },
+};
+
 export default function HomePage() {
   return (
     <>
@@ -124,6 +139,8 @@ export default function HomePage() {
             <p className="mx-auto mt-3 max-w-[480px] rounded-[12px] border border-mist px-4 py-3 text-small">
               <span className="font-semibold">{copy.hero.price.lead}</span> {copy.hero.price.rest}
             </p>
+            {/* The demo restaurant's own website, centred under the $0 card (owner, 2026-10-19). */}
+            <DemoLink className="mt-2" />
           </div>
         </Container>
         {/*
@@ -164,10 +181,11 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* d. Products: four rows between thin rules. Title, one line, link, and the product's own visual. */}
+      {/* d. Products: on phones a row of cards to swipe; from 768px four rows, each with the product's own visual. */}
       <Section id="products">
         <SectionHead heading={copy.products.heading} />
-        <ul className="mt-8 border-t border-mist lg:mt-12">
+        <ProductCards slugs={copy.products.slugs} stills={productStills} className="mt-6 md:hidden" />
+        <ul className="mt-8 hidden border-t border-mist md:block lg:mt-12">
           {copy.products.slugs.map((slug) => {
             const product = bySlug[slug];
             const href = productHref(slug);
@@ -189,17 +207,12 @@ export default function HomePage() {
                   </h3>
                   <p className="mt-2 max-w-[44ch] text-body text-ink-muted">{product.headline}</p>
                 </div>
-                {/* Phones: title, one line, link. The visual shows from 768px, at the small size. */}
-                <div className="hidden w-full shrink-0 md:block md:w-[340px] lg:w-[400px]">{productVisuals[slug]}</div>
+                <div className="w-full shrink-0 md:w-[340px] lg:w-[400px]">{productVisuals[slug]}</div>
               </li>
             );
           })}
         </ul>
-        {demoStorefront.on ? (
-          <div className="mt-4 lg:mt-6">
-            <TextLink href={demoStorefront.href}>{demoStorefront.label}</TextLink>
-          </div>
-        ) : null}
+        <DemoLink className="mt-4 lg:mt-6" />
       </Section>
 
       {/* The savings calculator, on warm: the owner's own numbers, the apps' published 15–30%. */}

@@ -26,7 +26,8 @@ import { StorefrontPhone } from "./visuals/storefront-phone";
 import { bySlug, productHref, type Product } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
 import { faqSchema } from "@/lib/schema";
-import { demoHref, demoStorefront } from "@/lib/site";
+import { demoHref } from "@/lib/site";
+import { DemoLink } from "./demo-link";
 
 /** Each product page's one hero visual (owner, 2026-10-13). */
 const heroVisuals: Record<string, ReactNode> = {
@@ -193,10 +194,8 @@ export function ProductPage({ product }: { product: Product }) {
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
             <CtaLink href={demoHref}>{copy.cta.primary}</CtaLink>
             <TextLink href="/pricing">See pricing</TextLink>
-            {/* The demo storefront, behind its flag (site.ts). */}
-            {product.slug === "restaurant-websites" && demoStorefront.on ? (
-              <TextLink href={demoStorefront.href}>{demoStorefront.label}</TextLink>
-            ) : null}
+            {/* The demo restaurant's own website (site.ts). */}
+            {product.slug === "restaurant-websites" ? <DemoLink /> : null}
           </div>
           {heroVisuals[product.slug] ? <div className="mt-12 lg:mt-16">{heroVisuals[product.slug]}</div> : null}
         </Container>

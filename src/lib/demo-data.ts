@@ -4,8 +4,8 @@ import { demoOrder, dish, money, photoOf, SERVICE_FEE_PERCENT, TAX_BP, TIP_PERCE
  * Demo restaurant data for the built visuals (src/components/visuals) that
  * isn't already in demo-order.ts. Each figure says where it comes from. The
  * dishes, prices and the restaurant's words are the owner's Palm&Stone Pizza
- * (2026-10-19, see demo-order.ts); the live demo restaurant is being updated
- * to match, and the "See a live WunTab restaurant" link stays off until it does.
+ * (2026-10-19, see demo-order.ts). The live demo restaurant, demo.wuntab.com,
+ * is live (owner, 2026-10-19) and "See a live restaurant" links to it.
  */
 
 /**

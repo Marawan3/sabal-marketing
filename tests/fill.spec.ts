@@ -3,13 +3,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { builtProducts, bySlug, productHref, products, secondaryProducts, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
-import { allRoutes, demoHref, demoStorefront } from "../src/lib/site";
+import { allRoutes, demoHref } from "../src/lib/site";
 
 /**
  * Filling the dead ends (owner, 2026-10-13): six secondary product pages,
  * Works with that always links, founding restaurants on the homepage, the
- * /pricing comparison, the demo link behind its flag, and /how-it-works'
- * new stage visuals.
+ * /pricing comparison, and /how-it-works' new stage visuals. The demo link,
+ * on since 2026-10-19, is tested in phone.spec.ts.
  */
 
 const secondary = ["online-menu", "upsells", "loyalty", "kitchen-display", "menu-management", "payments"];
@@ -25,7 +25,9 @@ test("the six secondary pages exist, stay out of the mega-menu, and are in the f
   const nav = page.locator('header nav[aria-label="Primary"]');
   await nav.getByRole("button", { name: "Product" }).hover();
   for (const slug of secondary) await expect(nav.locator(`a[href="/${slug}"]`), slug).toHaveCount(0);
-  for (const slug of secondary) await expect(page.locator(`footer a[href="/${slug}"]`), slug).toHaveCount(1);
+  // Once in the columns, and once in the phone footer's groups (closed, hidden at this width).
+  for (const slug of secondary) await expect(page.locator(`footer a[href="/${slug}"]:visible`), slug).toHaveCount(1);
+  for (const slug of secondary) await expect(page.locator(`footer [data-footer-group] a[href="/${slug}"]`), slug).toHaveCount(1);
   // Each is linked from at least one other page's Works with.
   for (const slug of secondary) {
     const parents = products.filter((p) => productHref(p.slug) && p.slug !== slug && p.related.includes(slug));
@@ -118,15 +120,6 @@ test("/pricing: WunTab next to a delivery app, under the $0 card, no app named, 
   // Every cell is sourced in COPY.md.
   const copyMd = readFileSync(join(process.cwd(), "COPY.md"), "utf8");
   for (const row of copy.pricing.compare.rows) expect(copyMd, row.label).toContain(row.label);
-});
-
-test("the demo link stays off until its flag is on", async ({ page }) => {
-  expect(demoStorefront.on).toBe(false);
-  expect(demoStorefront.href).toBe("https://demo.wuntab.com");
-  for (const path of ["/", "/restaurant-websites"]) {
-    await page.goto(path);
-    await expect(page.getByText(demoStorefront.label), path).toHaveCount(0);
-  }
 });
 
 test("/how-it-works: the reward card builds the relationship; the confirmation text brings them back", async ({ page }) => {

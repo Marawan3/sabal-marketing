@@ -119,6 +119,8 @@ export const copy = {
     value: "Average order value",
     result: "Estimated commission kept each year",
     empty: "Enter both numbers to see the range.",
+    /** Filled in on load so the range shows at once (owner, 2026-10-19), with the note that says so. */
+    example: { orders: 60, value: 30, note: "Example — change these" },
     low: 15,
     high: 30,
     assumption: "Third-party apps charge 15–30% commission; we charge the restaurant $0.",
@@ -132,6 +134,8 @@ export const copy = {
     heading: "Everything you need to sell direct.",
     /** Large panels on the homepage, in this order. */
     slugs: ["online-ordering", "delivery", "catering", "order-management"],
+    /** The phone cards' link line (owner, 2026-10-19). The arrow after it is drawn, aria-hidden. */
+    more: "Learn more",
   },
   steps: {
     heading: "How it works",

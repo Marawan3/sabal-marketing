@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId } from "react";
 import { buttonBase } from "./cta-link";
 import { demoHrefWithName } from "@/lib/demo-href";
 
@@ -9,6 +9,10 @@ import { demoHrefWithName } from "@/lib/demo-href";
  * filled in: by default the /contact form as a call request, with the name in
  * its Restaurant field (/contact?intent=call&restaurant=...). Nothing is sent
  * anywhere by this page: it only builds the link.
+ *
+ * The box is uncontrolled and read when the form is sent, so the name in it
+ * is the name that goes, even if it was typed before the page's script took
+ * over. A controlled box lost it once in WebKit (PR #54's first run there).
  */
 export function HeroSignup({
   href,
@@ -22,13 +26,13 @@ export function HeroSignup({
   nameParam?: string;
 }) {
   const id = useId();
-  const [name, setName] = useState("");
   return (
     <form
       className="mx-auto flex w-full max-w-[480px] items-stretch gap-2"
       onSubmit={(event) => {
         event.preventDefault();
-        window.location.href = demoHrefWithName(href, name, nameParam);
+        const name = new FormData(event.currentTarget).get("restaurant");
+        window.location.href = demoHrefWithName(href, typeof name === "string" ? name : "", nameParam);
       }}
     >
       <label htmlFor={id} className="sr-only">
@@ -40,8 +44,6 @@ export function HeroSignup({
         type="text"
         autoComplete="organization"
         placeholder={label}
-        value={name}
-        onChange={(event) => setName(event.target.value)}
         className="min-h-12 min-w-0 flex-1 rounded-[12px] border border-ink-muted bg-paper px-3 text-body text-ink placeholder:text-ink-muted focus-visible:border-ink"
       />
       <button

@@ -21,13 +21,18 @@ const STEPS = [0, 1500, 3000, 3600, 4800, 5100, 6400, 7700, 10000];
  * storefront shows it: the delivery checkout (address, the delivery quote and
  * its fee), the confirmation, then the tracking page with the driver's status.
  */
-export function DeliveryPhone({ cut = false, width }: { cut?: boolean; width?: string }) {
+export function DeliveryPhone({ cut = false, width, still = false }: { cut?: boolean; width?: string; still?: boolean }) {
   return (
-    <Visual name="delivery" steps={STEPS} description={copy.visuals.delivery} className={v.delivery}>
+    <Visual name="delivery" steps={STEPS} description={copy.visuals.delivery} className={v.delivery} still={still}>
       <Phone cut={cut} width={width}>
         <Checkout />
-        <Confirmation />
-        <Tracking />
+        {/* A still is the first screen only. */}
+        {still ? null : (
+          <>
+            <Confirmation />
+            <Tracking />
+          </>
+        )}
       </Phone>
     </Visual>
   );
