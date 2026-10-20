@@ -8,11 +8,12 @@ import { contactEmailText, contactSubject, readContact, readIntent } from "../sr
 import { allRoutes, companyLinks, demoHref, demoIsContactForm, legalNav } from "../src/lib/site";
 import { OWNER, publishedFounder } from "../src/lib/founder";
 import { customerStories, storiesFor } from "../src/lib/stories";
+import { SERVICE_FEE_CLAUSE } from "../src/lib/legal";
 import { yearlyRange } from "../src/components/savings-calculator";
 
 /**
  * The competitive upgrade (owner, 2026-10-13): two greys and a warm band, the
- * hero's trust line and $0 card, the savings calculator, the product-page
+ * hero's trust line (the $0 card went on 2026-10-20), the savings calculator, the product-page
  * template, the new pages, the navigation, the proof slots and the final band.
  */
 
@@ -20,12 +21,15 @@ const solutionPaths = solutions.map((s) => solutionHref(s.slug));
 const productPaths = builtProducts.map((slug) => `/${slug}`);
 const allPages = ["/", "/how-it-works", "/pricing", ...productPaths, ...solutionPaths, "/about", "/contact"];
 
-test("two greys: ink and ink-muted, a warm band, and no framework greys left in the CSS", async ({ page }) => {
+test("two greys: ink and ink-muted, one warm neutral, and no framework greys left in the CSS", async ({ page }) => {
   const read = (file: string) => readFileSync(join(process.cwd(), file), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
   const globals = read("src/app/globals.css");
   expect(globals).toContain("--ink: #1d1d1b;");
   expect(globals).toMatch(/--ink-muted: #6e6e6d;/);
-  expect(globals).toContain("--warm: #faf7f2;");
+  // One warm neutral and its line (owner, 2026-10-20); the cool mist and the old warm are retired.
+  expect(globals).toContain("--panel: #f7f3ec;");
+  expect(globals).toContain("--rule: #e8e1d5;");
+  expect(globals).not.toMatch(/--(mist|warm):/);
   // Tailwind's zinc, gray, stone and neutral greys, and the old near-blacks.
   const framework =
     /#(fafafa|f4f4f5|e4e4e7|d4d4d8|a1a1aa|71717a|52525b|3f3f46|27272a|18181b|09090b|f9fafb|f3f4f6|e5e7eb|d1d5db|9ca3af|6b7280|4b5563|374151|1f2937|111827|f5f5f4|e7e5e4|78716c|57534e|f5f5f5|e5e5e5|a3a3a3|737373|525252|404040|262626|171717|111111|0b0b0c|646b78|767676|202124|4d5156|70757a|dfe1e5|ebebeb)\b/i;
@@ -36,34 +40,48 @@ test("two greys: ink and ink-muted, a warm band, and no framework greys left in 
   const { execSync } = await import("node:child_process");
   const hits = execSync("grep -rhoE '(text|bg|border|fill|stroke)-(gray|zinc|slate|stone|neutral)-[0-9]+|(text|border|bg)-ink/[0-9]+' src || true", { encoding: "utf8" }).trim();
   expect(hits).toBe("");
-  // Warm on at most two sections a page; ink-muted text on paper or warm, never on saffron.
+  // The warm neutral on at most two sections a page (the panels behind the visuals aren't sections).
   for (const path of allPages) {
     await page.goto(path);
-    const warm = await page.locator("main > section").evaluateAll((els) => els.filter((el) => getComputedStyle(el).backgroundColor === "rgb(250, 247, 242)").length);
+    const warm = await page.locator("main > section").evaluateAll((els) => els.filter((el) => getComputedStyle(el).backgroundColor === "rgb(247, 243, 236)").length);
     expect(warm, path).toBeLessThanOrEqual(2);
   }
 });
 
-test("hero: the trust line above the headline, and the $0 card under the name field", async ({ page }) => {
+test("hero: the trust line above the headline carries the $0 and the 5%; no card under the name field", async ({ page }) => {
   await page.goto("/");
   const hero = page.locator("#top");
   const trust = hero.getByText(copy.hero.trust);
   await expect(trust).toBeVisible();
-  expect(copy.hero.trust).toBe("$0 for the restaurant · No lock-in · Your customers, your data");
-  // Each fact stays on one line: "No lock-in" never breaks at its hyphen.
-  const whole = await trust.locator(".whitespace-nowrap").allTextContents();
-  expect(whole).toEqual(["$0 for the restaurant ·", "No lock-in ·", "Your customers, your data"]);
-  // A saffron dot, then the text.
+  // The owner's line (2026-10-20): the 5% stays in the hero, so its pricing matches /terms.
+  expect(copy.hero.trust).toBe("$0 for the restaurant · Customers pay 5% at checkout · No lock-in");
+  expect(SERVICE_FEE_CLAUSE).toContain("the customer pays a service fee of 5% of the order");
+  // Each fact stays whole ("No lock-in" never breaks at its hyphen), and each dot ends a fact, so no line starts with one.
+  const whole = trust.locator(".whitespace-nowrap");
+  expect(await whole.allTextContents()).toEqual(["$0 for the restaurant ·", "Customers pay 5% at checkout ·", "No lock-in"]);
+  // A navy dot, then the text: saffron fills only buttons, the hero panel and the final band.
   const dot = await trust.locator("span[aria-hidden]").evaluate((el) => getComputedStyle(el).backgroundColor);
-  expect(dot).toBe("rgb(244, 168, 58)");
-  const card = hero.getByText(copy.hero.price.lead).locator("..");
-  await expect(card).toHaveText(`${copy.hero.price.lead} ${copy.hero.price.rest}`);
-  expect(`${copy.hero.price.lead} ${copy.hero.price.rest}`).toBe("$0/month for the restaurant. Customers pay 5% at checkout.");
-  for (const width of [390, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    const y = async (loc: ReturnType<typeof page.locator>) => (await loc.boundingBox())!.y;
-    expect(await y(trust)).toBeLessThan(await y(hero.locator("h1")));
-    expect(await y(hero.getByLabel(copy.hero.inputLabel))).toBeLessThan(await y(card));
+  expect(dot).toBe("rgb(19, 33, 60)");
+  // The $0 card under the name field is gone (2026-10-20); "Your customers, your data" moved to the founding section.
+  await expect(hero.getByText("$0/month for the restaurant.")).toHaveCount(0);
+  await expect(hero).not.toContainText("Your customers, your data");
+  await expect(page.locator("#founding li")).toHaveText([...copy.founding.points]);
+  expect(copy.founding.points.at(-1)).toBe("Your customers, your data.");
+  for (const width of [360, 375, 390, 1440]) {
+    await page.setViewportSize({ width, height: 800 });
+    const box = async (loc: ReturnType<typeof page.locator>) => (await loc.boundingBox())!;
+    expect((await box(trust)).y, `${width}`).toBeLessThan((await box(hero.locator("h1"))).y);
+    // Every fact on a single line, and the trust line in the first screen.
+    const lineHeight = await trust.evaluate((el) => parseFloat(getComputedStyle(el).lineHeight));
+    for (const fact of await whole.all()) expect((await box(fact)).height, `${await fact.textContent()} at ${width}`).toBeLessThanOrEqual(lineHeight + 1);
+    expect((await box(trust)).y + (await box(trust)).height).toBeLessThan(800);
+    // Two lines on phones from 360px: "$0 for the restaurant ·", then the other two. One from 640px.
+    const lines = Math.round((await box(trust)).height / lineHeight);
+    expect(lines, `trust line at ${width}`).toBe(width < 640 ? 2 : 1);
+    // The headline: at most four lines (owner, 2026-10-20, at 360).
+    const h1 = hero.locator("h1");
+    const h1Lines = Math.round((await box(h1)).height / (await h1.evaluate((el) => parseFloat(getComputedStyle(el).lineHeight))));
+    expect(h1Lines, `h1 at ${width}`).toBeLessThanOrEqual(4);
   }
   // The full pricing section stays lower down.
   await expect(page.locator("#pricing")).toContainText(copy.pricing.stat);

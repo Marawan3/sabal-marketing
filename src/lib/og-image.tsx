@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { brand } from "./brand";
+import { WORDMARK } from "./wordmark";
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -32,9 +33,10 @@ export function createOgImage(title: string) {
               strokeLinejoin="round"
             />
           </svg>
-          <span style={{ fontSize: 34, fontWeight: 500, letterSpacing: 3 }}>
-            WUNTAB
-          </span>
+          {/* The wordmark's outlines, at the tile's size: the same lockup as the header (logo.tsx). */}
+          <svg viewBox={`0 0 ${WORDMARK.width} ${WORDMARK.height}`} width={(WORDMARK.width * 56) / WORDMARK.height} height={56}>
+            <path d={WORDMARK.d} fill={brand.ink} />
+          </svg>
         </div>
         <div
           style={{

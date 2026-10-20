@@ -5,8 +5,8 @@ const tones = {
   paper: "bg-paper",
   navy: "on-dark bg-navy text-paper",
   saffron: "bg-saffron text-ink",
-  /** At most two sections a page (2026-10-13). */
-  warm: "bg-warm",
+  /** The warm neutral (owner, 2026-10-20). At most two sections a page (2026-10-13). */
+  panel: "bg-panel",
 } as const;
 
 /**
@@ -28,7 +28,7 @@ export function Section({
 }) {
   return (
     <section id={id} className={`scroll-mt-20 ${tones[tone]} ${className}`}>
-      <Container className={tone === "paper" ? "py-8 sm:py-10 lg:py-14" : tone === "warm" ? "py-10 sm:py-16 lg:py-24" : "py-12 sm:py-20 lg:py-28"}>
+      <Container className={tone === "paper" ? "py-8 sm:py-10 lg:py-14" : tone === "panel" ? "py-10 sm:py-16 lg:py-24" : "py-12 sm:py-20 lg:py-28"}>
         {children}
       </Container>
     </section>
@@ -65,8 +65,8 @@ export function Panel({
 }: {
   children: ReactNode;
   className?: string;
-  tone?: "saffron" | "mist";
+  tone?: "saffron" | "panel";
 }) {
-  const bg = tone === "saffron" ? "bg-saffron" : "bg-mist";
+  const bg = tone === "saffron" ? "bg-saffron" : "bg-panel";
   return <div className={`rounded-[20px] ${bg} ${className}`}>{children}</div>;
 }

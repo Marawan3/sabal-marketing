@@ -35,13 +35,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * The homepage, in the owner's order: hero (with the trust line and the $0
- * card), founding restaurants, outcome tabs, the kitchen band, product rows,
+ * The homepage, in the owner's order: hero (with the trust line; the $0
+ * card went on 2026-10-20), founding restaurants, outcome tabs, the kitchen band, product rows,
  * the savings calculator, how it works, pricing, final call to action. What
  * we believe moved to /about, and the FAQ left to make room for the founding
  * section (2026-10-13); its questions are on /pricing and the product pages. Every section is a headline, at most two short lines and one built
  * visual (2026-10-13): no screenshots, no photos. The pricing card is the
- * only card besides the hero's small $0 card. Customer stories render only
+ * only card. Customer stories render only
  * once their data is real.
  */
 /** One visual per outcome tab (owner, 2026-10-13). */
@@ -107,9 +107,13 @@ export default function HomePage() {
       {/* a. Hero */}
       <section id="top" className="scroll-mt-20">
         <Container className="pt-8 pb-10 text-center sm:pt-20 lg:pt-24 lg:pb-14">
-          {/* The trust line: a saffron dot, then the three facts (owner, 2026-10-13). */}
-          <p className="mx-auto mb-5 max-w-[34ch] text-small font-medium text-balance lg:mb-6 lg:max-w-none">
-            <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-saffron align-middle" />
+          {/*
+            The trust line: a navy dot, then the three facts (owner, 2026-10-20). It carries the 5%,
+            so the hero's pricing matches /terms now that the $0 card is gone. On phones it is two
+            lines: "$0 for the restaurant ·", then the other two.
+          */}
+          <p className="mx-auto mb-5 text-small font-medium text-balance lg:mb-6">
+            <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-navy align-middle" />
             {/* Each fact stays whole ("No lock-in" must not break at its hyphen), and a line never starts with a dot. */}
             {copy.hero.trust.split(" · ").map((fact, i, all) => (
               <span key={fact}>
@@ -135,11 +139,7 @@ export default function HomePage() {
               button={copy.cta.primary}
               nameParam={process.env.NEXT_PUBLIC_DEMO_NAME_PARAM}
             />
-            {/* The $0 pricing fact, moved up; the full pricing section stays lower down. */}
-            <p className="mx-auto mt-3 max-w-[480px] rounded-[12px] border border-mist px-4 py-3 text-small">
-              <span className="font-semibold">{copy.hero.price.lead}</span> {copy.hero.price.rest}
-            </p>
-            {/* The demo restaurant's own website, centred under the $0 card (owner, 2026-10-19). */}
+            {/* The demo restaurant's own website, centred under the name box (owner, 2026-10-19). The $0 card that sat between them went on 2026-10-20: the trust line says it. */}
             <DemoLink className="mt-2" />
           </div>
         </Container>
@@ -185,12 +185,12 @@ export default function HomePage() {
       <Section id="products">
         <SectionHead heading={copy.products.heading} />
         <ProductCards slugs={copy.products.slugs} stills={productStills} className="mt-6 md:hidden" />
-        <ul className="mt-8 hidden border-t border-mist md:block lg:mt-12">
+        <ul className="mt-8 hidden border-t border-rule md:block lg:mt-12">
           {copy.products.slugs.map((slug) => {
             const product = bySlug[slug];
             const href = productHref(slug);
             return (
-              <li key={slug} className="flex flex-col gap-5 border-b border-mist py-5 md:flex-row md:items-center md:gap-10 lg:py-10">
+              <li key={slug} className="flex flex-col gap-5 border-b border-rule py-5 md:flex-row md:items-center md:gap-10 lg:py-10">
                 <div className="min-w-0 flex-1">
                   {/* The name is the link (2026-10-13: the "More about" line went to make room for the calculator). */}
                   <h3 className="text-h3">
@@ -216,7 +216,7 @@ export default function HomePage() {
       </Section>
 
       {/* The savings calculator, on warm: the owner's own numbers, the apps' published 15–30%. */}
-      <Section id="savings" tone="warm">
+      <Section id="savings" tone="panel">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12">
           <SectionHead heading={copy.savings.heading} className="lg:col-span-5" />
           <div className="lg:col-span-7">

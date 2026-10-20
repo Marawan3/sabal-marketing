@@ -54,12 +54,12 @@ function Column({
 }) {
   return (
     <div className={className}>
-      <p className="text-small font-medium text-paper/80">{title}</p>
+      <p className="text-small font-medium text-paper/75">{title}</p>
       {/* From md to lg the links wrap in a row, so four columns stay short; from lg, one per line. */}
       <ul className="mt-1 flex flex-wrap gap-x-5 lg:mt-2 lg:block">
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
+            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper underline-offset-4 hover:underline">
               {link.label}
             </SmartLink>
           </li>
@@ -76,25 +76,25 @@ function Column({
 function Legal() {
   return (
     <div className="flex flex-wrap items-center gap-x-2 md:block">
-      <p className="hidden text-small font-medium text-paper/80 md:block">Legal</p>
+      <p className="hidden text-small font-medium text-paper/75 md:block">Legal</p>
       <ul className="flex flex-wrap items-center gap-x-2 md:mt-1 md:items-stretch md:gap-x-5 lg:mt-2 lg:block">
         {legalNav.map((link, i) => (
           <li key={link.href} className="max-md:flex max-md:items-center max-md:gap-x-2">
             {i > 0 ? (
-              <span aria-hidden className="text-small text-paper/60 md:hidden">
+              <span aria-hidden className="text-small text-paper/75 md:hidden">
                 ·
               </span>
             ) : null}
-            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
+            <SmartLink href={link.href} className="inline-flex min-h-11 items-center text-small text-paper underline-offset-4 hover:underline">
               {link.label}
             </SmartLink>
           </li>
         ))}
       </ul>
-      <span aria-hidden className="text-small text-paper/60 md:hidden">
+      <span aria-hidden className="text-small text-paper/75 md:hidden">
         ·
       </span>
-      <p className="text-small text-paper/80 md:hidden">
+      <p className="text-small text-paper/75 md:hidden">
         © {year} WunTab
       </p>
     </div>
@@ -131,14 +131,14 @@ function Group({ title, links }: { title: string; links: readonly FooterLink[] }
                 target="_blank"
                 rel="noopener"
                 data-demo-link
-                className="flex min-h-11 items-center gap-2 text-small text-paper/80 hover:text-paper"
+                className="flex min-h-11 items-center gap-2 text-small text-paper underline-offset-4 hover:underline"
               >
                 {link.label}
                 <ExternalIcon />
                 <span className="sr-only">(opens in a new tab)</span>
               </a>
             ) : (
-              <SmartLink href={link.href} className="flex min-h-11 items-center text-small text-paper/80 hover:text-paper">
+              <SmartLink href={link.href} className="flex min-h-11 items-center text-small text-paper underline-offset-4 hover:underline">
                 {link.label}
               </SmartLink>
             )}
@@ -151,7 +151,7 @@ function Group({ title, links }: { title: string; links: readonly FooterLink[] }
 
 export function SiteFooter() {
   return (
-    <footer className="on-dark bg-ink text-paper">
+    <footer className="on-dark bg-navy text-paper">
       <div className="mx-auto max-w-[1120px] px-4 py-6 sm:px-8 md:py-14 lg:px-12 lg:py-20">
         {/* Phones: the logo, then the groups (owner, 2026-10-20: the $0 line, Get Started and the demo link went; the final band right above has them). */}
         <div className="md:hidden" data-footer="phone">
@@ -181,7 +181,7 @@ export function SiteFooter() {
         <div className="mt-8 hidden border-t border-paper/15 pt-6 md:block lg:mt-12 lg:pt-8">
           <div className="flex items-center justify-between gap-4">
             <Logo tone="dark" size={28} />
-            <p className="text-small text-paper/80">© {year} WunTab</p>
+            <p className="text-small text-paper/75">© {year} WunTab</p>
           </div>
           <div className="mt-3 flex flex-wrap gap-x-6">
             <SmartLink

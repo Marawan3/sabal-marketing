@@ -45,6 +45,87 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-20 · PR #58: Brand pass: navy and saffron, the WunTab wordmark, a calmer first phone screen (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** the owner approved option B of the "WunTab brand and color audit" (2026-10-20):
+- navy becomes the one dark and saffron the one accent;
+- one warm neutral replaces the cool grey-blue panels;
+- the wordmark is redrawn in the site's own font;
+- the first phone screen is calmed down.
+
+**What changed:**
+
+**Colors.** Old and new tokens are in `brand.ts`, `globals.css` and the design skill's palette section (dated today).
+- **Panels and toned sections:** the panels behind the visuals (mist #E6E9EF) and the calculator, /about and product "What's included" sections (warm #FAF7F2) are one warm neutral, `panel` #F7F3EC. Both old tokens are retired.
+- **Lines:** hairlines and dividers are `rule` #E8E1D5.
+- **Hover fills:** these were mist and are now the panel neutral (the menus' hover and open states).
+- **Footer:** navy #13213C, was ink. Links are white, and secondary text is white at 75% (9.5:1).
+- **Dark-filled buttons:** navy with white text (16.0:1), with a deeper navy (#0B1528) on hover. That's the final band's Get Started, and the organization box in the multi-location diagram.
+- **Saffron** fills only buttons, the hero panel and the final band. These became navy:
+  - the "How it works" step numbers, now navy outline circles with navy numerals, on the homepage and /how-it-works;
+  - the product pages' flow diagram: its numbers are outlined, its lit nodes navy with white icons, its line navy;
+  - the trust line's dot.
+- **Saffron that stays:**
+  - **Interactive elements:** the skip link (a button), the focus ring on navy (8.0:1) and the text-selection highlight.
+  - **Logo:** the tile on navy.
+- **The visuals' insides don't change.** The restaurant's and the dashboard's screens keep the old cool grey as their own `--vis-mist`. Only the panel behind them and the pause button's hover follow the new palette.
+
+**Logo.** The tile is unchanged: geometry, navy, saffron, favicon and app icon. The wordmark changed:
+- **New wordmark:** "WunTab" in Archivo, weight 750, width 110%, tracking -0.02em, outlined from the site's own Archivo file with its kerning by `scripts/wordmark.py` into `src/lib/wordmark.ts`. It replaces WUNTAB in Bricolage caps.
+- **Size:** its capitals are 16px at logo size 28 and span exactly the W in the tile, peak to valleys, so they sit on the tile's optical centre (the W's centre, 12.75px down). It's 98px wide (WUNTAB was 94.5), with the same 14px gap.
+- **Colors:** ink on light; on the navy footer it's white, with the saffron tile and navy W.
+- **Where:** the header, the mobile menu (its header), the footer, and the OG images for /, /terms and /privacy (the image, not their wording).
+- **Removed:** `public/logo-mark.png`, the old blue "S", is deleted, and /logo-mark.png now returns 404.
+
+**The name.** Changed to "WunTab":
+- the OG image's "WUNTAB";
+- the logo's outlines;
+- `public/logo.svg`'s label ("Wuntab");
+- comments in `brand.ts` and `logo.tsx`.
+
+Left as they are:
+- **Legal pages:** the 28 "Wuntab" in `src/lib/legal.ts` are the approved entity wording and its defined name, and need the owner's written approval to change.
+- **Dashboard visual:** "WUNTAB" in its sidebar depicts the product's own sidebar.
+- **Demo banner:** its "Wuntab" is in the product repo, not this one.
+
+**First phone screen.**
+- **The $0 card is gone.** It sat under the name box ("$0/month for the restaurant. Customers pay 5% at checkout.").
+- **New trust line:** "$0 for the restaurant · Customers pay 5% at checkout · No lock-in", so the 5% stays in the hero and matches /terms. Each fact stays whole and no line starts with a dot. On phones it's two lines: "$0 for the restaurant ·", then the other two.
+- **"Your customers, your data."** It moved to the founding section as its fourth line. Its three lines are what a restaurant gets by joining early, and owning its customer list belongs with them. The section is four across from 1024px and two by two from 640px.
+- **The H1** is still 4 lines at 360 and 375.
+
+**Heights at 375 (Chromium):** the homepage went from 6,496 to 6,467px. At 1280 it went from 9,434 to 9,402px.
+
+**How it was checked:**
+- **New tests** (`tests/design.spec.ts`):
+  - every text and background pair in the palette (`textPairs` in `brand.ts`) meets WCAG AA, 4.5:1, or 3:1 for large text;
+  - a scan of every page at 375 and 1280 checks each visible text, outside the visuals, against the color behind it. It catches a planted saffron-on-white probe, at 2.0:1;
+  - saffron fills only buttons, the hero panel and the final band, and is never text;
+  - nothing is ink-filled;
+  - the footer is navy and the final band's button navy with white text;
+  - the wordmark is outlines, as tall as the tile and level with it, 14px from it, ink on light and white on navy;
+  - /logo-mark.png returns 404.
+- **Updated tests:**
+  - the hero's trust line and the 5%, with no card;
+  - the H1 at most 4 lines at 360;
+  - the step markers;
+  - "only cards" (the step circles aren't cards);
+  - the warm-neutral section count;
+  - the homepage height in Chromium, now held at 6,496px.
+- **Local suite:** 153 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **Evidence:** `docs/marketing-site/evidence/brand-pass/`, with before and after:
+  - at 375 and 1280: the first screen, the panels, the products, the calculator, How it works, the final band, the footer, and the header and footer logos;
+  - the OG image;
+  - after only: the founding section and the /delivery flow.
+
+**Notes:**
+- **Tracking:** the brief says the H1 is -0.02em. The H1 is actually -0.025em, and the wordmark uses the brief's -0.02em.
+- **The OG image** keeps its saffron accent bar and its title in the image library's default font.
+
+---
+
 ## 2026-10-20 · PR #56: An off-screen visual is held before its first step, not within 100 ms (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 56"). Squash commit `3e6814d` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`5c7fab6`): Vercel, and WebKit iPhone 69 of 69, with and without reduced motion.

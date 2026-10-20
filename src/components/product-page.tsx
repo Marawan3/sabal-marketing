@@ -162,9 +162,9 @@ function capability(line: string): ReactNode {
 /** A two-column list (one column on phones) between hairlines. */
 export function TwoColumnList({ items }: { items: readonly ReactNode[] }) {
   return (
-    <ul className="mt-6 grid border-t border-mist sm:grid-cols-2 sm:gap-x-8">
+    <ul className="mt-6 grid border-t border-rule sm:grid-cols-2 sm:gap-x-8">
       {items.map((item, index) => (
-        <li key={index} className="border-b border-mist py-3 text-body">
+        <li key={index} className="border-b border-rule py-3 text-body">
           {item}
         </li>
       ))}
@@ -210,7 +210,7 @@ export function ProductPage({ product }: { product: Product }) {
       ) : null}
 
       {/* What's included: on warm, the page's one toned section. /order-management keeps its settings card beside the list. */}
-      <Section id="included" tone="warm">
+      <Section id="included" tone="panel">
         {product.slug === "order-management" ? (
           <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
             <div className="lg:col-span-6">

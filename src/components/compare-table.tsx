@@ -26,7 +26,7 @@ export function CompareTable() {
       </thead>
       <tbody>
         {t.rows.map((row) => (
-          <tr key={row.label} className="grid grid-cols-2 gap-x-4 border-b border-mist py-4 sm:table-row sm:py-0">
+          <tr key={row.label} className="grid grid-cols-2 gap-x-4 border-b border-rule py-4 sm:table-row sm:py-0">
             <th scope="row" className="col-span-2 pb-2 text-small font-medium sm:py-4 sm:pr-6 sm:align-top">
               {row.label}
             </th>

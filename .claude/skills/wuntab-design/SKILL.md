@@ -239,28 +239,33 @@ retired. Do not reintroduce them.
 
 ## 3. Palette
 
-Restaurant vernacular, not SaaS vernacular: white paper, kitchen-ticket stock, deep
-navy ink, a saffron "we're open" accent. (Ink was a deep green until 2026-09-05;
-Marawan chose navy to lose the green-and-yellow fast-food echo.) Use exactly these
-six. Define them in
-`src/lib/brand.ts` and `src/app/globals.css`; never hard-code a hex in a component.
+**Brand pass, 2026-10-20 (owner, option B of the "WunTab brand and color audit"):
+navy is the one dark, saffron is the one accent, and one warm neutral replaces the
+cool grey.** Define colors in `src/lib/brand.ts` and `src/app/globals.css`; never
+hard-code a hex in a component. The product visuals' insides (the restaurant's and
+the dashboard's own screens) keep their own colors, including the old cool grey as
+`--vis-mist`; everything around them follows this table.
 
-| Token     | Hex       | Use                                                                 |
-|-----------|-----------|---------------------------------------------------------------------|
-| `paper`   | `#FFFFFF` | Page background. The page is white, not cream.                      |
-| `ink`     | `#13213C` | All text, the dark CTA band, the footer. Deep navy, not near-black. |
-| `ticket`  | `#F6F1E7` | The "counter": full-width band behind the proof and pricing sections. Tickets themselves are `paper` so the sawtooth edge reads. |
-| `saffron` | `#F4A83A` | Primary CTA fill with `ink` text. Nothing else is saffron.          |
-| `tomato`  | `#D9482B` | Unused since 2026-10-02 (its one use, the 0 on the withdrawn proof tickets, is gone). |
-| `mist`    | `#E3E7EE` | Hairlines, dividers, disabled, subtle backgrounds.                  |
+| Token          | Hex       | Use |
+|----------------|-----------|-----|
+| `paper`        | `#FFFFFF` | Page background. |
+| `ink`          | `#1D1D1B` | All text on light surfaces (16.9:1 on paper, 15.3:1 on panel). Never a fill. |
+| `ink-muted`    | `#6E6E6D` | Secondary text and control borders (5.1:1 on paper, 4.6:1 on panel). |
+| `navy`         | `#13213C` | The one dark: the logo tile, the kitchen band, the footer, every dark-filled button (white text, 16.0:1). |
+| `navy-deep`    | `#0B1528` | Hover on navy buttons. |
+| `saffron`      | `#F4A83A` | The one accent. Fills only buttons (with ink text), the hero panel and the final band. Never a text color on white (2.0:1). |
+| `saffron-deep` | `#E2962C` | Hover on saffron buttons. |
+| `panel`        | `#F7F3EC` | The one warm neutral: the panels behind the visuals and the toned sections (at most two a page). Replaced `mist` #E6E9EF and `warm` #FAF7F2. |
+| `rule`         | `#E8E1D5` | Hairlines and dividers. |
 
-Secondary text is `ink` at 72% opacity. Never `mist` for text.
-Contrast floors: `ink` on `paper` and `ink` on `saffron` both pass AA for all sizes.
-`tomato` on `paper` passes AA at 17px+ only; use it for numbers and short words, never
-paragraphs. No gradients anywhere. No tinted near-blacks.
-
-Dark sections: background `ink`, text `paper`, CTA `saffron`. At most two dark
-sections on the page (the final CTA band and, optionally, the proof module frame).
+- The footer is navy: links white, secondary text white at 75% (9.5:1).
+- Step numbers ("How it works", the product flows) are navy outline circles with navy
+  numerals, not saffron.
+- On navy, the focus ring is saffron (8.0:1) and the logo tile is saffron.
+- Every text and background pair is listed in `textPairs` (brand.ts) and must meet
+  WCAG AA: 4.5:1, or 3:1 for large text. `tests/design.spec.ts` checks the list and
+  scans every page's real text against what's behind it.
+- No gradients anywhere. No tinted near-blacks. The old beige `#F5EFE6` stays out.
 
 ## 4. Typography
 
@@ -421,13 +426,17 @@ parallax, marquees, typewriter headlines, particle backgrounds, cursor effects.
   Every dish a visual shows has its photo; a dish without one stays out.
 - No stock food photos.
 - Icons: none, unless a check mark in a checklist. No icon grids.
-- Logo: geometry is locked (rounded-square tile, one-stroke W with the raised center
-  peak, WUNTAB wordmark caps / weight 500 / 3px tracking, tile + 14px gap lockup). The
-  wordmark is outlined SVG (Bricolage lettering, frozen 2026-10-07), not live text.
-  Never symmetrize the W. Colors are ours: on light surfaces ink tile, saffron W, ink
-  wordmark; on dark surfaces saffron tile, ink W, paper wordmark. Stroke width 6 at
-  or under 24px, 5 at or under 40px, else 4.5. Source: `src/components/logo.tsx`,
-  `public/logo.svg`, `scripts/icons.mjs` (favicon.ico 16/32/48, apple-icon 180).
+- Logo: the tile's geometry is locked (rounded-square tile, one-stroke W with the raised
+  center peak, tile + 14px gap lockup). Never symmetrize the W. The wordmark is
+  "WunTab" in Archivo, weight 750, width 110%, tracking -0.02em (2026-10-20, it replaced
+  WUNTAB in Bricolage caps), outlined SVG from `scripts/wordmark.py` into
+  `src/lib/wordmark.ts`, never live text. Its capitals span the W in the tile (16px at
+  logo size 28), so they sit on the tile's optical centre. Colors: on light surfaces
+  navy tile, saffron W, ink wordmark; on navy, saffron tile, navy W, white wordmark.
+  Stroke width 6 at or under 24px, 5 at or under 40px, else 4.5. Source:
+  `src/components/logo.tsx`, `public/logo.svg`, `scripts/icons.mjs` (favicon.ico
+  16/32/48, apple-icon 180). The name is written "WunTab" in all copy; the legal pages
+  keep the approved entity wording.
 
 ## 11. Copy rules
 

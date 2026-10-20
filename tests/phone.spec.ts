@@ -20,6 +20,9 @@ const phone = { width: 375, height: 812 };
  */
 const HOMEPAGE_BEFORE = 6_692;
 
+/** The homepage at 375 in Chromium before the brand pass (2026-10-20, `main` at 8efd2a9). It must not grow either. */
+const HOMEPAGE_BEFORE_BRAND_PASS = 6_496;
+
 /**
  * The closed footer at 375: the owner's target, 520px (2026-10-20), once the
  * $0 line, Get Started and the demo link left the top of it. (The first
@@ -166,15 +169,15 @@ test("See a live restaurant: on by default, in every place, to demo.wuntab.com i
 
   await page.setViewportSize(phone);
   await page.goto("/");
-  // Under the hero signup: centred, below the $0 card.
+  // Under the hero signup: centred, below the name box (the $0 card that sat between them went on 2026-10-20).
   const hero = page.locator("#top [data-demo-link]");
   await check(hero, "hero");
-  const card = (await page.locator("#top p", { hasText: copy.hero.price.rest }).boundingBox())!;
+  const form = (await page.locator("#top form").boundingBox())!;
   const heroBox = (await hero.boundingBox())!;
-  expect(heroBox.y).toBeGreaterThanOrEqual(card.y + card.height);
+  expect(heroBox.y).toBeGreaterThanOrEqual(form.y + form.height);
   const text = (await hero.locator("span").first().boundingBox())!;
   const tag = (await hero.locator("span", { hasText: "Demo restaurant" }).boundingBox())!;
-  expect(Math.abs((text.x + tag.x + tag.width) / 2 - (card.x + card.width / 2)), "centred under the card").toBeLessThanOrEqual(2);
+  expect(Math.abs((text.x + tag.x + tag.width) / 2 - (form.x + form.width / 2)), "centred under the name box").toBeLessThanOrEqual(2);
   // The products section and the final band, under its button.
   await check(page.locator("#products [data-demo-link]"), "products");
   const band = page.locator("#cta [data-demo-link]");
@@ -270,13 +273,14 @@ test("products on phones: cards to swipe, each a still of its visual, its name, 
 });
 
 for (const reducedMotion of ["no-preference", "reduce"] as const) {
-  test(`the homepage at 375 is no taller than before (${reducedMotion})`, async ({ page }) => {
+  test(`the homepage at 375 is no taller than before (${reducedMotion})`, async ({ page, browserName }) => {
     await page.emulateMedia({ reducedMotion });
     await page.setViewportSize(phone);
     await page.goto("/");
     const height = await page.evaluate(() => document.documentElement.scrollHeight);
     test.info().annotations.push({ type: "homepage at 375", description: `${height}px` });
     expect(height).toBeLessThanOrEqual(HOMEPAGE_BEFORE);
+    if (browserName === "chromium") expect(height).toBeLessThanOrEqual(HOMEPAGE_BEFORE_BRAND_PASS);
     // The stills hold still with reduced motion too.
     expect(await page.locator("[data-still]").evaluateAll((els) => els.flatMap((el) => el.getAnimations({ subtree: true })).filter((a) => a.playState === "running").length)).toBe(0);
   });

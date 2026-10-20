@@ -6,7 +6,9 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 ## a. Hero
 
-**Trust line (2026-10-13), over the headline, after a saffron dot:** $0 for the restaurant · No lock-in · Your customers, your data
+**Trust line (2026-10-20), over the headline, after a navy dot:** $0 for the restaurant · Customers pay 5% at checkout · No lock-in
+- It took in the $0 card's 5%, so the hero's pricing still matches /terms. "Your customers, your data" moved to the founding section. *(Was, 2026-10-13: $0 for the restaurant · No lock-in · Your customers, your data.)*
+- Each fact stays whole and a line never starts with a dot. On phones it's two lines: "$0 for the restaurant ·", then the other two.
 - *$0 for the restaurant:* the service fee clause in /terms ("Wuntab is free to the restaurant").
 - *No lock-in:* /terms 4.2 ("You may end this agreement at any time, for any reason or none"). The owner chose "No lock-in" over "No contract" (PR #29), since /terms is itself an agreement.
 - *Your customers, your data:* /terms 1.2 ("What is yours: ... your customer list. Those stay yours throughout and you can take them with you").
@@ -17,9 +19,9 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Input:** Your restaurant's name · **Button:** Get Started (goes to the /contact form as a call request, with the name in its Restaurant field; 2026-10-19)
 
-**Small card under the name field (2026-10-13):** **$0/month for the restaurant.** Customers pay 5% at checkout. *(The same terms as the service fee clause; the full pricing section stays lower down.)*
+**The small card under the name field is gone (2026-10-20):** it said "**$0/month for the restaurant.** Customers pay 5% at checkout.", which the trust line now says. The full pricing section stays lower down.
 
-**Under the card, centred (2026-10-19):** See a live restaurant ↗ Demo restaurant *(to demo.wuntab.com, in a new tab; see Demo link below)*
+**Under the name box, centred (2026-10-19):** See a live restaurant ↗ Demo restaurant *(to demo.wuntab.com, in a new tab; see Demo link below)*
 
 **Visual:** a live phone drawn in HTML and CSS (2026-10-13; the demo restaurant became Palm&Stone Pizza on 2026-10-19, see "The demo restaurant" below). On the demo restaurant's storefront, the menu's head scrolls away to the Pizzas, each with its photo; a diner opens Pepperoni Pizza ($16.00), taps 16-inch (+$5.00), then Hot-honey drizzle (+$1.50), and the Add item price follows ($16.00, $21.00, $22.50). The cart bar shows "View cart · 1 item" at $23.96 (subtotal plus tax). Checkout: subtotal $22.50, Service fee (5%) $1.13, tax $1.46, tip $4.50, total $29.59; then the confirmation with a ready time 20 minutes after the visitor's own clock. Steam rises off the dish sheet's photo (none with reduced motion). On desktop the order then lands as ticket #1930 (1× Pepperoni Pizza, + 16-inch, + Hot-honey drizzle) in the New column of the kitchen display beside the phone. On phones there is no kitchen display in the hero (2026-10-19): the phone holds on the confirmation for about 2.5 seconds and starts again; the kitchen band just below shows the display. Every string on the screens is the storefront's or the kitchen display's own, except the "Service fee (5%)" line: the owner added it on 2026-10-13 to match /pricing and /terms, and the live checkout doesn't show it yet; every dish and price is the owner's Palm&Stone Pizza menu (`src/lib/demo-order.ts`). About 14 seconds on desktop and 12.5 on phones, then it loops; the second tap came out of the kitchen ticket's hold, so the desktop loop is as long as before. It starts again with a direct crossfade from the confirmation to the menu (300 ms; 150 ms with reduced motion), with the status bar and the island on screen throughout (2026-10-19: it used to fade to a blank white phone for about a second).
 
@@ -222,6 +224,7 @@ Product facts below were checked against sabal-ros `main` at `a5418d4`, read-onl
 - The people who built WunTab set up your restaurant themselves.
 - You get a direct line, not a ticket queue.
 - Founding restaurants shape what we build next.
+- Your customers, your data. *(From the hero's trust line, 2026-10-20. Source: /terms 1.2, your customer list is yours.)*
 
 Get Started (Book a call: the /contact form as a call request).
 

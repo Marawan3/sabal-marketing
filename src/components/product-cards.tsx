@@ -28,7 +28,7 @@ export function ProductCards({ slugs, stills, className = "" }: { slugs: readonl
           // The gutter less 12px gap and 24px peek: 16 + 20 = 36 on phones, 32 + 4 from 640px.
           <li key={slug} className="w-[calc(100%-20px)] shrink-0 snap-start sm:w-[calc(100%-4px)]">
             <SmartLink href={href} className="group block rounded-[20px]" data-product-card>
-              <div className="relative h-40 overflow-hidden rounded-[20px] bg-mist">
+              <div className="relative h-40 overflow-hidden rounded-[20px] bg-panel">
                 {still ? (
                   <div
                     className="absolute top-4 left-1/2 origin-top -translate-x-1/2"

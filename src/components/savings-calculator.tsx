@@ -70,7 +70,7 @@ export function SavingsCalculator() {
           </span>
         </label>
       </div>
-      <div className="mt-5 border-t border-mist pt-4 sm:mt-8 sm:pt-6" aria-live="polite">
+      <div className="mt-5 border-t border-rule pt-4 sm:mt-8 sm:pt-6" aria-live="polite">
         <p className="text-small font-medium">{t.result}</p>
         <p className="mt-1 text-h2 text-balance tabular-nums" data-result>
           {range ? `Between ${dollars(range[0])} and ${dollars(range[1])}` : <span className="text-body text-ink-muted">{t.empty}</span>}
