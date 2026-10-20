@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-19 · PR #54: Mobile polish: footer, demo link, product cards, calculator (PR open)
+## 2026-10-20 · PR #54: Mobile polish: footer, demo link, product cards, calculator (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 54"). Squash commit `ee46216` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`2225479`): Vercel, and WebKit iPhone 69 of 69, with and without reduced motion. Opened 2026-10-19; the owner's two changes (the footer's top block out, the stills trimmed to their first screen) went in on 2026-10-20 after reviewing the preview.
 
 **Why:** at 375px the footer was 766px on every page (25 links wrapped inline, like a tag cloud; 43% of /contact), the products section was a stack of underlined headings, the calculator showed nothing until both boxes were filled, and the live demo restaurant had no link. Item 5 of the request (the hero restart) was already merged as PR #52.
 
@@ -122,7 +122,7 @@ The homepage at 390 is 6,501 px (the limit is 7,000). With Company open, the foo
 - **WebKit iPhone:**
   - First run: 67 of 68 passed. Every new phone test passed, with and without reduced motion, including the homepage height. The one failure was the hero name box (above).
   - With the fix: 69 of 69.
-  - It runs again on the owner's two changes of 2026-10-20.
+  - On the owner's two changes of 2026-10-20 (the merged head): 69 of 69.
 - **Evidence:** `docs/marketing-site/evidence/mobile-polish/`:
   - full pages of /, /contact and /pricing at 375 and 1280;
   - the footer before and after, closed and with Company open;
