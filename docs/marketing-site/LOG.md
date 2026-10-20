@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-20 · PR #58: Brand pass: navy and saffron, the WunTab wordmark, a calmer first phone screen (PR open)
+## 2026-10-20 · PR #58: Brand pass: navy and saffron, the WunTab wordmark, a calmer first phone screen (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 58"), after the owner reviewed the preview at 375 and 1280 and asked for the second round below. Squash commit `618b58c` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`4b42df1`): Vercel, and WebKit iPhone 71 of 71, with and without reduced motion.
 
 **Why:** the owner approved option B of the "WunTab brand and color audit" (2026-10-20):
 - navy becomes the one dark and saffron the one accent;
