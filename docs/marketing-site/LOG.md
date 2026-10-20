@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-20 · PR #63: Header menus, option A: every product page with an icon, under three outcome headings (PR open)
+## 2026-10-20 · PR #63: Header menus, option A: every product page with an icon, under three outcome headings (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 63"), after the owner reviewed the preview at 1280 and 375 and asked for the second round below. Squash commit `d27afbc` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`c8c2c56`): Vercel, and WebKit iPhone 73 of 73, with and without reduced motion.
 
 **Why:** the owner chose option A from the "WunTab submenu options" canvas (2026-10-20).
 
