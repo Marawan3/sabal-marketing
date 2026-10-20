@@ -66,7 +66,7 @@ export function DemoCard() {
         <span className="text-small text-ink-muted">{demoStorefront.tag}</span>
         <span className="text-body font-[650] tracking-[-0.01em]">{demoOrder.restaurant}</span>
         <span className="mb-2 text-small">{copy.nav.demoCard}</span>
-        <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold underline underline-offset-4 group-hover/card:decoration-2">
+        <span className="inline-flex items-center gap-1.5 text-small font-semibold underline underline-offset-4 group-hover/card:decoration-2">
           {demoStorefront.label}
           <ExternalIcon />
         </span>

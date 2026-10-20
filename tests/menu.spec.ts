@@ -208,11 +208,11 @@ test("the Product panel: three columns, the card, then New to WunTab, and no nam
     // One row: the three columns side by side, the card to their right.
     expect(new Set(layout.groups.map((g) => Math.round(g.top))).size).toBe(1);
     for (const [i, g] of layout.groups.entries()) {
-      expect(g.heading, `heading at ${width}`).toEqual({ size: "13px", weight: "600", color: "rgb(110, 110, 109)" });
+      expect(g.heading, `heading at ${width}`).toEqual({ size: "14px", weight: "600", color: "rgb(110, 110, 109)" });
       for (const row of g.rows) {
         expect(row.lines, `"${row.label}" wraps at ${width}`).toBe(1);
         expect(row.height, `${row.label} at ${width}`).toBeGreaterThanOrEqual(44);
-        expect([row.size, row.weight], `${row.label}`).toEqual(["15px", "500"]);
+        expect([row.size, row.weight], `${row.label}`).toEqual(["14px", "500"]);
         expect(Math.round(row.gap), `${row.label}: 12px from its icon`).toBe(12);
         const next = layout.groups[i + 1];
         const limit = next?.left ?? layout.card?.left ?? layout.panel.right;
@@ -234,6 +234,59 @@ test("the Product panel: three columns, the card, then New to WunTab, and no nam
     await expect(more.locator("a")).toHaveText([copy.nav.howItWorks, copy.nav.pricing]);
     expect(await more.locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("href")))).toEqual(["/how-it-works", "/pricing"]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
+});
+
+/** The site's five text sizes at this width, read from the classes themselves. */
+async function scale(page: Page) {
+  return page.evaluate(() =>
+    ["text-small", "text-body", "text-h3", "text-h2", "text-display"].map((cls) => {
+      const el = Object.assign(document.createElement("span"), { className: cls, textContent: "x" });
+      document.body.appendChild(el);
+      const size = getComputedStyle(el).fontSize;
+      el.remove();
+      return size;
+    }),
+  );
+}
+
+/** Every distinct font size of the visible text in `scope`, with an example of each. */
+async function textSizes(scope: Locator) {
+  return scope.evaluate((root) => {
+    const found: Record<string, string> = {};
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const el = node.parentElement!;
+      const text = node.textContent?.trim();
+      if (!text || el.closest(".sr-only")) continue;
+      const rect = el.getBoundingClientRect();
+      if (!rect.width || !rect.height) continue;
+      found[getComputedStyle(el).fontSize] ??= text.slice(0, 30);
+    }
+    return found;
+  });
+}
+
+test("every piece of menu text is on the site's five sizes (owner, 2026-10-20)", async ({ page }) => {
+  for (const width of [1024, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const sizes = await scale(page);
+    for (const name of ["Product", "Solutions"] as const) {
+      const found = await textSizes(await openMenu(page, name));
+      for (const [size, example] of Object.entries(found)) expect(sizes, `${name} at ${width}: "${example}" is ${size}`).toContain(size);
+    }
+  }
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  const sizes = await scale(page);
+  await page.locator("header summary", { hasText: "Menu" }).click();
+  const nav = page.locator('header nav[aria-label="Mobile"]');
+  for (const summary of await nav.locator("details > summary").all()) {
+    await summary.click();
+    const found = await textSizes(nav);
+    for (const [size, example] of Object.entries(found)) expect(sizes, `phone menu: "${example}" is ${size}`).toContain(size);
+    await summary.click();
   }
 });
 

@@ -56,7 +56,7 @@ function ArrowIcon() {
   );
 }
 
-/** A row with an icon (owner, 2026-10-20): icon 20px, 12px gap, the name at 15px weight 500; under it, its line if it has one. */
+/** A row with an icon (owner, 2026-10-20): icon 20px, 12px gap, the name in the small size at weight 500; under it, its line if it has one. */
 function IconRow({ item }: { item: NavItem & { icon: IconName } }) {
   return (
     <SmartLink
@@ -69,7 +69,7 @@ function IconRow({ item }: { item: NavItem & { icon: IconName } }) {
         <NavIcon name={item.icon} size={20} />
       </span>
       <span>
-        <span data-name className="block text-[15px] font-medium">
+        <span data-name className="block text-small font-medium">
           {item.name}
         </span>
         {item.blurb ? <span className="mt-0.5 block text-small text-ink-muted">{item.blurb}</span> : null}
@@ -91,7 +91,7 @@ function Row({ item }: { item: NavItem }) {
   return item.icon ? <IconRow item={{ ...item, icon: item.icon }} /> : <PlainRow item={item} />;
 }
 
-/** The Product menu (owner, 2026-10-20: option A): its groups as columns under 13px headings, the card, then "New to WunTab?". */
+/** The Product menu (owner, 2026-10-20: option A): its groups as columns under their headings, the card, then "New to WunTab?". Every size is on the site's scale. */
 function ProductPanel({ menu }: { menu: NavMenu }) {
   return (
     <div className="px-7 pt-7">
@@ -101,7 +101,7 @@ function ProductPanel({ menu }: { menu: NavMenu }) {
       >
         {menu.groups.map((group, groupIndex) => (
           <div key={group.title ?? groupIndex} data-menu-group>
-            {group.title ? <p className="mb-2 pl-3 text-[13px] font-semibold text-ink-muted">{group.title}</p> : null}
+            {group.title ? <p className="mb-2 pl-3 text-small font-semibold text-ink-muted">{group.title}</p> : null}
             <ul className="flex flex-col gap-0.5">
               {group.items.map((item) => (
                 <li key={item.href}>

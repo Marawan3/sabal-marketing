@@ -229,9 +229,11 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Desktop Product panel:**
   - **Layout:** the three groups as columns, then the demo card. The card is 300px from 1200px and
     240px from 1024 to 1199, so no name wraps.
-  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name at 15px weight 500.
-  - **Headings:** 13px weight 600, ink-muted. 15px and 13px are the owner's sizes for the menu
-    only, not part of the five-size scale.
+  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name in the small size (14px) at weight
+    500.
+  - **Headings:** the small size, weight 600, ink-muted.
+  - **Type sizes:** every piece of menu text is on the five sizes (owner, 2026-10-20). The card's
+    title is the body size, and the rest is small. A test opens each menu and checks.
   - **Nothing else in a row:** no descriptions, no "New" badges, no numbers.
   - **Bottom row:** under a hairline, "New to WunTab?" (muted), then "See how it works" and
     "Pricing", each with a drawn arrow.
@@ -249,7 +251,7 @@ their reasoning. Where they disagree with this section, this section wins.
 - **Solutions menu:** each page with its icon (storefront, stopwatch, fork and knife, two pins)
   and its one line.
 - **Keyboard:** focus opens a menu, Tab goes into it, Escape closes it and returns focus to its
-  button (it stays closed).
+  button (it stays closed). No arrow keys: Tab and Escape are enough (owner, 2026-10-20).
 
 ## 1. What we are designing for
 

@@ -68,8 +68,8 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - **Which:** one per product page, and storefront, stopwatch, fork and knife, and two pins for the solutions.
 - **Desktop Product panel:**
   - **Layout:** the three groups as columns, then the demo card. The card is 300px from 1200px and narrows to 240px from 1024 to 1199, where 300 would leave the columns too narrow. Each column is at least as wide as its longest name.
-  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name at 15px weight 500. No descriptions.
-  - **Headings:** 13px weight 600, ink-muted.
+  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name in the small size (14px) at weight 500. No descriptions.
+  - **Headings:** the small size, weight 600, ink-muted.
   - **Card:** warm #F7F3EC, radius 16.
     - The demo photo at 300×150, lazy.
     - "Demo restaurant", "Palm&Stone Pizza", "Order like a guest and see what your customers get. Orders here aren't real.", and "See a live restaurant" with the new-tab icon.
@@ -79,9 +79,15 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 - **Phone menu:** the three headings as accordions, icons at 22px, 48px rows. Before Get Started, a compact demo row replaces the plain link: an 88px thumbnail, "Demo restaurant · Palm&Stone Pizza" and "See a live restaurant ↗". Below a 394px screen that first line is two lines, with the dot hidden.
 - **Keyboard fix:** Escape from inside an open menu used to hand focus back to its button, which opened the menu again. It now stays closed. This was the case before this change too, but no test pressed Escape from inside the panel.
 
-**Notes for the owner:**
-- **Type sizes:** 15px names and 13px headings are the owner's sizes and sit outside the site's five-size scale (14px small, 16 to 18px body). The five-size test counts only what's on screen when a page loads, and the desktop panel isn't, so it doesn't flag them. If the menu should stay on the scale, both go to 14px.
-- **No arrow keys:** the menu has never had arrow-key navigation. Tab moves through it, and Escape closes it and returns focus. The fix above makes that work from inside the panel. Arrow keys would be new behaviour.
+**Second round (owner's review on the preview at 1280 and 375, 2026-10-20):**
+- **Type sizes:** every piece of menu text is now on the five sizes. The first version used 15px for names and 13px for headings, from the brief, and both were outside the scale.
+  - **Names and headings:** item names and group headings are the small size (14px); headings are weight 600, ink-muted.
+  - **The card:** "Demo restaurant" and the link are 14px. The title stays the body size (18px at desktop), which was already on the scale.
+  - **Solutions names** are 14px too.
+  - **The check:** a new test opens each menu at 1024, 1280 and 1440, and every phone group at 375, and checks every visible text against the scale. It failed on the first version, on "Sell directly" at 13px, and passes now.
+  - **No wrapping:** no label wraps from 1024 to 1440 after the change.
+- **No arrow keys:** the menu never had them. The owner said Tab and Escape are enough.
+- **The Escape fix and its test** stay.
 - **Solutions and Company on phones** stay as they were, with no icons, as the brief says ("everything else stays as today").
 
 **Footer heights:** 533px at 1280 (unchanged); 441px at 375, down from 490px (five groups instead of six).
@@ -105,7 +111,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - the footer's five groups;
   - the screenshot run's group name.
 - **One test changed how it runs:** the contrast scan's planted probe now goes in after React has hydrated `<main>`. Before that, hydration replaced `<main>` and dropped the probe; the page itself logs no hydration error.
-- **Local suite:** 163 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **Local suite:** 164 passed, 1 skipped, after the second round. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
 - **Evidence:** `docs/marketing-site/evidence/menu/`, before over after:
   - the Product and Solutions menus open at 1024, 1280 and 1440;
   - the phone menu at 375, closed and with the first group open;
