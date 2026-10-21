@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-21 · PR #65: Menus close when you pick a page (PR open)
+## 2026-10-21 · PR #65: Menus close when you pick a page (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 65"). Squash commit `3f6d317` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`8031a30`): Vercel, and WebKit iPhone 81 of 81, with and without reduced motion.
 
 **The bug** (owner, 2026-10-21, reproduced on wuntab.com): menus stayed open after you picked a page.
 - **Phones:** tapping a page in the menu changed the URL and loaded the page, but the menu stayed over it (`details.mobile-nav` still open). The page couldn't scroll (`html` stayed `overflow: hidden`) until you tapped X.
@@ -75,6 +75,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - clicking an item in each of Product, Solutions and Company closes the panel; `aria-expanded` is "false" on the new page, and focus isn't on the menu button;
   - on a touch screen at 1024, tapping an item closes the panel.
 - **Local suite:** 174 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **WebKit iPhone:** 81 of 81, with and without reduced motion, all four new phone-menu tests included.
 
 ---
 
