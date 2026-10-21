@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-10-21 · PR #67: Menu names, round 2: "Your website", "Your orders", "Your kitchen", and Loyalty Program (PR open)
+## 2026-10-21 · PR #67: Menu names, round 2: "Your website", "Your orders", "Your kitchen", and Loyalty Program (merged)
 
-**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+**Merged by:** Claude, on the owner's instruction ("merge 67"). Squash commit `a7ccc3c` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`53a214d`): Vercel, and WebKit iPhone 81 of 81, with and without reduced motion.
 
 **Why:** the owner thought the 2026-10-20 headings read too much like a competitor's: "Run the restaurant" against their "Run your restaurant", and the same verb-plus-outcome format (2026-10-21).
 
@@ -82,6 +82,7 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - **The four links to /loyalty** (desktop menu, phone menu, both footers) say "Loyalty Program", and so does /online-ordering's Works with link.
   - **The old name** is in none of /, /loyalty, /online-ordering, /pricing and /how-it-works.
 - **Local suite:** 175 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **WebKit iPhone:** 81 of 81, with and without reduced motion.
 - **Evidence:** `docs/marketing-site/evidence/menu-names/`:
   - before over after: the Product menu at 1024, 1280 and 1440, and the footer at 1280;
   - before beside after: the phone menu and the footer at 375.
