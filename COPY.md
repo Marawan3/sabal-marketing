@@ -144,7 +144,7 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 
 ## Footer (2026-10-13; desktop rebuilt 2026-10-20)
 
-**From 768px (2026-10-20):** the same groups as on phones, as columns, built from the same list as the header menus, so a new page lands in the same group on every screen. Since the menu rebuild (2026-10-20) that's five: Sell directly, Get found and come back, Run the restaurant, Solutions, Company.
+**From 768px (2026-10-20):** the same groups as on phones, as columns, built from the same list as the header menus, so a new page lands in the same group on every screen. Since the menu rebuild that's five: Your website, Your orders, Your kitchen (2026-10-21), Solutions, Company.
 - **Layout:** one row of five from 1024px. From 768 to 1023px, the three Product groups, then Solutions and Company.
 - **Bottom bar, under a hairline:** the logo, hello@wuntab.com and **Send a message** (→ /contact) on the left, and **Terms · Privacy · © 2026 WunTab** on the right.
 - **What went:** the Legal column. Terms and Privacy are the bottom bar's.
@@ -154,25 +154,28 @@ Then **Works with** as one row of links, then the FAQ. The FAQ now also asks:
 **On phones (2026-10-19; top trimmed 2026-10-20):**
 - The logo. The $0 line, Get Started and See a live restaurant went from here on 2026-10-20: the final band right above has them. On /contact, which has no final band, Get Started is in the header.
 - Five closed groups, the Product menu's three and then two more (2026-10-20; there were six, Sell, Grow, Operate and Scale before them):
-  - **Sell directly:** Online Ordering, Online Menu, Delivery, Catering, Recommended Add-ons.
-  - **Get found and come back:** Restaurant Websites, Restaurant SEO, Loyalty & Rewards.
-  - **Run the restaurant:** Order Management, Menu Management, Kitchen Display, Payments, Integrations.
+  - **Your website:** Restaurant Websites, Online Menu, Restaurant SEO, Loyalty Program.
+  - **Your orders:** Online Ordering, Delivery, Catering, Recommended Add-ons, Payments.
+  - **Your kitchen:** Order Management, Kitchen Display, Menu Management, Integrations.
   - **Solutions:** the four solution pages.
   - **Company:** How it works, Pricing, About, Contact, then **Live demo restaurant ↗**, which opens demo.wuntab.com in a new tab. How it works and Pricing joined Company so every page is still linked.
 - hello@wuntab.com, then **Terms · Privacy · © 2026 WunTab**. No "Send a message" on phones: Contact is in Company.
 
-## Navigation (2026-10-13; menus rebuilt 2026-10-20)
+## Navigation (2026-10-13; menus rebuilt 2026-10-20; renamed 2026-10-21)
 
 Product · Solutions · How it works · Pricing · Company (About, Contact). Get Started still books a call: it goes to the /contact form as a call request (2026-10-19; it used to open an email to hello@wuntab.com, which did nothing on phones without a mail app).
 
-**Product menu (2026-10-20, option A):** every built product page, each with a navy line icon, under three headings.
-- **Sell directly:** Online Ordering · Online Menu · Delivery · Catering · Recommended Add-ons
-- **Get found and come back:** Restaurant Websites · Restaurant SEO · Loyalty & Rewards
-- **Run the restaurant:** Order Management · Menu Management · Kitchen Display · Payments · Integrations
-- **Changes from before:**
+**Product menu (2026-10-21):** every built product page, each with a navy line icon, under three headings. On desktop each name has its one line from the catalog under it; the phone menu shows names only.
+- **Your website:** Restaurant Websites (Your digital storefront.) · Online Menu (Your menu as your storefront.) · Restaurant SEO (Built so search engines read your menu.) · Loyalty Program (Give regulars a reason to come back.)
+- **Your orders:** Online Ordering (Take direct pickup and delivery orders.) · Delivery (Offer delivery without your own drivers.) · Catering (Take catering requests on your website.) · Recommended Add-ons (Suggest add-ons when they pick a dish.) · Payments (Card and Apple Pay at checkout.)
+- **Your kitchen:** Order Management (Every order from new to done.) · Kitchen Display (Orders on a kitchen screen.) · Menu Management (Change the menu once, everywhere.) · Integrations (Payments, delivery, and your POS.)
+- **Changes (2026-10-21):**
+  - the headings were "Sell directly", "Get found and come back" and "Run the restaurant" (2026-10-20); the owner found them too close to a competitor's;
+  - Payments moved to Your orders;
+  - **Loyalty & Rewards is now Loyalty Program** everywhere its name shows: the menus, the footers, the page's title and Works with. The page stays at /loyalty.
+- **Changes on 2026-10-20:**
   - the six secondary pages joined the menu (owner, reversing 2026-10-13);
-  - Integrations moved from Scale to Run the restaurant;
-  - no descriptions under the names.
+  - Integrations moved from Scale into the menu's third group.
 - **Card, on the right:** the demo restaurant's pepperoni pizza. Under it:
   - **Demo restaurant**
   - **Palm&Stone Pizza**

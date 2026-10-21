@@ -78,12 +78,12 @@ async function icons(scope: Locator) {
 }
 
 test("one list: the Product menu, the phone menu and both footers have the same groups and pages", async ({ page }) => {
-  // The three groups hold every built page, once each, in the owner's order.
-  expect(productGroups.map((g) => g.title)).toEqual(["Sell directly", "Get found and come back", "Run the restaurant"]);
+  // The three groups hold every built page, once each, in the owner's order (2026-10-21).
+  expect(productGroups.map((g) => g.title)).toEqual(["Your website", "Your orders", "Your kitchen"]);
   expect(productGroups.map((g) => g.slugs)).toEqual([
-    ["online-ordering", "online-menu", "delivery", "catering", "upsells"],
-    ["restaurant-websites", "restaurant-seo", "loyalty"],
-    ["order-management", "menu-management", "kitchen-display", "payments", "integrations"],
+    ["restaurant-websites", "online-menu", "restaurant-seo", "loyalty"],
+    ["online-ordering", "delivery", "catering", "upsells", "payments"],
+    ["order-management", "kitchen-display", "menu-management", "integrations"],
   ]);
   const listed = productMenu.flatMap((g) => g.items.map((i) => i.slug));
   expect([...listed].sort()).toEqual([...builtProducts].sort());
@@ -138,8 +138,11 @@ test("every menu item has one navy icon, the owner's, and the right page link", 
     const slug = href.slice(1);
     await expect(row.locator("svg"), href).toHaveCount(1);
     await expect(row.locator(`svg[data-icon="${slug}"]`), href).toHaveCount(1);
-    // No badges, no numbers: the icon and the name.
-    expect((await row.innerText()).trim(), href).toBe(productMenu.flatMap((g) => g.items).find((i) => i.href === href)!.name);
+    // No badges, no numbers: the icon, the name and, under it, the page's one line from the catalog.
+    const item = productMenu.flatMap((g) => g.items).find((i) => i.href === href)!;
+    await expect(row.locator("[data-name]"), href).toHaveText(item.name);
+    await expect(row.locator("[data-blurb]"), href).toHaveText(item.blurb);
+    expect((await row.innerText()).replace(/\s+/g, " ").trim(), href).toBe(`${item.name} ${item.blurb}`);
   }
   check(await icons(product.locator("[data-menu-group]")), "20", "Product");
   expect(await product.innerText()).not.toMatch(/\d/);
@@ -168,7 +171,7 @@ test("every menu item has one navy icon, the owner's, and the right page link", 
   for (const icon of found) expect(icon.color).not.toBe("rgb(244, 168, 58)");
 });
 
-test("the Product panel: three columns, the card, then New to WunTab, and no name wraps from 1024 to 1440", async ({ page }) => {
+test("the Product panel: three columns, the card, then New to WunTab; no name wraps and no description takes over two lines, 1024 to 1440", async ({ page }) => {
   for (const width of [1024, 1100, 1199, 1200, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
@@ -190,14 +193,28 @@ test("the Product panel: three columns, the card, then New to WunTab, and no nam
           range.selectNodeContents(name);
           const cs = getComputedStyle(name);
           const icon = a.querySelector("svg")!;
+          const first = range.getClientRects()[0];
+          const blurb = a.querySelector("[data-blurb]")!;
+          const blurbRange = document.createRange();
+          blurbRange.selectNodeContents(blurb);
+          const bs = getComputedStyle(blurb);
           return {
             label: name.textContent,
             lines: new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size,
             height: box(a).height,
-            right: Math.max(...[...range.getClientRects()].map((r) => r.right)),
+            right: Math.max(...[...range.getClientRects(), ...blurbRange.getClientRects()].map((r) => r.right)),
             size: cs.fontSize,
             weight: cs.fontWeight,
             gap: box(name).left - box(icon).right,
+            // The icon sits on the name's first line: their middles line up.
+            iconOffset: box(icon).top + box(icon).height / 2 - (first.top + first.height / 2),
+            blurb: {
+              lines: new Set([...blurbRange.getClientRects()].map((r) => Math.round(r.top))).size,
+              size: bs.fontSize,
+              color: bs.color,
+              below: box(blurb).top >= box(name).bottom - 1,
+              left: Math.round(box(blurb).left - box(name).left),
+            },
           };
         }),
       }));
@@ -214,6 +231,10 @@ test("the Product panel: three columns, the card, then New to WunTab, and no nam
         expect(row.height, `${row.label} at ${width}`).toBeGreaterThanOrEqual(44);
         expect([row.size, row.weight], `${row.label}`).toEqual(["14px", "500"]);
         expect(Math.round(row.gap), `${row.label}: 12px from its icon`).toBe(12);
+        expect(Math.abs(row.iconOffset), `${row.label}: icon off its first line at ${width}`).toBeLessThanOrEqual(1);
+        // Its one line: under the name, aligned with it, 14px in ink-muted, one or two lines.
+        expect(row.blurb.lines, `${row.label}'s line at ${width}`).toBeLessThanOrEqual(2);
+        expect(row.blurb, `${row.label}`).toMatchObject({ size: "14px", color: "rgb(110, 110, 109)", below: true, left: 0 });
         const next = layout.groups[i + 1];
         const limit = next?.left ?? layout.card?.left ?? layout.panel.right;
         expect(row.right, `${row.label} runs into the next column at ${width}`).toBeLessThanOrEqual(limit);
@@ -382,4 +403,25 @@ test.describe("on a touch screen from 1024px", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
     await expect(panel).toBeHidden();
   });
+});
+
+test("Loyalty Program (owner, 2026-10-21): the /loyalty page's title, the menus, the footers and Works with; \"Loyalty & Rewards\" nowhere", async ({ page, request }) => {
+  expect(productMenu.flatMap((g) => g.items).find((i) => i.slug === "loyalty")!.name).toBe("Loyalty Program");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/loyalty");
+  await expect(page).toHaveURL(/\/loyalty$/);
+  // The title carries the page's name; the H1 is its headline, as on every product page.
+  await expect(page).toHaveTitle(/^Loyalty Program: /);
+  await expect(page.locator("main h1")).toHaveText("Give regulars a reason to come back.");
+  const links = page.locator('header a[href="/loyalty"], footer a[href="/loyalty"]');
+  expect(await links.count()).toBe(4);
+  for (const link of await links.all()) await expect(link).toContainText("Loyalty Program");
+  // A Works with link to it, on /online-ordering.
+  await page.goto("/online-ordering");
+  await expect(page.locator('#works-with a[href="/loyalty"]')).toContainText("Loyalty Program");
+  // The old name is gone from every page.
+  for (const path of ["/", "/loyalty", "/online-ordering", "/pricing", "/how-it-works"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).not.toMatch(/Loyalty (&|&amp;|and) Rewards/);
+  }
 });

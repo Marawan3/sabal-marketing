@@ -359,7 +359,7 @@ test("the phone header shows the logo, Get Started and a menu that opens full sc
     const box = await nav.boundingBox();
     expect(box!.width, `menu width at ${width}`).toBe(width);
     expect(box!.y + box!.height, `menu reaches the bottom at ${width}`).toBeGreaterThanOrEqual(779);
-    for (const group of ["Sell directly", "Get found and come back", "Run the restaurant"]) {
+    for (const group of ["Your website", "Your orders", "Your kitchen"]) {
       await expect(nav.locator("summary", { hasText: group })).toBeVisible();
     }
   }

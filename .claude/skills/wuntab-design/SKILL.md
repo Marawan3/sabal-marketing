@@ -209,11 +209,14 @@ their reasoning. Where they disagree with this section, this section wins.
 ## 0f. Header menus, 2026-10-20 (option A, the "WunTab submenu options" canvas)
 
 - **One list:** `productGroups` in `src/lib/catalog.ts` holds every built product page, in order,
-  under three headings:
-  - "Sell directly": Online Ordering, Online Menu, Delivery, Catering, Recommended Add-ons;
-  - "Get found and come back": Restaurant Websites, Restaurant SEO, Loyalty & Rewards;
-  - "Run the restaurant": Order Management, Menu Management, Kitchen Display, Payments,
-    Integrations.
+  under three headings (owner, 2026-10-21):
+  - "Your website": Restaurant Websites, Online Menu, Restaurant SEO, Loyalty Program;
+  - "Your orders": Online Ordering, Delivery, Catering, Recommended Add-ons, Payments;
+  - "Your kitchen": Order Management, Kitchen Display, Menu Management, Integrations.
+
+  The 2026-10-20 headings ("Sell directly", "Get found and come back", "Run the restaurant") read
+  too much like a competitor's: no verb-plus-outcome headings. The page once called
+  "Loyalty & Rewards" is "Loyalty Program" (still /loyalty).
 
   The desktop Product menu, the phone menu, the desktop footer and the phone footer all read it,
   so they can't drift. The footer is those three, then Solutions and Company. An unbuilt page stays
@@ -228,13 +231,18 @@ their reasoning. Where they disagree with this section, this section wins.
   - **Where:** only in the menus.
 - **Desktop Product panel:**
   - **Layout:** the three groups as columns, then the demo card. The card is 300px from 1200px and
-    240px from 1024 to 1199, so no name wraps.
-  - **Rows:** 44px, with the icon 20px, a 12px gap, and the name in the small size (14px) at weight
-    500.
+    240px from 1024 to 1199, so no name wraps. Below 1200px the columns sit 16px apart (24px from
+    1200), so every description fits in two lines at 1024.
+  - **Rows:** at least 44px, with the icon 20px, a 12px gap, and the name in the small size (14px)
+    at weight 500.
+  - **Descriptions (2026-10-21):** under each name, the page's one line from the catalog (`blurb`),
+    in the small size, ink-muted. The icon sits on the name's first line. Names never wrap from 1024
+    to 1440; a description takes one or two lines. The descriptions don't count toward a column's
+    width (`contain: inline-size`), so the names alone set it. The panel is 562px tall at 1280.
   - **Headings:** the small size, weight 600, ink-muted.
   - **Type sizes:** every piece of menu text is on the five sizes (owner, 2026-10-20). The card's
     title is the body size, and the rest is small. A test opens each menu and checks.
-  - **Nothing else in a row:** no descriptions, no "New" badges, no numbers.
+  - **Nothing else in a row:** no "New" badges, no numbers.
   - **Bottom row:** under a hairline, "New to WunTab?" (muted), then "See how it works" and
     "Pricing", each with a drawn arrow.
 - **Demo card** (`DemoCard` in `demo-link.tsx`):
@@ -244,7 +252,7 @@ their reasoning. Where they disagree with this section, this section wins.
     your customers get. Orders here aren't real.", and "See a live restaurant" with the new-tab
     icon.
   - **Behaviour:** opens in a new tab. Absent while the demo link is off.
-- **Phone menu:** the three groups as accordions, rows 48px, icons 22px. Before Get Started, a
+- **Phone menu:** the three groups as accordions, rows 48px, icons 22px, names only. Before Get Started, a
   compact demo row (`DemoRow`): an 88px thumbnail, "Demo restaurant · Palm&Stone Pizza", and
   "See a live restaurant ↗". The first line goes to two lines, with the dot hidden, below a 394px
   screen. It's in the small size: 13px there showed up as a sixth size.
@@ -252,6 +260,11 @@ their reasoning. Where they disagree with this section, this section wins.
   and its one line.
 - **Keyboard:** focus opens a menu, Tab goes into it, Escape closes it and returns focus to its
   button (it stays closed). No arrow keys: Tab and Escape are enough (owner, 2026-10-20).
+- **Closing (2026-10-21):** the header stays mounted across client-side navigation, so every menu
+  closes itself when a link in it is chosen and when the route changes.
+  - **Phone menu:** a client wrapper around the native `<details>` (`mobile-menu.tsx`) does this, closing its groups too. Escape
+    closes it and focuses the menu button.
+  - **Desktop panels:** focus goes back to the button only after Escape.
 
 ## 1. What we are designing for
 
