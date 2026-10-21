@@ -51,7 +51,7 @@ function shapes(svg: string) {
 
 const NAVY = "rgb(19, 33, 60)";
 
-async function openMenu(page: Page, name: "Product" | "Solutions") {
+async function openMenu(page: Page, name: "Product" | "Solutions" | "Company") {
   const trigger = page.locator('header nav[aria-label="Primary"]').getByRole("button", { name, exact: true });
   // From outside the header first, so the hover is a real pointer entry even where the trigger sits where the mouse was.
   await page.mouse.move(0, 700);
@@ -344,4 +344,42 @@ test("the keyboard still works the menu: focus opens it, Tab goes in, Escape clo
   await page.keyboard.press("Escape");
   await expect(product).toHaveAttribute("aria-expanded", "false");
   await expect(product).toBeFocused();
+});
+
+test("choosing an item in Product, Solutions or Company closes the panel, and focus stays off the menu button", async ({ page }) => {
+  // The header stays mounted across client-side navigation (owner, 2026-10-21: the panel stayed open on the new page).
+  const picks = [
+    ["Product", "/restaurant-seo"],
+    ["Solutions", solutionHref("quick-service")],
+    ["Company", "/about"],
+  ] as const;
+  await page.setViewportSize({ width: 1280, height: 900 });
+  for (const [name, href] of picks) {
+    await page.goto("/");
+    const trigger = page.locator('header nav[aria-label="Primary"]').getByRole("button", { name, exact: true });
+    const panel = await openMenu(page, name);
+    await panel.locator(`a[href="${href}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
+    await expect(trigger, name).toHaveAttribute("aria-expanded", "false");
+    await expect(panel, name).toBeHidden();
+    // Focus goes back to the button only after Escape, never after a link.
+    await expect(trigger, name).not.toBeFocused();
+  }
+});
+
+test.describe("on a touch screen from 1024px", () => {
+  test.use({ hasTouch: true });
+
+  test("tapping an item closes the panel", async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.goto("/");
+    const trigger = page.locator('header nav[aria-label="Primary"]').getByRole("button", { name: "Product", exact: true });
+    await trigger.tap();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    const panel = page.locator(`[id="${await trigger.getAttribute("aria-controls")}"]`);
+    await panel.locator('a[href="/restaurant-seo"]').tap();
+    await expect(page).toHaveURL(/\/restaurant-seo$/);
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(panel).toBeHidden();
+  });
 });

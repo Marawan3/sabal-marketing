@@ -2,6 +2,7 @@
 
 import { SmartLink } from "./smart-link";
 import { NavIcon, type IconName } from "./nav-icon";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 /**
@@ -185,6 +186,15 @@ export function DesktopNav({
 
   useEffect(() => cancelClose, [cancelClose]);
 
+  // The header stays mounted across client-side navigation, so a new page closes the open panel (owner, 2026-10-21).
+  const pathname = usePathname();
+  const shown = useRef(pathname);
+  useEffect(() => {
+    if (shown.current === pathname) return;
+    shown.current = pathname;
+    closeNow();
+  }, [pathname, closeNow]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
@@ -260,6 +270,10 @@ export function DesktopNav({
               aria-labelledby={`${panelId}-trigger`}
               hidden={!isOpen}
               className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 ${widths[menu.width]}`}
+              // Choosing an item closes the panel, the page you're on included. Focus stays where it is: only Escape hands it back.
+              onClick={(event) => {
+                if ((event.target as Element).closest("a")) closeNow();
+              }}
             >
               <div className="rounded-[20px] border border-rule bg-paper shadow-lift">
                 {menu.width === "product" ? (

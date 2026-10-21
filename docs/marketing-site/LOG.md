@@ -45,6 +45,39 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-21 · PR #65: Menus close when you pick a page (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**The bug** (owner, 2026-10-21, reproduced on wuntab.com): menus stayed open after you picked a page.
+- **Phones:** tapping a page in the menu changed the URL and loaded the page, but the menu stayed over it (`details.mobile-nav` still open). The page couldn't scroll (`html` stayed `overflow: hidden`) until you tapped X.
+- **Desktop:** clicking an item in Product changed the page, but the panel stayed open (`aria-expanded="true"`) until the mouse left. On touch screens from 1024px it stayed open.
+- **Cause:** the header stays mounted across client-side navigation, and nothing closed either menu when a link was chosen or the route changed.
+
+**What changed:**
+- **Phone menu** (`src/components/mobile-menu.tsx`): a small client wrapper around the same `<details>`, so the menu still opens and closes without JavaScript. It closes the menu, and any group left open:
+  - when a link inside it is chosen: another page, the page you're on, a #hash, or the demo restaurant in a new tab;
+  - when the route changes, which covers the browser's back and forward buttons;
+  - on Escape, which also puts focus on the menu button, as the desktop menus do.
+
+  The page scrolls again straight away, because the scroll lock in `globals.css` only holds while the `<details>` is open.
+- **Desktop menus** (Product, Solutions, Company): the open panel closes when an item is clicked or tapped, and when the route changes. Focus isn't handed back to the menu button after a link; that's only for Escape.
+- **Unchanged:** how the menus look, hover to open, and the Escape fix from #63.
+
+**How it was checked:**
+- **Red first:** each new test failed on `main` (`f4fe791`) before the fix. In every case the menu was still open, or `aria-expanded` was still "true".
+- **New tests in `tests/phone.spec.ts`** (WebKit iPhone runs these, with and without reduced motion):
+  - **Tapping a product page in the menu:** the URL changes, the menu and its groups are closed, and the page isn't locked. The new page's H1 is what's on screen, and in Chromium a wheel scrolls the page.
+  - **On /pricing, tapping Pricing:** the menu closes. Tapping the demo restaurant, which opens a new tab, closes it too. The test blocks that tab's request, so it doesn't leave this site.
+  - **Back after a menu tap,** with the menu opened again on the new page: it's closed on the page before.
+  - **Escape:** it closes the menu and focus lands on the menu button.
+- **New tests in `tests/menu.spec.ts`:**
+  - clicking an item in each of Product, Solutions and Company closes the panel; `aria-expanded` is "false" on the new page, and focus isn't on the menu button;
+  - on a touch screen at 1024, tapping an item closes the panel.
+- **Local suite:** 174 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+
+---
+
 ## 2026-10-20 · PR #63: Header menus, option A: every product page with an icon, under three outcome headings (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 63"), after the owner reviewed the preview at 1280 and 375 and asked for the second round below. Squash commit `d27afbc` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`c8c2c56`): Vercel, and WebKit iPhone 73 of 73, with and without reduced motion.

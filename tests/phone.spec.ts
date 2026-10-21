@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { builtProducts, bySlug, productGroups, productHref, solutionHref, solutions } from "../src/lib/catalog";
 import { copy } from "../src/lib/copy";
 import { demoOrder } from "../src/lib/demo-order";
@@ -305,6 +305,87 @@ test("the phone menu: the Product groups as accordions, 22px icons on 48px rows,
     const rowBox = (await row.boundingBox())!;
     expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(button.y);
   }
+});
+
+/** Opens the phone menu if it's closed. */
+async function openPhoneMenu(page: Page) {
+  const menu = page.locator("header details.mobile-nav");
+  if (!(await menu.evaluate((el) => (el as HTMLDetailsElement).open))) await menu.locator(":scope > summary").click();
+  await expect(menu).toHaveJSProperty("open", true);
+  return { menu, nav: page.locator('header nav[aria-label="Mobile"]') };
+}
+
+/** The phone menu is shut, with no group left open, and the page isn't locked. */
+async function expectMenuClosed(page: Page, menu: Locator) {
+  await expect(menu).toHaveJSProperty("open", false);
+  expect(await menu.evaluate((el) => el.querySelectorAll("details[open]").length), "an open group").toBe(0);
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflowY), "html locked").not.toBe("hidden");
+}
+
+test("tapping a page in the phone menu closes the menu, shows the new page and lets it scroll", async ({ page, browserName }) => {
+  await page.setViewportSize(phone);
+  await page.goto("/");
+  const { menu, nav } = await openPhoneMenu(page);
+  await nav.locator("summary", { hasText: "Get found and come back" }).click();
+  await nav.locator('a[href="/restaurant-seo"]').click();
+  await expect(page).toHaveURL(/\/restaurant-seo$/);
+  await expectMenuClosed(page, menu);
+  // The H1 is the thing on screen, not the menu over it.
+  const h1 = page.locator("main h1");
+  await expect(h1).toHaveText(bySlug["restaurant-seo"].headline);
+  const onTop = await h1.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + Math.min(r.width / 2, 40), r.top + Math.min(r.height / 2, 20));
+    return !!hit && el.contains(hit);
+  });
+  expect(onTop, "the H1 is covered").toBe(true);
+  // The page scrolls (a wheel in Chromium; mobile WebKit has no wheel, so there the lock check above stands in).
+  if (browserName === "chromium") {
+    await page.mouse.move(phone.width / 2, phone.height / 2);
+    await page.mouse.wheel(0, 600);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
+  }
+});
+
+test("on /pricing, tapping Pricing in the phone menu closes it, and so does the demo link", async ({ page }) => {
+  await page.setViewportSize(phone);
+  await page.goto("/pricing");
+  const { menu, nav } = await openPhoneMenu(page);
+  await nav.locator('a[href="/pricing"]').click();
+  await expect(page).toHaveURL(/\/pricing$/);
+  await expectMenuClosed(page, menu);
+  // The demo restaurant, in a new tab, closes it too (the tab itself is stopped: tests don't leave this site).
+  if (!demoStorefront.on) return;
+  await page.context().route(`${demoStorefront.href}/**`, (route) => route.abort());
+  await openPhoneMenu(page);
+  const tab = page.context().waitForEvent("page");
+  await nav.locator("[data-demo-link]").click();
+  await (await tab).close();
+  await expectMenuClosed(page, menu);
+});
+
+test("back after a menu tap: the phone menu is closed on the page before", async ({ page }) => {
+  await page.setViewportSize(phone);
+  await page.goto("/");
+  const first = await openPhoneMenu(page);
+  await first.nav.locator("summary", { hasText: "Get found and come back" }).click();
+  await first.nav.locator('a[href="/restaurant-seo"]').click();
+  await expect(page).toHaveURL(/\/restaurant-seo$/);
+  // Open it again on the new page, then go back: the route change closes it.
+  const { menu } = await openPhoneMenu(page);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
+  await expectMenuClosed(page, menu);
+});
+
+test("Escape closes the phone menu and puts focus on the menu button", async ({ page }) => {
+  await page.setViewportSize(phone);
+  await page.goto("/");
+  const { menu, nav } = await openPhoneMenu(page);
+  await nav.locator("summary", { hasText: "Sell directly" }).click();
+  await page.keyboard.press("Escape");
+  await expectMenuClosed(page, menu);
+  await expect(menu.locator(":scope > summary")).toBeFocused();
 });
 
 test("See a live restaurant: on by default, in every place, to demo.wuntab.com in a new tab", async ({ page }) => {
