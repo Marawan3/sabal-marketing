@@ -3,6 +3,7 @@ import { CtaLink } from "./cta-link";
 import { DemoCard, DemoRow } from "./demo-link";
 import { DesktopNav, type NavMenu } from "./desktop-nav";
 import { Logo } from "./logo";
+import { MobileMenu } from "./mobile-menu";
 import { NavIcon, isIconName, solutionIcons, type IconName } from "./nav-icon";
 import { productMenu, solutionHref, solutions } from "@/lib/catalog";
 import { copy } from "@/lib/copy";
@@ -121,7 +122,7 @@ export function SiteHeader() {
           </CtaLink>
 
           {/* Below lg: a full-screen menu, an accordion per Product group, then Solutions and Company. */}
-          <details className="mobile-nav group lg:hidden">
+          <MobileMenu className="mobile-nav group lg:hidden">
             <summary className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[12px] border border-rule">
               <span className="sr-only">Menu</span>
               <svg
@@ -206,7 +207,7 @@ export function SiteHeader() {
                 </CtaLink>
               </div>
             </nav>
-          </details>
+          </MobileMenu>
         </div>
       </div>
     </header>
