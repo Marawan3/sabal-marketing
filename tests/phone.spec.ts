@@ -326,7 +326,7 @@ test("tapping a page in the phone menu closes the menu, shows the new page and l
   await page.setViewportSize(phone);
   await page.goto("/");
   const { menu, nav } = await openPhoneMenu(page);
-  await nav.locator("summary", { hasText: "Get found and come back" }).click();
+  await nav.locator("summary", { hasText: "Your website" }).click();
   await nav.locator('a[href="/restaurant-seo"]').click();
   await expect(page).toHaveURL(/\/restaurant-seo$/);
   await expectMenuClosed(page, menu);
@@ -368,7 +368,7 @@ test("back after a menu tap: the phone menu is closed on the page before", async
   await page.setViewportSize(phone);
   await page.goto("/");
   const first = await openPhoneMenu(page);
-  await first.nav.locator("summary", { hasText: "Get found and come back" }).click();
+  await first.nav.locator("summary", { hasText: "Your website" }).click();
   await first.nav.locator('a[href="/restaurant-seo"]').click();
   await expect(page).toHaveURL(/\/restaurant-seo$/);
   // Open it again on the new page, then go back: the route change closes it.
@@ -382,7 +382,7 @@ test("Escape closes the phone menu and puts focus on the menu button", async ({ 
   await page.setViewportSize(phone);
   await page.goto("/");
   const { menu, nav } = await openPhoneMenu(page);
-  await nav.locator("summary", { hasText: "Sell directly" }).click();
+  await nav.locator("summary", { hasText: "Your orders" }).click();
   await page.keyboard.press("Escape");
   await expectMenuClosed(page, menu);
   await expect(menu.locator(":scope > summary")).toBeFocused();

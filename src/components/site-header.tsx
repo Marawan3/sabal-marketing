@@ -32,7 +32,8 @@ const productNav: NavMenu = {
   width: "product",
   groups: productMenu.map((group) => ({
     title: group.title,
-    items: group.items.map((item) => ({ href: item.href, name: item.name, icon: iconOf(item.slug) })),
+    // Each with its one line under the name on desktop (owner, 2026-10-21); the phone menu shows names only.
+    items: group.items.map((item) => ({ href: item.href, name: item.name, blurb: item.blurb, icon: iconOf(item.slug) })),
   })),
   card: <DemoCard />,
   more: {

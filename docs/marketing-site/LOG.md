@@ -45,6 +45,49 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-10-21 · PR #67: Menu names, round 2: "Your website", "Your orders", "Your kitchen", and Loyalty Program (PR open)
+
+**Status:** PR open, not merged. It's a code PR, so it waits for the owner's "merge".
+
+**Why:** the owner thought the 2026-10-20 headings read too much like a competitor's: "Run the restaurant" against their "Run your restaurant", and the same verb-plus-outcome format (2026-10-21).
+
+**What changed:**
+- **New groups,** in `productGroups` (`catalog.ts`), the one list the desktop menu, the phone menu and both footers read:
+  - "Your website": Restaurant Websites, Online Menu, Restaurant SEO, Loyalty Program;
+  - "Your orders": Online Ordering, Delivery, Catering, Recommended Add-ons, Payments;
+  - "Your kitchen": Order Management, Kitchen Display, Menu Management, Integrations.
+
+  The footer is those three, then Solutions and Company.
+- **Loyalty & Rewards is now Loyalty Program** wherever its name shows: the menus, the footers, the page's title ("Loyalty Program: Give regulars a reason to come back.") and Works with. The URL stays /loyalty, and every other page name is unchanged.
+  - **The H1:** /loyalty's H1 is its headline, "Give regulars a reason to come back.", as on every product page. It never showed the name, so it didn't change.
+  - **SPEC.md** keeps the old name; it's the original spec.
+- **Desktop Product panel:**
+  - **Descriptions:** under each name, the page's one line from the catalog, in the small size (14px), ink-muted.
+  - **Icons:** each sits on its name's first line.
+  - **Wrapping:** names never wrap from 1024 to 1440, and a description takes one or two lines. The descriptions don't count toward a column's width, so the names alone set it.
+  - **Gaps:** below 1200px the columns sit 16px apart instead of 24px. At 1024, "Built so search engines read your menu." needs 152px for two lines and had 149px.
+  - **Unchanged:** the demo card and the bottom row.
+  - **Height at 1280:** 562px, up from 421px. It's the same at 1024 and 1440.
+- **Phone menu:** the three new headings, with names only and no descriptions. Otherwise unchanged.
+- **Kept:** the icons, the text sizes (every menu text is on the five sizes) and the close-on-navigation fix from #65.
+
+**How it was checked:**
+- **Updated tests:**
+  - the groups and their order;
+  - every row's name and its one line from the catalog;
+  - the panel test from 1024 to 1440: names on one line, descriptions on one or two, 14px in ink-muted under the name, and icons on the name's first line within 1px;
+  - the phone menu, phone header, navigation and footer tests that named the old headings;
+  - the phone-menu tests from #65, which now open "Your website" and "Your orders".
+- **New test:** /loyalty's title starts "Loyalty Program:".
+  - **The four links to /loyalty** (desktop menu, phone menu, both footers) say "Loyalty Program", and so does /online-ordering's Works with link.
+  - **The old name** is in none of /, /loyalty, /online-ordering, /pricing and /how-it-works.
+- **Local suite:** 175 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint, boundary-check and `motion --check` pass.
+- **Evidence:** `docs/marketing-site/evidence/menu-names/`:
+  - before over after: the Product menu at 1024, 1280 and 1440, and the footer at 1280;
+  - before beside after: the phone menu and the footer at 375.
+
+---
+
 ## 2026-10-21 · PR #65: Menus close when you pick a page (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 65"). Squash commit `3f6d317` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`8031a30`): Vercel, and WebKit iPhone 81 of 81, with and without reduced motion.

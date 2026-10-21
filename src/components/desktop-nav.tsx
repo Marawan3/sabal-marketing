@@ -41,7 +41,9 @@ const widths = {
  * The Product menu's columns (owner, 2026-10-20): one per group, each at
  * least as wide as its longest name so no name wraps, then the card, 300px
  * from 1200px and 240px below (1024 to 1199), where 300 would leave the
- * columns too narrow. --groups is the group count.
+ * columns too narrow. --groups is the group count. Below 1200px the columns
+ * sit 16px apart, not 24, so every one-line description fits in two lines
+ * at 1024 (2026-10-21: "Built so search engines read your menu." needs 152px).
  */
 const PRODUCT_COLS = {
   card: "grid-cols-[repeat(var(--groups),minmax(max-content,1fr))_240px] min-[1200px]:grid-cols-[repeat(var(--groups),minmax(max-content,1fr))_300px]",
@@ -57,7 +59,13 @@ function ArrowIcon() {
   );
 }
 
-/** A row with an icon (owner, 2026-10-20): icon 20px, 12px gap, the name in the small size at weight 500; under it, its line if it has one. */
+/**
+ * A row with an icon (owner, 2026-10-20): icon 20px, 12px gap, the name in
+ * the small size at weight 500. Under it, its line if it has one, in ink-muted
+ * (2026-10-21); the icon sits on the name's first line. The line doesn't count
+ * toward its column's width (contain: inline-size), so the names alone set
+ * the columns: they never wrap, and the lines wrap under them.
+ */
 function IconRow({ item }: { item: NavItem & { icon: IconName } }) {
   return (
     <SmartLink
@@ -66,14 +74,18 @@ function IconRow({ item }: { item: NavItem & { icon: IconName } }) {
         item.blurb ? "items-start py-2.5" : "min-h-11 items-center"
       }`}
     >
-      <span className={item.blurb ? "mt-px" : undefined}>
+      <span className="flex h-[1.45em] shrink-0 items-center text-small">
         <NavIcon name={item.icon} size={20} />
       </span>
-      <span>
+      <span className="min-w-0 flex-1">
         <span data-name className="block text-small font-medium">
           {item.name}
         </span>
-        {item.blurb ? <span className="mt-0.5 block text-small text-ink-muted">{item.blurb}</span> : null}
+        {item.blurb ? (
+          <span data-blurb className="mt-0.5 block text-small text-ink-muted [contain:inline-size]">
+            {item.blurb}
+          </span>
+        ) : null}
       </span>
     </SmartLink>
   );
@@ -97,7 +109,7 @@ function ProductPanel({ menu }: { menu: NavMenu }) {
   return (
     <div className="px-7 pt-7">
       <div
-        className={`grid gap-x-6 ${menu.card ? PRODUCT_COLS.card : PRODUCT_COLS.bare}`}
+        className={`grid gap-x-4 min-[1200px]:gap-x-6 ${menu.card ? PRODUCT_COLS.card : PRODUCT_COLS.bare}`}
         style={{ "--groups": menu.groups.length } as CSSProperties}
       >
         {menu.groups.map((group, groupIndex) => (

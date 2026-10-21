@@ -457,7 +457,8 @@ export const products: Product[] = [
   },
   {
     slug: "loyalty",
-    name: "Loyalty & Rewards",
+    // "Loyalty & Rewards" until 2026-10-21 (owner); the page stays at /loyalty.
+    name: "Loyalty Program",
     blurb: "Give regulars a reason to come back.",
     pillar: "grow",
     /*
@@ -861,25 +862,26 @@ export const bySlug = Object.fromEntries(products.map((p) => [p.slug, p])) as Re
 >;
 
 /**
- * The Product menu's groups (owner, 2026-10-20): every built product page,
- * under three outcome headings, in this order. The one list behind the
- * desktop Product menu, the phone menu, and both footers, so they can't
+ * The Product menu's groups (owner, 2026-10-21: "Your website", "Your
+ * orders", "Your kitchen"; they replaced the outcome headings of
+ * 2026-10-20): every built product page, in this order. The one list behind
+ * the desktop Product menu, the phone menu, and both footers, so they can't
  * drift. A page that isn't built stays out everywhere (productHref), and a
  * test fails if a built page is in no group.
  */
 export const productGroups: readonly { title: string; slugs: readonly string[] }[] = [
-  { title: "Sell directly", slugs: ["online-ordering", "online-menu", "delivery", "catering", "upsells"] },
-  { title: "Get found and come back", slugs: ["restaurant-websites", "restaurant-seo", "loyalty"] },
-  { title: "Run the restaurant", slugs: ["order-management", "menu-management", "kitchen-display", "payments", "integrations"] },
+  { title: "Your website", slugs: ["restaurant-websites", "online-menu", "restaurant-seo", "loyalty"] },
+  { title: "Your orders", slugs: ["online-ordering", "delivery", "catering", "upsells", "payments"] },
+  { title: "Your kitchen", slugs: ["order-management", "kitchen-display", "menu-management", "integrations"] },
 ];
 
-/** productGroups with each built page's link and name. */
+/** productGroups with each built page's link, name and one line. */
 export const productMenu = productGroups
   .map((group) => ({
     title: group.title,
     items: group.slugs.flatMap((slug) => {
       const href = productHref(slug);
-      return href ? [{ slug, href, name: bySlug[slug].name }] : [];
+      return href ? [{ slug, href, name: bySlug[slug].name, blurb: bySlug[slug].blurb }] : [];
     }),
   }))
   .filter((group) => group.items.length > 0);
