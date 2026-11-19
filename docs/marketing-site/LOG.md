@@ -45,9 +45,9 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
-## 2026-11-19 · PR #69: Every input is type-validated: the phone, the calculator, the hero's name (open)
+## 2026-11-19 · PR #69: Every input is type-validated: the phone, the calculator, the hero's name (merged)
 
-**Merged by:** not merged. The owner merges on "merge 69".
+**Merged by:** Claude, on the owner's instruction ("merge 69"). Squash commit `1f7493a` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`570f40a`): Vercel, and WebKit iPhone 93 of 93, with and without reduced motion.
 
 **Why:** the owner's standing rule (2026-11-18): every input is type-validated. The browser enforces the rule as people type or paste, and the server checks again with the same rule. A tester found that the /contact phone field took letters, and the handler took any 40 characters as a phone.
 
@@ -110,6 +110,10 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - **Cause:** /contact's form is drawn in the browser once the page's script reads the address. React takes away the placeholder form the server sent and draws its own, and the WebKit runner had typed into the placeholder.
   - **Fix:** the tests now wait for React's form before typing.
   - **The older issue it shows:** anything typed on /contact before the page's script has run is lost. That has been true on `main` since 2026-10-19, when /contact started reading `?intent` and `?restaurant`. It's raised on the PR, not fixed here.
+- **WebKit iPhone:** 93 of 93 on the merged head, with and without reduced motion, all 12 input tests included. The paste test there used the real clipboard.
+- **POST probe on the PR's Preview** (`570f40a`, 2026-11-19 at about 02:18 UTC):
+  - phone "abc1234567": refused with 400 (`field: phone`), and nothing was sent;
+  - phone "3055550123": accepted with 200. One real email went to hello@wuntab.com, subject "Website message: PR 69 probe, WunTab test", with hello@ as the reply-to. The session can't read the inbox; the owner checks that its Phone line reads (305) 555-0123.
 - **Evidence:** `docs/marketing-site/evidence/inputs/`, before beside after:
   - the contact form at 390 and 1280 with "abc305555" typed in the phone;
   - the calculator at 390 with "6a0.5e" and "30.999" typed.
