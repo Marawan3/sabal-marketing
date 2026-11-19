@@ -106,6 +106,10 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
   - "3055550123" and "+1 (305) 555-0123" are emailed as (305) 555-0123;
   - control characters come out of the name, restaurant and message.
 - **Local suite:** 188 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint and boundary-check pass.
+- **First WebKit run:** 2 of the phone tests failed, with an empty box after typing.
+  - **Cause:** /contact's form is drawn in the browser once the page's script reads the address. React takes away the placeholder form the server sent and draws its own, and the WebKit runner had typed into the placeholder.
+  - **Fix:** the tests now wait for React's form before typing.
+  - **The older issue it shows:** anything typed on /contact before the page's script has run is lost. That has been true on `main` since 2026-10-19, when /contact started reading `?intent` and `?restaurant`. It's raised on the PR, not fixed here.
 - **Evidence:** `docs/marketing-site/evidence/inputs/`, before beside after:
   - the contact form at 390 and 1280 with "abc305555" typed in the phone;
   - the calculator at 390 with "6a0.5e" and "30.999" typed.

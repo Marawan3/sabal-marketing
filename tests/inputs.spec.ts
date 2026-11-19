@@ -183,10 +183,25 @@ async function paste(page: Page, box: Locator, text: string) {
   return "insertText";
 }
 
+/**
+ * /contact's form is drawn in the browser once the page's script has read the
+ * address (useSearchParams): React takes away the placeholder form the server
+ * sent and draws its own. Anything typed into the placeholder goes with it, an
+ * older issue raised separately on PR #69, so the tests type into React's form.
+ * In WebKit, typing straight after the page loaded landed in the placeholder.
+ */
+async function openContact(page: Page) {
+  await page.goto("/contact");
+  await page.waitForFunction(() => {
+    const box = document.querySelector('input[name="phone"]');
+    return !!box && Object.keys(box).some((key) => key.startsWith("__reactProps"));
+  });
+}
+
 test.describe("phone box on /contact", () => {
   test.beforeEach(async ({ page, context, browserName }) => {
     if (browserName === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.goto("/contact");
+    await openContact(page);
   });
 
   test("typing keeps 10 digits and shows (305) 555-0123; letters alone leave it empty", async ({ page }) => {
