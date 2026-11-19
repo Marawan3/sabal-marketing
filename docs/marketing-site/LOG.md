@@ -45,6 +45,73 @@ Open items the owner asked to be recorded. Newest first. Strike one through when
 
 ---
 
+## 2026-11-19 · PR #69: Every input is type-validated: the phone, the calculator, the hero's name (open)
+
+**Merged by:** not merged. The owner merges on "merge 69".
+
+**Why:** the owner's standing rule (2026-11-18): every input is type-validated. The browser enforces the rule as people type or paste, and the server checks again with the same rule. A tester found that the /contact phone field took letters, and the handler took any 40 characters as a phone.
+
+**What changed:**
+- **Shared rules** (`src/lib/input-rules.ts`). The forms, the contact handler and the tests all import this file. Each rule has `filter` (what a keystroke, paste or autofill leaves), `parse` (the stored value, or null) and `format` (how it shows):
+  - **US phone:** digits only, at most 10. A pasted "+1 (305) 555-0123" or "13055550123" is the same 10 digits, shown as (305) 555-0123.
+  - **Whole number** (min, max) and **dollar amount** (digits and one point, at most two decimals, min, max).
+  - **Bounded text:** a maximum length, with control characters taken out.
+- **One box for all of them** (`src/components/rule-input.tsx`). `RuleInput` and `RuleTextarea` run the rule on every change. The caret stays among the characters that stayed, and the box's text is only rewritten when the rule changed it.
+- **/contact:**
+  - **Phone:** formatted while you type, with `type="tel"`, `inputMode="numeric"` and `autoComplete="tel"`. Left with part of a number, **Enter all 10 digits** shows under the box, with `aria-invalid` and `aria-describedby`, and the message isn't sent.
+  - **Handler** (`readContact`): it refuses a phone that isn't 10 US digits, and stores and emails it as (305) 555-0123. Name, restaurant and message have control characters taken out and keep their limits. The email keeps its current check.
+  - **maxLength:** every box carries it, from `contactLimits`.
+- **Savings calculator:**
+  - **Orders a week:** a whole number, digits only, 4 digits at most.
+  - **Average order:** up to $999.99 with two decimals, and a keypad with a decimal point (`inputMode="decimal"`).
+  - The example (60 at $30) and the result logic are unchanged.
+- **Hero:** the restaurant name box holds 80 characters at most, and control characters come out in the box and again before the name goes into the link (`demoHrefWithName`).
+- **Guard** (`tests/inputs.spec.ts`): it fails on any `<input>` or `<textarea>` in `src/` with neither a maxLength nor a shared rule, and on any `type="number"`. It reads the source, and it also visits every page in a browser. The hidden `intent` field and the `website` trap are exempt by name. WebKit iPhone runs this file on every pull request, so CI runs the guard.
+- **wuntab-design skill:** the rule is in the do/don't list.
+- **Unchanged:** copy, layout and colors, apart from the new error line.
+
+**Decisions made:**
+1. **A leading 1 is the country code.** No US area code starts with 1, so the box and the server drop it. Typing "1" first leaves the box empty, and "1305..." shows (305...
+2. **The server refuses a phone with any letter in it,** even one with 10 digits left over ("abc3055550123"). It allows only digits, spaces, ( ) - . and +. The box never sends letters, so only a hand-made request meets this.
+3. **The phone box's maxLength stays 40.** The box itself never holds more than 14 characters ("(305) 555-0123"). The 40 is room for a pasted "+1 (305) 555-0123" to arrive whole: a maxLength of 14 would cut that paste before the rule reads it. The server refuses more than 40 characters before it reads the digits.
+4. **While typing, the phone shows what it has:** "(3", "(305", "(305) 5", "(305) 555-0". Backspace or Delete over a ( ) - or space also takes the digit beside it, so the box never looks stuck.
+5. **When the error line shows:** when you move on to another box with part of a number, or press Send. It doesn't show when you tap Send straight from the phone box. If it did, the line would push Send down under your finger and the press could be lost; Send's own check shows the line and puts the cursor back in the phone box instead. Tapping blank space doesn't show it either; Send will.
+6. **The error line is ink, weight 500, 14px.** No new color: the palette has no red, and the retired tomato fails AA contrast at 14px.
+7. **Calculator bounds:**
+   - **Orders a week:** whole, 0 to 9,999.
+   - **Average order:** $0 to $999.99.
+
+   The range still shows only when both are above 0, as before.
+8. **The calculator boxes have no maxLength;** the rules cap them. A maxLength would cut a paste like "$1,250.00" before the rule reads it. When a box is full, a digit typed at the end is dropped. A digit typed earlier pushes the last one off, as in the phone.
+9. **Text:**
+   - **On one line,** a pasted line break or tab becomes a space ("Palm[tab]Stone" becomes "Palm Stone", not "PalmStone"). Other control characters are dropped.
+   - **In the message,** line breaks stay. A Windows line break (\r\n) becomes one \n, so the 4,000 limit counts each line break once. Before, a message near the limit with many line breaks could be refused.
+   - **Too long:** text over its limit after the control characters come out is still refused, not cut.
+10. **The hero's link** now holds 80 characters of the name (it was 120), the box's own limit. /contact's `?restaurant` goes through the Restaurant box's rule (control characters out, 160 at most).
+11. **Mid-composition** (accents, another language's keyboard), the box is left alone, and the rule runs when the composition ends. Text typed before the page's script loads gets the rule as soon as it does.
+12. **The email's check is unchanged,** as asked. Its pattern only refuses spaces and @, so a control character would pass it; see the PR for a question on that.
+
+**How it was checked:**
+- **Red first:** the new tests ran against `main`'s code (`306921d`) before the fix. 11 of the 12 in `tests/inputs.spec.ts` failed, and so did the 2 new or changed tests in `upgrade.spec.ts`. The one that passed tests only the new rules file.
+- **New tests** (`tests/inputs.spec.ts`, in Chromium and WebKit iPhone):
+  - **Phone:** typing "abc305555012399" shows (305) 555-0123. Pasting "+1 (305) 555-0123" or "13055550123" shows the same. Letters alone leave the box empty.
+  - **Caret:** the caret stays put when typing and deleting in the middle, and over the ( ) - and space.
+  - **Error line:** shown when the box is left with part of a number, with `aria-invalid`, `aria-describedby` and the description read out. It goes when the number is whole or the box is empty. Send with part of a number posts nothing and puts focus back on the box.
+  - **Calculator:** typing "6a0.5e" in orders gives 605, and "30.999" in average order gives 30.99. "-12345" gives 1234, and "1000" gives 100. The result follows.
+  - **Hero:** maxLength 80, and control characters stay out of the link.
+  - **Guard:** the source scan and every page in a browser.
+  - **Rules:** unit checks of every rule, and of the handler's check.
+- **New test in `upgrade.spec.ts`,** against the stand-in email server:
+  - phones "abc1234567", "305555012", "30555501234" and "305-555-0123 ext 4" are refused with 400 and nothing is sent;
+  - "3055550123" and "+1 (305) 555-0123" are emailed as (305) 555-0123;
+  - control characters come out of the name, restaurant and message.
+- **Local suite:** 188 passed, 1 skipped. Lint, `tsc`, honesty, copy-lint and boundary-check pass.
+- **Evidence:** `docs/marketing-site/evidence/inputs/`, before beside after:
+  - the contact form at 390 and 1280 with "abc305555" typed in the phone;
+  - the calculator at 390 with "6a0.5e" and "30.999" typed.
+
+---
+
 ## 2026-10-21 · PR #67: Menu names, round 2: "Your website", "Your orders", "Your kitchen", and Loyalty Program (merged)
 
 **Merged by:** Claude, on the owner's instruction ("merge 67"). Squash commit `a7ccc3c` on `main`, from branch `claude/wuntab-marketing-brief-49dbha`. CI was green on the merged head (`53a214d`): Vercel, and WebKit iPhone 81 of 81, with and without reduced motion.

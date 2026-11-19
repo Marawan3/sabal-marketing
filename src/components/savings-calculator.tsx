@@ -1,16 +1,21 @@
 "use client";
 
 import { useId, useState } from "react";
+import { RuleInput } from "./rule-input";
 import { copy } from "@/lib/copy";
+import { dollarAmount, wholeNumber } from "@/lib/input-rules";
 
 const t = copy.savings;
 const WEEKS = 52;
 
-/** A typed number, or null while the box is empty or not a number. */
-function parse(value: string): number | null {
-  const n = Number(value.replace(/[$,\s]/g, ""));
-  return value.trim() && Number.isFinite(n) && n >= 0 ? n : null;
-}
+/**
+ * The boxes' rules (owner, 2026-11-18): orders a week are a whole number,
+ * 0 to 9,999, digits only; the average order is 0 to $999.99, with two
+ * decimals at most. Letters, minus signs, "e" and a second point never stay
+ * in either box. Each parses to null while its box is empty or out of range.
+ */
+export const ordersRule = wholeNumber({ min: 0, max: 9999 });
+export const valueRule = dollarAmount({ min: 0, max: 999.99 });
 
 const dollars = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
@@ -31,8 +36,8 @@ export function SavingsCalculator() {
   const id = useId();
   const [orders, setOrders] = useState(String(t.example.orders));
   const [value, setValue] = useState(String(t.example.value));
-  const o = parse(orders);
-  const v = parse(value);
+  const o = ordersRule.parse(orders);
+  const v = valueRule.parse(value);
   const range = o !== null && v !== null && o * v > 0 ? yearlyRange(o, v) : null;
   const field =
     "block min-h-12 w-full rounded-[12px] border border-ink-muted bg-paper text-body text-ink tabular-nums focus-visible:border-ink";
@@ -44,14 +49,7 @@ export function SavingsCalculator() {
       <div className="grid grid-cols-2 gap-3 sm:gap-6">
         <label htmlFor={`${id}-o`} className="flex flex-col justify-between text-small font-medium">
           {t.orders}
-          <input
-            id={`${id}-o`}
-            inputMode="numeric"
-            autoComplete="off"
-            value={orders}
-            onChange={(e) => setOrders(e.target.value)}
-            className={`${field} mt-2 px-3`}
-          />
+          <RuleInput rule={ordersRule} id={`${id}-o`} autoComplete="off" value={orders} onValue={setOrders} className={`${field} mt-2 px-3`} />
         </label>
         <label htmlFor={`${id}-v`} className="flex flex-col justify-between text-small font-medium">
           {t.value}
@@ -59,14 +57,7 @@ export function SavingsCalculator() {
             <span aria-hidden className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-body text-ink-muted">
               $
             </span>
-            <input
-              id={`${id}-v`}
-              inputMode="numeric"
-              autoComplete="off"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className={`${field} pr-3 pl-7`}
-            />
+            <RuleInput rule={valueRule} id={`${id}-v`} autoComplete="off" value={value} onValue={setValue} className={`${field} pr-3 pl-7`} />
           </span>
         </label>
       </div>

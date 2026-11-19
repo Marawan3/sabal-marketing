@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { ContactForm } from "./contact-form";
 import { TextLink } from "./cta-link";
 import { copy } from "@/lib/copy";
-import { contactLimits, readIntent, type ContactIntent } from "@/lib/contact";
+import { contactRules, readIntent, type ContactIntent } from "@/lib/contact";
 
 const t = copy.contact;
 
@@ -70,7 +70,8 @@ export function ContactView({
 export function ContactFromQuery(props: { email: string; callHref: string | null }) {
   const query = useSearchParams();
   const intent = readIntent(query.get("intent"));
-  const restaurant = (query.get("restaurant") ?? "").trim().slice(0, contactLimits.restaurant.max);
+  // The restaurant box's own rule: control characters out, 160 at most.
+  const restaurant = contactRules.restaurant.filter(query.get("restaurant") ?? "").trim();
   // A new query (a client-side visit from Get Started) starts the form afresh.
   return <ContactView key={`${intent}|${restaurant}`} intent={intent} restaurant={restaurant} {...props} />;
 }

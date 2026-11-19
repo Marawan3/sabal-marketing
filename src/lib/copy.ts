@@ -300,6 +300,8 @@ export const copy = {
     headline: "Send us a message.",
     line: "Tell us about your restaurant. We reply within one business day.",
     fields: { name: "Your name", restaurant: "Restaurant", phone: "Phone", email: "Email", message: "Message" },
+    /** Under the phone box when it holds part of a number (owner, 2026-11-18). The phone stays optional. */
+    phoneIncomplete: "Enter all 10 digits",
     send: "Send message",
     sending: "Sending",
     sent: "Thanks. Your message is on its way. We reply within one business day.",

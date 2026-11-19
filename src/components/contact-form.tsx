@@ -1,19 +1,23 @@
 "use client";
 
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { buttonBase } from "./cta-link";
+import { RuleInput, RuleTextarea } from "./rule-input";
 import { copy } from "@/lib/copy";
-import { contactFields, contactLimits, contactTrap, type ContactField, type ContactIntent } from "@/lib/contact";
+import { contactFields, contactLimits, contactRules, contactTrap, type ContactField, type ContactIntent } from "@/lib/contact";
 
 const t = copy.contact;
 
-const kinds: Record<ContactField, { type: string; autoComplete: string }> = {
-  name: { type: "text", autoComplete: "name" },
-  restaurant: { type: "text", autoComplete: "organization" },
-  phone: { type: "tel", autoComplete: "tel" },
-  email: { type: "email", autoComplete: "email" },
-  message: { type: "text", autoComplete: "off" },
+const autoCompletes: Record<ContactField, string> = {
+  name: "name",
+  restaurant: "organization",
+  phone: "tel",
+  email: "email",
+  message: "off",
 };
+
+/** A phone box holding part of a number: some digits, not all 10. Empty is fine; the phone is optional. */
+const partPhone = (value: string) => value !== "" && contactRules.phone.parse(value) === null;
 
 /**
  * The /contact form: name, restaurant, phone, email and message, posted to
@@ -23,13 +27,29 @@ const kinds: Record<ContactField, { type: string; autoComplete: string }> = {
  * As a call request (intent "call", from Get Started) the message starts
  * filled in and stays editable, and the phone says what it is for. The
  * intent goes along in a hidden field; `restaurant` prefills its field.
+ *
+ * Every box but the email has its rule (src/lib/contact.ts), and the handler
+ * checks again with the same rules. The phone keeps 10 digits at most and
+ * shows them as (305) 555-0123; left with part of a number (on to another
+ * box, or Send), it says "Enter all 10 digits" under the box until the number
+ * is whole or the box is empty, and the message isn't sent.
  */
 export function ContactForm({ email, intent = "message", restaurant = "" }: { email: string; intent?: ContactIntent; restaurant?: string }) {
   const id = useId();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  const [phone, setPhone] = useState("");
+  const [phoneLeft, setPhoneLeft] = useState(false);
+  const phoneBox = useRef<HTMLDivElement>(null);
+  const phoneError = phoneLeft && partPhone(phone);
+  const phoneErrorId = `${id}-phone-error`;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (partPhone(phone)) {
+      setPhoneLeft(true);
+      phoneBox.current?.querySelector("input")?.focus();
+      return;
+    }
     setState("sending");
     const data = Object.fromEntries(new FormData(event.currentTarget));
     const res = await fetch("/api/contact", {
@@ -64,23 +84,46 @@ export function ContactForm({ email, intent = "message", restaurant = "" }: { em
           </>
         );
         const prefill = name === "restaurant" ? restaurant : name === "message" && intent === "call" ? t.callIntent.message : undefined;
-        return (
+        const shared = { id: `${id}-${name}`, name, required, autoComplete: autoCompletes[name] };
+        const box =
+          name === "message" ? (
+            <RuleTextarea rule={contactRules.message} {...shared} maxLength={max} rows={5} defaultValue={prefill} className={`${field} py-3`} />
+          ) : name === "email" ? (
+            <input {...shared} maxLength={max} type="email" className={`${field} min-h-12`} />
+          ) : name === "phone" ? (
+            <RuleInput
+              rule={contactRules.phone}
+              {...shared}
+              maxLength={max}
+              onValue={setPhone}
+              // Moving on to another box with part of a number shows the line. Send does too, from submit().
+              onBlur={(event) => {
+                if (event.relatedTarget?.matches("input, textarea")) setPhoneLeft(true);
+              }}
+              aria-invalid={phoneError || undefined}
+              aria-describedby={phoneError ? phoneErrorId : undefined}
+              className={`${field} min-h-12`}
+            />
+          ) : (
+            <RuleInput rule={contactRules[name]} {...shared} maxLength={max} defaultValue={prefill || undefined} className={`${field} min-h-12`} />
+          );
+        const labelled = (
           <label key={name} htmlFor={`${id}-${name}`} className={`text-small font-medium ${name === "message" ? "sm:col-span-2" : ""}`}>
             {label}
-            {name === "message" ? (
-              <textarea id={`${id}-${name}`} name={name} required={required} maxLength={max} rows={5} defaultValue={prefill} className={`${field} py-3`} />
-            ) : (
-              <input
-                id={`${id}-${name}`}
-                name={name}
-                required={required}
-                maxLength={max}
-                defaultValue={prefill || undefined}
-                {...kinds[name]}
-                className={`${field} min-h-12`}
-              />
-            )}
+            {box}
           </label>
+        );
+        if (name !== "phone") return labelled;
+        // The phone's line sits under its box, outside the label, so it isn't read as part of the box's name.
+        return (
+          <div key={name} ref={phoneBox} className="flex flex-col">
+            {labelled}
+            {phoneError ? (
+              <p id={phoneErrorId} data-phone-error className="mt-2 text-small font-medium text-ink">
+                {t.phoneIncomplete}
+              </p>
+            ) : null}
+          </div>
         );
       })}
       <input type="hidden" name="intent" value={intent} />

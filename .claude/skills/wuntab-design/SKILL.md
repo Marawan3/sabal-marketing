@@ -578,6 +578,7 @@ Do
 - Real screenshots in frames as soon as they exist.
 - Numbered steps only where the content is a sequence.
 - Leave white space. If a section feels empty, the copy is doing its job.
+- Every input has a type rule (digits, length, range) enforced while typing and again on the server. Never type="number". (Owner, 2026-11-18.) The rules live in `src/lib/input-rules.ts`; a box takes one through `RuleInput`/`RuleTextarea` (`src/components/rule-input.tsx`), and `tests/inputs.spec.ts` fails on any `<input>` or `<textarea>` with neither a maxLength nor a rule.
 
 Don't
 - Cream page, terracotta or brick accents, gradients, tinted blacks.
@@ -589,3 +590,4 @@ Don't
 - Testimonials, logos, "trusted by", star ratings, countdowns, popups.
 - Jargon. Competitor names. "Sabal". "Commission-free". Invented numbers.
 - Monthly prices, a "coming soon" price slot, or "no fees" (the diner pays 5%).
+- An input with no type rule, or `type="number"` (it lets "e", "-" and "." through).

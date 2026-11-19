@@ -105,9 +105,9 @@ test("calculator: between products and how it works; the owner's example on load
     await expect(value).toHaveValue("30");
     const [low, high] = yearlyRange(60, 30).map((n) => `$${n.toLocaleString("en-US")}`);
     await expect(calc.locator("[data-result]")).toHaveText(`Between ${low} and ${high}`);
-    // Numbers keypads, the $ before the order value, and the result larger and bolder than the labels.
+    // Number keypads (a decimal point for the order value, 2026-11-19), the $ before the order value, and the result larger and bolder than the labels.
     await expect(orders).toHaveAttribute("inputmode", "numeric");
-    await expect(value).toHaveAttribute("inputmode", "numeric");
+    await expect(value).toHaveAttribute("inputmode", "decimal");
     const dollar = (await calc.getByText("$", { exact: true }).boundingBox())!;
     const valueBox = (await value.boundingBox())!;
     expect(dollar.x).toBeGreaterThan(valueBox.x);
@@ -273,6 +273,27 @@ test.describe("contact", () => {
     expect((await request.post("/api/contact", { data: { ...ok, website: "spam" } })).status()).toBe(200);
     expect(received).toHaveLength(0);
     expect((await request.get("/api/contact")).status()).toBe(405);
+  });
+
+  test("the phone is 10 US digits or nothing: letters and part numbers are refused, a good one is emailed as (305) 555-0123", async ({ request }) => {
+    received.length = 0;
+    const ok = { name: "A", restaurant: "B", phone: "", email: "a@b.co", message: "Hi" };
+    for (const phone of ["abc1234567", "305555012", "30555501234", "305-555-0123 ext 4"]) {
+      const res = await request.post("/api/contact", { data: { ...ok, phone } });
+      expect(res.status(), phone).toBe(400);
+      expect(await res.json(), phone).toEqual({ error: "field", field: "phone" });
+    }
+    expect(received).toHaveLength(0);
+    for (const phone of ["3055550123", "+1 (305) 555-0123"]) expect((await request.post("/api/contact", { data: { ...ok, phone } })).status(), phone).toBe(200);
+    expect(received).toHaveLength(2);
+    for (const r of received) expect(r.text).toContain("\nPhone: (305) 555-0123\n");
+    // Control characters come out of the name, restaurant and message before the email is written.
+    received.length = 0;
+    const res = await request.post("/api/contact", { data: { ...ok, name: "Te\u0007st", restaurant: "Palm\t& Stone", message: "One\r\nTwo\u0000" } });
+    expect(res.status()).toBe(200);
+    expect(received[0].subject).toBe("Website message: Test, Palm & Stone");
+    expect(received[0].text).toContain("\nName: Test\n");
+    expect(received[0].text).toContain("\nOne\nTwo\n");
   });
 
   test("the message is checked and written as plain text", () => {

@@ -1,6 +1,14 @@
+import { boundedText } from "./input-rules";
+
 /**
- * The Get Started (Book a call) link with the restaurant's name filled in. No
- * imports, so it is safe in a client component.
+ * The hero's restaurant-name box (owner, 2026-11-18): 80 characters at most,
+ * control characters out, before the name goes into a link.
+ */
+export const heroName = boundedText({ max: 80 });
+
+/**
+ * The Get Started (Book a call) link with the restaurant's name filled in.
+ * Its one import has none of its own, so it is safe in a client component.
  *
  * - this site's own pages (the default, /contact?intent=call): the name is
  *   added as the query parameter `param` (default "restaurant"), which
@@ -11,7 +19,7 @@
  *   it to whatever field the scheduling tool prefills from.
  */
 export function demoHrefWithName(base: string, name: string, param = "restaurant"): string {
-  const restaurant = name.trim().slice(0, 120);
+  const restaurant = heroName.filter(name).trim();
   if (!restaurant) return base;
   // A path on this site: new URL() throws on it alone, so resolve it against a placeholder origin and drop the origin again.
   if (base.startsWith("/") && !base.startsWith("//")) {
