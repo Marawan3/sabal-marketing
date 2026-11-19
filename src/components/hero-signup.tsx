@@ -2,7 +2,8 @@
 
 import { useId } from "react";
 import { buttonBase } from "./cta-link";
-import { demoHrefWithName } from "@/lib/demo-href";
+import { RuleInput } from "./rule-input";
+import { demoHrefWithName, heroName } from "@/lib/demo-href";
 
 /**
  * "Your restaurant's name" and Get Started. Goes to Book a call with the name
@@ -13,6 +14,8 @@ import { demoHrefWithName } from "@/lib/demo-href";
  * The box is uncontrolled and read when the form is sent, so the name in it
  * is the name that goes, even if it was typed before the page's script took
  * over. A controlled box lost it once in WebKit (PR #54's first run there).
+ * It holds 80 characters at most and no control characters (`heroName`), and
+ * demoHrefWithName runs the same rule again before it builds the link.
  */
 export function HeroSignup({
   href,
@@ -38,10 +41,11 @@ export function HeroSignup({
       <label htmlFor={id} className="sr-only">
         {label}
       </label>
-      <input
+      <RuleInput
+        rule={heroName}
         id={id}
         name="restaurant"
-        type="text"
+        maxLength={heroName.max}
         autoComplete="organization"
         placeholder={label}
         className="min-h-12 min-w-0 flex-1 rounded-[12px] border border-ink-muted bg-paper px-3 text-body text-ink placeholder:text-ink-muted focus-visible:border-ink"

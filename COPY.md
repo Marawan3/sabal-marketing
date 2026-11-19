@@ -21,7 +21,7 @@ This file mirrors the homepage as rebuilt in the design pass of 2026-10-07. Ever
 
 **Line:** Your website, online ordering, delivery, and marketing, built and run for you.
 
-**Input:** Your restaurant's name · **Button:** Get Started (goes to the /contact form as a call request, with the name in its Restaurant field; 2026-10-19)
+**Input:** Your restaurant's name (80 characters at most, 2026-11-19) · **Button:** Get Started (goes to the /contact form as a call request, with the name in its Restaurant field; 2026-10-19)
 
 **The small card under the name field is gone (2026-10-20):** it said "**$0/month for the restaurant.** Customers pay 5% at checkout.", which the trust line now says. The full pricing section stays lower down.
 
@@ -63,7 +63,8 @@ On phones (2026-10-19): a row of four cards you swipe, the next one peeking at t
 **What commission would you keep?**
 
 - Over the boxes, small (2026-10-19): **Example — change these**
-- **Delivery-app orders per week** · **Average order value** ($ before the box). Both open on the owner's example, 60 orders and $30 (2026-10-19; until then both were empty), and both bring up the number keypad on phones.
+- **Delivery-app orders per week** · **Average order value** ($ before the box). Both open on the owner's example, 60 orders and $30 (2026-10-19; until then both were empty), and both bring up the number keypad on phones (with a decimal point for the order value since 2026-11-19).
+- **What the boxes take (2026-11-19):** orders a week are a whole number, 0 to 9,999, digits only. The average order is $0 to $999.99, with two decimals at most. Letters, minus signs, "e" and a second point never stay in either box: typing "6a0.5e" gives 605, and "30.999" gives 30.99.
 - **Estimated commission kept each year:** Between $X and $Y (orders × average order × 52 weeks × 15%, and × 30%), in larger, bolder type since 2026-10-19. On load: **Between $14,040 and $28,080**. With a box emptied: "Enter both numbers to see the range."
 - Under it: Third-party apps charge 15–30% commission; we charge the restaurant $0.
 
@@ -228,6 +229,7 @@ Removed from the catalog with this change: the "Catering Businesses" solution (i
 
 - **Send us a message.** Tell us about your restaurant. We reply within one business day. · hello@wuntab.com · Rather talk? Book a 20-minute call. (That last link shows only while Get Started goes somewhere other than this form; since 2026-10-19 it comes here, so it is hidden.)
 - Form: Your name, Restaurant, Phone (optional), Email, Message · **Send message**
+- **Phone box (2026-11-19):** digits only, 10 at most, shown as (305) 555-0123 while you type. A pasted "+1 (305) 555-0123" becomes the same 10 digits. Left with part of a number (moving on to another box, or pressing Send), a line under the box says **Enter all 10 digits**, and the message isn't sent until the number is whole or the box is empty. The email to hello@ shows the phone as (305) 555-0123.
 - **As a call request** (/contact?intent=call, where every Get Started goes, 2026-10-19): **Book a 20-minute call.** Tell us how to reach you. We'll set up a time and show WunTab on your own menu. · The Restaurant field holds the name typed in the hero, if any · Message starts as "I'd like a 20-minute call. Best time to reach me: " and stays editable · the phone field reads **Phone (for the call)** and stays optional. The email to hello@ is headed "Call request: name, restaurant" (otherwise "Website message: name, restaurant") and starts with an "Intent:" line.
 - Sent: Thanks. Your message is on its way. We reply within one business day.
 - If sending fails: We couldn't send your message. Please email us instead: hello@wuntab.com
